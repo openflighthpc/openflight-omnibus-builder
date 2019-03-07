@@ -22,7 +22,7 @@
 #
 #  https://opensource.org/licenses/EPL-2.0
 #
-# For more information on <project>, please visit:
+# For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 yum install -y -e0 git rpm-build cmake
