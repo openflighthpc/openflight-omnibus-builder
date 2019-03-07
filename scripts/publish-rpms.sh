@@ -25,21 +25,59 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-yum install -y -e0 git rpm-build cmake
-gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-curl -sSL https://get.rvm.io | bash -s stable
-source /etc/profile.d/rvm.sh
-rvm install 2.6.1
-mkdir /opt/flight
-chown vagrant /opt/flight
+# Publishes built RPMs to an s3-backed RPM repo.
+set -e
+if [ ! -z "${DEBUG}" ]; then
+  set -x
+fi
 
-# For fltk (flight-sessions)
-yum install -y -e0 libX11-devel freetype-devel
-# For libjpeg-turbo (flight-sessions)
-yum install -y -e0 nasm
-# For tigervnc (flight-sessions)
-yum install -y -e0 xorg-x11-server-source xorg-x11-util-macros \
-    xorg-x11-font-utils xorg-x11-xtrans-devel pixman-devel \
-    mesa-libGL-devel libxkbfile-devel libXfont2-devel pam-devel
+DEPENDENCIES=("aws" "createrepo")
+REGION="eu-west-1"
 
-yum install -y -e0 createrepo awscli
+for dep in "${DEPENDENCIES[@]}"
+do
+  if [ ! $(which ${dep}) ]; then
+      echo "${dep} must be available."
+      exit 1
+  fi
+done
+
+while getopts "s:t:" opt; do
+  case $opt in
+    s) SOURCE_DIR=$OPTARG ;;
+    t) TARGET_PREFIX=$OPTARG ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
+
+if [ -z "${SOURCE_DIR}" ]; then
+  echo "Source directory must be specified."
+  exit 1
+fi
+
+if [ -z "${TARGET_PREFIX}" ]; then
+  echo "Target bucket prefix must be specified."
+  exit 1
+fi
+
+TARGET_DIR="/tmp/${TARGET_PREFIX}"
+
+# make sure we're operating on the latest data in the target bucket
+mkdir -p $TARGET_DIR
+aws --region "${REGION}" s3 sync "s3://${TARGET_PREFIX}" $TARGET_DIR
+
+# copy the RPM in and update the repo
+mkdir -pv $TARGET_DIR/x86_64/
+cp -rv $SOURCE_DIR/*.rpm $TARGET_DIR/x86_64/
+UPDATE=""
+if [ -e "$TARGET_DIR/x86_64/repodata/repomd.xml" ]; then
+  UPDATE="--update "
+fi
+
+createrepo -v $UPDATE --deltas $TARGET_DIR/x86_64/
+
+# sync the repo state back to s3
+aws --region "${REGION}" s3 sync $TARGET_DIR s3://$TARGET_PREFIX

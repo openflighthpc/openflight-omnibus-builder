@@ -76,6 +76,40 @@ cd /vagrant/builders/flight-example
 yum install pkg/flight-example-someversion.el7.x86_64.rpm
 ```
 
+## Uploading built packages to the `yum` repo
+
+Once a package is built, the result can be uploaded to a `yum` repository.
+
+### Publishing to the development repo
+
+OpenFlightHPC contributors who have been provided with permissions to publish to the OpenFlight `yum` repositories on Amazon S3, can use the `scripts/publish-rpm.sh` script to push an RPM to the development repository.
+
+First, add your AWS credentials:
+
+```
+aws configure
+```
+
+Next, publish the RPM that you've built:
+
+```
+scripts/publish-rpm.sh builders/flight-example/pkg/flight-example-someversion.rpm
+```
+
+Users of the `openflight-dev` repository will then have access to install the new RPM via `yum` on their systems.
+
+### Promoting to the production repo
+
+Once the RPM has been tested, you can promote it to the live/production repo using the `scripts/promote-rpm.sh` script:
+
+```
+scripts/promote-rpm.sh flight-example-someversion
+```
+
+Note that the script does not take a file path, but takes a name pattern to match one or more RPMs that are present in the development repo.
+
+Once the RPM is published to the production repo, users of the `openflight` repository will have access to install/upgrade to the new RPM via `yum` on their systems.
+
 # Contributing
 
 Fork the project. Make your feature addition or bug fix. Send a pull
