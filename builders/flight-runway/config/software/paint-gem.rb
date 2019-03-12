@@ -24,50 +24,21 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-runway'
-maintainer 'Alces Flight Ltd'
-homepage 'https:/github.com/openflighthpc/flight-runway'
-friendly_name 'Flight Runway'
+name "paint-gem"
+default_version "2.1.0"
 
-install_dir '/opt/flight/opt/runway'
+license "MIT"
+license_file "https://raw.githubusercontent.com/janlelis/paint/master/MIT-LICENSE.txt"
+skip_transitive_dependency_licensing true
 
-build_version '0.4.0'
-build_iteration 1
+dependency "ruby"
+dependency "rubygems"
 
-# Creates required build directories
-dependency 'preparation'
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
 
-# flight-runway dependencies/components
-dependency 'flight-runway'
-
-# Version manifest file
-dependency 'version-manifest'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Integrated platform for Flight tools.'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-
-override :ruby, version: '2.6.1'
-
-%w(ruby irb gem bundle rake flight flexec flenable flactivate flintegrate flensure).each do |f|
-  extra_package_file "/opt/flight/bin/#{f}"
-end
-
-%w(05-flight.sh 05-flight.csh).each do |f|
-  extra_package_file "/opt/flight/etc/profile.d/#{f}"
-end
-
-%w(commands/help commands/shell shell/shell).each do |f|
-  extra_package_file "/opt/flight/libexec/#{f}"
-end
-
-runtime_dependency 'unzip'
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
+  gem "install paint" \
+      " --version '#{version}'" \
+      " --bindir '#{install_dir}/embedded/bin'" \
+      " --no-document", env: env
 end
