@@ -31,7 +31,7 @@ friendly_name 'Flight Runway'
 
 install_dir '/opt/flight/opt/runway'
 
-build_version '0.3.0'
+build_version '0.4.0'
 build_iteration 1
 
 # Creates required build directories
@@ -43,7 +43,7 @@ dependency 'flight-runway'
 # Version manifest file
 dependency 'version-manifest'
 
-license 'Eclipse Public License 2.0'
+license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
 description 'Integrated platform for Flight tools.'
@@ -54,7 +54,7 @@ exclude '**/bundler/git'
 
 override :ruby, version: '2.6.1'
 
-%w(ruby irb gem bundle rake flight flexec flenable flactivate flintegrate).each do |f|
+%w(ruby irb gem bundle rake flight flexec flenable flactivate flintegrate flensure).each do |f|
   extra_package_file "/opt/flight/bin/#{f}"
 end
 

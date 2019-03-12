@@ -32,8 +32,9 @@ source git: 'https://github.com/openflighthpc/flight-runway'
 dependency "ruby"
 dependency "rb-readline"
 dependency "bundler"
+dependency 'paint-gem'
 
-license 'Eclipse Public License 2.0'
+license 'EPL-2.0'
 license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
@@ -44,10 +45,16 @@ build do
   ].each do |path|
     copy(
       path,
-      File.expand_path("#{install_dir}/#{File.basename(path)}/.."),
+      File.expand_path(install_dir),
       preserve: true
     )
   end
+
+  copy(
+    'pkg/ruby/openflight',
+    File.expand_path("#{install_dir}/embedded/lib/ruby/site_ruby/2.6.0"),
+    preserve: true
+  )
 
   [
     'bin',
@@ -56,7 +63,7 @@ build do
   ].each do |path|
     copy(
       path,
-      "/opt/flight/#{path}",
+      "/opt/flight",
       preserve: true,
     )
   end

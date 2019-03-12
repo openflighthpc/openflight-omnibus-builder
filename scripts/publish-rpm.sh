@@ -25,21 +25,29 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-yum install -y -e0 git rpm-build cmake
-gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-curl -sSL https://get.rvm.io | bash -s stable
-source /etc/profile.d/rvm.sh
-rvm install 2.6.1
-mkdir /opt/flight
-chown vagrant /opt/flight
+# Publishes a specified RPM to an s3-backed RPM repo.
+set -e
+if [ ! -z "${DEBUG}" ]; then
+  set -x
+fi
 
-# For fltk (flight-sessions)
-yum install -y -e0 libX11-devel freetype-devel
-# For libjpeg-turbo (flight-sessions)
-yum install -y -e0 nasm
-# For tigervnc (flight-sessions)
-yum install -y -e0 xorg-x11-server-source xorg-x11-util-macros \
-    xorg-x11-font-utils xorg-x11-xtrans-devel pixman-devel \
-    mesa-libGL-devel libxkbfile-devel libXfont2-devel pam-devel
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-yum install -y -e0 createrepo awscli
+if [ -z "$1" ]; then
+  echo "Usage: $0 <rpm>"
+  exit 1
+elif [ ! -f "$1" ]; then
+  echo "$0: not found: $1"
+  exit 1
+fi
+
+if ! aws s3 ls &>/dev/null; then
+  echo "$0: unable to access S3; check credentials?"
+  exit 1
+fi
+
+RPM="$1"
+SOURCE_DIR=$(mktemp -d /tmp/publish-rpm.XXXXXX)
+cp $RPM $SOURCE_DIR
+$SCRIPT_DIR/publish-rpms.sh -s "$SOURCE_DIR" -t "openflighthpc/repos/openflight-dev"
+rm -rf $SOURCE_DIR
