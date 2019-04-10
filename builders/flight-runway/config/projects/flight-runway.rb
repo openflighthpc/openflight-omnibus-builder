@@ -31,7 +31,7 @@ friendly_name 'Flight Runway'
 
 install_dir '/opt/flight/opt/runway'
 
-build_version '0.4.0'
+build_version '0.5.0'
 build_iteration 1
 
 # Creates required build directories
