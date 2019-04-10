@@ -26,13 +26,13 @@
 #===============================================================================
 name 'flight-runway'
 maintainer 'Alces Flight Ltd'
-homepage 'https:/github.com/openflighthpc/flight-runway'
+homepage 'https://github.com/openflighthpc/flight-runway'
 friendly_name 'Flight Runway'
 
 install_dir '/opt/flight/opt/runway'
 
 build_version '0.5.0'
-build_iteration 1
+build_iteration 2
 
 # Creates required build directories
 dependency 'preparation'
