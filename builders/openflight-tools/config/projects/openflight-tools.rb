@@ -26,7 +26,7 @@
 #===============================================================================
 name 'openflight-tools'
 maintainer 'Alces Flight Ltd'
-homepage 'https:/github.com/openflighthpc/openflight-tools'
+homepage 'https://github.com/openflighthpc/openflight-tools'
 friendly_name 'OpenFlight Tools'
 
 install_dir '/opt/flight/opt/openflight-tools'
