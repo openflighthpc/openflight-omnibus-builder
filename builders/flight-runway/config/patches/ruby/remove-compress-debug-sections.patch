@@ -1,0 +1,27 @@
+--- configure.ac.orig	2019-01-17 22:07:55.000000000 +0000
++++ configure.ac	2019-04-10 20:43:14.000000000 +0100
+@@ -576,15 +576,15 @@
+ 	RUBY_APPEND_OPTION(LDFLAGS, $stack_protector)
+     ])
+ 
+-    AS_CASE("${compress_debug_sections:-zlib}",
+-    [none|no], [], [
+-    RUBY_TRY_LDFLAGS(${linker_flag}--compress-debug-sections=${compress_debug_sections:-zlib},
+-		     [compress_debug_sections=${compress_debug_sections:-zlib}],
+-		     [compress_debug_sections=no])
+-    ])
+-    AS_IF([test "x$compress_debug_sections" != xno], [
+-	RUBY_APPEND_OPTION(DLDFLAGS, ${linker_flag}--compress-debug-sections=$compress_debug_sections)
+-    ])
++#    AS_CASE("${compress_debug_sections:-zlib}",
++#    [none|no], [], [
++#    RUBY_TRY_LDFLAGS(${linker_flag}--compress-debug-sections=${compress_debug_sections:-zlib},
++#		     [compress_debug_sections=${compress_debug_sections:-zlib}],
++#		     [compress_debug_sections=no])
++#    ])
++#    AS_IF([test "x$compress_debug_sections" != xno], [
++#	RUBY_APPEND_OPTION(DLDFLAGS, ${linker_flag}--compress-debug-sections=$compress_debug_sections)
++#    ])
+ 
+     AS_CASE(["$target_os"],[mingw*], [
+       # On  Windows  platforms,   system  provided  headers  are  VC++
