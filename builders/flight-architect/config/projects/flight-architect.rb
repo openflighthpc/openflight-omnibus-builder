@@ -26,7 +26,7 @@
 #===============================================================================
 name 'flight-architect'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/openflight-tools'
+homepage 'https://github.com/openflighthpc/flight-architect'
 friendly_name 'Flight Architect'
 
 install_dir '/opt/flight/opt/architect'
