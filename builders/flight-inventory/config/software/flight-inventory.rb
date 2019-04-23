@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-inventory'
-default_version '1.1.0-rc2'
+default_version '1.2.1'
 
 source git: 'https://github.com/openflighthpc/flight-inventory'
 

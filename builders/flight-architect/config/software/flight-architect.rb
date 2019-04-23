@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-architect'
-default_version '0.6.0-rc4'
+default_version '1.0.1'
 
 source git: 'https://github.com/openflighthpc/flight-architect'
 
