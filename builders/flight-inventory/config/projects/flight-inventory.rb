@@ -48,6 +48,7 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
+runtime_dependency 'vim'
 
 extra_package_file 'opt/flight/libexec/commands/inventory'
 
