@@ -16,6 +16,15 @@ Usage
 -----
 ### Build
 
+Before building the package, install libpcap-devel to ensure that the pcap gem can be compiled properly:
+
+```shell
+$ yum install libpcap-devel
+```
+
+**Note: The above should be compiled as part of the RPM to prevent this need for manual dependency resolution** 
+
+
 You create a platform-specific package using the `build project` command:
 
 ```shell
