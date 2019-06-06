@@ -42,4 +42,7 @@ yum install -y -e0 xorg-x11-server-source xorg-x11-util-macros \
     xorg-x11-font-utils xorg-x11-xtrans-devel pixman-devel \
     mesa-libGL-devel libxkbfile-devel libXfont2-devel pam-devel
 
+# For libpcap compile (flight-metal)
+yum install -y -e0 flex
+
 yum install -y -e0 createrepo awscli

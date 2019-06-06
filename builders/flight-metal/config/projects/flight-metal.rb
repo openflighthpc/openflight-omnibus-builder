@@ -49,7 +49,6 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
 runtime_dependency 'syslinux'
-runtime_dependency 'libpcap'
 
 extra_package_file 'opt/flight/libexec/commands/metal'
 

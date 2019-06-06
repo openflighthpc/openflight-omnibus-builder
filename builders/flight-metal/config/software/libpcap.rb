@@ -24,35 +24,18 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-metal'
-default_version '0.0.3'
+name 'libpcap'
+#default_version 'libpcap-1.9.0'
 
-source git: 'https://github.com/openflighthpc/flight-metal'
-
-dependency 'flight-runway'
-dependency 'libpcap'
-whitelist_file Regexp.new("vendor/ruby/.*\.so$")
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
+source git: 'https://github.com/the-tcpdump-group/libpcap'
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
-  # Moves the project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'bin', 'etc', 'lib', 
-    'LICENSE.txt', 'README.md', 'metal.gemspec'
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
-  end
+  configure_command = []
+  configure(*configure_command, env: env)
+  make "-j #{workers}", env: env
+  make "-j #{workers} install", env: env
 
-  # Installs the gems to the shared `vendor/share`
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle config build.pcap --with-cflags='-I#{install_dir}/embedded/include' --with-ldflags='-I#{install_dir}/embedded/include'"
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+  #copy "#{install_dir}/embedded/include/pcap*", "#{install_dir}/../runway/embedded/include"
 end
