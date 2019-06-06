@@ -53,6 +53,6 @@ build do
     "--without development test",
     '--path vendor'
   ].join(' ')
-  #command "cd #{install_dir} && /opt/flight/bin/bundle config build.pcap --with-cflags='-I#{install_dir}/embedded/include' --with-ldflags='-I#{install_dir}/embedded/include'"
+  command "cd #{install_dir} && /opt/flight/bin/bundle config build.pcap --with-pcap-dir='#{install_dir}/embedded'"
   command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
 end
