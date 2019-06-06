@@ -37,5 +37,7 @@ build do
   make "-j #{workers}", env: env
   make "-j #{workers} install", env: env
 
-  #copy "#{install_dir}/embedded/include/pcap*", "#{install_dir}/../runway/embedded/include"
+  copy "#{install_dir}/embedded/bin/pcap*", "#{install_dir}/../runway/embedded/bin/"
+  copy "#{install_dir}/embedded/include/pcap*", "#{install_dir}/../runway/embedded/include/"
+  copy "#{install_dir}/embedded/lib/libpcap*", "#{install_dir}/../runway/embedded/lib/"
 end
