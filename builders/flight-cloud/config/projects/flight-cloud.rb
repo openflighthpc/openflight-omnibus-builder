@@ -31,7 +31,7 @@ friendly_name 'Flight Cloud'
 
 install_dir '/opt/flight/opt/cloud'
 
-build_version '1.1.0'
+build_version '1.1.1'
 build_iteration 1
 
 dependency 'preparation'
