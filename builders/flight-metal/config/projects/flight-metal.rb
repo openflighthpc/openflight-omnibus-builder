@@ -31,7 +31,7 @@ friendly_name 'Flight Metal'
 
 install_dir '/opt/flight/opt/metal'
 
-build_version '0.1.1'
+build_version '0.1.2'
 build_iteration 1
 
 dependency 'preparation'
@@ -49,6 +49,7 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
 runtime_dependency 'syslinux'
+runtime_dependency 'ipmitool'
 
 extra_package_file 'opt/flight/libexec/commands/metal'
 
