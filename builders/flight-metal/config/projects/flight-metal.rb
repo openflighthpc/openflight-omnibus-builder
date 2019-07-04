@@ -31,7 +31,7 @@ friendly_name 'Flight Metal'
 
 install_dir '/opt/flight/opt/metal'
 
-build_version '0.1.2'
+build_version '0.1.3'
 build_iteration 1
 
 dependency 'preparation'
