@@ -1,4 +1,3 @@
-#!/bin/bash
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
@@ -25,24 +24,35 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-yum install -y -e0 git rpm-build cmake
-gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-curl -sSL https://get.rvm.io | bash -s stable
-source /etc/profile.d/rvm.sh
-rvm install 2.6.1
-mkdir /opt/flight
-chown vagrant /opt/flight
+name 'flight-metal'
+maintainer 'Alces Flight Ltd'
+homepage 'https://github.com/openflighthpc/flight-metal'
+friendly_name 'Flight Metal'
 
-# For fltk (flight-sessions)
-yum install -y -e0 libX11-devel freetype-devel
-# For libjpeg-turbo (flight-sessions)
-yum install -y -e0 nasm
-# For tigervnc (flight-sessions)
-yum install -y -e0 xorg-x11-server-source xorg-x11-util-macros \
-    xorg-x11-font-utils xorg-x11-xtrans-devel pixman-devel \
-    mesa-libGL-devel libxkbfile-devel libXfont2-devel pam-devel
+install_dir '/opt/flight/opt/metal'
 
-# For libpcap compile (flight-metal)
-yum install -y -e0 flex
+build_version '0.1.3'
+build_iteration 1
 
-yum install -y -e0 createrepo awscli
+dependency 'preparation'
+dependency 'flight-metal'
+dependency 'version-manifest'
+
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+
+description 'Manage installation and configuration of cluster content'
+
+exclude '**/.git'
+exclude '**/.gitkeep'
+exclude '**/bundler/git'
+
+runtime_dependency 'flight-runway'
+runtime_dependency 'syslinux'
+runtime_dependency 'ipmitool'
+
+extra_package_file 'opt/flight/libexec/commands/metal'
+
+package :rpm do
+  vendor 'Alces Flight Ltd'
+end

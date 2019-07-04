@@ -1,4 +1,3 @@
-#!/bin/bash
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
@@ -25,24 +24,34 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-yum install -y -e0 git rpm-build cmake
-gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
-curl -sSL https://get.rvm.io | bash -s stable
-source /etc/profile.d/rvm.sh
-rvm install 2.6.1
-mkdir /opt/flight
-chown vagrant /opt/flight
+name 'flight-inventory'
+default_version '1.2.1'
 
-# For fltk (flight-sessions)
-yum install -y -e0 libX11-devel freetype-devel
-# For libjpeg-turbo (flight-sessions)
-yum install -y -e0 nasm
-# For tigervnc (flight-sessions)
-yum install -y -e0 xorg-x11-server-source xorg-x11-util-macros \
-    xorg-x11-font-utils xorg-x11-xtrans-devel pixman-devel \
-    mesa-libGL-devel libxkbfile-devel libXfont2-devel pam-devel
+source git: 'https://github.com/openflighthpc/flight-inventory'
 
-# For libpcap compile (flight-metal)
-yum install -y -e0 flex
+dependency 'flight-runway'
+whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
-yum install -y -e0 createrepo awscli
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
+
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
+
+  # Moves the project into place
+  [
+    'Gemfile', 'Gemfile.lock', 'bin', 'data', 'etc', 'lib', 'libexec',
+    'helpers', 'templates', 'LICENSE.txt', 'README.md', 'inventoryware.gemspec',
+    'var'
+  ].each do |file|
+    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
+
+  # Installs the gems to the shared `vendor/share`
+  flags = [
+    "--without development test",
+    '--path vendor'
+  ].join(' ')
+  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+end
