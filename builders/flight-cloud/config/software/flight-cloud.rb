@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-cloud'
-default_version '1.1.3'
+default_version '1.2.2'
 
 source git: 'https://github.com/openflighthpc/flight-cloud'
 
@@ -41,8 +41,9 @@ build do
 
   # Moves the project into place
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'data', 'etc', 'examples', 'lib',
-    'libexec', 'LICENSE.txt', 'README.md', 'cloudware.gemspec'
+    'app', 'bin', 'cloudware.gemspec', 'config.ru', 'data', 'etc',
+    'examples', 'Gemfile', 'Gemfile.lock', 'lib', 'libexec', 'LICENSE.txt',
+    'Rakefile', 'README.md'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
