@@ -31,7 +31,7 @@ friendly_name 'Flight Architect'
 
 install_dir '/opt/flight/opt/architect'
 
-build_version '1.0.8'
+build_version '1.0.9'
 build_iteration 1
 
 dependency 'preparation'

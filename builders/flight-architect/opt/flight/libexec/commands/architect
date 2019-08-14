@@ -34,4 +34,4 @@
 export FLIGHT_CWD="$(pwd)"
 cd /opt/flight/opt/architect
 export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
-flexec bundle exec bin/underware "$@"
+flexec bundle exec bin/architect "$@"
