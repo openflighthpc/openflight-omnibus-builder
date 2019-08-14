@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-cloud'
-default_version '1.2.2'
+default_version '1.2.4'
 
 source git: 'https://github.com/openflighthpc/flight-cloud'
 
