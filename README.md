@@ -42,7 +42,7 @@ Log in to the build VM and set up the Omnibus build infrastructure.
 ```
 vagrant ssh
 cd /vagrant/builders/flight-example
-bundle install --path=vendor --binstubs
+bundle install
 ```
 
 ## Building a project

@@ -26,10 +26,7 @@
 #===============================================================================
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/centos-7.6"
-  config.vm.box_version = "201812.27.0"
   code_path = ENV['FLIGHT_CODE'] || "#{ENV['HOME']}/code"
-
-  config.vm.box = "bento/centos-7.6"
 
   config.vm.define "default", primary: true do |build|
     build.vm.provision "shell", path: "vagrant/provision.sh"

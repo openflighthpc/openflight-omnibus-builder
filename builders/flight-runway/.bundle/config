@@ -1,0 +1,3 @@
+---
+BUNDLE_PATH: "/home/vagrant/flight-runway/vendor"
+BUNDLE_BIN: "bin"
