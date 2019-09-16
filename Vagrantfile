@@ -26,10 +26,17 @@
 #===============================================================================
 Vagrant.configure("2") do |config|
   config.vm.box = "bento/centos-7.6"
-
+  code_path = ENV['FLIGHT_CODE'] || "#{ENV['HOME']}/code"
 
   config.vm.define "default", primary: true do |build|
     build.vm.provision "shell", path: "vagrant/provision.sh"
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
+    end
   end
-  config.vm.define "test", autostart: false
+  config.vm.define "test", autostart: false do |build|
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
+    end
+  end
 end

@@ -29,7 +29,7 @@ yum install -y -e0 git rpm-build cmake
 gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 curl -sSL https://get.rvm.io | bash -s stable
 source /etc/profile.d/rvm.sh
-rvm install 2.6.1
+rvm install 2.6.3
 mkdir /opt/flight
 chown vagrant /opt/flight
 
@@ -41,5 +41,8 @@ yum install -y -e0 nasm
 yum install -y -e0 xorg-x11-server-source xorg-x11-util-macros \
     xorg-x11-font-utils xorg-x11-xtrans-devel pixman-devel \
     mesa-libGL-devel libxkbfile-devel libXfont2-devel pam-devel
+
+# For libpcap compile (flight-metal)
+yum install -y -e0 flex
 
 yum install -y -e0 createrepo awscli
