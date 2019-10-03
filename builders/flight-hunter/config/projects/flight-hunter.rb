@@ -31,7 +31,7 @@ friendly_name 'Flight hunter'
 
 install_dir '/opt/flight/opt/hunter'
 
-build_version '0.0.5'
+build_version '0.0.6'
 build_iteration 1
 
 dependency 'preparation'

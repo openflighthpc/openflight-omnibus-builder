@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-hunter'
-default_version '0.0.5'
+default_version '0.0.6'
 
 source git: 'https://github.com/openflighthpc/flight-hunter'
 

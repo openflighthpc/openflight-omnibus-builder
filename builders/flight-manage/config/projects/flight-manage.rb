@@ -31,7 +31,7 @@ friendly_name 'Flight Manage'
 
 install_dir '/opt/flight/opt/manage'
 
-build_version '1.0.0-rc2'
+build_version '1.0.1'
 build_iteration 1
 
 dependency 'preparation'

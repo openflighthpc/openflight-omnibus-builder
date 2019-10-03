@@ -31,7 +31,7 @@ friendly_name 'Flight Inventory'
 
 install_dir '/opt/flight/opt/inventory'
 
-build_version '1.3.0'
+build_version '1.4.1'
 build_iteration 1
 
 dependency 'preparation'

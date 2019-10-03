@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-manage'
-default_version '1.0.0-rc2'
+default_version '1.0.1'
 
 source git: 'https://github.com/openflighthpc/flight-manage'
 
