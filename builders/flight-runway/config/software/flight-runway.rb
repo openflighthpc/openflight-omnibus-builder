@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name "flight-runway"
-default_version 'master'
+default_version '0.5.4'
 
 source git: 'https://github.com/openflighthpc/flight-runway'
 
