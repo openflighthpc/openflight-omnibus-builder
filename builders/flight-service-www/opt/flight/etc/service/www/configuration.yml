@@ -1,0 +1,7 @@
+---
+title: "Flight environment web server"
+text: "Please provide values for the following configuration items."
+values:
+  - key: port
+    label: Port
+    value: 80
