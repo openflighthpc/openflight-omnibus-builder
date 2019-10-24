@@ -27,7 +27,7 @@
 name 'flight-desktop'
 default_version '1.1.0'
 
-source git: 'https://github.com/alces-flight/flight-desktop'
+source git: 'https://github.com/openflighthpc/flight-desktop'
 
 dependency 'flight-runway'
 whitelist_file Regexp.new("vendor/ruby/.*\.so$")
