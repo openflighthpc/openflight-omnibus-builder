@@ -31,7 +31,7 @@ friendly_name 'Flight Environment'
 
 install_dir '/opt/flight/opt/flight-env'
 
-build_version '1.1.5'
+build_version '1.2.2'
 build_iteration 1
 
 dependency 'preparation'
@@ -49,9 +49,12 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
 
+# vim-common provides xxd a dependency required by Gridware
+# ncurses-static required by EasyBuild
 %w(
   wget python-setuptools libuuid-devel zlib-devel uuid
-  gcc-c++ sqlite-devel cmake openssl-devel git
+  gcc-c++ sqlite-devel cmake openssl-devel git vim-common
+  ncurses-static
 ).each do |dep|
   runtime_dependency dep
 end
