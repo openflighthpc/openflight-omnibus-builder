@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-service'
-default_version '0.1.0'
+default_version '0.1.1'
 
 source git: 'https://github.com/openflighthpc/flight-service'
 
