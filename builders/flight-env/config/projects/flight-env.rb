@@ -31,7 +31,7 @@ friendly_name 'Flight Environment'
 
 install_dir '/opt/flight/opt/flight-env'
 
-build_version '1.2.3'
+build_version '1.2.4'
 build_iteration 1
 
 dependency 'preparation'
