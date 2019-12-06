@@ -42,7 +42,7 @@ do
   fi
 done
 
-while getopts "s:t:" opt; do
+while getopts "s:t:a:" opt; do
   case $opt in
     s) SOURCE_DIR=$OPTARG ;;
     t) TARGET_PREFIX=$OPTARG ;;
