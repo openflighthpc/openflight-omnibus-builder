@@ -81,21 +81,22 @@ mkdir -p $TARGET_DIR
 aws --region "${REGION}" s3 sync "s3://${TARGET_PREFIX}" $TARGET_DIR
 
 # copy the RPM in and update the repo
-mkdir -pv $TARGET_DIR/x86_64/
+mkdir -pv $TARGET_DIR/{x86_64,aarch64}/
 shopt -s nullglob
-targets="$(echo $SOURCE_DIR/x86_64/${RPM_MATCH}.{noarch,x86_64}.rpm*)"
+targets="$(echo $SOURCE_DIR/{x86_64,aarch64}/${RPM_MATCH}.{noarch,x86_64,aarch64}.rpm*)"
 echo targets: $targets
 shopt -u nullglob
 if [ -z "$targets" ]; then
-  echo "No match found: $SOURCE_DIR/x86_64/${RPM_MATCH}.{noarch,x86_64}.rpm"
+  echo "No match found: $SOURCE_DIR/{x86_64,aarch64}/${RPM_MATCH}.{noarch,x86_64,aarch64}.rpm"
   exit 1
 fi
-cp -rv ${targets} $TARGET_DIR/x86_64/
+ARCH="$(rpm -qip $targets |grep '^Architecture' |awk '{print $2}')"
+cp -rv ${targets} $TARGET_DIR/$ARCH/
 UPDATE=""
 if [ -e "${TARGET_DIR}/noarch/repodata/repomd.xml" ]; then
   UPDATE="--update "
 fi
-createrepo -v $UPDATE --deltas $TARGET_DIR/x86_64/
+createrepo -v $UPDATE --deltas $TARGET_DIR/$ARCH/
 
 # sync the repo state back to s3
 aws --region "${REGION}" s3 sync $TARGET_DIR s3://$TARGET_PREFIX
