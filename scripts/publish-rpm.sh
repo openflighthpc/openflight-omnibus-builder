@@ -48,6 +48,7 @@ fi
 
 RPM="$1"
 SOURCE_DIR=$(mktemp -d /tmp/publish-rpm.XXXXXX)
+ARCH="$(rpm -qip $RPM |grep '^Architecture' |awk '{print $2}')"
 cp $RPM $SOURCE_DIR
-$SCRIPT_DIR/publish-rpms.sh -s "$SOURCE_DIR" -t "openflighthpc/repos/openflight-dev"
+$SCRIPT_DIR/publish-rpms.sh -s "$SOURCE_DIR" -t "openflighthpc/repos/openflight-dev" -a "$ARCH"
 rm -rf $SOURCE_DIR

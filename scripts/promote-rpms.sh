@@ -81,21 +81,52 @@ mkdir -p $TARGET_DIR
 aws --region "${REGION}" s3 sync "s3://${TARGET_PREFIX}" $TARGET_DIR
 
 # copy the RPM in and update the repo
-mkdir -pv $TARGET_DIR/x86_64/
+NOARCH_TARGETS="x86_64 aarch64"
+bash -c "mkdir -pv $TARGET_DIR/{${NOARCH_TARGETS/ /,}}/"
 shopt -s nullglob
-targets="$(echo $SOURCE_DIR/x86_64/${RPM_MATCH}.{noarch,x86_64}.rpm*)"
-echo targets: $targets
+
+# Locate RPM
+matches="$(find $SOURCE_DIR -path "*$RPM_MATCH*")"
 shopt -u nullglob
-if [ -z "$targets" ]; then
-  echo "No match found: $SOURCE_DIR/x86_64/${RPM_MATCH}.{noarch,x86_64}.rpm"
+
+# Exit if no matches found
+if [ -z "$matches" ]; then
+  echo "No match found: $SOURCE_DIR/{${NOARCH_TARGETS/ /,}}/${RPM_MATCH}*"
   exit 1
 fi
-cp -rv ${targets} $TARGET_DIR/x86_64/
-UPDATE=""
-if [ -e "${TARGET_DIR}/noarch/repodata/repomd.xml" ]; then
-  UPDATE="--update "
+
+# Exit if more than one match found
+if [[ $(echo "$matches" |wc -l) -gt 1 ]] ; then
+    echo "More than one match found: "
+    echo "$matches"
+    echo
+    echo "Please refine the argument to match more specifically, this can be done by ensuring that version number, build date, architecture and parent directory are included in the argument:"
+    echo "    aarch64/flight-starter-banner-1.2.1-1.noarch.rpm"
+    exit 1
 fi
-createrepo -v $UPDATE --deltas $TARGET_DIR/x86_64/
+
+echo "Match: $matches"
+
+ARCH="$(rpm -qip $matches |grep '^Architecture' |awk '{print $2}')"
+
+# Push to all architectures if noarch rpm
+if [ "$ARCH" == "noarch" ] ; then
+    for arch in $NOARCH_TARGETS ; do 
+        cp -rv ${matches} $TARGET_DIR/$arch/
+        UPDATE=""
+        if [ -e "${TARGET_DIR}/$arch/repodata/repomd.xml" ]; then
+          UPDATE="--update "
+        fi
+        createrepo -v $UPDATE --deltas $TARGET_DIR/$arch/
+    done
+else
+    cp -rv ${matches} $TARGET_DIR/$ARCH/
+    UPDATE=""
+    if [ -e "${TARGET_DIR}/$ARCH/repodata/repomd.xml" ]; then
+      UPDATE="--update "
+    fi
+    createrepo -v $UPDATE --deltas $TARGET_DIR/$ARCH/
+fi
 
 # sync the repo state back to s3
 aws --region "${REGION}" s3 sync $TARGET_DIR s3://$TARGET_PREFIX
