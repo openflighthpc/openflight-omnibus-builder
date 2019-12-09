@@ -87,7 +87,6 @@ shopt -s nullglob
 
 # Locate RPM
 matches="$(find $SOURCE_DIR -path "*$RPM_MATCH*")"
-echo matches: $matches
 shopt -u nullglob
 
 # Exit if no matches found
@@ -105,6 +104,8 @@ if [[ $(echo "$matches" |wc -l) -gt 1 ]] ; then
     echo "    aarch64/flight-starter-banner-1.2.1-1.noarch.rpm"
     exit 1
 fi
+
+echo "Match: $matches"
 
 ARCH="$(rpm -qip $matches |grep '^Architecture' |awk '{print $2}')"
 
