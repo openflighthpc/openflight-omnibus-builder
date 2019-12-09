@@ -13,7 +13,7 @@ Source0:        https://raw.githubusercontent.com/openflighthpc/openflight-omnib
 Source1:        https://openflighthpc.s3-eu-west-1.amazonaws.com/repos/openflight/openflight.repo
 %define SHA256SUM1 eef326f52cb3899837136753c3380602f9594c8e35be1d593c148be2021b3572
 Source2:        https://openflighthpc.s3-eu-west-1.amazonaws.com/repos/openflight-dev/openflight-dev.repo
-%define SHA256SUM2 3caca02c70445670432de4e09108824e6dc98cd775d23c80a30be6b531d6ec67
+%define SHA256SUM2 06f83e15a4bff7eba52c50c35133af3955b2d765b021316ade9b1541d843e2c9
 #Source3:        https://openflighthpc.org/RPM-GPG-KEY-OPENFLIGHT
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
