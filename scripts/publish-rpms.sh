@@ -71,14 +71,27 @@ mkdir -p $TARGET_DIR
 aws --region "${REGION}" s3 sync "s3://${TARGET_PREFIX}" $TARGET_DIR
 
 # copy the RPM in and update the repo
-mkdir -pv $TARGET_DIR/$ARCH/
-cp -rv $SOURCE_DIR/*.rpm $TARGET_DIR/$ARCH/
-UPDATE=""
-if [ -e "$TARGET_DIR/$ARCH/repodata/repomd.xml" ]; then
-  UPDATE="--update "
-fi
+NOARCH_TARGETS="x86_64 aarch64"
 
-createrepo -v $UPDATE --deltas $TARGET_DIR/$ARCH/
+if [ "$ARCH" == "noarch" ] ; then
+    for arch in $NOARCH_TARGETS ; do
+        mkdir -pv $TARGET_DIR/$arch
+        cp -rv $SOURCE_DIR/*.rpm $TARGET_DIR/$arch
+        UPDATE=""
+        if [ -e "$TARGET_DIR/$arch/repodata/repomd.xml" ]; then
+          UPDATE="--update "
+        fi
+        createrepo -v $UPDATE --deltas $TARGET_DIR/$arch/
+    done
+else
+    mkdir -pv $TARGET_DIR/$ARCH/
+    cp -rv $SOURCE_DIR/*.rpm $TARGET_DIR/$ARCH/
+    UPDATE=""
+    if [ -e "$TARGET_DIR/$ARCH/repodata/repomd.xml" ]; then
+      UPDATE="--update "
+    fi
+    createrepo -v $UPDATE --deltas $TARGET_DIR/$ARCH/
+fi
 
 # sync the repo state back to s3
 aws --region "${REGION}" s3 sync $TARGET_DIR s3://$TARGET_PREFIX
