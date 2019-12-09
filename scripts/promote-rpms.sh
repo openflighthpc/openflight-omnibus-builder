@@ -82,12 +82,11 @@ aws --region "${REGION}" s3 sync "s3://${TARGET_PREFIX}" $TARGET_DIR
 
 # copy the RPM in and update the repo
 NOARCH_TARGETS="x86_64 aarch64"
-mkdir -pv $TARGET_DIR/{${NOARCH_TARGETS/ /,}}/
+bash -c "mkdir -pv $TARGET_DIR/{${NOARCH_TARGETS/ /,}}/"
 shopt -s nullglob
 
 # Locate RPM
 matches="$(find $SOURCE_DIR -path "*$RPM_MATCH*")"
-targets="$(echo $SOURCE_DIR/{${NOARCH_TARGETS/ /,}}/${RPM_MATCH}.{noarch,x86_64,aarch64}.rpm*)"
 echo matches: $matches
 shopt -u nullglob
 
