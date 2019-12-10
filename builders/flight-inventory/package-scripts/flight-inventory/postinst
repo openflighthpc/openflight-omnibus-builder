@@ -1,3 +1,0 @@
-if [[ $(/opt/flight/bin/flight inventory list-cluster |wc -l) == 0 ]] ; then
-    /opt/flight/bin/flight inventory init-cluster default
-fi
