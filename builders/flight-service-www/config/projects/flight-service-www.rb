@@ -32,6 +32,7 @@ friendly_name 'Flight web server service'
 install_dir '/opt/flight/opt/www'
 
 build_version '0.1.0'
+append_timestamp false
 build_iteration 1
 
 dependency 'preparation'
