@@ -32,7 +32,6 @@ friendly_name 'Flight Desktop'
 install_dir '/opt/flight/opt/template'
 
 build_version '1.1.0'
-append_timestamp false
 build_iteration 1
 
 dependency 'preparation'
