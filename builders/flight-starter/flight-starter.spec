@@ -1,5 +1,5 @@
 Name:           flight-starter
-Version:        1.2.1
+Version:        2020.1.0
 Release:        1
 Summary:        Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
@@ -9,7 +9,7 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 %undefine _disable_source_fetch
 Source0:        https://github.com/openflighthpc/%{name}/archive/%{version}.tar.gz
-%define SHA256SUM0 5ebed59dcca0e5aa1ca410ce98285b1f650d471cbb971eefa78766bfb1dd2b55
+%define SHA256SUM0 eea98864a5f283e3f6bbd191883d2c6f3687cca7207a1b8283befd7fdb1748cf
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -48,6 +48,9 @@ cp -R dist/* $RPM_BUILD_ROOT
 %exclude /opt/flight/libexec/flight-starter/banner
 
 %changelog
+* Wed Dec 11 2019 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.1.0
+- Updated numbering scheme
+- Updated to 2020.1.0
 * Mon Nov  4 2019 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 1.2.1
 - Updated to v1.2.1
 * Mon Oct 28 2019 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 1.2.0
