@@ -9,7 +9,7 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 
 BuildArch:     noarch
-Requires:      flight-runway flight-starter flight-env flight-desktop
+Requires:      flight-runway => 1.0.0, flight-runway < 1.1.0, flight-starter => 1.2.0, flight-starter < 1.3.0, flight-env => 1.3.0, flight-env < 1.4.0, flight-desktop => 1.2.0, flight-desktop < 1.3.0
 
 %description
 The Flight User Suite collection of tools and packages for running a HPC environment.
