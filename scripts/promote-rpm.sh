@@ -44,6 +44,6 @@ if ! aws s3 ls &>/dev/null; then
 fi
 
 RPM_PATTERN="$1"
-$SCRIPT_DIR/promote-rpms.sh -s "repos.openflighthpc.org/openflight-dev/centos/7" \
-                            -t "repos.openflighthpc.org/openflight/centos/7" \
+$SCRIPT_DIR/promote-rpms.sh -s "repo.openflighthpc.org/openflight-dev/centos/7" \
+                            -t "repo.openflighthpc.org/openflight/centos/7" \
                             -r "$RPM_PATTERN"
