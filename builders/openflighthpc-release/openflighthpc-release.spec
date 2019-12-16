@@ -10,9 +10,9 @@ URL:            https://openflighthpc.org
 %undefine _disable_source_fetch
 Source0:        https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/LICENSE.txt
 %define SHA256SUM0 8c349f80764d0648e645f41ef23772a70c995a0924b5235f735f4a3d09df127c
-Source1:        http://repo.openflighthpc.org/openflight/centos/7/openflight.repo
-%define SHA256SUM1 e5c5313e6806112dd81cd4277702065528c1d6817d81717c5a6381c8145e7e08
-Source2:        http://repo.openflighthpc.org/openflight-dev/centos/7/openflight-dev.repo
+Source1:        https://repo.openflighthpc.org/openflight/centos/7/openflight.repo
+%define SHA256SUM1 c00aa682164c2fadc411cac2ead70fdf5c9cc2030cc015053f5808225a31f7ba
+Source2:        https://repo.openflighthpc.org/openflight-dev/centos/7/openflight-dev.repo
 %define SHA256SUM2 5477460085d067cad038abbd6cbcbdc2c73a8a8f40758de1caf57d830ac82e85
 #Source3:        https://openflighthpc.org/RPM-GPG-KEY-OPENFLIGHT
 
