@@ -47,12 +47,12 @@ sed -i 's/enabled=1/enabled=0/g' %{SOURCE3}
 rm -rf $RPM_BUILD_ROOT
 
 #GPG Key
-#install -Dpm 644 %{SOURCE3} \
+#install -Dpm 644 %{SOURCE4} \
 #    $RPM_BUILD_ROOT%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-OPENFLIGHT
 
 # yum
 install -dm 755 $RPM_BUILD_ROOT%{_sysconfdir}/yum.repos.d
-install -pm 644 %{SOURCE1} %{SOURCE2}  \
+install -pm 644 %{SOURCE1} %{SOURCE2} %{SOURCE3}  \
     $RPM_BUILD_ROOT%{_sysconfdir}/yum.repos.d
 
 %clean
