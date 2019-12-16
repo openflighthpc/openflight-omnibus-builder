@@ -1,5 +1,5 @@
 Name:           flight-starter
-Version:        2020.1.0
+Version:        2020.1.1
 Release:        1
 Summary:        Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
@@ -48,6 +48,8 @@ cp -R dist/* $RPM_BUILD_ROOT
 %exclude /opt/flight/libexec/flight-starter/banner
 
 %changelog
+* Mon Dec 16 2019 Stu Franks <stu.franks@openflighthpc.org> - 2020.1.1
+- Updated to 2020.1.1
 * Wed Dec 11 2019 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.1.0
 - Updated numbering scheme
 - Updated to 2020.1.0
