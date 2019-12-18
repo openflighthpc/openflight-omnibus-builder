@@ -15,6 +15,11 @@ git clone $REPO --branch $VERSION --depth 1 --single-branch $DIRECTORY
 tar --exclude='.git' -cvjSf $TARBALL $DIRECTORY
 
 # Build RPMs
-rpmbuild --macros='/usr/lib/rpm/macros:/usr/lib/rpm/redhat/macros:/etc/rpm/macros:~/.rpmmacros:./.rpmmacros' -ta $TARBALL
+rpmbuild --define '_prefix /opt/flight/opt/slurm' \
+         --define '_sysconfdir %{_prefix}/etc' \
+         --define '_defaultdocdir %{_prefix}/doc' \
+         --define '_localstatedir %{_prefix}/var' \
+         --define '_sharedstatedir %{_prefix}/var/lib' \
+         -ta $TARBALL
 mkdir -p pkg
 mv $HOME/rpmbuild/RPMS/*/flight-slurm-*.rpm pkg

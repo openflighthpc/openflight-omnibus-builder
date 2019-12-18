@@ -1,7 +1,0 @@
-%_prefix	/opt/flight/opt/slurm
-%_prefix_path           /opt/flight/opt/slurm
-%_slurm_prefix_path           /opt/flight/opt/slurm
-%_sysconfdir       %{_prefix}/etc
-%_slurm_sysconfdir       %{_prefix}/etc
-%_defaultdocdir    %{_prefix}/doc
-%_slurm_defaultdocdir    %{_prefix}/doc
