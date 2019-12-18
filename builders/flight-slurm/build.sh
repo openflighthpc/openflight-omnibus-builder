@@ -16,7 +16,7 @@ tar --exclude='.git' -cvjSf $TARBALL $DIRECTORY
 
 # Build RPMs
 rpmbuild --define '_prefix /opt/flight/opt/slurm' \
-         --define '_sysconfdir %{_prefix}/etc' \
+         --define '_slurm_sysconfdir %{_prefix}/etc' \
          --define '_defaultdocdir %{_prefix}/doc' \
          --define '_localstatedir %{_prefix}/var' \
          --define '_sharedstatedir %{_prefix}/var/lib' \
