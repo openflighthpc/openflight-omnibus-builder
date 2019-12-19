@@ -129,4 +129,4 @@ else
 fi
 
 # sync the repo state back to s3
-aws --region "${REGION}" s3 sync $TARGET_DIR s3://$TARGET_PREFIX
+aws --region "${REGION}" s3 sync $TARGET_DIR s3://$TARGET_PREFIX --acl public-read
