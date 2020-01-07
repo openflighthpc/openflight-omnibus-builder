@@ -53,6 +53,7 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 override :ruby, version: '2.6.1'
+override :bundler, version: '1.17.3'
 
 %w(ruby irb gem bundle rake flight flexec flenable flactivate flintegrate flensure).each do |f|
   extra_package_file "/opt/flight/bin/#{f}"
