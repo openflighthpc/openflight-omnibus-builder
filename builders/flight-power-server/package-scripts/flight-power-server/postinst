@@ -33,7 +33,7 @@ cp -vf /opt/flight/opt/power-server/support/power-server.service /usr/lib/system
 
 if [ ! -f /opt/flight/etc/power-server.conf ] ; then
     echo "Generating app secret key"
-    echo "export jwt_shared_secret='$(openssl rand -base64 16)'" > /opt/flight/etc/power-server.conf
+    echo "jwt_shared_secret='$(openssl rand -base64 16)'" > /opt/flight/etc/power-server.conf
 fi
 
 if [ ! -f /opt/flight/opt/power-server/config/topology.yaml ] ; then
