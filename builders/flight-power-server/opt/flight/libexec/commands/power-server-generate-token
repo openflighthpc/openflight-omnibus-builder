@@ -42,5 +42,7 @@ if [[ $# != 0 ]] ; then
     fi
 fi
 export RACK_ENV=production
+set -a
 source /opt/flight/etc/power-server.conf
+set +a
 flexec bundle exec bin/rake token:user$EXPIRE
