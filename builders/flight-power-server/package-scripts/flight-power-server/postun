@@ -26,6 +26,6 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 echo "Tidying up any remaining files"
-rm -vf /opt/flight/opt/power-server
+rm -vrf /opt/flight/opt/power-server
 
 exit 0
