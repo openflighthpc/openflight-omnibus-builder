@@ -29,7 +29,7 @@ echo "Creating log and config directories"
 mkdir -p /opt/flight/{etc,log}
 
 echo "Setting up systemd service"
-mv -vf /opt/flight/opt/power-server/support/power-server.service /usr/lib/systemd/system/ 
+cp -vf /opt/flight/opt/power-server/support/power-server.service /usr/lib/systemd/system/ 
 
 if [ ! -f /opt/flight/etc/power-server.conf ] ; then
     echo "Generating app secret key"
