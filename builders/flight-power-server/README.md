@@ -1,7 +1,7 @@
-Flight Power Server Omnibus project
+flight-power-server Omnibus project
 ===========================
 This project creates full-stack platform-specific packages for
-`Flight Power Server`!
+`flight-power-server`!
 
 Installation
 ------------
@@ -19,7 +19,7 @@ Usage
 You create a platform-specific package using the `build project` command:
 
 ```shell
-$ bin/omnibus build Flight Power Server
+$ bin/omnibus build flight-power-server
 ```
 
 The platform/architecture type of the package created will match the platform
@@ -33,15 +33,15 @@ You can clean up all temporary files generated during the build process with
 the `clean` command:
 
 ```shell
-$ bin/omnibus clean Flight Power Server
+$ bin/omnibus clean flight-power-server
 ```
 
 Adding the `--purge` purge option removes __ALL__ files generated during the
-build including the project install directory (`/opt/Flight Power Server`) and
+build including the project install directory (`/opt/flight-power-server`) and
 the package cache directory (`/var/cache/omnibus/pkg`):
 
 ```shell
-$ bin/omnibus clean Flight Power Server --purge
+$ bin/omnibus clean flight-power-server --purge
 ```
 
 ### Publish
