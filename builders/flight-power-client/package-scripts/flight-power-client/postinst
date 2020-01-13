@@ -27,7 +27,7 @@
 #===============================================================================
 if [ ! -f /opt/flight/opt/power-client/etc/config.yaml ] ; then
     cat << EOF > /opt/flight/opt/power-client/etc/config.yaml
-base_url: http://power-server-ip:port
+base_url: http://localhost:6302
 jwt_token: generated_authorisation_token
 EOF
     echo "=============================================="
