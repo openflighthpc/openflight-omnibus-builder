@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-power-client'
-default_version '0.2.1'
+default_version '0.2.2'
 
 source git: 'https://github.com/openflighthpc/power-client'
 

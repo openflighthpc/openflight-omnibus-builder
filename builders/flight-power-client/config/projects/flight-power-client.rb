@@ -31,7 +31,7 @@ friendly_name 'Flight Power Server'
 
 install_dir '/opt/flight/opt/power-client'
 
-build_version '0.2.1'
+build_version '0.2.2'
 build_iteration 1
 
 dependency 'preparation'
