@@ -34,11 +34,26 @@ cp -vf /opt/flight/opt/power-server/support/power-server.service /usr/lib/system
 if [ ! -f /opt/flight/etc/power-server.conf ] ; then
     echo "Generating app secret key"
     echo "jwt_shared_secret='$(openssl rand -base64 16)'" > /opt/flight/etc/power-server.conf
+    echo "topology_config=/opt/flight/etc/power-server/topology.yaml" >> /opt/flight/etc/power-server.conf
 fi
 
-if [ ! -f /opt/flight/opt/power-server/config/topology.yaml ] ; then
-    echo "Creating topology.yaml"
-    cp /opt/flight/opt/power-server/config/topology.example.yaml /opt/flight/opt/power-server/config/topology.yaml
+if [ ! -f /opt/flight/etc/power-server/topology.yaml ] ; then
+    echo "Creating topology.yaml and adding example nodes"
+    mkdir -p /opt/flight/etc/power-server/
+    cp /opt/flight/opt/power-server/config/topology.example.yaml /opt/flight/etc/power-server/topology.yaml
+    cat << EOF > /opt/flight/etc/power-server/topology.yaml
+static_nodes:
+  node01:
+    platform: aws
+    ec2_id: i-node01xxxxxxxxxxx
+    region: eu-west-1
+  node02:
+    platform: azure
+    resource_group: demo-power-group
+  node03:
+    platform: ipmi
+    ipmi_username: admin
+EOF
 fi
 
 exit 0

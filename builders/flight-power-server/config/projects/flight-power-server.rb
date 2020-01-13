@@ -32,7 +32,7 @@ friendly_name 'Flight Power Server'
 install_dir '/opt/flight/opt/power-server'
 
 build_version '0.3.2'
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-power-server'
