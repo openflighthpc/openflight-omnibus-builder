@@ -41,7 +41,7 @@ if [ ! -f /opt/flight/etc/power-server/topology.yaml ] ; then
     echo "Creating topology.yaml and adding example nodes"
     mkdir -p /opt/flight/etc/power-server/
     cp /opt/flight/opt/power-server/config/topology.example.yaml /opt/flight/etc/power-server/topology.yaml
-    cat << EOF > /opt/flight/etc/power-server/topology.yaml
+    cat << EOF >> /opt/flight/etc/power-server/topology.yaml
 static_nodes:
   node01:
     platform: aws
