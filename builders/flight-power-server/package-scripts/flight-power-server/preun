@@ -26,9 +26,9 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 echo "Removing systemd service"
-systemctl disable power-server.service
-systemctl stop power-server.service
-rm -vf /usr/lib/systemd/system/power-server.service
+systemctl disable flight-power-server.service
+systemctl stop flight-power-server.service
+rm -vf /usr/lib/systemd/system/flight-power-server.service
 
 echo "Tidying additional application configuration files"
 mv -vf /opt/flight/etc/power-server.conf /opt/flight/etc/power-server.conf.rpmold
