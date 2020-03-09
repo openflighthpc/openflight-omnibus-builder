@@ -39,4 +39,18 @@ Vagrant.configure("2") do |config|
       build.vm.synced_folder code_path, "/code"
     end
   end
+
+  config.vm.define "ubuntu", autostart: false do |build|
+    build.vm.box = 'ubuntu/bionic64'
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
+    end
+  end
+
+  config.vm.define "ubuntu-test", autostart: false do |build|
+    build.vm.box = 'ubuntu/bionic64'
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
+    end
+  end
 end
