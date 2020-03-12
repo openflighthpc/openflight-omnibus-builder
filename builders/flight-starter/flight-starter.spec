@@ -9,7 +9,7 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 %undefine _disable_source_fetch
 Source0:        https://github.com/openflighthpc/%{name}/archive/%{version}.tar.gz
-%define SHA256SUM0 50bff839281643fd32b2533ff19321ab6baba4fffa2bc9cdc48b5f9d855927ee
+%define SHA256SUM0 666a3fed195530a9699509575dd6f4b8ba3f56ca45279751540876350917f9ef
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
