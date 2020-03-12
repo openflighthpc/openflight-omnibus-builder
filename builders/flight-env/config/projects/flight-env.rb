@@ -31,7 +31,7 @@ friendly_name 'Flight Environment'
 
 install_dir '/opt/flight/opt/flight-env'
 
-build_version '1.3.1'
+build_version '1.3.2'
 build_iteration 1
 
 dependency 'preparation'
@@ -54,7 +54,7 @@ runtime_dependency 'flight-runway'
 %w(
   wget python-setuptools libuuid-devel zlib-devel uuid
   gcc-c++ sqlite-devel cmake openssl-devel git vim-common
-  ncurses-static
+  ncurses-static bzip2 gzip unzip
 ).each do |dep|
   runtime_dependency dep
 end
