@@ -1,5 +1,5 @@
 Name:           flight-starter
-Version:        2020.1.1
+Version:        2020.1.2
 Release:        1
 Summary:        Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
@@ -42,12 +42,17 @@ cp -R dist/* $RPM_BUILD_ROOT
 %config(noreplace) /opt/flight/etc/setup-sshkey.rc
 %config(noreplace) /opt/flight/etc/flight-config-map.yml
 /opt/flight/etc/profile.d/*
+/opt/flight/etc/setup.sh
+/opt/flight/etc/setup.csh
 /opt/flight/libexec/commands/*
 %dir /opt/flight/libexec/flight-starter/
 /opt/flight/libexec/flight-starter/*
 %exclude /opt/flight/libexec/flight-starter/banner
 
 %changelog
+* Thu Mar 12 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.1.2
+- Updated to 2020.1.2
+- Added sourceable setup scripts for use in job scripts
 * Mon Dec 16 2019 Stu Franks <stu.franks@openflighthpc.org> - 2020.1.1
 - Updated to 2020.1.1
 * Wed Dec 11 2019 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.1.0
