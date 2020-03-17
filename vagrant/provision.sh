@@ -31,6 +31,7 @@ if which yum &>/dev/null; then
   curl -sSL https://get.rvm.io | bash -s stable
   source /etc/profile.d/rvm.sh
   rvm install 2.7.0
+  gem install bundler:1.17.2
 
   # For libpcap compile (flight-metal)
   yum install -y -e0 flex
