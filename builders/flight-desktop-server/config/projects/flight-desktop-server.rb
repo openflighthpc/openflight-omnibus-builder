@@ -24,18 +24,17 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'template'
+name 'flight-desktop-server'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/template'
-friendly_name 'Flight Desktop'
+homepage 'https://github.com/openflighthpc/flight-desktop-server'
+friendly_name 'Flight Desktop Server'
 
-install_dir '/opt/flight/opt/template'
+install_dir '/opt/flight/opt/flight-desktop-server'
 
-build_version '1.1.0'
+build_version '0.1.2'
 build_iteration 1
 
 dependency 'preparation'
-dependency 'template'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
@@ -47,20 +46,8 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-runway'
-
-%w(
-  tigervnc-server-minimal xorg-x11-xauth
-).each do |dep|
-  runtime_dependency dep
-end
-
-%w(
-  opt/flight/libexec/commands/desktop
-  opt/flight/etc/banner/tips.d/20-desktop.rc
-).each do |f|
-  extra_package_file f
-end
+runtime_dependency 'flight-desktop'
+runtime_dependency 'flight-service-www'
 
 package :rpm do
   vendor 'Alces Flight Ltd'

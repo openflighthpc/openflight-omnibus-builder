@@ -24,12 +24,11 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'template'
-default_version '1.1.0'
+name 'flight-desktop-server'
+default_version '0.0.0'
 
 source git: 'https://github.com/openflighthpc/template'
 
-dependency 'flight-runway'
 whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
 license 'EPL-2.0'
@@ -54,3 +53,4 @@ build do
   ].join(' ')
   command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
 end
+
