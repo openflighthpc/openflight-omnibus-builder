@@ -39,7 +39,7 @@
 #
 # Uncomment this line to change the default base directory to "local"
 # -------------------------------------------------------------------
-base_dir '/home/vagrant/template/local'
+base_dir '/home/vagrant/flight-desktop-server/local'
 
 append_timestamp false
 #

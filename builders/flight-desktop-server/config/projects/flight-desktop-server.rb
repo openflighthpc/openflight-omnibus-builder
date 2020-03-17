@@ -37,6 +37,8 @@ build_iteration 1
 dependency 'preparation'
 dependency 'version-manifest'
 
+dependency 'flight-desktop-server'
+
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
@@ -46,6 +48,7 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
+runtime_dependency 'flight-runway'
 runtime_dependency 'flight-desktop'
 runtime_dependency 'flight-service-www'
 
