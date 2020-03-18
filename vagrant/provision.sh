@@ -44,5 +44,6 @@ elif which apt &>/dev/null; then
 fi
 
 mkdir /opt/flight
+usermod -a -G rvm vagrant
 chown vagrant /opt/flight
 hostname openflight-builder
