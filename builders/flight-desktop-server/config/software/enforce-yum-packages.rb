@@ -24,39 +24,37 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-desktop-server'
-default_version '0.1.2'
+name "enforce-yum-packages"
+default_version "0.0.0"
 
-source git: 'https://github.com/openflighthpc/flight-desktop-server'
+Dir.mktmpdir do |tmpdir|
+  source path: tmpdir
 
-whitelist_file Regexp.new("vendor/ruby/.*\.so$")
-
-dependency 'enforce-yum-packages'
-dependency 'enforce-flight-runway'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
-
-build do
-  env = with_standard_compiler_flags(with_embedded_path)
-
-  # Moves the project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'bin', 'etc', 'lib', 'libexec',
-    'LICENSE.txt', 'README.md'
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
-  end
-
-  # Installs the gems to the shared `vendor/share`
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
-
-  link 'config/flight-www-upstream.conf', '/opt/flight/etc/www/http.d/flight-desktop-server.conf'
-  link 'config/flight-www-location.conf', '/opt/flight/etc/www/server-http.d/flight-desktop-server.conf'
+  # Fixes bug where project_dir isn't created. This is likely due to the source
+  # being empty. It prevents any system commands from being ran
+  FileUtils.mkdir_p project_dir
 end
 
+build do
+  packages = ['gcc', 'make', 'ruby-devel', 'pam-devel']
+  command <<~CMD
+    status=0
+    missing=()
+    #{
+      packages.map do |p|
+        <<~SUBCMD
+          yum list installed #{p}
+          if [ $? -ne 0 ]; then
+            status=1
+            missing+=('#{p}')
+          fi
+        SUBCMD
+      end.join("\n")
+    }
+    if [ $status -ne 0 ]; then
+      echo Please run the following command to install required packages: >&2
+      echo yum install -y -e0 ${missing[@]} >&2
+    fi
+    exit $status
+  CMD
+end
