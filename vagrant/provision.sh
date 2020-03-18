@@ -45,4 +45,11 @@ fi
 
 mkdir /opt/flight
 chown vagrant /opt/flight
+
+# Install bundler:1.17.3 within the vagrant user's GEM_PATH
+# This will be picked up by omnibus during the build and removes the
+# build time dependency on flight-runway
+usermod -a -G rvm vagrant
+su vagrant -c 'gem install --user bundler:1.17.3'
+
 hostname openflight-builder
