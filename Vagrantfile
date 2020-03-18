@@ -40,6 +40,21 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.define "centos8", autostart: false do |build|
+    build.vm.box = 'bento/centos-8.1'
+    build.vm.provision "shell", path: "vagrant/provision.sh"
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
+    end
+  end
+
+  config.vm.define "centos8-test", autostart: false do |build|
+    build.vm.box = 'bento/centos-8.1'
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
+    end
+  end
+
   config.vm.define "ubuntu", autostart: false do |build|
     build.vm.box = 'ubuntu/bionic64'
     if File.directory?(code_path)
