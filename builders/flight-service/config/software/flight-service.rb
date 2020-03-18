@@ -29,7 +29,6 @@ default_version '0.1.2'
 
 source git: 'https://github.com/openflighthpc/flight-service'
 
-dependency 'flight-runway'
 whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
 license 'EPL-2.0'
@@ -52,7 +51,7 @@ build do
     "--without development test",
     '--path vendor'
   ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+  command "cd #{install_dir} && bundle install #{flags}", env: env
 
   block do
     require 'yaml'
