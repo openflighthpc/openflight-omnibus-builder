@@ -5,10 +5,10 @@ This project creates full-stack platform-specific packages for
 
 Installation
 ------------
-You must have a sane Ruby 2.0.0+ environment with Bundler installed. Ensure all
-the required gems are installed:
+You must use the ruby version specified within the .rvmrc to prevent deprecation errors. This version of ruby can be installed using `rvm use` within a interactive shell. The build must use the installed version of Bundler. Ensure all the required gems are installed:
 
 ```shell
+$ rvm use
 $ bundle install --binstubs
 ```
 
