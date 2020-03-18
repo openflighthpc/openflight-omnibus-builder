@@ -54,5 +54,8 @@ build do
     '--path vendor'
   ].join(' ')
   command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+
+  link 'config/flight-www-upstream.conf', '/opt/flight/etc/www/http.d/flight-desktop-server.conf'
+  link 'config/flight-www-location.conf', '/opt/flight/etc/www/server-http.d/flight-desktop-server.conf'
 end
 
