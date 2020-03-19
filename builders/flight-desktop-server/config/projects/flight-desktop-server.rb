@@ -52,6 +52,11 @@ runtime_dependency 'flight-runway'
 runtime_dependency 'flight-desktop'
 runtime_dependency 'flight-service-www'
 
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
+end
+
 package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends
