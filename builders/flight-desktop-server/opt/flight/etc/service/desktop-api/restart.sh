@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,36 +25,6 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-desktop-server'
-default_version '0.1.2'
 
-source git: 'https://github.com/openflighthpc/flight-desktop-server'
-
-whitelist_file Regexp.new("vendor/ruby/.*\.so$")
-
-dependency 'enforce-yum-packages'
-dependency 'enforce-flight-runway'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
-
-build do
-  env = with_standard_compiler_flags(with_embedded_path)
-
-  # Moves the project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app', 'libexec',
-    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'Rakefile'
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
-  end
-
-  # Installs the gems to the shared `vendor/share`
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
-end
+$flight_ROOT/opt/flight-desktop-server/bin/pumactl restart --pidfile $1
 
