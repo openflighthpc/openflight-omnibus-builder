@@ -37,6 +37,7 @@ log_file=$flight_ROOT/var/log/flight-desktop.log
 mkdir -p $(dirname $log_file)
 
 tool_bg bin/puma --bind unix://$var_dir/puma.sock \
+                 --environment production \
                  --redirect-stdout $log_file \
                  --redirect-stderr $log_file
 
