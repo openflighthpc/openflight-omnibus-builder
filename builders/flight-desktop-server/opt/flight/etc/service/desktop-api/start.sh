@@ -36,11 +36,18 @@ mkdir -p $var_dir
 log_file=$flight_ROOT/var/log/flight-desktop/puma.log
 mkdir -p $(dirname $log_file)
 
+pidfile=$(mktemp /tmp/puma.XXXXXXXX.pid)
+rm $pidfile
+
 tool_bg bin/puma --bind unix://$var_dir/puma.sock \
+                 --pidfile $pidfile \
                  --environment production \
                  --redirect-stdout $log_file \
                  --redirect-stderr $log_file \
                  --redirect-append
 
-pid=$!
+sleep 1
+pid=$(cat $pidfile)
+rm $pidfile
+
 tool_set pid=$pid
