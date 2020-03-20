@@ -1,7 +1,7 @@
-%GITHUB-PROJECT% Omnibus project
+flight-desktop-client Omnibus project
 ===========================
 This project creates full-stack platform-specific packages for
-`%GITHUB-PROJECT%`!
+`flight-desktop-client`!
 
 Installation
 ------------
@@ -19,7 +19,7 @@ Usage
 You create a platform-specific package using the `build project` command:
 
 ```shell
-$ bin/omnibus build %GITHUB-PROJECT%
+$ bin/omnibus build flight-desktop-client
 ```
 
 The platform/architecture type of the package created will match the platform
@@ -33,15 +33,15 @@ You can clean up all temporary files generated during the build process with
 the `clean` command:
 
 ```shell
-$ bin/omnibus clean %GITHUB-PROJECT%
+$ bin/omnibus clean flight-desktop-client
 ```
 
 Adding the `--purge` purge option removes __ALL__ files generated during the
-build including the project install directory (`/opt/%GITHUB-PROJECT%`) and
+build including the project install directory (`/opt/flight-desktop-client`) and
 the package cache directory (`/var/cache/omnibus/pkg`):
 
 ```shell
-$ bin/omnibus clean %GITHUB-PROJECT% --purge
+$ bin/omnibus clean flight-desktop-client --purge
 ```
 
 ### Publish
