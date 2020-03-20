@@ -28,4 +28,4 @@
 
 $flight_ROOT/opt/flight-desktop-server/bin/pumactl restart --pidfile $1
 
-tool_set pid=$1
+tool_set pid=$(cat $1)
