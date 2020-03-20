@@ -39,7 +39,8 @@ mkdir -p $(dirname $log_file)
 tool_bg bin/puma --bind unix://$var_dir/puma.sock \
                  --environment production \
                  --redirect-stdout $log_file \
-                 --redirect-stderr $log_file
+                 --redirect-stderr $log_file \
+                 --redirect-append
 
 pid=$!
 tool_set pid=$pid
