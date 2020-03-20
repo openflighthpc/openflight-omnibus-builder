@@ -31,8 +31,12 @@ friendly_name 'Flight Desktop Server'
 
 install_dir '/opt/flight/opt/flight-desktop-server'
 
-build_version '0.1.2'
+VERSION = '0.1.4'
+
+build_version VERSION
 build_iteration 1
+
+override 'flight-desktop-server', version: VERSION
 
 dependency 'preparation'
 dependency 'version-manifest'
