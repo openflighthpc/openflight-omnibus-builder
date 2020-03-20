@@ -33,7 +33,7 @@ cd $flight_ROOT/opt/flight-desktop-server
 var_dir=$flight_ROOT/var/flight-desktop-server
 mkdir -p $var_dir
 
-log_file=$flight_ROOT/var/log/flight-desktop.log
+log_file=$flight_ROOT/var/log/flight-desktop/puma.log
 mkdir -p $(dirname $log_file)
 
 tool_bg bin/puma --bind unix://$var_dir/puma.sock \
