@@ -1,0 +1,14 @@
+# Rotate Flight WWW logs
+/opt/flight/var/log/flight-desktop/*.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    delaycompress
+    notifempty
+    create 640 nobody adm
+    sharedscripts
+      postrotate
+      [ -f /opt/flight/var/run/desktop-api.pid ] && kill -USR1 `cat /opt/flight/var/run/desktop-api.pid`
+    endscript
+}
