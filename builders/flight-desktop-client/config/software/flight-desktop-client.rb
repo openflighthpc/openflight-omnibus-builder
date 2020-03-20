@@ -29,7 +29,6 @@ default_version "1.0.1"
 
 source git: 'https://github.com/openflighthpc/flight-desktop-client'
 
-dependency 'flight-desktop-server'
 # XXX Write this to ensure correct version of nodejs is installed and yarn
 # too.
 # dependency 'enforce-node-packages'

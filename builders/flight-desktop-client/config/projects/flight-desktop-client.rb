@@ -50,14 +50,12 @@ exclude '**/bundler/git'
 runtime_dependency 'flight-runway'
 
 %w(
-  tigervnc-server-minimal xorg-x11-xauth
+  flight-desktop-server
 ).each do |dep|
   runtime_dependency dep
 end
 
 %w(
-  opt/flight/libexec/commands/desktop
-  opt/flight/etc/banner/tips.d/20-desktop.rc
 ).each do |f|
   extra_package_file f
 end
