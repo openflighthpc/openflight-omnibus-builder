@@ -27,7 +27,7 @@
 name 'flight-desktop-client'
 maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/flight-desktop-client'
-friendly_name 'Flight Desktop'
+friendly_name 'Flight Desktop Client'
 
 install_dir '/opt/flight/opt/flight-desktop-client'
 
@@ -48,16 +48,11 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
+runtime_dependency 'flight-desktop-server'
 
-%w(
-  flight-desktop-server
-).each do |dep|
-  runtime_dependency dep
-end
-
-%w(
-).each do |f|
-  extra_package_file f
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
 end
 
 package :rpm do
