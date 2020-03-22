@@ -25,13 +25,9 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name "flight-desktop-client"
-default_version "1.0.1"
+default_version "1.0.2"
 
 source git: 'https://github.com/openflighthpc/flight-desktop-client'
-
-# XXX Write this to ensure correct version of nodejs is installed and yarn
-# too.
-# dependency 'enforce-node-packages'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
@@ -52,5 +48,6 @@ build do
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
-  command "cd #{install_dir} && /opt/flight/bin/yarn install", env: env
+  command "cd #{install_dir} && yarn install", env: env
+  command "cd #{install_dir} && yarn run build", env: env
 end

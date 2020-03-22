@@ -26,8 +26,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 cat <<EOF 1>&2
-cd /opt/flight/opt/flight-desktop-client
-yarn run build
+flight-desktop-client can be configured by editing /opt/flight/opt/flight-desktop-client/build/config.json.
 EOF
 
 exit 0
