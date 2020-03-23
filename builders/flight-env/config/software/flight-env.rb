@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-env'
-default_version '1.3.2'
+default_version '1.4.0-rc1'
 
 source git: 'https://github.com/openflighthpc/flight-env'
 

@@ -31,7 +31,7 @@ friendly_name 'Flight Environment'
 
 install_dir '/opt/flight/opt/flight-env'
 
-build_version '1.3.2'
+build_version '1.4.0-rc1'
 build_iteration 1
 
 dependency 'preparation'
@@ -49,14 +49,28 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
 
-# vim-common provides xxd a dependency required by Gridware
-# ncurses-static required by EasyBuild
-%w(
-  wget python-setuptools libuuid-devel zlib-devel uuid
-  gcc-c++ sqlite-devel cmake openssl-devel git vim-common
-  ncurses-static bzip2 gzip unzip
-).each do |dep|
-  runtime_dependency dep
+if ohai['platform_family'] == 'rhel'
+  # vim-common provides xxd a dependency required by Gridware
+  %w(
+    wget libuuid-devel zlib-devel uuid gcc-c++ sqlite-devel
+    cmake openssl-devel git vim-common bzip2 gzip unzip tar
+  ).each do |dep|
+    runtime_dependency dep
+  end
+
+  rhel_rel = ohai['platform_version'].split('.').first.to_i
+  if rhel_rel == 8
+    # lua-posix, lua-devel, python3 required by EasyBuild
+    runtime_dependency 'lua-posix'
+    runtime_dependency 'lua-devel'
+    runtime_dependency 'python3'
+  elsif rhel_rel == 7
+    # python-setuptools, ncurses-static required by EasyBuild
+    runtime_dependency 'python-setuptools'
+    runtime_dependency 'ncurses-static'
+  else
+    raise "Unable to determine platform_version: #{ohai['platform_version']}"
+  end
 end
 
 %w(
