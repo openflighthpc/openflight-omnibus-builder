@@ -24,8 +24,7 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+source 'https://rubygems.org'
 
-location ^~ /desktop/api/ {
-  proxy_pass http://desktop-api/;
-}
-
+gem 'omnibus', '~> 6.0'
+gem 'omnibus-software', github: 'chef/omnibus-software'

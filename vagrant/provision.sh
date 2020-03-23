@@ -37,6 +37,19 @@ if which yum &>/dev/null; then
   yum install -y -e0 flex
 
   yum install -y -e0 createrepo awscli
+
+  # Install nvm so that we can install nodejs so that we can build
+  # flight-desktop-client.
+  # nvm is intended to be installed per-user not globally.
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | sudo -u vagrant bash
+  sudo -i -u vagrant nvm install 12.16.1
+
+  # Install yarn.
+  curl --silent --show-error --location https://rpm.nodesource.com/setup_10.x | bash -
+  curl --silent --show-error --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo
+  rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg
+  yum install -y yarn
+
 elif which apt &>/dev/null; then
   apt -y install ruby ruby-dev libffi-dev gcc make autoconf fakeroot
 

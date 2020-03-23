@@ -24,8 +24,13 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name "flight-runway"
+default_version "0.0.0"
 
-location ^~ /desktop/api/ {
-  proxy_pass http://desktop-api/;
-}
+Dir.mktmpdir do |tmpdir|
+  source path: tmpdir
+end
 
+build do
+  raise "Flight Runway is not installed!" if ! File.exists?('/opt/flight/bin/flight')
+end

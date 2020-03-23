@@ -24,8 +24,30 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name "flight-desktop-client"
+default_version "1.0.3"
 
-location ^~ /desktop/api/ {
-  proxy_pass http://desktop-api/;
-}
+source git: 'https://github.com/openflighthpc/flight-desktop-client'
 
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
+
+Dir.mktmpdir do |tmpdir|
+  source path: tmpdir
+end
+
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
+
+  # Moves the project into place
+  [
+    'package.json', 'yarn.lock', 'public', 'src', '.env', '.nvmrc',
+    'LICENSE.txt', 'README.md'
+  ].each do |file|
+    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
+
+  command "cd #{install_dir} && yarn install", env: env
+  command "cd #{install_dir} && yarn run build", env: env
+end

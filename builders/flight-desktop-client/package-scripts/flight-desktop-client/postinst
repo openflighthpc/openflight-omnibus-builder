@@ -1,3 +1,4 @@
+#!/bin/sh
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
@@ -24,8 +25,8 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+cat <<EOF 1>&2
+flight-desktop-client can be configured by editing /opt/flight/opt/flight-desktop-client/build/config.json.
+EOF
 
-location ^~ /desktop/api/ {
-  proxy_pass http://desktop-api/;
-}
-
+exit 0
