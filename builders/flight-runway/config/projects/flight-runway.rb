@@ -53,7 +53,18 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 override :ruby, version: '2.6.1'
+override :rubygems, version: '3.0.8'
 override :bundler, version: '1.17.3'
+
+# This override is required to provide improved parity with the
+# version of `openssl` available in RHEL8 (1.1.1c at the time of
+# writing).
+if ohai['platform_family'] == 'rhel'
+  rhel_rel = ohai['platform_version'].split('.').first.to_i
+  if rhel_rel == 8
+    override :openssl, version: '1.1.1d'
+  end
+end
 
 %w(ruby irb gem bundle rake flight flexec flenable flactivate flintegrate flensure).each do |f|
   extra_package_file "/opt/flight/bin/#{f}"
