@@ -25,7 +25,15 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-cat <<EOF 1>&2
+if grep -q 'release 8' /etc/redhat-release; then
+  cat <<EOF 1>&2
+========================================
+Optional Dependencies for Flight Desktop
+========================================
+For screen capture support, please install 'xorg-x11-apps' and 'netpbm-progs'
+EOF
+else
+  cat <<EOF 1>&2
 ========================================
 Optional Dependencies for Flight Desktop
 ========================================
@@ -33,5 +41,6 @@ For better desktop session passwords, please install 'apg' (requires EPEL)
 For websocket support, please install 'python-websockify' (requires EPEL)
 For screen capture support, please install 'xorg-x11-apps' and 'netpbm-progs'
 EOF
+fi
 
 exit 0
