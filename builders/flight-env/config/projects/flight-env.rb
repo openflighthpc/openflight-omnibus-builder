@@ -31,7 +31,7 @@ friendly_name 'Flight Environment'
 
 install_dir '/opt/flight/opt/flight-env'
 
-build_version '1.4.0-rc1'
+build_version '1.4.0-rc2'
 build_iteration 1
 
 dependency 'preparation'
@@ -70,6 +70,15 @@ if ohai['platform_family'] == 'rhel'
     runtime_dependency 'ncurses-static'
   else
     raise "Unable to determine platform_version: #{ohai['platform_version']}"
+  end
+elsif ohai['platform_family'] == 'debian'
+  # ohai['platform_version'] => '18.04'
+  %w(
+    wget uuid-dev zlib1g-dev uuid g++ libsqlite3-dev
+    cmake libssl-dev git vim-common bzip2 gzip unzip tar
+    python3 python3-setuptools pkg-config
+  ).each do |dep|
+    runtime_dependency dep
   end
 end
 

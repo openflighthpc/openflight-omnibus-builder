@@ -64,6 +64,8 @@ if ohai['platform_family'] == 'rhel'
   if rhel_rel == 8
     override :openssl, version: '1.1.1d'
   end
+elsif ohai['platform_family'] == 'debian'
+  override :openssl, version: '1.1.1d'
 end
 
 %w(ruby irb gem bundle rake flight flexec flenable flactivate flintegrate flensure).each do |f|
