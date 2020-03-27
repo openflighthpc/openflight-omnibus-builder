@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop Server'
 
 install_dir '/opt/flight/opt/flight-desktop-server'
 
-VERSION = '0.2.0'
+VERSION = '0.2.1'
 
 build_version VERSION
 build_iteration 1
