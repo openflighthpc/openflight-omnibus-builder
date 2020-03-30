@@ -46,6 +46,7 @@ description 'Manage interactive GUI desktop sessions'
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
+exclude 'node_modules'
 
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-desktop-server'

@@ -40,9 +40,15 @@ end
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
-  # Moves the project into place
+  # These are only needed to build the software.  We don't want them in the
+  # RPM.
+  build_only = %w( package.json yarn.lock public src .env .nvmrc)
+
+  build_only.each do |file|
+    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
+
   [
-    'package.json', 'yarn.lock', 'public', 'src', '.env', '.nvmrc',
     'LICENSE.txt', 'README.md'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
@@ -50,4 +56,8 @@ build do
 
   command "cd #{install_dir} && yarn install", env: env
   command "cd #{install_dir} && yarn run build", env: env
+
+  build_only.each do |file|
+    delete File.expand_path("#{install_dir}/#{file}")
+  end
 end
