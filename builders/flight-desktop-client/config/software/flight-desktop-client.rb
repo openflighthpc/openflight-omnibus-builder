@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name "flight-desktop-client"
-default_version "1.0.3"
+default_version "1.0.4"
 
 source git: 'https://github.com/openflighthpc/flight-desktop-client'
 
