@@ -39,8 +39,8 @@ mkdir -p $(dirname $log_file)
 pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
 rm $pidfile
 
-socket=unix://$var_dir/puma.sock
-tool_bg bin/puma --bind $socket?umask=0177 \
+addr=tcp://127.0.0.1:6305
+tool_bg bin/puma --bind $addr \
                  --pidfile $pidfile \
                  --environment production \
                  --redirect-stdout $log_file \
@@ -51,7 +51,7 @@ tool_bg bin/puma --bind $socket?umask=0177 \
 pid=''
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$(ps -ax | grep $socket | grep "\spuma\s" | awk '{ print $1 }')
+  pid=$(ps -ax | grep $addr | grep "\spuma\s" | awk '{ print $1 }')
   if [ -n "$pid" ]; then
     break
   fi
