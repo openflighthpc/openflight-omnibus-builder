@@ -39,7 +39,7 @@ mkdir -p $(dirname $log_file)
 pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
 rm $pidfile
 
-addr=tcp://127.0.0.1:6305
+addr=tcp://127.0.0.1:915
 tool_bg bin/puma --bind $addr \
                  --pidfile $pidfile \
                  --environment production \

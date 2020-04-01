@@ -44,7 +44,7 @@ CLI_VERSION = Net::HTTP.get_response(
 MAX_CLI_VERSION = "#{CLI_VERSION.split.first.to_i + 1}.0.0"
 
 build_version VERSION
-build_iteration 0
+build_iteration 1
 
 override 'flight-desktop-server', version: VERSION
 
