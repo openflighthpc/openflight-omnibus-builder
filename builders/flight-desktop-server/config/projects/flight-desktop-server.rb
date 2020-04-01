@@ -24,14 +24,24 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+GIT_REPO = 'openflighthpc/flight-desktop-server'
+
 name 'flight-desktop-server'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-desktop-server'
+homepage "https://github.com/#{GIT_REPO}"
 friendly_name 'Flight Desktop Server'
 
 install_dir '/opt/flight/opt/flight-desktop-server'
 
+# Sets the version numbering
+require 'net/http'
 VERSION = '0.3.0'
+CLI_VERSION = Net::HTTP.get_response(
+  URI.parse("https://raw.githubusercontent.com/#{GIT_REPO}/#{VERSION}/.cli-version")
+).tap { |r| raise 'Failed to get cli version' unless r.code == '200' }
+ .body
+ .chomp
+MAX_CLI_VERSION = "#{CLI_VERSION.split.first.to_i + 1}.0.0"
 
 build_version VERSION
 build_iteration 2
@@ -52,8 +62,9 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-runway'
-runtime_dependency 'flight-desktop'
+runtime_dependency "flight-runway"
+# NOTE: This syntax matches the RPM version syntax and may need tweaking for other distros
+runtime_dependency "flight-desktop >= #{CLI_VERSION}, flight-desktop < #{MAX_CLI_VERSION}"
 runtime_dependency 'flight-service-www'
 
 require 'find'

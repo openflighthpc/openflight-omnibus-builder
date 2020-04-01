@@ -36,18 +36,17 @@ mkdir -p $var_dir
 log_file=$flight_ROOT/var/log/flight-desktop/puma.log
 mkdir -p $(dirname $log_file)
 
-pidfile=$(mktemp /tmp/puma.XXXXXXXX.pid)
+pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
 rm $pidfile
 
-tool_bg bin/puma --bind unix://$var_dir/puma.sock \
+socket=unix://$var_dir/puma.sock
+tool_bg bin/puma --bind $socket \
                  --pidfile $pidfile \
                  --environment production \
                  --redirect-stdout $log_file \
                  --redirect-stderr $log_file \
                  --redirect-append
 
-sleep 1
-pid=$(cat $pidfile)
-rm $pidfile
+# Give a moment for puma to start and grep for the PID
+tool_set pid=$(ps -ax | grep $socket | grep "\spuma\s" | awk '{ print $1 }')
 
-tool_set pid=$pid
