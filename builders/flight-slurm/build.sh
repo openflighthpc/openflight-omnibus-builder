@@ -25,7 +25,7 @@ VERSION=$1
 case $VERSION in
   17.11)
     TAG="slurm-17-11-13-2-flight1"
-    REL="slurm-17.11.13.flight1"
+    REL="slurm-17.11.13-2.flight1"
     libssh2=true
     ;;
   18.08)
