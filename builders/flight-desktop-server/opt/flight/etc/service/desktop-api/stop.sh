@@ -26,9 +26,6 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-# Remove the deletable pid files
-ls /tmp/flight-deletable\.*\.pid | xargs -e rm
-
 # Stop puma
 $flight_ROOT/opt/flight-desktop-server/bin/pumactl stop  --pidfile $1
 

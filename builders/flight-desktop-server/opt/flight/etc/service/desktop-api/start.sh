@@ -47,6 +47,21 @@ tool_bg bin/puma --bind $socket \
                  --redirect-stderr $log_file \
                  --redirect-append
 
-# Give a moment for puma to start and grep for the PID
-tool_set pid=$(ps -ax | grep $socket | grep "\spuma\s" | awk '{ print $1 }')
+# Wait up to 10ish seconds for puma to start
+pid=''
+for _ in `seq 1 20`; do
+  sleep 0.5
+  pid=$(ps -ax | grep $socket | grep "\spuma\s" | awk '{ print $1 }')
+  if [ -n "$pid" ]; then
+    break
+  fi
+done
+
+# Report back the pid or error
+if [ -n "$pid" ]; then
+  tool_set pid=$pid
+else
+  echo Failed to start desktop-api >&2
+  exit 1
+fi
 
