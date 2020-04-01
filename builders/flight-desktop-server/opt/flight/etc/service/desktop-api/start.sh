@@ -40,7 +40,7 @@ pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
 rm $pidfile
 
 socket=unix://$var_dir/puma.sock
-tool_bg bin/puma --bind $socket \
+tool_bg bin/puma --bind $socket?umask=0177 \
                  --pidfile $pidfile \
                  --environment production \
                  --redirect-stdout $log_file \
