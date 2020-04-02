@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/flight-desktop'
 
-build_version '1.3.0-rc2'
+build_version '1.3.0-rc3'
 build_iteration 1
 
 dependency 'preparation'
@@ -49,10 +49,12 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
 
-%w(
-  tigervnc-server-minimal xorg-x11-xauth
-).each do |dep|
-  runtime_dependency dep
+if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'tigervnc-server-minimal'
+  runtime_dependency 'xorg-x11-xauth'
+elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'tigervnc-standalone-server'
+  runtime_dependency 'xauth'
 end
 
 %w(
@@ -62,8 +64,25 @@ end
   extra_package_file f
 end
 
-package :rpm do
-  vendor 'Alces Flight Ltd'
-  # repurposed 'priority' field to set RPM recommends
-  #priority 'apg python-websockify xorg-x11-apps netpbm-progs'
+if ohai['platform_family'] == 'rhel'
+  rhel_rel = ohai['platform_version'].split('.').first.to_i
+  if rhel_rel == 8
+    package :rpm do
+      vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends
+      # neither 'apg' or 'python-websockify' are available on RHEL8
+      # note: xorg-x11-apps is only available in PowerTools
+      priority 'xorg-x11-apps netpbm-progs'
+    end
+  else
+    package :rpm do
+      vendor 'Alces Flight Ltd'
+    end
+  end
+elsif ohai['platform_family'] == 'debian'
+  package :deb do
+    vendor 'Alces Flight Ltd'
+    # repurposed 'section' field to set DEB suggests
+    section ':netpbm x11-apps apg websockify'
+  end
 end
