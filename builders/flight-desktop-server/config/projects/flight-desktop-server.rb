@@ -35,7 +35,7 @@ install_dir '/opt/flight/opt/flight-desktop-server'
 
 # Sets the version numbering
 require 'net/http'
-VERSION = '0.3.0'
+VERSION = '0.3.1'
 CLI_VERSION = Net::HTTP.get_response(
   URI.parse("https://raw.githubusercontent.com/#{GIT_REPO}/#{VERSION}/.cli-version")
 ).tap { |r| raise 'Failed to get cli version' unless r.code == '200' }
@@ -44,7 +44,7 @@ CLI_VERSION = Net::HTTP.get_response(
 MAX_CLI_VERSION = "#{CLI_VERSION.split.first.to_i + 1}.0.0"
 
 build_version VERSION
-build_iteration 1
+build_iteration 0
 
 override 'flight-desktop-server', version: VERSION
 
