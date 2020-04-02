@@ -49,6 +49,7 @@ fi
 RPM="$1"
 SOURCE_DIR=$(mktemp -d /tmp/publish-rpm.XXXXXX)
 ARCH="$(rpm -qip $RPM |grep '^Architecture' |awk '{print $2}')"
+DIST="$(rpm -qip $RPM |grep '^Release' |awk '{print $3}' |sed 's/.*\.el//g')" # e.g. 7 or 8
 cp $RPM $SOURCE_DIR
-$SCRIPT_DIR/publish-rpms.sh -s "$SOURCE_DIR" -t "repo.openflighthpc.org/openflight-dev/centos/7" -a "$ARCH"
+$SCRIPT_DIR/publish-rpms.sh -s "$SOURCE_DIR" -t "repo.openflighthpc.org/openflight-dev/centos" -d $DIST -a "$ARCH"
 rm -rf $SOURCE_DIR

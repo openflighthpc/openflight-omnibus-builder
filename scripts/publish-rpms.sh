@@ -42,11 +42,12 @@ do
   fi
 done
 
-while getopts "s:t:a:" opt; do
+while getopts "s:t:a:d:" opt; do
   case $opt in
     s) SOURCE_DIR=$OPTARG ;;
     t) TARGET_PREFIX=$OPTARG ;;
     a) ARCH=$OPTARG ;;
+    d) DIST=$OPTARG ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       exit 1
@@ -64,7 +65,30 @@ if [ -z "${TARGET_PREFIX}" ]; then
   exit 1
 fi
 
-TARGET_DIR="/tmp/${TARGET_PREFIX}"
+# distribution targets
+DIST_TARGETS="7 8"
+
+if [[ "$DIST_TARGETS" != *"$DIST"* ]] ; then
+    # Prompt for user input of target distribution
+    echo "Unknown distribution: $DIST"
+    echo "Distribution of this system: $(rpm --eval '%{centos_ver}')"
+    echo "Distribution should be one of: $DIST_TARGETS"
+    echo "This is expected for noarch RPMs which don't include distribution in release tag"
+    echo
+    read -p "Which distribution target to use? ($DIST_TARGETS) " dist
+    if [[ "$DIST_TARGETS" != *"$dist"* ]] ; then
+        echo "$dist is invalid, exiting..."
+        exit 1
+    elif [[ "$dist" == "" ]] ; then
+        echo "No answer provided, exiting..."
+        exit 1
+    else
+        DIST=$dist
+    fi
+fi
+
+TARGET_DIR="/tmp/${TARGET_PREFIX}/${DIST}"
+TARGET_PREFIX="${TARGET_PREFIX}/${DIST}"
 
 # make sure we're operating on the latest data in the target bucket
 mkdir -p $TARGET_DIR
