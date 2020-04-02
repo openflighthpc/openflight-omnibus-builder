@@ -2,14 +2,14 @@
 REPO="https://github.com/openflighthpc/slurm"
 TARGET="$(cd "$(dirname "$0")" && pwd)/pkg"
 
-if [ "$1" == "--distro" ]; then
-  distro=true
+if [ "$1" == "--non-flight" ]; then
+  nonflight=true
   shift
 fi
 
 if [ -z "$1" ]; then
   cat <<EOF
-Usage: $0 [--distro] <version|'latest'>
+Usage: $0 [--non-flight] <version|'latest'>
 
 Specify <version> to build:
 
@@ -47,7 +47,7 @@ case $VERSION in
   ;;
 esac
 
-if [ -z "$distro" ]; then
+if [ -z "$nonflight" ]; then
   TAG="flight-${TAG}"
   REL="flight-${REL}"
 fi
@@ -116,7 +116,7 @@ tar --exclude='.git' -cjSf $REL.tar.bz2 $REL
 mkdir -p "$TARGET"
 
 # Build RPMs
-if [ -z "$distro" ]; then
+if [ -z "$nonflight" ]; then
   rpmbuild --define '_prefix /opt/flight/opt/slurm' \
            --define '_slurm_sysconfdir %{_prefix}/etc' \
            --define '_defaultdocdir %{_prefix}/doc' \
