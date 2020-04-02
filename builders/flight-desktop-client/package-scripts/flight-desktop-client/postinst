@@ -26,7 +26,10 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 cat <<EOF 1>&2
-flight-desktop-client can be configured by editing /opt/flight/opt/flight-desktop-client/build/config.json.
+flight-desktop-client should now be configured by running 
+
+  /opt/flight/bin/flight service configure desktop-client
+
 EOF
 
 exit 0
