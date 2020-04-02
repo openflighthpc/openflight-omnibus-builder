@@ -34,11 +34,12 @@ fi
 DEPENDENCIES=("aws" "createrepo")
 REGION="eu-west-1"
 
-while getopts "s:t:r:" opt; do
+while getopts "s:t:r:d:" opt; do
   case $opt in
     r) RPM_MATCH=$OPTARG ;;
     s) SOURCE_PREFIX=$OPTARG ;;
     t) TARGET_PREFIX=$OPTARG ;;
+    d) DIST=$OPTARG ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
       exit 1
@@ -68,6 +69,18 @@ if [ -z "${TARGET_PREFIX}" ]; then
   echo "Target bucket prefix must be specified."
   exit 1
 fi
+
+# distribution targets
+DIST_TARGETS="7 8"
+
+if [[ "$DIST_TARGETS" != *"$DIST"* ]] ; then
+    echo "Unknown distribution: $DIST"
+    echo "Distribution should be one of: $DIST_TARGETS"
+    exit 1
+fi
+
+SOURCE_PREFIX="${SOURCE_PREFIX}/$DIST"
+TARGET_PREFIX="${TARGET_PREFIX}/$DIST"
 
 SOURCE_DIR="/tmp/${SOURCE_PREFIX}"
 TARGET_DIR="/tmp/${TARGET_PREFIX}"

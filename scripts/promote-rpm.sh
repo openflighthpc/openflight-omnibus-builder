@@ -34,8 +34,13 @@ fi
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 if [ -z "$1" ]; then
-  echo "Usage: $0 <rpm pattern>"
+  echo "Usage: $0 <rpm pattern> <distribution>"
   exit 1
+fi
+
+if [ -z "$2" ] ; then
+    echo "Usage: $0 <rpm pattern> <distribution>"
+    exit 1
 fi
 
 if ! aws s3 ls &>/dev/null; then
@@ -44,6 +49,8 @@ if ! aws s3 ls &>/dev/null; then
 fi
 
 RPM_PATTERN="$1"
-$SCRIPT_DIR/promote-rpms.sh -s "repo.openflighthpc.org/openflight-dev/centos/7" \
-                            -t "repo.openflighthpc.org/openflight/centos/7" \
-                            -r "$RPM_PATTERN"
+DIST="$2"
+$SCRIPT_DIR/promote-rpms.sh -s "repo.openflighthpc.org/openflight-dev/centos" \
+                            -t "repo.openflighthpc.org/openflight/centos" \
+                            -r "$RPM_PATTERN" \
+                            -d "$DIST"
