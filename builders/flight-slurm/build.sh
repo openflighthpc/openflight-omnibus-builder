@@ -111,6 +111,14 @@ fi
 
 # Create tarball
 git clone $REPO --branch $TAG --depth 1 --single-branch $REL
+
+if [[ $distro == 'rhel8' ]] ; then
+    ## Fix dlopen bug/error as explained here https://bugs.schedmd.com/show_bug.cgi?id=2443
+    sed -i '1i%global _hardened_ldflags "-Wl,-z,lazy"' $REL/slurm.spec
+    sed -i '1i%global _hardened_cflags "-Wl,-z,lazy"' $REL/slurm.spec
+    sed -i '1i%undefine _hardened_build' $REL/slurm.spec
+fi
+
 tar --exclude='.git' -cjSf $REL.tar.bz2 $REL
 
 mkdir -p "$TARGET"
