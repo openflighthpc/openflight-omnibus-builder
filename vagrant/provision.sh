@@ -61,6 +61,8 @@ EOF
 
 if [ "$1" != "test" ]; then
   if which yum &>/dev/null; then
+    CENTOS_VERS=$(rpm --eval '%{centos_ver}')
+
     yum install -y -e0 git rpm-build cmake
     gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
     curl -sSL https://get.rvm.io | bash -s stable
@@ -72,7 +74,14 @@ if [ "$1" != "test" ]; then
     # For libpcap compile (flight-metal)
     yum install -y -e0 flex
 
-    yum install -y -e0 createrepo awscli
+    yum install -y -e0 createrepo
+
+    if [[ $CENTOS_VER == 8 ]] ; then
+      yum install python3-pip
+      pip3 install awscli --upgrade --user
+    else
+      yum install -y -e0 awscli
+    fi
 
     # Install nvm so that we can install nodejs so that we can build
     # flight-desktop-client.
