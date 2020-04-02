@@ -38,8 +38,8 @@ case $VERSION in
     REL="slurm-19.05.6.flight2"
     ;;
   20.02|latest)
-    TAG="slurm-20-02-1-1-flight1"
-    REL="slurm-20.02.1.flight1"
+    TAG="slurm-20-02-1-1-flight2"
+    REL="slurm-20.02.1.flight2"
     ;;
   *)
     echo "$0: unrecognized Slurm version: $VERSION"
