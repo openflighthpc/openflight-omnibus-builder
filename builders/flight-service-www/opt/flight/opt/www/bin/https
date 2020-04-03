@@ -80,8 +80,8 @@ disable_https() {
 
 usage() {
     local prog
-    prog=$(basename "$0")
-    echo "Usage: ${prog} enable|disable"
+    prog="flight www"
+    echo "Usage: ${prog} enable-https|disable-https"
     echo "Enable or disable HTTPs support for the flight www service."
 }
 
@@ -89,12 +89,12 @@ main() {
     assert_user_is_root
 
     case "$1" in
-        enable)
+        enable-https)
             shift
             enable_https "${@}"
             ;;
 
-        disable)
+        disable-https)
             shift
             disable_https "${@}"
             ;;
