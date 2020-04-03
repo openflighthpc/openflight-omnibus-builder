@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+CERT_DIR="/root/flight/www/certs"
+
 assert_user_is_root() {
     if [[ "$( id -u )" != "0" ]] ; then
         echo "Must be root to run this script" >&2
@@ -17,36 +19,44 @@ format() {
     fi
 }
 
+create_private_key() {
+    if [ -f "${CERT_DIR}"/cert.csr -a -f "${CERT_DIR}"/privkey.pem ] ; then
+        echo "Using existing private key."
+    else
+        format "To enable HTTPs SSL certificates need to be generated.  We will" \
+            "step you through generating self-signed certificates that are" \
+            "valid for 1 year.\n"
+        format "You will be asked to enter a passphrase and to provide details" \
+            "about your organization.\n"
+        format "When you are ready press enter to continue or Ctrl-C to abort.\n"
+
+        read -s
+
+        mkdir -p "${CERT_DIR}"
+        openssl req -new > "${CERT_DIR}"/cert.csr
+    fi
+}
+
 create_certs() {
-    format "To enable HTTPs SSL certificates need to be generated.  We will" \
-        "step you through generating self-signed certificates that are" \
-        "valid for 1 year.\n"
-    format "You will be asked to enter a passphrase and to provide details" \
-        "about your organization.\n"
-    format "When you are ready press enter to continue or Ctrl-C to abort.\n"
-
-    read -s
-
-    mkdir -p /root/flight/www/certs
-    cd /root/flight/www/certs
-    openssl req -new > cert.csr
-
     format "\nWe will now generate a public key.  You will be asked to enter" \
         "the passphrase you provided earlier.\n"
     format "When you are ready press enter to continue or Ctrl-C to abort.\n"
     read -s
 
-    openssl rsa -in privkey.pem -out key.pem
-    openssl x509 -in cert.csr -out cert.pem -req -signkey key.pem -days 365
-    cat key.pem >> cert.pem
-    cd - 1>/dev/null
+    openssl rsa -in "${CERT_DIR}"/privkey.pem -out "${CERT_DIR}"/key.pem
+    openssl x509 -in "${CERT_DIR}"/cert.csr \
+        -out "${CERT_DIR}"/cert.pem \
+        -req \
+        -signkey "${CERT_DIR}"/key.pem \
+        -days 365
+    cat "${CERT_DIR}"/key.pem >> "${CERT_DIR}"/cert.pem
 }
 
 
 install_certs() {
     mkdir -p "${flight_ROOT}"/etc/www/ssl
-    cp /root/flight/www/certs/cert.pem "${flight_ROOT}"/etc/www/ssl/fullchain.pem
-    cp /root/flight/www/certs/key.pem "${flight_ROOT}"/etc/www/ssl/key.pem
+    cp "${CERT_DIR}"/cert.pem "${flight_ROOT}"/etc/www/ssl/fullchain.pem
+    cp "${CERT_DIR}"/key.pem "${flight_ROOT}"/etc/www/ssl/key.pem
 }
 
 reload_www_service() {
@@ -56,6 +66,7 @@ reload_www_service() {
 }
 
 enable_https() {
+    create_private_key
     create_certs
     install_certs
     mv "${flight_ROOT}"/etc/www/http.d/https.conf{.disabled,}
