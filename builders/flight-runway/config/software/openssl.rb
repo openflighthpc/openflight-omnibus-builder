@@ -27,7 +27,7 @@ default_version "1.0.2u"
 
 # OpenSSL source ships with broken symlinks which windows doesn't allow.
 # Skip error checking.
-source url: "https://www.openssl.org/source/openssl-#{version}.tar.gz", extract: :lax_tar
+source url: "https://www.openssl.org/source/old/#{version[0..-2]}/openssl-#{version}.tar.gz", extract: :lax_tar
 
 version("1.1.1d") { source sha256: "1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2" }
 version("1.1.0i") { source sha256: "ebbfc844a8c8cc0ea5dc10b86c9ce97f401837f3fa08c17b2cdadc118253cf99" }
