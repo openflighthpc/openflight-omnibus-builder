@@ -25,16 +25,18 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 Vagrant.configure("2") do |config|
-  config.vm.box = "bento/centos-7.6"
   code_path = ENV['FLIGHT_CODE'] || "#{ENV['HOME']}/code"
 
-  config.vm.define "default", primary: true do |build|
+  config.vm.define "centos7", primary: true do |build|
+    config.vm.box = "bento/centos-7.6"
     build.vm.provision "shell", path: "vagrant/provision.sh"
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
   end
-  config.vm.define "test", autostart: false do |build|
+
+  config.vm.define "centos7-test", autostart: false do |build|
+    config.vm.box = "bento/centos-7.6"
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
@@ -55,17 +57,45 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.define "ubuntu", autostart: false do |build|
+  config.vm.define "ubuntu1804", autostart: false do |build|
+    build.vm.box = 'ubuntu/bionic64'
+    build.vm.provision "shell", path: "vagrant/provision.sh"
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
+    end
+  end
+
+  config.vm.define "ubuntu1804-test", autostart: false do |build|
     build.vm.box = 'ubuntu/bionic64'
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
   end
 
-  config.vm.define "ubuntu-test", autostart: false do |build|
-    build.vm.box = 'ubuntu/bionic64'
-    if File.directory?(code_path)
-      build.vm.synced_folder code_path, "/code"
+  config.vm.define "ubuntu2004", autostart: false do |build|
+    build.vm.box = 'ubuntu/focal64'
+    build.vm.provision "shell", path: "vagrant/provision.sh"
+    if File.exist?('.vagrant/machines/ubuntu2002/virtualbox/action_provision')
+      if File.directory?(code_path)
+        build.vm.synced_folder code_path, "/code"
+      end
+    else
+      config.vm.synced_folder ".", "/vagrant", disabled: true
+    end
+  end
+
+  config.vm.define "ubuntu2004-test", autostart: false do |build|
+    build.vm.box = 'ubuntu/focal64'
+    build.vm.provision "shell" do |s|
+      s.path = "vagrant/provision.sh"
+      s.args = ["test"]
+    end
+    if File.exist?('.vagrant/machines/ubuntu2002-test/virtualbox/action_provision')
+      if File.directory?(code_path)
+        build.vm.synced_folder code_path, "/code"
+      end
+    else
+      config.vm.synced_folder ".", "/vagrant", disabled: true
     end
   end
 end
