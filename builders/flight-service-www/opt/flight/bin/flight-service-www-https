@@ -1,0 +1,106 @@
+#!/bin/bash
+set -e
+
+assert_user_is_root() {
+    if [[ "$( id -u )" != "0" ]] ; then
+        echo "Must be root to run this script" >&2
+        exit 1
+    fi
+}
+
+format() {
+    local columns=${COLUMNS:-`tput cols 2>&-||echo 80`}
+    if [ type fmt 1>/dev/null 2>/dev/null ] ; then
+        echo -e "$@" | fmt -w ${columns}
+    else
+        echo -e "$@"
+    fi
+}
+
+create_certs() {
+    format "To enable HTTPs SSL certificates need to be generated.  We will" \
+        "step you through generating self-signed certificates that are" \
+        "valid for 1 year.\n"
+    format "You will be asked to enter a passphrase and to provide details" \
+        "about your organization.\n"
+    format "When you are ready press enter to continue or Ctrl-C to abort.\n"
+
+    read -s
+
+    mkdir -p /root/flight/www/certs
+    cd /root/flight/www/certs
+    openssl req -new > cert.csr
+
+    format "\nWe will now generate a public key.  You will be asked to enter" \
+        "the passphrase you provided earlier.\n"
+    format "When you are ready press enter to continue or Ctrl-C to abort.\n"
+    read -s
+
+    openssl rsa -in privkey.pem -out key.pem
+    openssl x509 -in cert.csr -out cert.pem -req -signkey key.pem -days 365
+    cat key.pem >> cert.pem
+    cd - 1>/dev/null
+}
+
+
+install_certs() {
+    mkdir -p "${flight_ROOT}"/etc/www/ssl
+    cp /root/flight/www/certs/cert.pem "${flight_ROOT}"/etc/www/ssl/fullchain.pem
+    cp /root/flight/www/certs/key.pem "${flight_ROOT}"/etc/www/ssl/key.pem
+}
+
+reload_www_service() {
+    "${flight_ROOT}"/bin/flight service stop www || true
+    sleep 1
+    "${flight_ROOT}"/bin/flight service start www || true
+}
+
+enable_https() {
+    create_certs
+    install_certs
+    mv "${flight_ROOT}"/etc/www/http.d/https.conf{.disabled,}
+    reload_www_service
+}
+
+disable_https() {
+    mv "${flight_ROOT}"/etc/www/http.d/https.conf{,.disabled}
+    reload_www_service
+}
+
+usage() {
+    local prog
+    prog=$(basename "$0")
+    echo "Usage: ${prog} enable|disable"
+    echo "Enable or disable HTTPs support for the flight www service."
+}
+
+main() {
+    assert_user_is_root
+
+    case "$1" in
+        enable)
+            shift
+            enable_https "${@}"
+            ;;
+
+        disable)
+            shift
+            disable_https "${@}"
+            ;;
+
+        --help | help)
+            usage
+            exit 0
+            ;;
+
+        *)
+            usage
+            exit 2
+            ;;
+    esac
+}
+
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
