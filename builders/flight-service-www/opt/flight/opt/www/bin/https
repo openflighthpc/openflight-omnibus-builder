@@ -48,7 +48,7 @@ create_certs() {
         -out "${CERT_DIR}"/cert.pem \
         -req \
         -signkey "${CERT_DIR}"/key.pem \
-        -days 365
+        -days 3650
     cat "${CERT_DIR}"/key.pem >> "${CERT_DIR}"/cert.pem
 }
 
