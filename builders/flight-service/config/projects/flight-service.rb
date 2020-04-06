@@ -32,7 +32,7 @@ friendly_name 'Manage HPC environment services'
 install_dir '/opt/flight/opt/service'
 
 build_version '1.0.0'
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-service'
