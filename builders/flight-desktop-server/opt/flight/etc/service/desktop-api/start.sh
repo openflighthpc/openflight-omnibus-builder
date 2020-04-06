@@ -28,23 +28,22 @@
 
 set -e
 
-cd $flight_ROOT/opt/flight-desktop-server
+var_dir="${flight_ROOT}"/var/flight-desktop-server
+mkdir -p "${var_dir}"
 
-var_dir=$flight_ROOT/var/flight-desktop-server
-mkdir -p $var_dir
-
-log_file=$flight_ROOT/var/log/flight-desktop/puma.log
-mkdir -p $(dirname $log_file)
+log_file="${flight_ROOT}"/var/log/flight-desktop/puma.log
+mkdir -p $(dirname "${log_file}")
 
 pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
-rm $pidfile
+rm "${pidfile}"
 
+PATH="${flight_ROOT}/bin/:${PATH}"
 addr=tcp://127.0.0.1:915
-tool_bg bin/puma --bind $addr \
+tool_bg "${flight_ROOT}"/opt/flight-desktop-server/bin/puma --bind $addr \
                  --pidfile $pidfile \
                  --environment production \
-                 --redirect-stdout $log_file \
-                 --redirect-stderr $log_file \
+                 --redirect-stdout "${log_file}" \
+                 --redirect-stderr "${log_file}" \
                  --redirect-append
 
 # Wait up to 10ish seconds for puma to start
@@ -64,4 +63,3 @@ else
   echo Failed to start desktop-api >&2
   exit 1
 fi
-

@@ -27,6 +27,5 @@
 #===============================================================================
 
 # Stop puma
-$flight_ROOT/opt/flight-desktop-server/bin/pumactl stop  --pidfile $1
-
-
+PATH="${flight_ROOT}/bin/:${PATH}"
+"${flight_ROOT}"/opt/flight-desktop-server/bin/pumactl stop  --pidfile $1

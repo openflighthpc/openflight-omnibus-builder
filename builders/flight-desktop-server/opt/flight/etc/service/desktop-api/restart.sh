@@ -26,6 +26,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-$flight_ROOT/opt/flight-desktop-server/bin/pumactl restart --pidfile $1
+PATH="${flight_ROOT}/bin/:${PATH}"
+"${flight_ROOT}"/opt/flight-desktop-server/bin/pumactl restart --pidfile $1
 
 tool_set pid=$(cat $1)
