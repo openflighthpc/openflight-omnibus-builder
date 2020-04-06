@@ -49,6 +49,7 @@ exclude '**/bundler/git'
 exclude 'node_modules'
 
 runtime_dependency 'flight-service => 1.0.0'
+runtime_dependency 'flight-service-www'
 
 require 'find'
 Find.find('opt') do |o|
