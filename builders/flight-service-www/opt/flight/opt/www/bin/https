@@ -25,7 +25,7 @@ create_private_key() {
     else
         format "To enable HTTPs SSL certificates need to be generated.  We will" \
             "step you through generating self-signed certificates that are" \
-            "valid for 1 year.\n"
+            "valid for 10 years.\n"
         format "You will be asked to enter a passphrase and to provide details" \
             "about your organization.\n"
         format "When you are ready press enter to continue or Ctrl-C to abort.\n"
