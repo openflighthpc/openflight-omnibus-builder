@@ -1,7 +1,11 @@
 #!/bin/bash
 set -e
 
-CERT_DIR="/root/flight/www/certs"
+CERT_DIR=$(mktemp -d /tmp/flight-www-certs.XXXXXX)
+clean_up() {
+  rm -rf "${CERT_DIR}"
+}
+ trap clean_up EXIT
 
 assert_user_is_root() {
     if [[ "$( id -u )" != "0" ]] ; then
@@ -20,21 +24,19 @@ format() {
 }
 
 create_private_key() {
-    if [ -f "${CERT_DIR}"/cert.csr -a -f "${CERT_DIR}"/privkey.pem ] ; then
-        echo "Using existing private key."
-    else
-        format "To enable HTTPs SSL certificates need to be generated.  We will" \
-            "step you through generating self-signed certificates that are" \
-            "valid for 10 years.\n"
-        format "You will be asked to enter a passphrase and to provide details" \
-            "about your organization.\n"
-        format "When you are ready press enter to continue or Ctrl-C to abort.\n"
+    format "To enable HTTPs SSL certificates need to be generated.  We will" \
+        "step you through generating self-signed certificates that are" \
+        "valid for 10 years.\n"
+    format "You will be asked to enter a passphrase and to provide details" \
+        "about your organization.\n"
+    format "When you are ready press enter to continue or Ctrl-C to abort.\n"
 
-        read -s
+    read -s
 
-        mkdir -p "${CERT_DIR}"
-        openssl req -new > "${CERT_DIR}"/cert.csr
-    fi
+    mkdir -p "${CERT_DIR}"
+    cd "${CERT_DIR}"
+    openssl req -new > "${CERT_DIR}"/cert.csr
+    cd - 1>/dev/null
 }
 
 create_certs() {
@@ -60,12 +62,11 @@ install_certs() {
 }
 
 reload_www_service() {
-    "${flight_ROOT}"/bin/flight service stop www || true
-    sleep 1
-    "${flight_ROOT}"/bin/flight service start www || true
+    "${flight_ROOT}"/bin/flight service restart www || true
 }
 
 enable_https() {
+    echo "CERT_DIR=${CERT_DIR}"
     create_private_key
     create_certs
     install_certs
