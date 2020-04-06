@@ -1,5 +1,6 @@
+#!/bin/sh
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,37 +25,8 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-service'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-service'
-friendly_name 'Manage HPC environment services'
 
-install_dir '/opt/flight/opt/service'
+# This directory needs to exist for `flight service configure` to work.
+mkdir -p /opt/flight/opt/service/var/lib
 
-build_version '1.0.0'
-build_iteration 2
-
-dependency 'preparation'
-dependency 'flight-service'
-dependency 'version-manifest'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Manage HPC environment services'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-
-runtime_dependency 'flight-runway'
-runtime_dependency 'dialog'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
+exit 0
