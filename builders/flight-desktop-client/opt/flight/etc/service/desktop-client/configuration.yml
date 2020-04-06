@@ -6,7 +6,7 @@ text: |
   Cluster name: The human-friendly name of the cluster.
   Cluster description: A human-friendly description of the cluster.  This could be used to describe its purpose or the features that it supports.
   Cluster logo: The URL of a logo for the cluster.  Leave blank to not use a logo.
-  Hostname or IP: The hostname of IP address for this cluster.
+  Hostname or IP: The hostname or IP address for this cluster.
 
 values:
   - key: clusterName
