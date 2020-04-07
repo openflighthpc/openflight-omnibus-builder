@@ -31,8 +31,8 @@ friendly_name 'Flight Desktop Client'
 
 install_dir '/opt/flight/opt/flight-desktop-client'
 
-build_version '1.0.5'
-build_iteration 1
+build_version '1.1.0'
+build_iteration 0
 
 dependency 'preparation'
 dependency 'flight-desktop-client'
