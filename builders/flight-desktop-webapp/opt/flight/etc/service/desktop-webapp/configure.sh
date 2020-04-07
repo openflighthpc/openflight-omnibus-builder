@@ -11,11 +11,11 @@ set_string() {
     # one, change the other.
   "${flight_ROOT}/bin/ruby" <<EOF
 require 'json'
-json = File.read('/opt/flight/opt/flight-desktop-client/build/config.json')
+json = File.read('/opt/flight/opt/desktop-webapp/build/config.json')
 config = JSON.parse(json)
 config["${key}"] = "${value}"
 new_json = JSON.pretty_generate(config)
-File.write('/opt/flight/opt/flight-desktop-client/build/config.json', new_json)
+File.write('/opt/flight/opt/desktop-webapp/build/config.json', new_json)
 EOF
 }
 
@@ -28,11 +28,11 @@ set_nil() {
     # one, change the other.
   "${flight_ROOT}/bin/ruby" <<EOF
 require 'json'
-json = File.read('/opt/flight/opt/flight-desktop-client/build/config.json')
+json = File.read('/opt/flight/opt/desktop-webapp/build/config.json')
 config = JSON.parse(json)
 config["${key}"] = nil
 new_json = JSON.pretty_generate(config)
-File.write('/opt/flight/opt/flight-desktop-client/build/config.json', new_json)
+File.write('/opt/flight/opt/desktop-webapp/build/config.json', new_json)
 EOF
 }
 

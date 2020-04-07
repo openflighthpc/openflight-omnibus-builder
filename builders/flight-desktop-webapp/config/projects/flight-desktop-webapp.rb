@@ -1,4 +1,3 @@
-#!/bin/sh
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
@@ -25,11 +24,40 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-cat <<EOF 1>&2
-flight-desktop-client should now be configured by running 
+name 'flight-desktop-webapp'
+maintainer 'Alces Flight Ltd'
+homepage 'https://github.com/openflighthpc/flight-desktop-webapp'
+friendly_name 'Flight Desktop Webapp'
 
-  /opt/flight/bin/flight service configure desktop-client
+install_dir '/opt/flight/opt/desktop-webapp'
 
-EOF
+build_version '1.1.0'
+build_iteration 0
 
-exit 0
+dependency 'preparation'
+dependency 'flight-desktop-webapp'
+dependency 'version-manifest'
+
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+
+description 'Manage interactive GUI desktop sessions'
+
+exclude '**/.git'
+exclude '**/.gitkeep'
+exclude '**/bundler/git'
+exclude 'node_modules'
+
+runtime_dependency 'flight-service => 1.0.0'
+runtime_dependency 'flight-service-www'
+
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
+end
+
+package :rpm do
+  vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends
+  #priority 'apg python-websockify xorg-x11-apps netpbm-progs'
+end

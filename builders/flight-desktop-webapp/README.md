@@ -1,7 +1,7 @@
-flight-desktop-client Omnibus project
+flight-desktop-webapp Omnibus project
 ===========================
 This project creates full-stack platform-specific packages for
-`flight-desktop-client`!
+`flight-desktop-webapp`!
 
 Installation
 ------------
@@ -19,7 +19,7 @@ Usage
 You create a platform-specific package using the `build project` command:
 
 ```shell
-$ bin/omnibus build flight-desktop-client
+$ bin/omnibus build flight-desktop-webapp
 ```
 
 The platform/architecture type of the package created will match the platform
@@ -33,15 +33,15 @@ You can clean up all temporary files generated during the build process with
 the `clean` command:
 
 ```shell
-$ bin/omnibus clean flight-desktop-client
+$ bin/omnibus clean flight-desktop-webapp
 ```
 
 Adding the `--purge` purge option removes __ALL__ files generated during the
-build including the project install directory (`/opt/flight-desktop-client`) and
+build including the project install directory (`/opt/flight-desktop-webapp`) and
 the package cache directory (`/var/cache/omnibus/pkg`):
 
 ```shell
-$ bin/omnibus clean flight-desktop-client --purge
+$ bin/omnibus clean flight-desktop-webapp --purge
 ```
 
 ### Publish
