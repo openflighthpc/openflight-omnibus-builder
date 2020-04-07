@@ -29,7 +29,7 @@ maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/flight-desktop-webapp'
 friendly_name 'Flight Desktop Webapp'
 
-install_dir '/opt/flight/opt/flight-desktop-webapp'
+install_dir '/opt/flight/opt/desktop-webapp'
 
 build_version '1.1.0'
 build_iteration 0
