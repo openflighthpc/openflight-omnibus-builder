@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop Webapp'
 
 install_dir '/opt/flight/opt/desktop-webapp'
 
-build_version '1.1.0'
+build_version '1.1.1'
 build_iteration 0
 
 dependency 'preparation'
