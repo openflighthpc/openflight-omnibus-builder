@@ -27,6 +27,6 @@
 #===============================================================================
 
 PATH="${flight_ROOT}/bin/:${PATH}"
-"${flight_ROOT}"/opt/flight-desktop-server/bin/pumactl restart --pidfile $1
+"${flight_ROOT}"/opt/flight-desktop-restapi/bin/pumactl restart --pidfile $1
 
 tool_set pid=$(cat $1)
