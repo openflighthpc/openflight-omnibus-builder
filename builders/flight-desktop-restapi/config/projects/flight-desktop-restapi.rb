@@ -31,7 +31,7 @@ maintainer 'Alces Flight Ltd'
 homepage "https://github.com/#{GIT_REPO}"
 friendly_name 'Flight Desktop RestAPI'
 
-install_dir '/opt/flight/opt/flight-desktop-restapi'
+install_dir '/opt/flight/opt/desktop-restapi'
 
 # Sets the version numbering
 require 'net/http'

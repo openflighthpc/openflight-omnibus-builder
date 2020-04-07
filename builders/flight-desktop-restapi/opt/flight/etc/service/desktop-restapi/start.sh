@@ -39,13 +39,13 @@ rm "${pidfile}"
 
 PATH="${flight_ROOT}/bin/:${PATH}"
 addr=tcp://127.0.0.1:915
-tool_bg "${flight_ROOT}"/opt/flight-desktop-restapi/bin/puma --bind $addr \
+tool_bg "${flight_ROOT}"/opt/desktop-restapi/bin/puma --bind $addr \
                  --pidfile $pidfile \
                  --environment production \
                  --redirect-stdout "${log_file}" \
                  --redirect-stderr "${log_file}" \
                  --redirect-append \
-                 --dir "${flight_ROOT}"/opt/flight-desktop-restapi
+                 --dir "${flight_ROOT}"/opt/desktop-restapi
 
 # Wait up to 10ish seconds for puma to start
 pid=''

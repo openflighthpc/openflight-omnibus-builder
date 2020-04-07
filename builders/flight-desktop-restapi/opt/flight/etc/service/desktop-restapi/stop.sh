@@ -28,4 +28,4 @@
 
 # Stop puma
 PATH="${flight_ROOT}/bin/:${PATH}"
-"${flight_ROOT}"/opt/flight-desktop-restapi/bin/pumactl stop  --pidfile $1
+"${flight_ROOT}"/opt/desktop-restapi/bin/pumactl stop  --pidfile $1
