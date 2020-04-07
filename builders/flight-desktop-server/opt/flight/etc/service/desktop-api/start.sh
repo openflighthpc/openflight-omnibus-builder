@@ -44,7 +44,8 @@ tool_bg "${flight_ROOT}"/opt/flight-desktop-server/bin/puma --bind $addr \
                  --environment production \
                  --redirect-stdout "${log_file}" \
                  --redirect-stderr "${log_file}" \
-                 --redirect-append
+                 --redirect-append \
+                 --dir "${flight_ROOT}"/opt/flight-desktop-server
 
 # Wait up to 10ish seconds for puma to start
 pid=''
