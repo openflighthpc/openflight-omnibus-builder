@@ -29,7 +29,7 @@ GIT_REPO = 'openflighthpc/flight-desktop-restapi'
 name 'flight-desktop-restapi'
 maintainer 'Alces Flight Ltd'
 homepage "https://github.com/#{GIT_REPO}"
-friendly_name 'Flight Desktop Server'
+friendly_name 'Flight Desktop RestAPI'
 
 install_dir '/opt/flight/opt/flight-desktop-restapi'
 
