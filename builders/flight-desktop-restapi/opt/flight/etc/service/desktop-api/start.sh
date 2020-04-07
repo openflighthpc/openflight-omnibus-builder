@@ -28,10 +28,10 @@
 
 set -e
 
-var_dir="${flight_ROOT}"/var/flight-desktop-server
+var_dir="${flight_ROOT}"/var/desktop-restapi
 mkdir -p "${var_dir}"
 
-log_file="${flight_ROOT}"/var/log/flight-desktop/puma.log
+log_file="${flight_ROOT}"/var/log/desktop-restapi/puma.log
 mkdir -p $(dirname "${log_file}")
 
 pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
