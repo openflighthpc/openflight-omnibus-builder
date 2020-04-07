@@ -24,18 +24,18 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-desktop-client'
+name 'flight-desktop-webapp'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-desktop-client'
-friendly_name 'Flight Desktop Client'
+homepage 'https://github.com/openflighthpc/flight-desktop-webapp'
+friendly_name 'Flight Desktop Webapp'
 
-install_dir '/opt/flight/opt/flight-desktop-client'
+install_dir '/opt/flight/opt/flight-desktop-webapp'
 
 build_version '1.1.0'
 build_iteration 0
 
 dependency 'preparation'
-dependency 'flight-desktop-client'
+dependency 'flight-desktop-webapp'
 dependency 'version-manifest'
 
 license 'EPL-2.0'

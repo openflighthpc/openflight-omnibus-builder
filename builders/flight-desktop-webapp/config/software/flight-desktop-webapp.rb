@@ -24,10 +24,10 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name "flight-desktop-client"
+name "flight-desktop-webapp"
 default_version "1.1.0"
 
-source git: 'https://github.com/openflighthpc/flight-desktop-client'
+source git: 'https://github.com/openflighthpc/flight-desktop-webapp'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
