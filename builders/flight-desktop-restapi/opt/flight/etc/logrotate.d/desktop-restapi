@@ -1,5 +1,5 @@
 # Rotate Flight WWW logs
-/opt/flight/var/log/flight-desktop/*.log {
+/opt/flight/var/log/desktop-restapi/*.log {
     daily
     missingok
     rotate 7
@@ -9,6 +9,6 @@
     create 640 nobody adm
     sharedscripts
       postrotate
-      [ -f /opt/flight/var/run/desktop-api.pid ] && kill -USR1 `cat /opt/flight/var/run/desktop-api.pid`
+      [ -f /opt/flight/var/run/desktop-restapi.pid ] && kill -USR1 `cat /opt/flight/var/run/desktop-restapi.pid`
     endscript
 }

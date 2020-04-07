@@ -24,10 +24,10 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-desktop-server'
+name 'flight-desktop-restapi'
 default_version '0.0.0'
 
-source git: 'https://github.com/openflighthpc/flight-desktop-server'
+source git: 'https://github.com/openflighthpc/flight-desktop-restapi'
 
 whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 

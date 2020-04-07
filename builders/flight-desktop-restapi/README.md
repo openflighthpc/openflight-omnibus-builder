@@ -1,7 +1,7 @@
-flight-desktop-server Omnibus project
+flight-desktop-restapi Omnibus project
 ===========================
 This project creates full-stack platform-specific packages for
-`flight-desktop-server`!
+`flight-desktop-restapi`!
 
 Installation
 ------------
@@ -19,7 +19,7 @@ Usage
 You create a platform-specific package using the `build project` command:
 
 ```shell
-$ bin/omnibus build flight-desktop-server
+$ bin/omnibus build flight-desktop-restapi
 ```
 
 The platform/architecture type of the package created will match the platform
@@ -33,15 +33,15 @@ You can clean up all temporary files generated during the build process with
 the `clean` command:
 
 ```shell
-$ bin/omnibus clean flight-desktop-server
+$ bin/omnibus clean flight-desktop-restapi
 ```
 
 Adding the `--purge` purge option removes __ALL__ files generated during the
-build including the project install directory (`/opt/flight-desktop-server`) and
+build including the project install directory (`/opt/flight-desktop-restapi`) and
 the package cache directory (`/var/cache/omnibus/pkg`):
 
 ```shell
-$ bin/omnibus clean flight-desktop-server --purge
+$ bin/omnibus clean flight-desktop-restapi --purge
 ```
 
 ### Publish

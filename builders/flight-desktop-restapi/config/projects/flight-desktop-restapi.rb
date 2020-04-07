@@ -24,14 +24,14 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-GIT_REPO = 'openflighthpc/flight-desktop-server'
+GIT_REPO = 'openflighthpc/flight-desktop-restapi'
 
-name 'flight-desktop-server'
+name 'flight-desktop-restapi'
 maintainer 'Alces Flight Ltd'
 homepage "https://github.com/#{GIT_REPO}"
 friendly_name 'Flight Desktop Server'
 
-install_dir '/opt/flight/opt/flight-desktop-server'
+install_dir '/opt/flight/opt/flight-desktop-restapi'
 
 # Sets the version numbering
 require 'net/http'
@@ -46,12 +46,12 @@ MAX_CLI_VERSION = "#{CLI_VERSION.split.first.to_i + 1}.0.0"
 build_version VERSION
 build_iteration 2
 
-override 'flight-desktop-server', version: VERSION
+override 'flight-desktop-restapi', version: VERSION
 
 dependency 'preparation'
 dependency 'version-manifest'
 
-dependency 'flight-desktop-server'
+dependency 'flight-desktop-restapi'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
