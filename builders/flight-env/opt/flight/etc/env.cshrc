@@ -1,8 +1,10 @@
 ################################################################################
 ##
-## Flight Environment
+## Flight Starter
 ## Copyright (c) 2019-present Alces Flight Ltd
 ##
 ################################################################################
-flight_TIP_command="flight env"
-flight_TIP_synopsis="manage software package environments"
+if ( ! $?flight_ROOT ) then
+  setenv flight_ROOT /opt/flight
+endif
+setenv flight_ENV_root "${flight_ROOT}/opt/env"

@@ -4,11 +4,11 @@
 ## Copyright (c) 2019-present Alces Flight Ltd
 ##
 ################################################################################
-if ( -f ${flight_ROOT}/etc/flight-env.cshrc ) then
-  source ${flight_ROOT}/etc/flight-env.cshrc
+if ( -f ${flight_ROOT}/etc/env.cshrc ) then
+  source ${flight_ROOT}/etc/env.cshrc
 endif
 if ( ! $?flight_ENV_root ) then
-   setenv flight_ENV_root "${flight_ROOT}"/opt/flight-env
+   setenv flight_ENV_root "${flight_ROOT}"/opt/env
 endif
 setenv flight_ENV_shell tcsh
 

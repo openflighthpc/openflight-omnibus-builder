@@ -29,9 +29,9 @@ maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/flight-env'
 friendly_name 'Flight Environment'
 
-install_dir '/opt/flight/opt/flight-env'
+install_dir '/opt/flight/opt/env'
 
-build_version '1.4.0-rc4'
+build_version '1.4.0-rc5'
 build_iteration 1
 
 dependency 'preparation'
@@ -41,15 +41,23 @@ dependency 'version-manifest'
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Manage and access HPC application environments'
+description 'Manage and access HPC application ecosystems'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-runway'
+runtime_dep_versions = {
+  'flight-runway': {
+                     gte: '1.1.0',
+                     lt: '1.2.0',
+                   }
+}
 
 if ohai['platform_family'] == 'rhel'
+  runtime_dep_versions.each do |k,v|
+    runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
+  end
   # vim-common provides xxd a dependency required by Gridware
   %w(
     wget libuuid-devel zlib-devel uuid gcc-c++ sqlite-devel
@@ -72,6 +80,10 @@ if ohai['platform_family'] == 'rhel'
     raise "Unable to determine platform_version: #{ohai['platform_version']}"
   end
 elsif ohai['platform_family'] == 'debian'
+  runtime_dep_versions.each do |k,v|
+    runtime_dependency "#{k} (>= #{v[:gte]}), #{k} (<< #{v[:lt]})"
+  end
+
   # ohai['platform_version'] => '18.04'
   %w(
     wget uuid-dev zlib1g-dev uuid g++ libsqlite3-dev
@@ -84,11 +96,11 @@ end
 
 %w(
   opt/flight/libexec/commands/env
-  opt/flight/etc/flight-env.rc
-  opt/flight/etc/flight-env.cshrc
-  opt/flight/etc/profile.d/10-flenv.csh
-  opt/flight/etc/profile.d/10-flenv.sh
-  opt/flight/etc/banner/tips.d/10-flenv.rc
+  opt/flight/etc/env.rc
+  opt/flight/etc/env.cshrc
+  opt/flight/etc/profile.d/10-env.csh
+  opt/flight/etc/profile.d/10-env.sh
+  opt/flight/etc/banner/tips.d/10-env.rc
 ).each do |f|
   extra_package_file f
 end

@@ -30,6 +30,6 @@
 # https://github.com/openflighthpc/flight-env
 # ==============================================================================
 export FLIGHT_CWD=$(pwd)
-cd /opt/flight/opt/flight-env
+cd /opt/flight/opt/env
 export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
 flexec bundle exec bin/flenv "$@"
