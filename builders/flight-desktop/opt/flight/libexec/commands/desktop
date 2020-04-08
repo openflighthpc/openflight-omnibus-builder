@@ -30,6 +30,6 @@
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
 export FLIGHT_CWD=$(pwd)
-cd /opt/flight/opt/flight-desktop
+cd /opt/flight/opt/desktop
 export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
 flexec bundle exec bin/desktop "$@"
