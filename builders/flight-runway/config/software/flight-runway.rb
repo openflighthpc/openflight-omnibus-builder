@@ -56,7 +56,7 @@ build do
   ].each do |path|
     copy(
       path,
-      File.expand_path("#{install_dir}/embedded/lib/ruby/site_ruby/2.6.0"),
+      File.expand_path("#{install_dir}/embedded/lib/ruby/site_ruby/2.7.0"),
       preserve: true
     )
   end
