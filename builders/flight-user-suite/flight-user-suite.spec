@@ -1,6 +1,6 @@
 Name:           flight-user-suite
 Version:        2020.2
-Release:        1
+Release:        2
 Summary:        The Flight User Suite collection of HPC environment tools
 
 Group:          OpenFlight/Environment
