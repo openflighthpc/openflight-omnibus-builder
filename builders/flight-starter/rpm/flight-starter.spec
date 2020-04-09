@@ -1,6 +1,6 @@
 Name:           flight-starter
 Version:        2020.2.0
-Release:        1
+Release:        2
 Summary:        Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
 Group:          OpenFlight/Environment
@@ -14,7 +14,7 @@ Source0:        https://github.com/openflighthpc/%{name}/archive/%{version}.tar.
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:     noarch
-Requires:      flight-runway => 1.1.0, flight-runway < 1.2.0~, flight-starter-banner => 2020.2.0, flight-starter-banner < 2020.3.0~
+Requires:      flight-runway, flight-starter-banner => 2020.2.0, flight-starter-banner < 2020.3.0~
 
 %description
 Profile scripts and infrastructure for activating an OpenFlight HPC environment
