@@ -32,7 +32,7 @@ friendly_name 'Flight Runway'
 install_dir '/opt/flight/opt/runway'
 
 build_version '1.1.0'
-build_iteration 1
+build_iteration 2
 
 # Creates required build directories
 dependency 'preparation'
