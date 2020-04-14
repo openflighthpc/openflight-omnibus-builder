@@ -32,7 +32,7 @@ friendly_name 'Flight Environment'
 install_dir '/opt/flight/opt/env'
 
 build_version '1.4.0-rc5'
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-env'
@@ -62,6 +62,7 @@ if ohai['platform_family'] == 'rhel'
   %w(
     wget libuuid-devel zlib-devel uuid gcc-c++ sqlite-devel
     cmake openssl-devel git vim-common bzip2 gzip unzip tar
+    make
   ).each do |dep|
     runtime_dependency dep
   end
