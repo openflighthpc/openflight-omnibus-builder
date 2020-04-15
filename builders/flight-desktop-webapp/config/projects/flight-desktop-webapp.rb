@@ -48,7 +48,17 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 exclude 'node_modules'
 
-runtime_dependency 'flight-service => 1.0.0'
+runtime_dep_versions = {
+  'flight-service': {
+                     gte: '1.0.0',
+                     lt: '1.1.0',
+                   }
+}
+
+runtime_dep_versions.each do |k,v|
+  runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
+end
+
 runtime_dependency 'flight-service-www'
 
 require 'find'

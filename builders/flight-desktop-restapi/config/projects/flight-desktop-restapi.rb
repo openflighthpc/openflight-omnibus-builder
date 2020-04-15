@@ -62,10 +62,24 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency "flight-runway"
-# NOTE: This syntax matches the RPM version syntax and may need tweaking for other distros
-runtime_dependency "flight-desktop >= #{CLI_VERSION}, flight-desktop < #{MAX_CLI_VERSION}"
+runtime_dep_versions = {
+  'flight-desktop': {
+                     gte: CLI_VERSION,
+                     lt: MAX_CLI_VERSION,
+                   },
+  'flight-runway': {
+                     gte: '1.1.0',
+                     lt: '1.2.0',
+                   }
+}
+
 runtime_dependency 'flight-service-www'
+
+# NOTE: This syntax matches the RPM version syntax and may need tweaking for
+# other distros.
+runtime_dep_versions.each do |k,v|
+  runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
+end
 
 require 'find'
 Find.find('opt') do |o|
