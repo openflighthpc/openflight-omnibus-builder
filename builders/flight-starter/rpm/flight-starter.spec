@@ -1,5 +1,5 @@
 Name:           flight-starter
-Version:        2020.1.3
+Version:        2020.2.1
 Release:        1
 Summary:        Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
@@ -9,12 +9,12 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 %undefine _disable_source_fetch
 Source0:        https://github.com/openflighthpc/%{name}/archive/%{version}.tar.gz
-%define SHA256SUM0 be6abbf073295293984dcdb80c305433b32260052fbc022ee6aa489008ddb8fe
+%define SHA256SUM0 e8029c557c9252271da3837ca0656a3abe43c53f5e7d0d43a4154de16e36744e
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:     noarch
-Requires:      flight-runway flight-starter-banner
+Requires:      flight-runway, flight-starter-banner => 2020.2.0, flight-starter-banner < 2020.3.0~
 
 %description
 Profile scripts and infrastructure for activating an OpenFlight HPC environment
@@ -50,6 +50,11 @@ cp -R dist/* $RPM_BUILD_ROOT
 %exclude /opt/flight/libexec/flight-starter/banner
 
 %changelog
+* Tue Apr 14 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.2.1
+- Updated to 2020.2.1
+- Additional robustness when "nounset" shell option is used
+* Wed Apr  8 2020 Stu Franks <stu.franks@openflighthpc.org> - 2020.2.0
+- Updated to 2020.2.0
 * Thu Apr  2 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.1.3
 - Updated to 2020.1.3
 - Support /etc/lsb-release if /etc/redhat-release not present

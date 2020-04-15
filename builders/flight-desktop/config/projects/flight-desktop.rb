@@ -29,9 +29,9 @@ maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/flight-desktop'
 friendly_name 'Flight Desktop'
 
-install_dir '/opt/flight/opt/flight-desktop'
+install_dir '/opt/flight/opt/desktop'
 
-build_version '1.3.0-rc4'
+build_version '1.3.0-rc5'
 build_iteration 1
 
 dependency 'preparation'
@@ -47,12 +47,23 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-runway'
+runtime_dep_versions = {
+  'flight-runway': {
+                     gte: '1.1.0',
+                     lt: '1.2.0',
+                   }
+}
 
 if ohai['platform_family'] == 'rhel'
+  runtime_dep_versions.each do |k,v|
+    runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
+  end
   runtime_dependency 'tigervnc-server-minimal'
   runtime_dependency 'xorg-x11-xauth'
 elsif ohai['platform_family'] == 'debian'
+  runtime_dep_versions.each do |k,v|
+    runtime_dependency "#{k} (>= #{v[:gte]}), #{k} (<< #{v[:lt]})"
+  end
   runtime_dependency 'tigervnc-standalone-server'
   runtime_dependency 'xauth'
 end

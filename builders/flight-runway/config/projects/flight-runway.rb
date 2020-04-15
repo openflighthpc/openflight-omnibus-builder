@@ -31,8 +31,8 @@ friendly_name 'Flight Runway'
 
 install_dir '/opt/flight/opt/runway'
 
-build_version '1.0.3'
-build_iteration 1
+build_version '1.1.0'
+build_iteration 2
 
 # Creates required build directories
 dependency 'preparation'
@@ -52,9 +52,9 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-override :ruby, version: '2.6.1'
-override :rubygems, version: '3.0.8'
-override :bundler, version: '1.17.3'
+override :ruby, version: '2.7.1'
+override :rubygems, version: '3.1.2'
+override :bundler, version: '2.1.4'
 
 # This override is required to provide improved parity with the
 # version of `openssl` available in RHEL8 (1.1.1c at the time of

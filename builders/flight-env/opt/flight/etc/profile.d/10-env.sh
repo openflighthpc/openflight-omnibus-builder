@@ -33,10 +33,10 @@ flenv() {
 }
 export -f flenv
 
-if [ -f ${flight_ROOT}/etc/flight-env.rc ]; then
-  . ${flight_ROOT}/etc/flight-env.rc
+if [ -f ${flight_ROOT}/etc/env.rc ]; then
+  . ${flight_ROOT}/etc/env.rc
 fi
-export flight_ENV_root=${flight_ENV_root:-${flight_ROOT}/opt/flight-env}
+export flight_ENV_root=${flight_ENV_root:-${flight_ROOT}/opt/env}
 export flight_ENV_shell=bash
 
 flight() {

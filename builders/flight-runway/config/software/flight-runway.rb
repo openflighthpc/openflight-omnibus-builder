@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name "flight-runway"
-default_version '1.0.3'
+default_version '1.1.0'
 
 source git: 'https://github.com/openflighthpc/flight-runway'
 
@@ -56,7 +56,7 @@ build do
   ].each do |path|
     copy(
       path,
-      File.expand_path("#{install_dir}/embedded/lib/ruby/site_ruby/2.6.0"),
+      File.expand_path("#{install_dir}/embedded/lib/ruby/site_ruby/2.7.0"),
       preserve: true
     )
   end
