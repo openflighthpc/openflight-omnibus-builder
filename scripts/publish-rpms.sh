@@ -121,6 +121,8 @@ fi
 aws --region "${REGION}" s3 sync --delete $TARGET_DIR s3://$TARGET_PREFIX --acl public-read
 
 # Notify slack
+if [ "$ARCH" == "noarch" ] ; then ARCH="x86_64" ; fi
 export PACKAGE=$(echo "$RPM" |sed 's/.*\///g')
 export REPO=$(echo "$TARGET_PREFIX" |sed 's/.*org\///g')
+export PACKAGE_URL=https://$TARGET_PREFIX/$ARCH/$PACKAGE
 $SCRIPT_DIR/slack-update.sh 
