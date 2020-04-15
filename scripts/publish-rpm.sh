@@ -31,7 +31,7 @@ if [ ! -z "${DEBUG}" ]; then
   set -x
 fi
 
-SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+export SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 if [ -z "$1" ]; then
   echo "Usage: $0 <rpm>"
@@ -46,7 +46,10 @@ if ! aws s3 ls &>/dev/null; then
   exit 1
 fi
 
-RPM="$1"
+# Check Slack notifications configured
+$SCRIPT_DIR/slack-check.sh
+
+export RPM="$1"
 SOURCE_DIR=$(mktemp -d /tmp/publish-rpm.XXXXXX)
 ARCH="$(rpm -qip $RPM |grep '^Architecture' |awk '{print $2}')"
 DIST="$(rpm -qip $RPM |grep '^Release' |awk '{print $3}' |sed 's/.*\.el//g')" # e.g. 7 or 8

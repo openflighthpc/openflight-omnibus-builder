@@ -119,3 +119,8 @@ fi
 
 # sync the repo state back to s3
 aws --region "${REGION}" s3 sync --delete $TARGET_DIR s3://$TARGET_PREFIX --acl public-read
+
+# Notify slack
+export PACKAGE=$(echo "$RPM" |sed 's/.*\///g')
+export REPO=$(echo "$TARGET_PREFIX" |sed 's/.*org\///g')
+$SCRIPT_DIR/slack-update.sh 
