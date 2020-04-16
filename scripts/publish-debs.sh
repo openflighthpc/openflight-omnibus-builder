@@ -31,7 +31,7 @@ if [ ! -z "${DEBUG}" ]; then
   set -x
 fi
 
-DEPENDENCIES=("aws" "dpkg-dev")
+DEPENDENCIES=("aws" "dpkg-scanpackages")
 REGION="eu-west-1"
 
 for dep in "${DEPENDENCIES[@]}"
