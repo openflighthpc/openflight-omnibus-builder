@@ -71,7 +71,7 @@ if [[ "$DIST_TARGETS" != *"$DIST"* ]] ; then
     # Prompt for user input of target distribution
     echo "Unknown distribution: $DIST"
     echo "Distribution should be one of: $DIST_TARGETS"
-    echo "This is expected for noarch RPMs which don't include distribution in release tag"
+    echo "This is expected for noarch debs which don't include distribution in release tag"
     echo
     read -p "Which distribution target to use? ($DIST_TARGETS) " dist
     if [[ "$DIST_TARGETS" != *"$dist"* ]] ; then
@@ -85,8 +85,8 @@ if [[ "$DIST_TARGETS" != *"$DIST"* ]] ; then
     fi
 fi
 
-TARGET_DIR="/tmp/${TARGET_PREFIX}/dist/${DIST}"
-TARGET_PREFIX="${TARGET_PREFIX}/dist/${DIST}"
+TARGET_DIR="/tmp/${TARGET_PREFIX}/dists/${DIST}"
+TARGET_PREFIX="${TARGET_PREFIX}/dists/${DIST}"
 
 # make sure we're operating on the latest data in the target bucket
 mkdir -p $TARGET_DIR
@@ -102,6 +102,7 @@ if [ "$ARCH" == "all" ] ; then
         # create a list of packages, allowing multiple versions
         cd $TARGET_DIR/main/$arch/
         dpkg-scanpackages -m . /dev/null |gzip -9c > Packages.gz
+        cd -
     done
 else
     mkdir -pv $TARGET_DIR/main/$ARCH/
@@ -109,6 +110,7 @@ else
     # create a list of packages, allowing multiple versions
     cd $TARGET_DIR/main/$ARCH/
     dpkg-scanpackages -m . /dev/null |gzip -9c > Packages.gz
+    cd -
 fi
 
 # sync the repo state back to s3
