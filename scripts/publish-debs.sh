@@ -95,7 +95,7 @@ aws --region "${REGION}" s3 sync "s3://${TARGET_PREFIX}" $TARGET_DIR
 # copy the deb in and update the repo
 NOARCH_TARGETS="binary-amd64"
 
-if [ "$ARCH" == "all" ] ; then
+if [ "$ARCH" == "binary-all" ] ; then
     for arch in $NOARCH_TARGETS ; do
         mkdir -pv $TARGET_DIR/main/$arch
         cp -rv $SOURCE_DIR/*.deb $TARGET_DIR/main/$arch
