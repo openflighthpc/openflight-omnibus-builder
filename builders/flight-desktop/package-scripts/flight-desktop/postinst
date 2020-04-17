@@ -31,6 +31,8 @@ if [ -f /etc/redhat-release ]; then
 ========================================
 Optional Dependencies for Flight Desktop
 ========================================
+For better desktop session passwords, please install 'apg' (requires OpenFlightHPC).
+For websocket support, please install 'python3-websockify' (requires OpenFlightHPC).
 For screen capture support, please install 'xorg-x11-apps' (requires PowerTools)
 and 'netpbm-progs'.
 EOF

@@ -32,7 +32,7 @@ friendly_name 'Flight Desktop'
 install_dir '/opt/flight/opt/desktop'
 
 build_version '1.3.0-rc6'
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-desktop'
