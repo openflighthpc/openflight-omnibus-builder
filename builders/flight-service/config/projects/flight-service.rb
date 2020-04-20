@@ -31,8 +31,8 @@ friendly_name 'Manage HPC environment services'
 
 install_dir '/opt/flight/opt/service'
 
-build_version '1.0.0'
-build_iteration 2
+build_version '1.0.1'
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-service'
@@ -47,7 +47,23 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-runway'
+runtime_dep_versions = {
+  'flight-runway': {
+                     gte: '1.1.0',
+                     lt: '1.2.0',
+                   }
+}
+
+if ohai['platform_family'] == 'rhel'
+  runtime_dep_versions.each do |k,v|
+    runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
+  end
+elsif ohai['platform_family'] == 'debian'
+  runtime_dep_versions.each do |k,v|
+    runtime_dependency "#{k} (>= #{v[:gte]}), #{k} (<< #{v[:lt]})"
+  end
+end
+
 runtime_dependency 'dialog'
 
 require 'find'
