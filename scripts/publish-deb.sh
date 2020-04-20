@@ -46,6 +46,11 @@ if ! aws s3 ls &>/dev/null; then
   exit 1
 fi
 
+if ! gpg --list-secret-key 408ECC57 ; then
+    echo "Secret key not present!"
+    $SCRIPT_DIR/install-gpg.sh
+fi
+
 # Check Slack notifications configured
 $SCRIPT_DIR/slack-check.sh
 

@@ -85,6 +85,9 @@ if [[ "$DIST_TARGETS" != *"$DIST"* ]] ; then
     fi
 fi
 
+TOPLEVEL_DIR="/tmp/${TARGET_PREFIX}"
+TOPLEVEL_PREFIX="${TARGET_PREFIX}"
+
 TARGET_DIR="/tmp/${TARGET_PREFIX}/dists/${DIST}"
 TARGET_PREFIX="${TARGET_PREFIX}/dists/${DIST}"
 
@@ -100,24 +103,44 @@ if [ "$ARCH" == "binary-all" ] ; then
         mkdir -pv $TARGET_DIR/main/$arch
         cp -rv $SOURCE_DIR/*.deb $TARGET_DIR/main/$arch
         # create a list of packages, allowing multiple versions
-        cd $TARGET_DIR/main/$arch/
-        dpkg-scanpackages -m . /dev/null |gzip -9c > Packages.gz
+        cd $TOPLEVEL_DIR
+        dpkg-scanpackages -m dists/$DIST/main/$arch > dists/$DIST/main/$arch/Packages
+        cat dists/$DIST/main/$arch/Packages | gzip -9c > dists/$DIST/main/$arch/Packages.gz
         cd -
     done
 else
     mkdir -pv $TARGET_DIR/main/$ARCH/
     cp -rv $SOURCE_DIR/*.deb $TARGET_DIR/main/$ARCH/
     # create a list of packages, allowing multiple versions
-    cd $TARGET_DIR/main/$ARCH/
-    dpkg-scanpackages -m . /dev/null |gzip -9c > Packages.gz
+    cd $TOPLEVEL_DIR
+    dpkg-scanpackages -m dists/$DIST/main/$ARCH > dists/$DIST/main/$ARCH/Packages
+    cat dists/$DIST/main/$ARCH/Packages | gzip -9c > dists/$DIST/main/$ARCH/Packages.gz
     cd -
 fi
+
+# Create distro release file
+cd $TARGET_DIR
+cat << EOF > Release
+Origin: OpenFlightHPC
+Label: OpenFlightHPC Development Packages
+Codename: $DIST
+Architectures: $(echo "$ARCH" |sed 's/binary-//g')
+Components: main
+Description: OpenFlightHPC Development Packages for Ubuntu $DIST
+$(apt-ftparchive release .)
+EOF
+
+# GPG signing
+rm -f InRelease && gpg --default-key openflighthpc --clearsign -o InRelease Release
+
+# Back to original directory
+cd -
 
 # sync the repo state back to s3
 aws --region "${REGION}" s3 sync --delete $TARGET_DIR s3://$TARGET_PREFIX --acl public-read
 
 # Notify slack
-if [ "$ARCH" == "noarch" ] ; then ARCH="x86_64" ; fi
+if [ "$ARCH" == "noarch" ] ; then ARCH="binary-amd64" ; fi
 export PACKAGE=$(echo "$DEB" |sed 's/.*\///g')
 export REPO=$(echo "$TARGET_PREFIX" |sed 's/.*org\///g')
 export PACKAGE_URL=https://$TARGET_PREFIX/main/$ARCH/$PACKAGE
