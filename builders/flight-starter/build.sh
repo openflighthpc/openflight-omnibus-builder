@@ -10,7 +10,7 @@ if [ -f /etc/redhat-release ]; then
   mv $HOME/rpmbuild/RPMS/noarch/flight-starter-*.noarch.rpm pkg
 elif [ -f /etc/lsb-release ]; then
   echo "Building DEB package..."
-  VERSION=2020.2.1
+  VERSION=2020.2.2
 
   mkdir -p $HOME/flight-starter
 

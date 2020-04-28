@@ -1,5 +1,5 @@
 Name:           flight-starter
-Version:        2020.2.1
+Version:        2020.2.2
 Release:        1
 Summary:        Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
@@ -9,7 +9,7 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 %undefine _disable_source_fetch
 Source0:        https://github.com/openflighthpc/%{name}/archive/%{version}.tar.gz
-%define SHA256SUM0 e8029c557c9252271da3837ca0656a3abe43c53f5e7d0d43a4154de16e36744e
+%define SHA256SUM0 7085fbcecf424d3879ab79682bc96d38a5873da67a775feca9ca224d4fc271b1
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -50,6 +50,9 @@ cp -R dist/* $RPM_BUILD_ROOT
 %exclude /opt/flight/libexec/flight-starter/banner
 
 %changelog
+* Tue Apr 28 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.2.2
+- Updated to 2020.2.2
+- Only execute banner script under interactive shells
 * Tue Apr 14 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.2.1
 - Updated to 2020.2.1
 - Additional robustness when "nounset" shell option is used
