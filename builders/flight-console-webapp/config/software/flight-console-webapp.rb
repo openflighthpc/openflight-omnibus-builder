@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name "flight-console-webapp"
-default_version "9e4dcf44c7ea14c2749ccff3b6ea1d18d5d02401"
+default_version "0.0.1"
 
 source git: 'https://github.com/openflighthpc/flight-console-webapp'
 

@@ -32,7 +32,7 @@ friendly_name 'Flight Console Webapp'
 install_dir '/opt/flight/opt/console-webapp'
 
 build_version '0.0.1'
-build_iteration 0
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-console-webapp'
