@@ -1,3 +1,4 @@
+#!/bin/sh
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
@@ -25,37 +26,5 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-name 'flight-nodejs'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/blob/master/builders/flight-nodejs/README.md'
-friendly_name 'Flight NodeJS'
+exec /opt/flight/opt/nodejs/bin/node "$@"
 
-install_dir '/opt/flight/opt/nodejs'
-
-build_version '1.0.0'
-build_iteration 1
-
-dependency 'preparation'
-dependency 'flight-nodejs'
-dependency 'flight-yarn'
-dependency 'version-manifest'
-
-override 'flight-nodejs', version: '12.16.1'
-override 'flight-yarn', version: '1.22.4'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Manage interactive GUI desktop sessions'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
