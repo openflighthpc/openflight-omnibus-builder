@@ -24,13 +24,25 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name "flight-runway"
-default_version "0.0.0"
+name 'flight-yarn'
+default_version '0.0.0'
 
-Dir.mktmpdir do |tmpdir|
-  source path: tmpdir
+source url: "https://github.com/yarnpkg/yarn/releases/download/v#{version}/yarn-v#{version}.tar.gz"
+
+version '1.22.4' do
+  source sha256: 'bc5316aa110b2f564a71a3d6e235be55b98714660870c5b6b2d2d3f12587fb58'
 end
 
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
+
+relative_path "yarn-v#{version}"
+
 build do
-  raise "Flight Runway is not installed!" if ! File.exists?('/opt/flight/bin/flight')
+  block do
+    Dir.glob(File.join(project_dir, '*')).each do |path|
+      FileUtils.cp_r path, install_dir
+    end
+  end
 end
