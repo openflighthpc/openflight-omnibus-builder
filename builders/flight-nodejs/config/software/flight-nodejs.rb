@@ -33,7 +33,9 @@ version '12.16.1' do
   source sha256: 'b2d9787da97d6c0d5cbf24c69fdbbf376b19089f921432c5a61aa323bc070bea'
 end
 
-# whitelist_file Regexp.new("vendor/ruby/.*\.so$")
+version '12.16.3' do
+  source sha256: '66518c31ea7735ae5a0bb8ea27edfee846702dbdc708fea6ad4a308d43ef5652'
+end
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'

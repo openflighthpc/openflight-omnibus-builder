@@ -40,7 +40,7 @@ dependency 'flight-nodejs'
 dependency 'flight-yarn'
 dependency 'version-manifest'
 
-override 'flight-nodejs', version: '12.16.1'
+override 'flight-nodejs', version: '12.16.3'
 override 'flight-yarn', version: '1.22.4'
 
 license 'EPL-2.0'
