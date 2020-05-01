@@ -36,12 +36,12 @@ build_version '1.0.0'
 build_iteration 1
 
 dependency 'preparation'
-dependency 'flight-nodejs'
-dependency 'flight-yarn'
+dependency 'nodejs'
+dependency 'yarn'
 dependency 'version-manifest'
 
-override 'flight-nodejs', version: '12.16.3'
-override 'flight-yarn', version: '1.22.4'
+override 'nodejs', version: '12.16.3'
+override 'yarn', version: '1.22.4'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
