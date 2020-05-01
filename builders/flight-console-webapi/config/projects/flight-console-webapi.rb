@@ -56,7 +56,8 @@ runtime_dep_versions.each do |k,v|
   runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
 end
 
-runtime_dependency 'flight-service-www'
+runtime_dependency 'flight-service-www >= 0.2.0, flight-service-www < 0.3.0'
+runtime_dependency 'flight-nodejs >= 1.0.0, flight-nodejs < 1.1.0'
 
 require 'find'
 Find.find('opt') do |o|
