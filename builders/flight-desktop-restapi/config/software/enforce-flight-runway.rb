@@ -31,6 +31,27 @@ Dir.mktmpdir do |tmpdir|
   source path: tmpdir
 end
 
+
 build do
-  raise "Flight Runway is not installed!" if ! File.exists?('/opt/flight/bin/flight')
+  block do
+    version_file = '/opt/flight/opt/runway/version-manifest.json'
+    raise "Flight Runway is not installed!" unless File.exists?(version_file)
+
+    cur = Gem::Version.new JSON.parse(File.read(version_file))["build_version"]
+
+    gte = Gem::Version.new overrides[:flight_version_gte]
+    lt = Gem::Version.new overrides[:flight_version_lt]
+
+    raise <<~ERROR.chomp if cur < gte
+      Flight Runway is to old!
+      Requires >= #{gte.to_s}
+      Got       = #{cur.to_s}
+    ERROR
+
+    raise <<~ERROR.chomp if cur >= lt
+      Flight Runway is to new!
+      Requires < #{lt.to_s}
+      Got:     = #{cur.to_s}
+    ERROR
+  end
 end

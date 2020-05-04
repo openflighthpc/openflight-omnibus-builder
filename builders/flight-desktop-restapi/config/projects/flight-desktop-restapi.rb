@@ -35,6 +35,9 @@ install_dir '/opt/flight/opt/desktop-restapi'
 
 # Sets the version numbering
 require 'net/http'
+FLIGHT_VERSION_GTE = '1.1.0'
+FLIGHT_VERSION_LT = '1.2.0'
+
 VERSION = '1.0.0'
 CLI_VERSION = Net::HTTP.get_response(
   URI.parse("https://raw.githubusercontent.com/#{GIT_REPO}/#{VERSION}/.cli-version")
@@ -48,9 +51,15 @@ build_iteration 0
 
 override 'flight-desktop-restapi', version: VERSION
 
+override 'enforce-flight-runway',
+         flight_version_gte: FLIGHT_VERSION_GTE,
+         flight_version_lt: FLIGHT_VERSION_LT
+
 dependency 'preparation'
 dependency 'version-manifest'
 
+dependency 'enforce-yum-packages'
+dependency 'enforce-flight-runway'
 dependency 'flight-desktop-restapi'
 
 license 'EPL-2.0'
@@ -68,8 +77,8 @@ runtime_dep_versions = {
                      lt: MAX_CLI_VERSION,
                    },
   'flight-runway': {
-                     gte: '1.1.0',
-                     lt: '1.2.0',
+                     gte: FLIGHT_VERSION_GTE,
+                     lt: FLIGHT_VERSION_LT,
                    }
 }
 

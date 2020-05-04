@@ -31,9 +31,6 @@ source git: 'https://github.com/openflighthpc/flight-desktop-restapi'
 
 whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
-dependency 'enforce-yum-packages'
-dependency 'enforce-flight-runway'
-
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
