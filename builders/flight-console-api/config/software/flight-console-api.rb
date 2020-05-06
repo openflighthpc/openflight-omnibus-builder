@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-console-api'
-default_version '0.0.1'
+default_version '0.0.2'
 
 source git: 'https://github.com/openflighthpc/flight-console-api'
 

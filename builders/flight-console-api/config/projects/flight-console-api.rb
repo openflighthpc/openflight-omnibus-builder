@@ -31,7 +31,7 @@ friendly_name 'Flight Console api'
 
 install_dir '/opt/flight/opt/console-api'
 
-build_version '0.0.1'
+build_version '0.0.2'
 build_iteration 0
 
 dependency 'preparation'
