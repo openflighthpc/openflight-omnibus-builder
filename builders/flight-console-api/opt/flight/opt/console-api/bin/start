@@ -26,4 +26,4 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-node src/index.js 1>"${flight_ROOT}"/var/log/console-api/console-api.log 2>&1 &
+"${flight_ROOT}"/bin/node src/index.js 1>"${flight_ROOT}"/var/log/console-api/console-api.log 2>&1 &
