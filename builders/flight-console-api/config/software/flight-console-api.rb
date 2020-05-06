@@ -1,6 +1,5 @@
-#!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2019-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,34 +24,31 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-set -e
-echo "Starting"
-mkdir -p "${flight_ROOT}"/var/run
-mkdir -p "${flight_ROOT}"/var/log/console-webapi
-cd "${flight_ROOT}"/opt/console-webapi
+name 'flight-console-api'
+default_version '0.0.1'
 
-tool_bg "bin/start"
-wait
+source git: 'https://github.com/openflighthpc/flight-console-api'
 
-# Wait up to 10ish seconds for the server to write its pid file.
-pid=''
-for _ in `seq 1 20`; do
-  sleep 0.5
-  if [ -f "${flight_ROOT}/var/run/console-webapi.pid" ]; then
-    pid=$(cat "${flight_ROOT}/var/run/console-webapi.pid")
-    if [ -n "$pid" ]; then
-      break
-    fi
-  fi
-done
+whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
-echo "Done waiting for PID. pid=${pid}"
+# dependency 'enforce-flight-runway'
 
-# Report back the pid or error
-if [ -n "$pid" ]; then
-  tool_set pid=$pid
-  exit 0
-else
-  echo Failed to start console-api >&2
-  exit 1
-fi
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
+
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
+
+  # Moves the project into place
+  [
+    
+    'package.json', 'yarn.lock', 'src', 'etc',
+    'LICENSE.txt', 'README.md',
+  ].each do |file|
+    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
+
+  command "cd #{install_dir} && yarn install", env: env
+end
+

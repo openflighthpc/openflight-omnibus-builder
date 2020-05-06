@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,46 +25,34 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-console-webapi'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-console-webapi'
-friendly_name 'Flight Console Webapi'
+set -e
+echo "Starting"
+mkdir -p "${flight_ROOT}"/var/run
+mkdir -p "${flight_ROOT}"/var/log/console-api
+cd "${flight_ROOT}"/opt/console-api
 
-install_dir '/opt/flight/opt/console-webapi'
+tool_bg "bin/start"
+wait
 
-build_version '0.0.1'
-build_iteration 0
+# Wait up to 10ish seconds for the server to write its pid file.
+pid=''
+for _ in `seq 1 20`; do
+  sleep 0.5
+  if [ -f "${flight_ROOT}/var/run/console-api.pid" ]; then
+    pid=$(cat "${flight_ROOT}/var/run/console-api.pid")
+    if [ -n "$pid" ]; then
+      break
+    fi
+  fi
+done
 
-dependency 'preparation'
-dependency 'flight-console-webapi'
-dependency 'version-manifest'
+echo "Done waiting for PID. pid=${pid}"
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'API to provide browser access to an interactive terminal console'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-
-runtime_dep_versions = {
-}
-
-# NOTE: This syntax matches the RPM version syntax and may need tweaking for
-# other distros.
-runtime_dep_versions.each do |k,v|
-  runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
-end
-
-runtime_dependency 'flight-service-www >= 0.2.0, flight-service-www < 0.3.0'
-runtime_dependency 'flight-nodejs >= 1.0.0, flight-nodejs < 1.1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
+# Report back the pid or error
+if [ -n "$pid" ]; then
+  tool_set pid=$pid
+  exit 0
+else
+  echo Failed to start console-api >&2
+  exit 1
+fi
