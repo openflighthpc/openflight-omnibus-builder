@@ -48,6 +48,8 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 runtime_dep_versions = {
+  'flight-service-www': { gte: '0.2.0', lt: '0.3.0' },
+  'flight-nodejs': { gte: '1.0.0', lt: '1.1.0' },
 }
 
 # NOTE: This syntax matches the RPM version syntax and may need tweaking for
@@ -55,9 +57,6 @@ runtime_dep_versions = {
 runtime_dep_versions.each do |k,v|
   runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
 end
-
-runtime_dependency 'flight-service-www >= 0.2.0, flight-service-www < 0.3.0'
-runtime_dependency 'flight-nodejs >= 1.0.0, flight-nodejs < 1.1.0'
 
 require 'find'
 Find.find('opt') do |o|
