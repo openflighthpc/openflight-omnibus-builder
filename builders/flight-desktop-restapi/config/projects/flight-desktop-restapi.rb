@@ -38,7 +38,7 @@ require 'net/http'
 FLIGHT_VERSION_GTE = '1.1.0'
 FLIGHT_VERSION_LT = '1.2.0'
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 CLI_VERSION = Net::HTTP.get_response(
   URI.parse("https://raw.githubusercontent.com/#{GIT_REPO}/#{VERSION}/.cli-version")
 ).tap { |r| raise 'Failed to get cli version' unless r.code == '200' }
@@ -47,7 +47,7 @@ CLI_VERSION = Net::HTTP.get_response(
 MAX_CLI_VERSION = "#{CLI_VERSION.split.first.to_i + 1}.0.0"
 
 build_version VERSION
-build_iteration 0
+build_iteration 1
 
 override 'flight-desktop-restapi', version: VERSION
 

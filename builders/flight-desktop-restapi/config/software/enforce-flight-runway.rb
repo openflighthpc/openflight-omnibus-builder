@@ -53,5 +53,12 @@ build do
       Requires < #{lt.to_s}
       Got:     = #{cur.to_s}
     ERROR
+
+    bundle_version = Bundler.with_unbundled_env do
+      `/opt/flight/bin/bundle --version | sed 's/Bundler version //g'`.chomp
+    end
+    if bundle_version != '2.1.4'
+      raise "Flight Runway has incorrect bundle version: #{bundle_version} (expected 2.1.4)"
+    end
   end
 end
