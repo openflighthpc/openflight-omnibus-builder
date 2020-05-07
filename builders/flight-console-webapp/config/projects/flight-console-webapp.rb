@@ -32,7 +32,7 @@ friendly_name 'Flight Console Webapp'
 install_dir '/opt/flight/opt/console-webapp'
 
 build_version '0.0.2'
-build_iteration 0
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-console-webapp'
@@ -49,17 +49,13 @@ exclude '**/bundler/git'
 exclude 'node_modules'
 
 runtime_dep_versions = {
-  'flight-service': {
-                     gte: '1.0.0',
-                     lt: '1.1.0',
-                   }
+  'flight-service': { gte: '1.0.0', lt: '1.1.0', },
+  'flight-service-www': { gte: '0.2.0', lt: '0.3.0' },
 }
 
 runtime_dep_versions.each do |k,v|
   runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
 end
-
-runtime_dependency 'flight-service-www'
 
 require 'find'
 Find.find('opt') do |o|
