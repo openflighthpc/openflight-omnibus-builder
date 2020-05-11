@@ -33,4 +33,10 @@ end
 
 build do
   raise "Flight Runway is not installed!" if ! File.exists?('/opt/flight/bin/flight')
+  bundle_version = Bundler.with_unbundled_env do
+    `/opt/flight/bin/bundle --version | sed 's/Bundler version //g'`.chomp
+  end
+  if bundle_version != '2.1.4'
+    raise "Flight Runway has incorrect bundle version: #{bundle_version} (expected 2.1.4)"
+  end
 end

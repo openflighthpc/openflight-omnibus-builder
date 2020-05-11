@@ -31,7 +31,7 @@ friendly_name 'Flight hunter'
 
 install_dir '/opt/flight/opt/hunter'
 
-build_version '0.0.6'
+build_version '0.0.7'
 build_iteration 1
 
 dependency 'preparation'
@@ -47,7 +47,30 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-runway'
+runtime_dep_versions = {
+  'flight-runway': {
+                     gte: '1.1.0',
+                     lt: '1.2.0',
+                   }
+}
+
+if ohai['platform_family'] == 'rhel'
+  runtime_dep_versions.each do |k,v|
+    dep_str = "".tap do |s|
+      s << "#{k} >= #{v[:gte]}"
+      s << ", #{k} < #{v[:lt]}~" unless v[:lt].nil?
+    end
+    runtime_dependency dep_str
+  end
+elsif ohai['platform_family'] == 'debian'
+  runtime_dep_versions.each do |k,v|
+    dep_str = "".tap do |s|
+      s << "#{k} (>= #{v[:gte]})"
+      s << ", #{k} (<< #{v[:lt]})" unless v[:lt].nil?
+    end
+    runtime_dependency dep_str
+  end
+end
 
 extra_package_file 'opt/flight/libexec/commands/hunter'
 
