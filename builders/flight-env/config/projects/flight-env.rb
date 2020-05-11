@@ -56,7 +56,11 @@ runtime_dep_versions = {
 
 if ohai['platform_family'] == 'rhel'
   runtime_dep_versions.each do |k,v|
-    runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
+    dep_str = "".tap do |s|
+      s << "#{k} >= #{v[:gte]}"
+      s << ", #{k} < #{v[:lt]}~" unless v[:lt].nil?
+    end
+    runtime_dependency dep_str
   end
   # vim-common provides xxd a dependency required by Gridware
   %w(
@@ -82,7 +86,11 @@ if ohai['platform_family'] == 'rhel'
   end
 elsif ohai['platform_family'] == 'debian'
   runtime_dep_versions.each do |k,v|
-    runtime_dependency "#{k} (>= #{v[:gte]}), #{k} (<< #{v[:lt]})"
+    dep_str = "".tap do |s|
+      s << "#{k} (>= #{v[:gte]})"
+      s << ", #{k} (<< #{v[:lt]})" unless v[:lt].nil?
+    end
+    runtime_dependency dep_str
   end
 
   # ohai['platform_version'] => '18.04'
