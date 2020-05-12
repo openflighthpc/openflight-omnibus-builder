@@ -101,3 +101,7 @@ end
 package :rpm do
   vendor 'Alces Flight Ltd'
 end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+end
