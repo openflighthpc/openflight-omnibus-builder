@@ -31,8 +31,8 @@ friendly_name 'Manage HPC environment services'
 
 install_dir '/opt/flight/opt/service'
 
-build_version '1.0.1'
-build_iteration 1
+build_version '1.1.0-rc1'
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-service'
@@ -47,23 +47,8 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dep_versions = {
-  'flight-runway': {
-                     gte: '1.1.0',
-                     lt: '1.2.0',
-                   }
-}
-
-if ohai['platform_family'] == 'rhel'
-  runtime_dep_versions.each do |k,v|
-    runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
-  end
-elsif ohai['platform_family'] == 'debian'
-  runtime_dep_versions.each do |k,v|
-    runtime_dependency "#{k} (>= #{v[:gte]}), #{k} (<< #{v[:lt]})"
-  end
-end
-
+runtime_dependency 'flight-runway'
+runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'dialog'
 
 require 'find'
@@ -72,5 +57,9 @@ Find.find('opt') do |o|
 end
 
 package :rpm do
+  vendor 'Alces Flight Ltd'
+end
+
+package :deb do
   vendor 'Alces Flight Ltd'
 end

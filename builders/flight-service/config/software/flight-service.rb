@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-service'
-default_version '1.0.1'
+default_version '1.1.0-rc1'
 
 source git: 'https://github.com/openflighthpc/flight-service'
 
@@ -58,8 +58,13 @@ build do
     require 'yaml'
     config = {
       'type_paths' => [
+        '/opt/flight/etc/service/types',
         '/opt/flight/etc/service'
-      ]
+      ],
+      'env_dir' => '/opt/flight/etc/service/env',
+      'service_etc_dir' => '/opt/flight/var/lib/service',
+      'service_state_dir' => '/opt/flight/var/run/service',
+      'service_log_dir' => '/opt/flight/var/log/service'
     }
     File.write(
       File.expand_path("#{install_dir}/etc/config.yml"),
