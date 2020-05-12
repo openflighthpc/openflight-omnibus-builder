@@ -25,17 +25,15 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name "flight-console-webapp"
-default_version "0.0.2"
+default_version "0.0.0"
 
 source git: 'https://github.com/openflighthpc/flight-console-webapp'
+
+dependency 'enforce-flight-nodejs'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
-
-Dir.mktmpdir do |tmpdir|
-  source path: tmpdir
-end
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
@@ -54,8 +52,8 @@ build do
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
-  command "cd #{install_dir} && yarn install", env: env
-  command "cd #{install_dir} && yarn run build", env: env
+  command "cd #{install_dir} && /opt/flight/bin/yarn install", env: env
+  command "cd #{install_dir} && /opt/flight/bin/yarn run build", env: env
 
   build_only.each do |file|
     delete File.expand_path("#{install_dir}/#{file}")

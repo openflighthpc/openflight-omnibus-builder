@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,47 +24,15 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-console-webapp'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-console-webapp'
-friendly_name 'Flight Console Webapp'
+name "enforce-flight-nodejs"
+description "enforce existence of flight-nodejs"
+default_version "1.0.0"
 
-install_dir '/opt/flight/opt/console-webapp'
+license :project_license
+skip_transitive_dependency_licensing true
 
-VERSION = '0.0.2'
-override 'flight-console-webapp', version: VERSION
-
-build_version VERSION
-build_iteration 2
-
-dependency 'preparation'
-dependency 'flight-console-webapp'
-dependency 'version-manifest'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Provide browser access to an interactive terminal console'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-exclude 'node_modules'
-
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
+build do
+  block do
+    raise "Flight NodeJS is not installed!" if ! File.exists?('/opt/flight/bin/yarn')
+  end
 end
