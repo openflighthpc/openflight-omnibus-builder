@@ -32,7 +32,7 @@ friendly_name 'Flight Desktop'
 install_dir '/opt/flight/opt/desktop'
 
 build_version '1.3.0-rc6'
-build_iteration 2
+build_iteration 3
 
 dependency 'preparation'
 dependency 'flight-desktop'
@@ -47,31 +47,13 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dep_versions = {
-  'flight-runway': {
-                     gte: '1.1.0',
-                     lt: '1.2.0',
-                   }
-}
+runtime_dependency 'flight-runway'
+runtime_dependency 'flight-ruby-system-2.0'
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dep_versions.each do |k,v|
-    dep_str = "".tap do |s|
-      s << "#{k} >= #{v[:gte]}"
-      s << ", #{k} < #{v[:lt]}~" unless v[:lt].nil?
-    end
-    runtime_dependency dep_str
-  end
   runtime_dependency 'tigervnc-server-minimal'
   runtime_dependency 'xorg-x11-xauth'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dep_versions.each do |k,v|
-    dep_str = "".tap do |s|
-      s << "#{k} (>= #{v[:gte]})"
-      s << ", #{k} (<< #{v[:lt]})" unless v[:lt].nil?
-    end
-    runtime_dependency dep_str
-  end
   runtime_dependency 'tigervnc-standalone-server'
   runtime_dependency 'xauth'
 end
