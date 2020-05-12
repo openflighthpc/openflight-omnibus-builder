@@ -24,18 +24,21 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-service-www'
+name 'flight-www'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/openflight-omnibus-builders/builders/flight-service-www'
+homepage 'https://github.com/openflighthpc/openflight-omnibus-builders/builders/flight-www'
 friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-build_version '0.2.0'
+VERSION = '1.0.0'
+override 'flight-www', version: VERSION
+
+build_version VERSION
 build_iteration 1
 
 dependency 'preparation'
-dependency 'flight-service-www'
+dependency 'flight-www'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
@@ -49,7 +52,9 @@ exclude '**/bundler/git'
 
 override :nginx, version: '1.14.2'
 
+WWW_SYSTEM = '1.0'
 runtime_dependency 'flight-service'
+runtime_dependency 'flight-service-system-1.0'
 
 require 'find'
 Find.find('opt') do |o|
@@ -58,4 +63,15 @@ end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends/provides
+  # provides are prefixed with `:`
+  priority ":flight-www-system-#{WWW_SYSTEM}"
+end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section "::flight-www-system-#{WWW_SYSTEM}"
 end

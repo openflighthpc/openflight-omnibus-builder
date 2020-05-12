@@ -1,7 +1,7 @@
-flight-service-www Omnibus project
+flight-www Omnibus project
 ===========================
 This project creates full-stack platform-specific packages for
-`flight-service-www`!
+`flight-www`!
 
 Installation
 ------------
@@ -19,7 +19,7 @@ Usage
 You create a platform-specific package using the `build project` command:
 
 ```shell
-$ bin/omnibus build flight-service-www
+$ bin/omnibus build flight-www
 ```
 
 The platform/architecture type of the package created will match the platform
@@ -33,15 +33,15 @@ You can clean up all temporary files generated during the build process with
 the `clean` command:
 
 ```shell
-$ bin/omnibus clean flight-service-www
+$ bin/omnibus clean flight-www
 ```
 
 Adding the `--purge` purge option removes __ALL__ files generated during the
-build including the project install directory (`/opt/flight/opt/flight-service-www`) and
+build including the project install directory (`/opt/flight/opt/flight-www`) and
 the package cache directory (`/var/cache/omnibus/pkg`):
 
 ```shell
-$ bin/omnibus clean flight-service-www --purge
+$ bin/omnibus clean flight-www --purge
 ```
 
 ### Publish

@@ -24,7 +24,18 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-source 'https://rubygems.org'
+name 'flight-www'
+default_version '1.0.0'
 
-gem 'omnibus', '~> 6.0'
-gem 'omnibus-software', github: 'chef/omnibus-software'
+dependency 'zlib'
+dependency 'nginx'
+
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
+
+build do
+  block do
+    true
+  end
+end
