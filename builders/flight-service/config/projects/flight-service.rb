@@ -31,8 +31,11 @@ friendly_name 'Manage HPC environment services'
 
 install_dir '/opt/flight/opt/service'
 
-build_version '1.1.0-rc1'
-build_iteration 2
+VERSION = '1.1.0-rc1'
+override 'flight-service', version: VERSION
+
+build_version VERSION
+build_iteration 3
 
 dependency 'preparation'
 dependency 'flight-service'
@@ -47,6 +50,7 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
+SERVICE_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'dialog'
@@ -58,8 +62,15 @@ end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends/provides
+  # provides are prefixed with `:`
+  priority ":flight-service-system-#{SERVICE_SYSTEM}"
 end
 
 package :deb do
   vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section "::flight-service-system-#{SERVICE_SYSTEM}"
 end
