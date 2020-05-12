@@ -25,11 +25,11 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-env'
-default_version '1.4.0-rc5'
+default_version '0.0.0'
 
 source git: 'https://github.com/openflighthpc/flight-env'
 
-dependency 'flight-runway'
+dependency 'enforce-flight-runway'
 whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
 license 'EPL-2.0'
