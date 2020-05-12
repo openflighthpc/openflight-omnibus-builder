@@ -33,20 +33,21 @@ friendly_name 'Flight NodeJS'
 install_dir '/opt/flight/opt/nodejs'
 
 build_version '1.0.0'
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'nodejs'
 dependency 'yarn'
 dependency 'version-manifest'
 
+JS_SYSTEM = '1.0'
 override 'nodejs', version: '12.16.3'
 override 'yarn', version: '1.22.4'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Manage interactive GUI desktop sessions'
+description 'NodeJS platform for Flight tools.'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
@@ -58,4 +59,13 @@ end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends/provides
+  # provides are prefixed with `:`
+  priority ":flight-js-system-#{JS_SYSTEM}"
+end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  section ":flight-js-system-#{JS_SYSTEM}"
 end
