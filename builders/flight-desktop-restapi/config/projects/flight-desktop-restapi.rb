@@ -24,43 +24,22 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-GIT_REPO = 'openflighthpc/flight-desktop-restapi'
-
 name 'flight-desktop-restapi'
 maintainer 'Alces Flight Ltd'
-homepage "https://github.com/#{GIT_REPO}"
-friendly_name 'Flight Desktop RestAPI'
+homepage "https://github.com/openflighthpc/flight-desktop-restapi"
+friendly_name 'Flight Desktop REST API'
 
 install_dir '/opt/flight/opt/desktop-restapi'
 
-# Sets the version numbering
-require 'net/http'
-FLIGHT_VERSION_GTE = '1.1.0'
-FLIGHT_VERSION_LT = '1.2.0'
-
 VERSION = '1.0.1'
-CLI_VERSION = Net::HTTP.get_response(
-  URI.parse("https://raw.githubusercontent.com/#{GIT_REPO}/#{VERSION}/.cli-version")
-).tap { |r| raise 'Failed to get cli version' unless r.code == '200' }
- .body
- .chomp
-MAX_CLI_VERSION = "#{CLI_VERSION.split.first.to_i + 1}.0.0"
-
-build_version VERSION
-build_iteration 1
-
 override 'flight-desktop-restapi', version: VERSION
 
-override 'enforce-flight-runway',
-         flight_version_gte: FLIGHT_VERSION_GTE,
-         flight_version_lt: FLIGHT_VERSION_LT
+build_version VERSION
+build_iteration 2
 
 dependency 'preparation'
-dependency 'version-manifest'
-
-dependency 'enforce-yum-packages'
-dependency 'enforce-flight-runway'
 dependency 'flight-desktop-restapi'
+dependency 'version-manifest'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
@@ -71,24 +50,14 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dep_versions = {
-  'flight-desktop': {
-                     gte: CLI_VERSION,
-                     lt: MAX_CLI_VERSION,
-                   },
-  'flight-runway': {
-                     gte: FLIGHT_VERSION_GTE,
-                     lt: FLIGHT_VERSION_LT,
-                   }
-}
-
-runtime_dependency 'flight-service-www'
-
-# NOTE: This syntax matches the RPM version syntax and may need tweaking for
-# other distros.
-runtime_dep_versions.each do |k,v|
-  runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
-end
+runtime_dependency 'flight-runway'
+runtime_dependency 'flight-ruby-system-2.0'
+runtime_dependency 'flight-desktop'
+runtime_dependency 'flight-desktop-system-1.0'
+runtime_dependency 'flight-www'
+runtime_dependency 'flight-www-system-1.0'
+runtime_dependency 'flight-service'
+runtime_dependency 'flight-service-system-1.0'
 
 require 'find'
 Find.find('opt') do |o|
@@ -97,6 +66,8 @@ end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
-  # repurposed 'priority' field to set RPM recommends
-  #priority 'apg python-websockify xorg-x11-apps netpbm-progs'
+end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
 end

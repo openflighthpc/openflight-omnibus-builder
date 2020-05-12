@@ -29,6 +29,8 @@ default_version '0.0.0'
 
 source git: 'https://github.com/openflighthpc/flight-desktop-restapi'
 
+dependency 'enforce-flight-runway'
+
 whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
 license 'EPL-2.0'

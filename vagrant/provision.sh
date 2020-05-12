@@ -64,8 +64,15 @@ if [ "$1" != "test" ]; then
     CENTOS_VER=$(rpm --eval '%{centos_ver}')
 
     yum install -y -e0 git rpm-build cmake
-    gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+    if ! gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB; then
+      command curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
+      command curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
+    fi
     if ! curl -sSL https://get.rvm.io | bash -s stable; then
+      if ! gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB; then
+        command curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
+        command curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
+      fi
       curl -sSL https://get.rvm.io | bash -s stable
       if [ $? -gt 0 ]; then
         cat <<EOF 1>&2
@@ -86,10 +93,10 @@ EOF
     gem install bundler:2.1.4
     usermod -a -G rvm vagrant
 
-    # For libpcap compile (flight-metal)
-    yum install -y -e0 flex
-
     yum install -y -e0 createrepo
+
+    # required for building flight-desktop-restapi
+    yum install -y -e0 pam-devel
 
     if [[ $CENTOS_VER == 8 ]] ; then
       yum install python3-pip python3-devel python2-devel
@@ -97,22 +104,13 @@ EOF
     else
       yum install -y -e0 awscli
     fi
-
-    # Install nvm so that we can install nodejs so that we can build
-    # flight-desktop-client.
-    # nvm is intended to be installed per-user not globally.
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | sudo -u vagrant bash
-    sudo -i -u vagrant nvm install 12.16.1
-
-    # Install yarn.
-    curl --silent --show-error --location https://rpm.nodesource.com/setup_10.x | bash -
-    curl --silent --show-error --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo
-    rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg
-    yum install -y yarn
-
   elif which apt &>/dev/null; then
-    apt update
-    apt -y install ruby ruby-dev libffi-dev gcc make autoconf fakeroot
+    apt-get update
+    apt-get -y install ruby ruby-dev libffi-dev gcc make autoconf fakeroot
+
+    # required for building flight-desktop-restapi
+    apt-get -y install libpam0g-dev
+
     gem install bundler:1.17.3
     gem install bundler:2.1.4
   fi
