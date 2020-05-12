@@ -32,7 +32,7 @@ friendly_name 'Flight Environment'
 install_dir '/opt/flight/opt/env'
 
 build_version '1.4.0-rc5'
-build_iteration 2
+build_iteration 3
 
 dependency 'preparation'
 dependency 'flight-env'
@@ -47,21 +47,10 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dep_versions = {
-  'flight-runway': {
-                     gte: '1.1.0',
-                     lt: '1.2.0',
-                   }
-}
+runtime_dependency 'flight-runway'
+runtime_dependency 'flight-ruby-system-2.0'
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dep_versions.each do |k,v|
-    dep_str = "".tap do |s|
-      s << "#{k} >= #{v[:gte]}"
-      s << ", #{k} < #{v[:lt]}~" unless v[:lt].nil?
-    end
-    runtime_dependency dep_str
-  end
   # vim-common provides xxd a dependency required by Gridware
   %w(
     wget libuuid-devel zlib-devel uuid gcc-c++ sqlite-devel
@@ -85,14 +74,6 @@ if ohai['platform_family'] == 'rhel'
     raise "Unable to determine platform_version: #{ohai['platform_version']}"
   end
 elsif ohai['platform_family'] == 'debian'
-  runtime_dep_versions.each do |k,v|
-    dep_str = "".tap do |s|
-      s << "#{k} (>= #{v[:gte]})"
-      s << ", #{k} (<< #{v[:lt]})" unless v[:lt].nil?
-    end
-    runtime_dependency dep_str
-  end
-
   # ohai['platform_version'] => '18.04'
   %w(
     wget uuid-dev zlib1g-dev uuid g++ libsqlite3-dev
