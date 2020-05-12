@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,27 +24,15 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-console-api'
-default_version '0.0.0'
+name "enforce-flight-nodejs"
+description "enforce existence of flight-nodejs"
+default_version "1.0.0"
 
-source git: 'https://github.com/openflighthpc/flight-console-api'
-
-dependency 'enforce-flight-nodejs'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
+license :project_license
 skip_transitive_dependency_licensing true
 
 build do
-  env = with_standard_compiler_flags(with_embedded_path)
-
-  # Moves the project into place
-  [
-    'package.json', 'yarn.lock', 'src', 'etc',
-    'LICENSE.txt', 'README.md',
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  block do
+    raise "Flight NodeJS is not installed!" if ! File.exists?('/opt/flight/bin/yarn')
   end
-
-  command "cd #{install_dir} && /opt/flight/bin/yarn install", env: env
 end

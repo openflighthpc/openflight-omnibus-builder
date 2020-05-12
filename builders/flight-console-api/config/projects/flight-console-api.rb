@@ -31,8 +31,11 @@ friendly_name 'Flight Console api'
 
 install_dir '/opt/flight/opt/console-api'
 
-build_version '0.0.2'
-build_iteration 0
+VERSION = '0.0.2'
+override 'flight-console-api', version: VERSION
+
+build_version VERSION
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-console-api'
@@ -45,18 +48,11 @@ description 'API to provide browser access to an interactive terminal console'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
-exclude '**/bundler/git'
 
-runtime_dep_versions = {
-  'flight-service-www': { gte: '0.2.0', lt: '0.3.0' },
-  'flight-nodejs': { gte: '1.0.0', lt: '1.1.0' },
-}
-
-# NOTE: This syntax matches the RPM version syntax and may need tweaking for
-# other distros.
-runtime_dep_versions.each do |k,v|
-  runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
-end
+runtime_dependency 'flight-nodejs'
+runtime_dependency 'flight-js-system-1.0'
+runtime_dependency 'flight-www'
+runtime_dependency 'flight-www-system-1.0'
 
 require 'find'
 Find.find('opt') do |o|
@@ -64,5 +60,9 @@ Find.find('opt') do |o|
 end
 
 package :rpm do
+  vendor 'Alces Flight Ltd'
+end
+
+package :deb do
   vendor 'Alces Flight Ltd'
 end
