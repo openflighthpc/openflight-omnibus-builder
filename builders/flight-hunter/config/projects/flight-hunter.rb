@@ -31,8 +31,11 @@ friendly_name 'Flight hunter'
 
 install_dir '/opt/flight/opt/hunter'
 
-build_version '0.0.7'
-build_iteration 2
+VERSION = '0.0.7'
+override 'flight-hunter', version: VERSION
+
+build_version VERSION
+build_iteration 3
 
 dependency 'preparation'
 dependency 'flight-hunter'
@@ -53,5 +56,9 @@ runtime_dependency 'flight-ruby-system-2.0'
 extra_package_file 'opt/flight/libexec/commands/hunter'
 
 package :rpm do
+  vendor 'Alces Flight Ltd'
+end
+
+package :deb do
   vendor 'Alces Flight Ltd'
 end
