@@ -32,7 +32,7 @@ friendly_name 'Flight Runway'
 install_dir '/opt/flight/opt/runway'
 
 build_version '1.1.0'
-build_iteration 2
+build_iteration 3
 
 # Creates required build directories
 dependency 'preparation'
@@ -52,9 +52,13 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-override :ruby, version: '2.7.1'
+RUBY_SYSTEM = '2.0'
+
+RUBY_VERSION = '2.7.1'
+override :ruby, version: RUBY_VERSION
+BUNDLER_VERSION = '2.1.4'
+override :bundler, version: BUNDLER_VERSION
 override :rubygems, version: '3.1.2'
-override :bundler, version: '2.1.4'
 
 # This override is required to provide improved parity with the
 # version of `openssl` available in RHEL8 (1.1.1c at the time of
@@ -84,4 +88,13 @@ runtime_dependency 'unzip'
 
 package :rpm do
   vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends/provides
+  # provides are prefixed with `:`
+  priority ":flight-ruby-system-#{RUBY_SYSTEM} :flight-ruby-#{RUBY_VERSION.split('.')[0..1].join('.')} :flight-bundler-#{BUNDLER_VERSION}"
+end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  section ":flight-ruby-system-#{RUBY_SYSTEM} :flight-ruby-#{RUBY_VERSION.split('.')[0..1].join('.')} :flight-bundler-#{BUNDLER_VERSION}"
 end
