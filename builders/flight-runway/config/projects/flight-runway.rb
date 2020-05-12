@@ -31,16 +31,14 @@ friendly_name 'Flight Runway'
 
 install_dir '/opt/flight/opt/runway'
 
-build_version '1.1.0'
+VERSION = '1.1.0'
+override 'flight-runway', version: VERSION
+
+build_version VERSION
 build_iteration 3
 
-# Creates required build directories
 dependency 'preparation'
-
-# flight-runway dependencies/components
 dependency 'flight-runway'
-
-# Version manifest file
 dependency 'version-manifest'
 
 license 'EPL-2.0'
@@ -96,5 +94,7 @@ end
 package :deb do
   vendor 'Alces Flight Ltd'
   # repurposed 'section' field to set DEB recommends/provides
-  section ":flight-ruby-system-#{RUBY_SYSTEM} :flight-ruby-#{RUBY_VERSION.split('.')[0..1].join('.')} :flight-bundler-#{BUNDLER_VERSION}"
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section "::flight-ruby-system-#{RUBY_SYSTEM} :flight-ruby-#{RUBY_VERSION.split('.')[0..1].join('.')} :flight-bundler-#{BUNDLER_VERSION}"
 end
