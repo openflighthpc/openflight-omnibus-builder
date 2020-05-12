@@ -1,4 +1,3 @@
-#!/bin/sh
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
@@ -25,6 +24,23 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name 'flight-nodejs'
+default_version '0.0.0'
 
-exec /opt/flight/bin/node /opt/flight/opt/nodejs/bin/npm "$@"
+dependency 'nodejs'
+dependency 'yarn'
 
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+
+Dir.mktmpdir do |tmpdir|
+  source path: tmpdir
+end
+
+build do
+  block do
+    Dir.glob(File.join(File.dirname(__FILE__), '..', '..', 'dist', 'bin', '*')).each do |path|
+      FileUtils.cp_r path, '/opt/flight/bin'
+    end
+  end
+end

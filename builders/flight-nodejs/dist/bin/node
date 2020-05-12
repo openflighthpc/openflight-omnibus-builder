@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
-# This file is part of OpenFlight Omnibus Builder.
+# This file is part of Flight NodeJS
 #
 # This program and the accompanying materials are made available under
 # the terms of the Eclipse Public License 2.0 which is available at
@@ -22,9 +22,29 @@
 #
 #  https://opensource.org/licenses/EPL-2.0
 #
-# For more information on OpenFlight Omnibus Builder, please visit:
-# https://github.com/openflighthpc/openflight-omnibus-builder
+# For more information on Flight NodeJS, please visit:
+# https://github.com/openflighthpc/openflight-omnibus-builder/builders/flight-nodejs
 #===============================================================================
+_setup() {
+  local a xdg_config
+  IFS=: read -a xdg_config <<< "${XDG_CONFIG_HOME:-$HOME/.config}:${XDG_CONFIG_DIRS:-/etc/xdg}"
+  for a in "${xdg_config[@]}"; do
+    if [ -e "${a}"/flight.rc ]; then
+      source "${a}"/flight.rc
+      break
+    fi
+  done
+  if [ -d "${flight_ROOT}"/libexec/hooks ]; then
+    shopt -s nullglob
+    for a in "${flight_ROOT}"/libexec/hooks/*.sh; do
+      source "${a}"
+    done
+    shopt -u nullglob
+  fi
+}
 
-exec /opt/flight/opt/nodejs/bin/node "$@"
+flight_ROOT=${flight_ROOT:-$(cd $(dirname ${BASH_SOURCE[0]})/.. && pwd)}
+_setup
+unset _setup
 
+exec ${flight_ROOT}/opt/nodejs/bin/node "$@"

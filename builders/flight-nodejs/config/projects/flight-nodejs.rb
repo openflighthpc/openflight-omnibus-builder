@@ -24,7 +24,6 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-
 name 'flight-nodejs'
 maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/blob/master/builders/flight-nodejs/README.md'
@@ -32,12 +31,14 @@ friendly_name 'Flight NodeJS'
 
 install_dir '/opt/flight/opt/nodejs'
 
-build_version '1.0.0'
-build_iteration 2
+VERSION = '1.0.1'
+override 'flight-nodejs', version: VERSION
+
+build_version VERSION
+build_iteration 1
 
 dependency 'preparation'
-dependency 'nodejs'
-dependency 'yarn'
+dependency 'flight-nodejs'
 dependency 'version-manifest'
 
 JS_SYSTEM = '1.0'
@@ -52,9 +53,8 @@ description 'NodeJS platform for Flight tools.'
 exclude '**/.git'
 exclude '**/.gitkeep'
 
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
+%w(node npm yarn).each do |f|
+  extra_package_file "/opt/flight/bin/#{f}"
 end
 
 package :rpm do
@@ -67,5 +67,7 @@ end
 package :deb do
   vendor 'Alces Flight Ltd'
   # repurposed 'section' field to set DEB recommends/provides
-  section ":flight-js-system-#{JS_SYSTEM}"
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section "::flight-js-system-#{JS_SYSTEM}"
 end
