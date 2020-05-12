@@ -31,8 +31,11 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-build_version '1.3.0-rc6'
-build_iteration 3
+VERSION = '1.3.0-rc6'
+override 'flight-desktop', version: VERSION
+
+build_version VERSION
+build_iteration 4
 
 dependency 'preparation'
 dependency 'flight-desktop'
@@ -47,6 +50,7 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
+DESKTOP_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 
@@ -70,20 +74,26 @@ if ohai['platform_family'] == 'rhel'
   if rhel_rel == 8
     package :rpm do
       vendor 'Alces Flight Ltd'
-      # repurposed 'priority' field to set RPM recommends
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
       # neither 'apg' or 'python-websockify' are available on RHEL8
       # note: xorg-x11-apps is only available in PowerTools
-      priority 'xorg-x11-apps netpbm-progs'
+      priority "xorg-x11-apps netpbm-progs :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   else
     package :rpm do
       vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
+      priority ":flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   end
-elsif ohai['platform_family'] == 'debian'
-  package :deb do
-    vendor 'Alces Flight Ltd'
-    # repurposed 'section' field to set DEB suggests
-    section ':netpbm x11-apps apg websockify'
-  end
+end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section ":netpbm x11-apps apg websockify :flight-desktop-system-#{DESKTOP_SYSTEM}"
 end

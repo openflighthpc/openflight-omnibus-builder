@@ -29,7 +29,7 @@ default_version '1.3.0-rc6'
 
 source git: 'https://github.com/openflighthpc/flight-desktop'
 
-dependency 'flight-runway'
+dependency 'enforce-flight-runway'
 whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
 license 'EPL-2.0'
