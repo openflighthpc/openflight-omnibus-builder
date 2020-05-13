@@ -25,34 +25,16 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-set -e
-echo "Starting"
-mkdir -p "${flight_ROOT}"/var/run
-mkdir -p "${flight_ROOT}"/var/log/console-api
-cd "${flight_ROOT}"/opt/console-api
-
-tool_bg "bin/start"
-wait
-
-# Wait up to 10ish seconds for the server to write its pid file.
-pid=''
-for _ in `seq 1 20`; do
+echo "Stopping: $@"
+pid=$(cat "$1")
+kill $pid
+# Wait a couple of seconds for the server to remove its pid file.
+for _ in `seq 1 4`; do
   sleep 0.5
-  if [ -f "${flight_ROOT}/var/run/console-api.pid" ]; then
-    pid=$(cat "${flight_ROOT}/var/run/console-api.pid")
-    if [ -n "$pid" ]; then
-      break
-    fi
+  if [ ! -f "${flight_ROOT}/var/run/console-api.pid" ]; then
+    break
   fi
 done
-
-echo "Done waiting for PID. pid=${pid}"
-
-# Report back the pid or error
-if [ -n "$pid" ]; then
-  tool_set pid=$pid
-  exit 0
-else
-  echo Failed to start console-api >&2
-  exit 1
+if [ -f "${flight_ROOT}/var/run/console-api.pid" ]; then
+  kill $pid
 fi
