@@ -35,7 +35,7 @@ VERSION = '1.1.1'
 override 'flight-desktop-webapp', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-desktop-webapp'
@@ -53,8 +53,8 @@ exclude 'node_modules'
 
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-service-www'
-runtime_dependency 'flight-service-www-1.0'
+runtime_dependency 'flight-www'
+runtime_dependency 'flight-www-system-1.0'
 
 require 'find'
 Find.find('opt') do |o|
