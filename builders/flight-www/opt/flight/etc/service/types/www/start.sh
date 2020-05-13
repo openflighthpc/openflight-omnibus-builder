@@ -12,4 +12,12 @@ done
 www_port="${www_port:-80}"
 tool_bg "${flight_ROOT}"/opt/www/embedded/sbin/nginx -c "${flight_ROOT}"/etc/www/nginx.conf
 wait
+c=0
+while [ ! -f "${flight_ROOT}/var/run/www.pid" ]; do
+  if [ $c -gt 10 ]; then
+    break
+  fi
+  sleep 1
+  c+=1
+done
 tool_set pid=$(cat "${flight_ROOT}/var/run/www.pid")
