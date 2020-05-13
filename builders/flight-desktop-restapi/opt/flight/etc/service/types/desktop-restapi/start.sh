@@ -25,8 +25,17 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-
 set -e
+
+# Required so desktop-restapi can locate the `flight` entry point.
+PATH="${flight_ROOT}/bin:${PATH}"
+# Required to support initializers.
+export USER=$(whoami)
+# Required to correctly handle output parsing.
+if [ -f /etc/locale.conf ]; then
+  . /etc/locale.conf
+fi
+export LANG=${LANG:-en_US.UTF-8}
 
 var_dir="${flight_ROOT}"/var/desktop-restapi
 mkdir -p "${var_dir}"
@@ -37,15 +46,15 @@ mkdir -p $(dirname "${log_file}")
 pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
-PATH="${flight_ROOT}/bin/:${PATH}"
 addr=tcp://127.0.0.1:915
-tool_bg "${flight_ROOT}"/opt/desktop-restapi/bin/puma --bind $addr \
-                 --pidfile $pidfile \
-                 --environment production \
-                 --redirect-stdout "${log_file}" \
-                 --redirect-stderr "${log_file}" \
-                 --redirect-append \
-                 --dir "${flight_ROOT}"/opt/desktop-restapi
+tool_bg "${flight_ROOT}"/bin/ruby \
+  "${flight_ROOT}"/opt/desktop-restapi/bin/puma --bind $addr \
+    --pidfile $pidfile \
+    --environment production \
+    --redirect-stdout "${log_file}" \
+    --redirect-stderr "${log_file}" \
+    --redirect-append \
+    --dir "${flight_ROOT}"/opt/desktop-restapi
 
 # Wait up to 10ish seconds for puma to start
 pid=''
