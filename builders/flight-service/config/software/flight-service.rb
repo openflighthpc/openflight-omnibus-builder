@@ -58,8 +58,7 @@ build do
     require 'yaml'
     config = {
       'type_paths' => [
-        '/opt/flight/etc/service/types',
-        '/opt/flight/etc/service'
+        '/opt/flight/etc/service/types'
       ],
       'env_dir' => '/opt/flight/etc/service/env',
       'service_etc_dir' => '/opt/flight/var/lib/service',
