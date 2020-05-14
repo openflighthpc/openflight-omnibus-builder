@@ -1,5 +1,5 @@
 Package: flight-starter
-Version: %VERSION%-1
+Version: %VERSION%-%REL%
 Section: misc
 Priority: optional
 Architecture: all

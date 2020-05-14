@@ -1,6 +1,6 @@
 Name:           flight-starter
-Version:        2020.2.2
-Release:        1
+Version:        %{_flight_pkg_version}
+Release:        %{_flight_pkg_rel}
 Summary:        Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
 Group:          OpenFlight/Environment
@@ -9,18 +9,16 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 %undefine _disable_source_fetch
 Source0:        https://github.com/openflighthpc/%{name}/archive/%{version}.tar.gz
-%define SHA256SUM0 7085fbcecf424d3879ab79682bc96d38a5873da67a775feca9ca224d4fc271b1
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:     noarch
-Requires:      flight-runway, flight-starter-banner => 2020.2.0, flight-starter-banner < 2020.3.0~
+Requires:      flight-runway, flight-starter-banner => %{_flight_pkg_now}.0, flight-starter-banner < %{_flight_pkg_next}.0~
 
 %description
 Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
 %prep
-echo "%SHA256SUM0 %SOURCE0" | sha256sum -c -
 %setup -q
 
 %build

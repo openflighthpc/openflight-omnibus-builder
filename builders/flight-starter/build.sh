@@ -2,15 +2,24 @@
 cd "$(dirname "$0")"
 d="$(pwd)"
 mkdir -p pkg
+
+NOW=2020.2
+NEXT=2020.3
+VERSION=${NOW}.2
+REL=1
+
 if [ -f /etc/redhat-release ]; then
   echo "Building RPM package..."
   cd rpm
-  rpmbuild -bb flight-starter.spec
+  rpmbuild -bb flight-starter.spec \
+           --define "_flight_pkg_version $VERSION" \
+           --define "_flight_pkg_rel $REL" \
+           --define "_flight_pkg_now $NOW" \
+           --define "_flight_pkg_next $NEXT"
   cd ..
   mv $HOME/rpmbuild/RPMS/noarch/flight-starter-*.noarch.rpm pkg
 elif [ -f /etc/lsb-release ]; then
   echo "Building DEB package..."
-  VERSION=2020.2.2
 
   mkdir -p $HOME/flight-starter
 
@@ -20,9 +29,13 @@ elif [ -f /etc/lsb-release ]; then
   mkdir -p flight-starter_${VERSION}-1/DEBIAN
   mkdir -p flight-starter-banner_${VERSION}-1/DEBIAN
   sed -e "s/%VERSION%/$VERSION/g" \
+      -e "s/%REL%/$REL/g" \
       $d/deb/control.tpl > \
       $HOME/flight-starter/flight-starter_${VERSION}-1/DEBIAN/control
   sed -e "s/%VERSION%/$VERSION/g" \
+      -e "s/%REL%/$REL/g" \
+      -e "s/%NOW%/$NOW/g" \
+      -e "s/%NEXT%/$NEXT/g" \
       $d/deb/flight-starter-banner.control.tpl > \
       $HOME/flight-starter/flight-starter-banner_${VERSION}-1/DEBIAN/control
 
