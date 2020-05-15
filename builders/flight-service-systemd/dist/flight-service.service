@@ -30,8 +30,6 @@ After=syslog.target
 After=network-online.target
 
 [Service]
-# Workaround for https://bugs.ruby-lang.org/issues/12695
-Environment="USER=root"
 Type=oneshot
 SyslogIdentifier=flight-service
 RemainAfterExit=true
