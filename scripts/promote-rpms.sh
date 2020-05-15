@@ -87,11 +87,11 @@ TARGET_DIR="/tmp/${TARGET_PREFIX}"
 
 # make sure we're operating on the latest data in the source bucket
 mkdir -p $SOURCE_DIR
-aws --region "${REGION}" s3 sync "s3://${SOURCE_PREFIX}" $SOURCE_DIR
+aws --region "${REGION}" s3 sync --delete "s3://${SOURCE_PREFIX}" $SOURCE_DIR
 
 # make sure we're operating on the latest data in the target bucket
 mkdir -p $TARGET_DIR
-aws --region "${REGION}" s3 sync "s3://${TARGET_PREFIX}" $TARGET_DIR
+aws --region "${REGION}" s3 sync --delete "s3://${TARGET_PREFIX}" $TARGET_DIR
 
 # copy the RPM in and update the repo
 NOARCH_TARGETS="x86_64 aarch64"
