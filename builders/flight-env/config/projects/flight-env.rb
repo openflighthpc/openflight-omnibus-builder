@@ -31,11 +31,11 @@ friendly_name 'Flight Environment'
 
 install_dir '/opt/flight/opt/env'
 
-VERSION = '1.4.0-rc5'
+VERSION = '1.4.0-rc6'
 override 'flight-env', version: VERSION
 
 build_version VERSION
-build_iteration 4
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-env'
@@ -55,10 +55,11 @@ runtime_dependency 'flight-ruby-system-2.0'
 
 if ohai['platform_family'] == 'rhel'
   # vim-common provides xxd a dependency required by Gridware
+  # Homebrew requires: perl-ExtUtils-MakeMaker & patch
   %w(
     wget libuuid-devel zlib-devel uuid gcc-c++ sqlite-devel
     cmake openssl-devel git vim-common bzip2 gzip unzip tar
-    make
+    make perl-ExtUtils-MakeMaker patch
   ).each do |dep|
     runtime_dependency dep
   end
@@ -78,10 +79,11 @@ if ohai['platform_family'] == 'rhel'
   end
 elsif ohai['platform_family'] == 'debian'
   # ohai['platform_version'] => '18.04'
+  # Homebrew requires: patch & perl-modules (for ExtUtils::MakeMaker)
   %w(
     wget uuid-dev zlib1g-dev uuid g++ libsqlite3-dev
     cmake libssl-dev git vim-common bzip2 gzip unzip tar
-    python3 python3-setuptools pkg-config
+    python3 python3-setuptools pkg-config perl-modules patch
   ).each do |dep|
     runtime_dependency dep
   end
