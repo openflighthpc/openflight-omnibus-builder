@@ -32,4 +32,7 @@
 export FLIGHT_CWD=$(pwd)
 cd /opt/flight/opt/env
 export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
-flexec bundle exec bin/flenv "$@"
+# The following 'exec .../bundle' incantation is used to ensure that flenv
+# receives the correct parent shell, rather than the shell of this
+# script (which is always bash).
+exec ${flight_ROOT:-/opt/flight}/bin/bundle exec bin/flenv "$@"
