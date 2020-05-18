@@ -39,14 +39,9 @@ fi
 export flight_ENV_root=${flight_ENV_root:-${flight_ROOT}/opt/env}
 export flight_ENV_shell=bash
 
-flight() {
-  if [ "$1" == "env" ]; then
-      shift
-      export FLIGHT_PROGRAM_NAME="flight env"
-      flenv "$@"
-  else
-      flexec flight "$@"
-  fi
+flight_env() {
+  export FLIGHT_PROGRAM_NAME="flight env"
+  flenv "$@"
 }
 
 if [ -z "${flight_ENV_active}" ] && \
