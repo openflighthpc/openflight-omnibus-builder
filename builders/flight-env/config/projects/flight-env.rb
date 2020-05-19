@@ -50,8 +50,10 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
+ENV_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
+runtime_dependency 'flight-env-types'
 
 if ohai['platform_family'] == 'rhel'
   # vim-common provides xxd a dependency required by Gridware
@@ -102,8 +104,15 @@ end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends/provides
+  # provides are prefixed with `:`
+  priority ":flight-env-system-#{ENV_SYSTEM}"
 end
 
 package :deb do
   vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section "::flight-env-system-#{ENV_SYSTEM}"
 end

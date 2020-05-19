@@ -53,4 +53,21 @@ build do
     '--path vendor'
   ].join(' ')
   command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+
+  block do
+    require 'yaml'
+    config = {
+      'type_paths' => [
+        '/opt/flight/usr/lib/env/types',
+        '/opt/flight/etc/env/types'
+      ],
+      'global_depot_path' => '/opt/flight/var/lib/env',
+      'global_build_cache_path' => '/opt/flight/var/cache/env/build',
+      'global_cache_path' => '/opt/flight/var/cache/env'
+    }
+    File.write(
+      File.expand_path("#{install_dir}/etc/config.yml"),
+      config.to_yaml
+    )
+  end
 end
