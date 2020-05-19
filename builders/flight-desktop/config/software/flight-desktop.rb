@@ -53,4 +53,20 @@ build do
     '--path vendor'
   ].join(' ')
   command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+
+  block do
+    require 'yaml'
+    config = {
+      'type_paths' => [
+        '/opt/flight/usr/lib/desktop/types',
+        '/opt/flight/etc/desktop/types'
+      ],
+      'global_state_path' => '/opt/flight/var/lib/desktop',
+      'global_log_path' => '/opt/flight/var/log/desktop'
+    }
+    File.write(
+      File.expand_path("#{install_dir}/etc/config.yml"),
+      config.to_yaml
+    )
+  end
 end

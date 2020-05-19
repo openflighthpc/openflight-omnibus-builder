@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.3.0-rc9'
+VERSION = '1.3.0-rc10'
 override 'flight-desktop', version: VERSION
 
 build_version VERSION
@@ -53,6 +53,7 @@ exclude '**/bundler/git'
 DESKTOP_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
+runtime_dependency 'flight-desktop-types'
 
 if ohai['platform_family'] == 'rhel'
   runtime_dependency 'tigervnc-server-minimal'
