@@ -39,6 +39,7 @@ end
 
 build do
   block do
+    FileUtils.mkdir_p '/opt/flight/bin'
     Dir.glob(File.join(File.dirname(__FILE__), '..', '..', 'dist', 'bin', '*')).each do |path|
       FileUtils.cp_r path, '/opt/flight/bin'
     end
