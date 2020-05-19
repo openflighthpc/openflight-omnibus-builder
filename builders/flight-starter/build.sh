@@ -25,34 +25,34 @@ elif [ -f /etc/lsb-release ]; then
 
   pushd $HOME/flight-starter
   rm -rf ${VERSION}.tar.gz flight-starter-${VERSION}
-  rm -rf flight-starter_${VERSION}-1 flight-starter-banner_${VERSION}-1
-  mkdir -p flight-starter_${VERSION}-1/DEBIAN
-  mkdir -p flight-starter-banner_${VERSION}-1/DEBIAN
+  rm -rf flight-starter_${VERSION}-${REL} flight-starter-banner_${VERSION}-${REL}
+  mkdir -p flight-starter_${VERSION}-${REL}/DEBIAN
+  mkdir -p flight-starter-banner_${VERSION}-${REL}/DEBIAN
   sed -e "s/%VERSION%/$VERSION/g" \
       -e "s/%REL%/$REL/g" \
       $d/deb/control.tpl > \
-      $HOME/flight-starter/flight-starter_${VERSION}-1/DEBIAN/control
+      $HOME/flight-starter/flight-starter_${VERSION}-${REL}/DEBIAN/control
   sed -e "s/%VERSION%/$VERSION/g" \
       -e "s/%REL%/$REL/g" \
       -e "s/%NOW%/$NOW/g" \
       -e "s/%NEXT%/$NEXT/g" \
       $d/deb/flight-starter-banner.control.tpl > \
-      $HOME/flight-starter/flight-starter-banner_${VERSION}-1/DEBIAN/control
+      $HOME/flight-starter/flight-starter-banner_${VERSION}-${REL}/DEBIAN/control
 
   wget https://github.com/openflighthpc/flight-starter/archive/${VERSION}.tar.gz
   tar xzf ${VERSION}.tar.gz
-  mv flight-starter-${VERSION}/dist/* flight-starter_${VERSION}-1
+  mv flight-starter-${VERSION}/dist/* flight-starter_${VERSION}-${REL}
   for a in /opt/flight/etc/flight-starter.rc \
            /opt/flight/etc/flight-starter.cshrc \
            /opt/flight/etc/banner/banner.erb \
            /opt/flight/etc/banner/banner.txt \
            /opt/flight/etc/banner/banner.yml \
            /opt/flight/libexec/flight-starter/banner; do
-    mkdir -p flight-starter-banner_${VERSION}-1/$(dirname "$a")
-    mv flight-starter_${VERSION}-1/$a flight-starter-banner_${VERSION}-1/$a
+    mkdir -p flight-starter-banner_${VERSION}-${REL}/$(dirname "$a")
+    mv flight-starter_${VERSION}-${REL}/$a flight-starter-banner_${VERSION}-${REL}/$a
   done
-  dpkg-deb --build flight-starter_${VERSION}-1
-  dpkg-deb --build flight-starter-banner_${VERSION}-1
+  dpkg-deb --build flight-starter_${VERSION}-${REL}
+  dpkg-deb --build flight-starter-banner_${VERSION}-${REL}
   popd
 
   mv $HOME/flight-starter/*.deb pkg
