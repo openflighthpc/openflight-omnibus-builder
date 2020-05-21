@@ -9,7 +9,7 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 
 BuildArch:     noarch
-Requires:      flight-console-api => 0.0.2, flight-console-webapp => 0.0.3, flight-desktop-restapi => 1.0.1, flight-desktop-restapi < 1.1.0~, flight-desktop-webapp => 1.2.0, flight-desktop-restapi < 1.3.0~
+Requires:      flight-console-api => 0.0.2, flight-console-webapp => 0.0.5, flight-desktop-restapi => 1.0.1, flight-desktop-restapi < 1.1.0~, flight-desktop-webapp => 1.2.0, flight-desktop-restapi < 1.3.0~
 
 %description
 The Flight Webapp Suite collection of webapps for accessing a HPC environment.
