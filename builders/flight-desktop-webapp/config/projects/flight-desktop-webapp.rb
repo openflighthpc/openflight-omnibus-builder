@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop Webapp'
 
 install_dir '/opt/flight/opt/desktop-webapp'
 
-VERSION = '1.2.0-rc2'
+VERSION = '1.2.0'
 override 'flight-desktop-webapp', version: VERSION
 
 build_version VERSION
