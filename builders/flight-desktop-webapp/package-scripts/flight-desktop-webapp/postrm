@@ -27,11 +27,4 @@
 #===============================================================================
 /opt/flight/bin/flight landing-page compile
 
-cat <<EOF 1>&2
-desktop-webapp should now be configured by running 
-
-  /opt/flight/bin/flight service configure desktop-webapp
-
-EOF
-
 exit 0

@@ -25,7 +25,7 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-/opt/flight/bin/flight landing-page compile >/dev/null 2>/dev/null
+/opt/flight/bin/flight landing-page compile
 
 cat <<EOF 1>&2
 console-webapp should now be configured by running 
