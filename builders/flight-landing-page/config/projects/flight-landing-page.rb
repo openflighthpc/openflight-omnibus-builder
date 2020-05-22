@@ -31,7 +31,7 @@ friendly_name 'Flight Landing Page'
 
 install_dir '/opt/flight/opt/landing-page'
 
-VERSION = '0.0.2'
+VERSION = '0.0.3'
 override 'flight-landing-page', version: VERSION
 
 build_version VERSION
