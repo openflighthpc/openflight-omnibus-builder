@@ -1,6 +1,6 @@
 Name:           flight-webapp-suite
 Version:        2020.2
-Release:        0
+Release:        1
 Summary:        The Flight Webapp Suite collection of HPC environment webapps
 
 Group:          OpenFlight/Environment
@@ -29,7 +29,31 @@ The Flight Webapp Suite collection of webapps for accessing a HPC environment.
 %files
 # Nothing to do
 
+%post
+/opt/flight/bin/flight service enable console-api
+/opt/flight/bin/flight service enable desktop-restapi
+/opt/flight/bin/flight service enable www
+/opt/flight/bin/flight service start console-api
+/opt/flight/bin/flight service start desktop-restapi
+/opt/flight/bin/flight service start www
+cat <<EOF 1>&2
+================================================
+HTTPs support needs to be enabled for flight-www
+================================================
+To enable HTTPs support run '/opt/flight/bin/flight www enable-https'.
+EOF
+
+%postun
+/opt/flight/bin/flight service stop console-api
+/opt/flight/bin/flight service stop desktop-restapi
+/opt/flight/bin/flight service stop www
+/opt/flight/bin/flight service disable console-api
+/opt/flight/bin/flight service disable desktop-restapi
+/opt/flight/bin/flight service disable www
+
 %changelog
+* Fri May 22 2020 Ben Armston <ben.armston@alces-flight.com> - 2020.2-1
+- Added post installation and uninstallation scripts.
 * Mon May 18 2020 Ben Armston <ben.armston@alces-flight.com> - 2020.2-0
 - Initial Package
 
