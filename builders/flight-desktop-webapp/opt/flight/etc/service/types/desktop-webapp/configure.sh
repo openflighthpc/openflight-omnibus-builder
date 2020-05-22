@@ -11,8 +11,15 @@ set_string() {
     # one, change the other.
   "${flight_ROOT}/bin/ruby" <<EOF
 require 'json'
-json = File.read('/opt/flight/opt/desktop-webapp/build/config.json')
-config = JSON.parse(json)
+if File.exist?('/opt/flight/opt/desktop-webapp/build/config.json')
+  json = File.read('/opt/flight/opt/desktop-webapp/build/config.json')
+  config = JSON.parse(json)
+else
+  config = {
+    "websocketPathPrefix" => "/ws",
+    "websocketPathIp" => "127.0.0.1",
+  }
+end
 config["${key}"] = "${value}"
 new_json = JSON.pretty_generate(config)
 File.write('/opt/flight/opt/desktop-webapp/build/config.json', new_json)
@@ -28,8 +35,15 @@ set_nil() {
     # one, change the other.
   "${flight_ROOT}/bin/ruby" <<EOF
 require 'json'
-json = File.read('/opt/flight/opt/desktop-webapp/build/config.json')
-config = JSON.parse(json)
+if File.exist?('/opt/flight/opt/desktop-webapp/build/config.json')
+  json = File.read('/opt/flight/opt/desktop-webapp/build/config.json')
+  config = JSON.parse(json)
+else
+  config = {
+    "websocketPathPrefix" => "/ws",
+    "websocketPathIp" => "127.0.0.1",
+  }
+end
 config["${key}"] = nil
 new_json = JSON.pretty_generate(config)
 File.write('/opt/flight/opt/desktop-webapp/build/config.json', new_json)
