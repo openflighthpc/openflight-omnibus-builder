@@ -126,7 +126,7 @@ echo "Match: $matches"
 ARCH="binary-$(dpkg-deb -I $matches |grep '^ Architecture' |awk '{print $2}')"
 
 # Push to all architectures if noarch rpm
-if [ "$ARCH" == "binary-noarch" ] ; then
+if [ "$ARCH" == "binary-all" ] ; then
     for arch in $NOARCH_TARGETS ; do
         mkdir -pv $TARGET_DIR/main/$arch
         cp -rv ${matches} $TARGET_DIR/main/$arch
