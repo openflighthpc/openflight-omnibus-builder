@@ -123,7 +123,7 @@ fi
 
 echo "Match: $matches"
 
-ARCH="binary-$(dpkg-deb -I $DEB  |grep '^ Architecture' |awk '{print $2}')"
+ARCH="binary-$(dpkg-deb -I $matches |grep '^ Architecture' |awk '{print $2}')"
 
 # Push to all architectures if noarch rpm
 if [ "$ARCH" == "binary-noarch" ] ; then
@@ -169,7 +169,7 @@ aws --region "${REGION}" s3 sync --delete $TARGET_DIR s3://$TARGET_PREFIX --acl 
 
 # Notify slack
 if [ "$ARCH" == "noarch" ] ; then ARCH="binary-amd64" ; fi
-export PACKAGE=$(echo "$DEB" |sed 's/.*\///g')
+export PACKAGE=$(echo "$matches" |sed 's/.*\///g')
 export REPO=$(echo "$TARGET_PREFIX" |sed 's/.*org\///g')
 export PACKAGE_URL=https://$TARGET_PREFIX/main/$ARCH/$PACKAGE
 $SCRIPT_DIR/slack-update.sh
