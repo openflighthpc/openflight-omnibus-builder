@@ -42,6 +42,7 @@ build do
     FileUtils.mkdir_p '/opt/flight/bin'
     Dir.glob(File.join(File.dirname(__FILE__), '..', '..', 'dist', 'bin', '*')).each do |path|
       FileUtils.cp_r path, '/opt/flight/bin'
+      FileUtils.chmod(0755, File.join('/opt/flight/bin', File.basename(path)))
     end
   end
 end
