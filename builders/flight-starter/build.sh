@@ -5,7 +5,7 @@ mkdir -p pkg
 
 NOW=2020.2
 NEXT=2020.3
-VERSION=${NOW}.2
+VERSION=${NOW}.3
 REL=1
 
 if [ -f /etc/redhat-release ]; then
@@ -42,6 +42,11 @@ elif [ -f /etc/lsb-release ]; then
   wget https://github.com/openflighthpc/flight-starter/archive/${VERSION}.tar.gz
   tar xzf ${VERSION}.tar.gz
   mv flight-starter-${VERSION}/dist/* flight-starter_${VERSION}-${REL}
+  # Relocate login script for tcsh - refs:
+  # https://github.com/openflighthpc/openflight-omnibus-builder/issues/29
+  mkdir -p flight-starter_${VERSION}-${REL}/etc/csh/login.d
+  mv flight-starter_${VERSION}-${REL}/etc/profile.d/zz-flight-starter.csh \
+     flight-starter_${VERSION}-${REL}/etc/csh/login.d
   for a in /opt/flight/etc/flight-starter.rc \
            /opt/flight/etc/flight-starter.cshrc \
            /opt/flight/etc/banner/banner.erb \
