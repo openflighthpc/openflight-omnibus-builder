@@ -46,7 +46,7 @@ mkdir -p $(dirname "${log_file}")
 pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
-addr=tcp://127.0.0.1:915
+addr=tcp://127.0.0.1:917
 tool_bg "${flight_ROOT}"/bin/ruby \
   "${flight_ROOT}"/opt/action-api/bin/puma --bind $addr \
     --pidfile $pidfile \
