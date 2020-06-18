@@ -1,6 +1,6 @@
 : '
 : NAME: env
-: SYNOPSIS: Manage and access HPC application environments
+: SYNOPSIS: Manage and access HPC software package ecosystems
 : VERSION: 1.1.4
 : '
 #==============================================================================

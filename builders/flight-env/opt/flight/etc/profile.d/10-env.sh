@@ -5,30 +5,29 @@
 ##
 ################################################################################
 flenv() {
-  if [ ! -x $flight_ENV_root/bin/flenv ]; then
-    return
-  fi
   local op tmpf rc flight_ENV_eval
-  export FLIGHT_PROGRAM_NAME=${FLIGHT_PROGRAM_NAME:-flenv}
-  op="$1"
-  case $op in
-    activate|deactivate|switch)
-      tmpf=$(mktemp -t flenv.XXXXXXXX)
-      flight_ENV_eval=true flexec ruby $flight_ENV_root/bin/flenv "$@" > $tmpf
-      rc=$?
-      if [ $rc -gt 0 ]; then
-        cat $tmpf
-        unset FLIGHT_PROGRAM_NAME
-        return $rc
-      else
-        source $tmpf
-      fi
-      rm -f $tmpf
-      ;;
-    *)
-      flexec ruby $flight_ENV_root/bin/flenv "$@"
-      ;;
-  esac
+  if [ -x $flight_ENV_root/bin/flenv ]; then
+    export FLIGHT_PROGRAM_NAME=${FLIGHT_PROGRAM_NAME:-flenv}
+    op="$1"
+    case $op in
+      activate|deactivate|switch)
+        tmpf=$(mktemp -t flenv.XXXXXXXX)
+        flight_ENV_eval=true flexec ruby $flight_ENV_root/bin/flenv "$@" > $tmpf
+        rc=$?
+        if [ $rc -gt 0 ]; then
+          cat $tmpf
+          unset FLIGHT_PROGRAM_NAME
+          return $rc
+        else
+          source $tmpf
+        fi
+        rm -f $tmpf
+        ;;
+      *)
+        flexec ruby $flight_ENV_root/bin/flenv "$@"
+        ;;
+    esac
+  fi
   unset FLIGHT_PROGRAM_NAME
 }
 export -f flenv
@@ -43,6 +42,7 @@ flight_env() {
   export FLIGHT_PROGRAM_NAME="flight env"
   flenv "$@"
 }
+export -f flight_env
 
 if [ -z "${flight_ENV_active}" ] && \
     (
