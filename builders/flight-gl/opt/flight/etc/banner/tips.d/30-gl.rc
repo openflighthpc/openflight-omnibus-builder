@@ -1,0 +1,15 @@
+################################################################################
+##
+## Flight GL
+## Copyright (c) 2020-present Alces Flight Ltd
+##
+################################################################################
+if [ -z "$flight_STARTER_tips_system" ]; then
+  flight_TIP_command="flight gl"
+  flight_TIP_synopsis="manage GPU visualization sessions"
+elif [ "$flight_STARTER_tips_system" -ge 2 ]; then
+  if [ "$DISPLAY" ]; then
+    flight_TIP_command="flight gl"
+    flight_TIP_synopsis="manage GPU visualization sessions"
+  fi
+fi
