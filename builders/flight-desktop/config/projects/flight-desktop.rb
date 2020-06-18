@@ -35,7 +35,7 @@ VERSION = '1.3.0-rc10'
 override 'flight-desktop', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-desktop'
@@ -58,9 +58,11 @@ runtime_dependency 'flight-desktop-types'
 if ohai['platform_family'] == 'rhel'
   runtime_dependency 'tigervnc-server-minimal'
   runtime_dependency 'xorg-x11-xauth'
+  runtime_dependency 'perl'
 elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'tigervnc-standalone-server'
   runtime_dependency 'xauth'
+  runtime_dependency 'perl'
 end
 
 %w(
