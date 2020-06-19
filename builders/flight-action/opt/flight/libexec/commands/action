@@ -32,4 +32,10 @@
 export FLIGHT_CWD=$(pwd)
 cd /opt/flight/opt/action
 export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
+
+# Disable warnings about use of the double splat (`**`) operator.  When
+# libraries are updated these warning will go away and we can then remove
+# this line.
+export RUBYOPT='-W:no-deprecated -W:no-experimental'
+
 flexec bundle exec bin/action "$@"
