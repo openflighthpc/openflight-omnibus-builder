@@ -93,6 +93,9 @@ EOF
     gem install bundler:2.1.4
     usermod -a -G rvm vagrant
 
+    # required for building genders as part of flight-pdsh
+    yum install -y -e0 flex
+
     yum install -y -e0 createrepo
 
     # required for building flight-desktop-restapi
