@@ -1,5 +1,9 @@
-#!/usr/bin/env ruby
-# =============================================================================
+: '
+: NAME: power
+: SYNOPSIS: Execute power actions
+: VERSION: 0.3.2
+: '
+#==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
 # This file is part of Flight Action.
@@ -23,36 +27,17 @@
 #  https://opensource.org/licenses/EPL-2.0
 #
 # For more information on Flight Action, please visit:
-# https://github.com/alces-flight/action-client-ruby
+# https://github.com/alces-flight/flight-action
 # ==============================================================================
-begin
-  lib_dir = File.expand_path(File.join(__FILE__, '../../lib'))
-  $LOAD_PATH.unshift(lib_dir)
-  ENV['BUNDLE_GEMFILE'] ||= File.join(__FILE__, '../../Gemfile')
+export FLIGHT_CWD=$(pwd)
+cd /opt/flight/opt/action
+export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
 
-  require 'rubygems'
-  require 'bundler'
+# Disable warnings about use of the double splat (`**`) operator.  When
+# libraries are updated these warning will go away and we can then remove
+# this line.
+export RUBYOPT='-W0'
+export FLIGHT_ACTION_NAMESPACE=power
+export FLIGHT_ACTION_DESCRIPTION="Execute power actions"
 
-  Bundler.setup(:default)
-
-  require 'active_support/core_ext/string'
-  require 'active_support/core_ext/module'
-  require 'active_support/core_ext/module/delegation'
-
-  require 'action_client/config'
-
-  require 'action_client/patches'
-  require 'action_client/errors'
-  require 'action_client/formatter'
-  require 'action_client/records'
-  require 'action_client/cli'
-
-  ActionClient::CLI.new.run if $PROGRAM_NAME == __FILE__
-rescue Interrupt
-  if Kernel.const_defined?(:Paint)
-    $stderr.puts "\n#{Paint['WARNING', :underline, :yellow]}: Cancelled by user"
-  else
-    $stderr.puts "\nWARNING: Cancelled by user"
-  end
-  exit(130)
-end
+flexec bundle exec bin/action "$@"
