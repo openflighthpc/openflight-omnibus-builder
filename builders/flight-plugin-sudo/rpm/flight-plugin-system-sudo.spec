@@ -1,7 +1,7 @@
-Name:           flight-system-plugin-sudoers
+Name:           flight-plugin-system-sudo
 Version:        %{_flight_pkg_version}
 Release:        %{_flight_pkg_rel}
-Summary:        Provides sudoers integration for OpenFlight tools
+Summary:        Provides sudo integration for OpenFlight tools
 
 Group:          OpenFlight/Environment
 License:        EPL-2.0
@@ -9,16 +9,17 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 %undefine _disable_source_fetch
 Source0:        https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/LICENSE.txt
-Source1:        https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/builders/flight-sudoers/dist/openflight-sudoers
+Source1:        https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/builders/flight-plugin-sudo/dist/openflight-sudoers
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 Provides:       flight-sudo-system-1.0
+Conflicts:      flight-plugin-manual-sudo
 Requires:       sudo
 
 %description
-Provides sudoers integration for OpenFlight tools
+Provides sudo integration for OpenFlight tools
 
 %setup -q -c -T
 install -pm 644 %{SOURCE0} .
