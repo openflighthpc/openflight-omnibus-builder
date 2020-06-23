@@ -31,7 +31,7 @@ friendly_name 'Flight GL'
 
 install_dir '/opt/flight/opt/gl'
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 override 'flight-gl', version: VERSION
 
 build_version VERSION
@@ -50,7 +50,9 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
+GL_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
+runtime_dependency 'flight-sudo-system-1.0'
 
 if ohai['platform_family'] == 'rhel'
   runtime_dependency 'VirtualGL'
@@ -74,8 +76,15 @@ end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends/provides
+  # provides are prefixed with `:`
+  priority ":flight-gl-system-#{GL_SYSTEM}"
 end
 
 package :deb do
   vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section "::flight-gl-system-#{DESKTOP_SYSTEM}"
 end

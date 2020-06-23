@@ -93,6 +93,8 @@ Obsoletes: <%= name %>
 %config(noreplace) <%= file %>
 <% end -%>
 <% # List all files -%>
+%attr(750,root,root) /opt/flight/etc/sudoers.d
+%attr(600,root,root) /opt/flight/etc/sudoers.d/*
 <% files.each do |file| -%>
 <%= file %>
 <% end -%>

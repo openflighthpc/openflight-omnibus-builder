@@ -1,0 +1,7 @@
+################################################################################
+##
+## Flight GL - sudoers configuration file
+## Copyright (c) 2020 Alces Flight Ltd
+##
+################################################################################
+ALL ALL= NOPASSWD:/opt/flight/opt/gl/libexec/share/tty
