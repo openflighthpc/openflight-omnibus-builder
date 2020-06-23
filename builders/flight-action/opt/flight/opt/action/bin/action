@@ -47,7 +47,8 @@ begin
   require 'action_client/records'
   require 'action_client/cli'
 
-  ActionClient::CLI.new.run if $PROGRAM_NAME == __FILE__
+  Dir.chdir(ENV.fetch('FLIGHT_CWD','.'))
+  ActionClient::CLI.new.run
 rescue Interrupt
   if Kernel.const_defined?(:Paint)
     $stderr.puts "\n#{Paint['WARNING', :underline, :yellow]}: Cancelled by user"
