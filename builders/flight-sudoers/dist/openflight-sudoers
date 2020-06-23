@@ -1,0 +1,8 @@
+################################################################################
+##
+## OpenFlight - sudoers configuration file
+## Copyright (c) 2020 Alces Flight Ltd
+##
+################################################################################
+# Note that the # in the following line does not mean a comment
+#includedir /opt/flight/etc/sudoers.d
