@@ -1,0 +1,7 @@
+################################################################################
+##
+## OpenFlight - Log rotation configuration
+## Copyright (c) 2020 Alces Flight Ltd
+##
+################################################################################
+include /opt/flight/etc/logrotate.d
