@@ -35,7 +35,7 @@ VERSION = '0.3.3'
 override 'flight-action', version: VERSION
 
 build_version VERSION
-build_iteration 0
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-action'
@@ -60,6 +60,7 @@ elsif ohai['platform_family'] == 'debian'
 end
 
 %w(
+  opt/flight/etc/banner/tips.d/40-power.rc
   opt/flight/libexec/commands/action
   opt/flight/libexec/commands/power
   opt/flight/opt/action/bin/action
