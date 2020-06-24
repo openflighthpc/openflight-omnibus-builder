@@ -33,3 +33,14 @@ flight_gl() {
   flgl "$@"
 }
 export -f flight_gl
+
+flight_gl_exit() {
+  if [ "${FLIGHTGL_PID}" ]; then
+    flgl stop &>/dev/null
+  fi
+}
+
+if [ "${flight_DEFINES}" ]; then
+  flight_DEFINES+=(flgl flight_gl flight_gl_exit flight_GL_root)
+  flight_DEFINES_exits+=(flight_gl_exit)
+fi
