@@ -20,6 +20,7 @@ set flight_ENV_cmd="${flight_ROOT}/bin/flexec ruby $flight_ENV_root/bin/flenv"
 
 if ( ! $?flight_SYSTEM_start ) then
   set flight_SYSTEM_start=false
+  set flight_SYSTEM_start_tmp=true
 endif
 
 if ( ! $?flight_ENV_active && ( $?loginsh || $?prompt || "$flight_SYSTEM_start" == "true" ) ) then
@@ -29,4 +30,16 @@ if ( ! $?flight_ENV_active && ( $?loginsh || $?prompt || "$flight_SYSTEM_start" 
     flenv activate "${flight_ENV_default}"
   endif
   unset flight_ENV_default
+endif
+
+if ($?flight_SYSTEM_start_tmp) then
+  unset flight_SYSTEM_start
+  unset flight_SYSTEM_start_tmp
+endif
+
+alias flight_env_exit 'if ( $?flight_ENV_active ) eval flenv deactivate'
+
+if ($?flight_DEFINES) then
+  setenv flight_DEFINES "${flight_DEFINES} flenv flight_env_exit flight_ENV_root flight_ENV_shell flight_ENV_eval_cmd flight_ENV_cmd"
+  setenv flight_DEFINES_exits "${flight_DEFINES_exits} flight_env_exit"
 endif

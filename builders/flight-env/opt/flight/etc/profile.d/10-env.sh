@@ -62,3 +62,15 @@ if [ -z "${flight_ENV_active}" ] && \
   fi
   unset flight_ENV_default
 fi
+
+flight_env_exit() {
+  if [ "${flight_ENV_active}" ]; then
+    flenv deactivate
+  fi
+}
+export -f flight_env_exit
+
+if [ "${flight_DEFINES}" ]; then
+  flight_DEFINES+=(flenv flight_env flight_env_exit flight_ENV_root flight_ENV_shell)
+  flight_DEFINES_exits+=(flight_env_exit)
+fi
