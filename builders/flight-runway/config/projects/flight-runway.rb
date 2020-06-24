@@ -31,7 +31,7 @@ friendly_name 'Flight Runway'
 
 install_dir '/opt/flight/opt/runway'
 
-VERSION = '1.1.1'
+VERSION = '1.1.2'
 override 'flight-runway', version: VERSION
 
 build_version VERSION
