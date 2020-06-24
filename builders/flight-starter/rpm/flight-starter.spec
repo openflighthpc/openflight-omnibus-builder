@@ -13,7 +13,7 @@ Source0:        https://github.com/openflighthpc/%{name}/archive/%{version}.tar.
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:     noarch
-Requires:      flight-runway, flight-starter-banner => %{_flight_pkg_now}.0, flight-starter-banner < %{_flight_pkg_next}.0~
+Requires:      flight-runway, flight-starter-banner => %{_flight_pkg_now}.0, flight-starter-banner < %{_flight_pkg_next}.0~, flight-starter-system-1.0
 
 %description
 Profile scripts and infrastructure for activating an OpenFlight HPC environment
@@ -26,6 +26,12 @@ Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
 %install
 cp -R dist/* $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/opt/flight/etc/plugin/xdg
+mkdir -p $RPM_BUILD_ROOT/opt/flight/etc/plugin/profile.d
+install -p -m 644 $RPM_BUILD_ROOT/etc/profile.d/zz-flight-starter.sh $RPM_BUILD_ROOT/opt/flight/etc/plugin/profile.d/flight-starter.sh
+install -p -m 644 $RPM_BUILD_ROOT/etc/profile.d/zz-flight-starter.csh $RPM_BUILD_ROOT/opt/flight/etc/plugin/profile.d/flight-starter.csh
+install -p -m 644 $RPM_BUILD_ROOT/etc/xdg/flight.rc $RPM_BUILD_ROOT/opt/flight/etc/plugin/xdg
+install -p -m 644 $RPM_BUILD_ROOT/etc/xdg/flight.cshrc $RPM_BUILD_ROOT/opt/flight/etc/plugin/xdg
 
 %clean
 #rm -rf $RPM_BUILD_ROOT
@@ -33,8 +39,6 @@ cp -R dist/* $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %license LICENSE.txt
-%config(noreplace) %{_sysconfdir}/xdg/*
-%{_sysconfdir}/profile.d/*
 /opt/flight/etc/banner/banner.d/*
 /opt/flight/etc/banner/tips.d/*
 %config(noreplace) /opt/flight/etc/setup-sshkey.rc
@@ -48,6 +52,8 @@ cp -R dist/* $RPM_BUILD_ROOT
 %exclude /opt/flight/libexec/flight-starter/banner
 
 %changelog
+* Wed Jun 24 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.2.x
+- Reworked to use plugin approach
 * Tue Apr 28 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.2.2
 - Updated to 2020.2.2
 - Only execute banner script under interactive shells
@@ -76,9 +82,33 @@ cp -R dist/* $RPM_BUILD_ROOT
 * Fri Oct  4 2019 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 1.1.0
 - Initial Package
 
+%package -n flight-plugin-system-starter
+Summary: Provides profile script integration for Flight Starter
+Requires: flight-starter
+Requires: setup
+Provides: flight-starter-system-1.0
+Conflicts: flight-plugin-manual-starter
+%description -n flight-plugin-system-starter
+Provides profile script integration for Flight Starter
+%files -n flight-plugin-system-starter
+%config(noreplace) %{_sysconfdir}/xdg/*
+%{_sysconfdir}/profile.d/*
+
+%package -n flight-plugin-manual-starter
+Summary: Provides manually managed profile script integration for Flight Starter
+Requires: flight-starter
+Provides: flight-starter-system-1.0
+Conflicts: flight-plugin-system-starter
+%description -n flight-plugin-manual-starter
+Provides manually managed profile script integration for Flight Starter
+%files -n flight-plugin-manual-starter
+%config(noreplace) /opt/flight/etc/plugin/xdg/*
+/opt/flight/etc/plugin/profile.d/*
+
 %package banner
 Summary: OpenFlightHPC branded banner for Flight Starter
 Requires: flight-starter
+Provides: flight-starter-banner-system-1.0
 %description banner
 OpenFlightHPC branded banner for Flight Starter
 %files banner
