@@ -11,6 +11,16 @@ for a in "$@"; do
       sed -i "${flight_ROOT}"/etc/www/http.d/base-http.conf \
           -e "s/^\s*listen\s.*;/listen ${v} default;/g"
     ;;
+    https_port)
+      if [ -f "${flight_ROOT}"/etc/www/http.d/https.conf.disabled ] ; then
+          sed -i "${flight_ROOT}"/etc/www/http.d/https.conf.disabled \
+              -e "s/^\s*listen\s.*;/listen ${v} ssl default;/g"
+      fi
+      if [ -f "${flight_ROOT}"/etc/www/http.d/https.conf ] ; then
+          sed -i "${flight_ROOT}"/etc/www/http.d/https.conf \
+              -e "s/^\s*listen\s.*;/listen ${v} ssl default;/g"
+      fi
+    ;;
     *)
       echo "Unrecognised key: $k"
     ;;

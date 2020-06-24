@@ -3,5 +3,8 @@ title: "Flight environment web server"
 text: "Please provide values for the following configuration items."
 values:
   - key: port
-    label: Port
+    label: HTTP Port
     value: 80
+  - key: https_port
+    label: HTTPs Port
+    value: 443

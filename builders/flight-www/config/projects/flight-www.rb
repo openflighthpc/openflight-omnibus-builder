@@ -31,11 +31,11 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 override 'flight-www', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 0
 
 dependency 'preparation'
 dependency 'flight-www'
