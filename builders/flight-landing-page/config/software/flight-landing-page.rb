@@ -1,6 +1,5 @@
-#!/bin/sh
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,13 +24,33 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-/opt/flight/bin/flight landing-page compile
+name 'flight-landing-page'
+default_version '0.0.0'
 
-cat <<EOF 1>&2
-desktop-webapp should now be configured by running 
+source git: 'https://github.com/openflighthpc/flight-landing-page'
 
-  /opt/flight/bin/flight service configure desktop-webapp
+dependency 'enforce-flight-runway'
+whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
-EOF
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
 
-exit 0
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
+
+  # Moves the project into place
+  [
+    'Gemfile', 'Gemfile.lock', 'bin', 'www',
+    'LICENSE.txt', 'README.md'
+  ].each do |file|
+    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
+
+  # Installs the gems to the shared `vendor/share`
+  flags = [
+    "--without development test",
+    '--path vendor'
+  ].join(' ')
+  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+end

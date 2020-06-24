@@ -1,6 +1,5 @@
-#!/bin/sh
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,13 +24,21 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-/opt/flight/bin/flight landing-page compile
+name "enforce-flight-runway"
+description "enforce existence of flight-runway"
+default_version "1.0.0"
 
-cat <<EOF 1>&2
-desktop-webapp should now be configured by running 
+license :project_license
+skip_transitive_dependency_licensing true
 
-  /opt/flight/bin/flight service configure desktop-webapp
-
-EOF
-
-exit 0
+build do
+  block do
+    raise "Flight Runway is not installed!" if ! File.exists?('/opt/flight/bin/flight')
+    bundle_version = Bundler.with_unbundled_env do
+      `/opt/flight/bin/bundle --version | sed 's/Bundler version //g'`.chomp
+    end
+    if bundle_version != '2.1.4'
+      raise "Flight Runway has incorrect bundle version: #{bundle_version} (expected 2.1.4)"
+    end
+  end
+end

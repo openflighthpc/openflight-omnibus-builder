@@ -35,7 +35,7 @@ VERSION = '1.0.0'
 override 'flight-www', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 3
 
 dependency 'preparation'
 dependency 'flight-www'
@@ -55,6 +55,7 @@ override :nginx, version: '1.14.2'
 WWW_SYSTEM = '1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
+runtime_dependency 'flight-landing-page'
 
 require 'find'
 Find.find('opt') do |o|
