@@ -50,8 +50,6 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-asset'
-
 extra_package_file "opt/flight/libexec/commands/pdsh-sync"
 extra_package_file "opt/flight/opt/pdsh-sync/bin/sync.sh"
 
@@ -60,6 +58,7 @@ package :rpm do
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
   # priority ""
+  runtime_dependency "flight-asset >= 0.5.0"
 end
 
 package :deb do
@@ -68,4 +67,5 @@ package :deb do
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
   # section ""
+  runtime_dependency "flight-asset (>= 0.5.0)"
 end
