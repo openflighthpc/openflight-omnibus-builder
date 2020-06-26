@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.3.0-rc11'
+VERSION = '1.3.0-rc12'
 override 'flight-desktop', version: VERSION
 
 build_version VERSION
