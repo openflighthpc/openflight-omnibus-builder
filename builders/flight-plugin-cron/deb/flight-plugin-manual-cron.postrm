@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ "$1" != "upgrade" ]; then
+  rm -f /opt/flight/etc/plugin/cron.d/openflight
+  rmdir /opt/flight/etc/plugin/cron.d 2>/dev/null || true
+  rmdir /opt/flight/etc/plugin 2>/dev/null || true
+fi

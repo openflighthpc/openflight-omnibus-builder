@@ -1,0 +1,2 @@
+#!/bin/sh
+/opt/flight/libexec/cron/crontab-generator /etc/cron.d/openflight

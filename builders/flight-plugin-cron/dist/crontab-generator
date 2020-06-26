@@ -1,0 +1,49 @@
+#!/bin/bash
+################################################################################
+##
+## OpenFlight - Cron configuration
+## Copyright (c) 2020 Alces Flight Ltd
+##
+################################################################################
+# If any files in /opt/flight/etc/cron.d are newer than
+# /etc/cron.d/openflight-crontab then regenerate
+# /etc/cron.d/openflight-crontab.
+SOURCE_DIR="/opt/flight/etc/cron.d"
+TARGET="$1"
+if [ -z "$1" ]; then
+  echo "Usage: $0 <target>"
+  exit 1
+fi
+shopt -s nullglob
+
+if [ -e "${TARGET}" ]; then
+  for a in "${SOURCE_DIR}"/*; do
+    if [ "$a" -nt "${TARGET}" ]; then
+      found=true
+      break
+    fi
+  done
+else
+  found=true
+fi
+
+if [ "$found" ]; then
+  cat <<EOF > "${TARGET}"
+################################################################################
+##
+## OpenFlight - Cron configuration
+## Copyright (c) 2020 Alces Flight Ltd
+##
+################################################################################
+SHELL=/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=root
+EOF
+  for a in "${SOURCE_DIR}"/*; do
+    cat <<EOF >> "${TARGET}"
+
+# $a
+EOF
+    cat "$a" >> "${TARGET}"
+  done
+fi
