@@ -1,0 +1,16 @@
+#!/bin/sh
+if [ "$1" == "upgrade" ]; then
+  :
+else
+  if [ -e /etc/bash.bashrc ]; then
+    sed -i \
+      -e '/^# BEGIN OpenFlightHPC flight-starter/,/^# END OpenFlightHPC flight-starter/d' \
+      /etc/bash.bashrc
+  fi
+
+  if [ -e /etc/csh.cshrc ]; then
+    sed -i \
+      -e '/^# BEGIN OpenFlightHPC flight-starter/,/^# END OpenFlightHPC flight-starter/d' \
+      /etc/csh.cshrc
+  fi
+fi

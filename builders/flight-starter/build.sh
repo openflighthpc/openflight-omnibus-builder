@@ -5,7 +5,7 @@ mkdir -p pkg
 
 NOW=2020.2
 NEXT=2020.3
-VERSION=${NOW}.4
+VERSION=${NOW}.5
 REL=1
 
 if [ -f /etc/redhat-release ]; then
@@ -26,7 +26,11 @@ elif [ -f /etc/lsb-release ]; then
 
   pushd $HOME/flight-starter
   rm -rf ${VERSION}.tar.gz flight-starter-${VERSION}
-  rm -rf flight-starter_${VERSION}-${REL} flight-starter-banner_${VERSION}-${REL}
+  rm -rf \
+     flight-starter_${VERSION}-${REL} \
+     flight-starter-banner_${VERSION}-${REL} \
+     flight-plugin-system-starter_${VERSION}-${REL} \
+     flight-plugin-manual-starter_${VERSION}-${REL}
   mkdir -p flight-starter_${VERSION}-${REL}/DEBIAN
   mkdir -p flight-starter-banner_${VERSION}-${REL}/DEBIAN
   mkdir -p flight-plugin-system-starter_${VERSION}-${REL}/DEBIAN
@@ -39,6 +43,13 @@ elif [ -f /etc/lsb-release ]; then
       -e "s/%REL%/$REL/g" \
       $d/deb/flight-plugin-system-starter.control.tpl > \
       $HOME/flight-starter/flight-plugin-system-starter_${VERSION}-${REL}/DEBIAN/control
+  cp $d/deb/flight-plugin-system-starter.postinst \
+     $HOME/flight-starter/flight-plugin-system-starter_${VERSION}-${REL}/DEBIAN/postinst
+     chmod 755 $HOME/flight-starter/flight-plugin-system-starter_${VERSION}-${REL}/DEBIAN/postinst
+  cp $d/deb/flight-plugin-system-starter.postrm \
+     $HOME/flight-starter/flight-plugin-system-starter_${VERSION}-${REL}/DEBIAN/postrm
+     chmod 755 $HOME/flight-starter/flight-plugin-system-starter_${VERSION}-${REL}/DEBIAN/postrm
+
   sed -e "s/%VERSION%/$VERSION/g" \
       -e "s/%REL%/$REL/g" \
       $d/deb/flight-plugin-manual-starter.control.tpl > \
@@ -88,7 +99,7 @@ elif [ -f /etc/lsb-release ]; then
   fakeroot dpkg-deb --build flight-starter_${VERSION}-${REL}
   fakeroot dpkg-deb --build flight-starter-banner_${VERSION}-${REL}
   fakeroot dpkg-deb --build flight-plugin-system-starter_${VERSION}-${REL}
-  fakeroot dpkg-deb --build flight-plugin-manul-starter_${VERSION}-${REL}
+  fakeroot dpkg-deb --build flight-plugin-manual-starter_${VERSION}-${REL}
   popd
 
   mv $HOME/flight-starter/*.deb pkg

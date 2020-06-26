@@ -1,0 +1,38 @@
+#!/bin/sh
+if [ -e /etc/bash.bashrc ]; then
+  if ! grep -q 'OpenFlightHPC flight-starter' /etc/bash.bashrc; then
+     cat <<'EOF' >> /etc/bash.bashrc
+# BEGIN OpenFlightHPC flight-starter
+if ! shopt -q login_shell; then
+  if [ -e /etc/profile.d/zz-flight-starter.sh ]; then
+    if [ "$PS1" ]; then
+      source /etc/profile.d/zz-flight-starter.sh
+    else
+      source /etc/profile.d/zz-flight-starter.sh >& /dev/null
+    fi
+  fi
+fi
+# END OpenFlightHPC flight-starter
+EOF
+  fi
+fi
+
+if [ -e /etc/csh.cshrc ]; then
+  if ! grep -q 'OpenFlightHPC flight-starter' /etc/csh.cshrc; then
+     cat <<'EOF' >> /etc/csh.cshrc
+# BEGIN OpenFlightHPC flight-starter
+if ($?tcsh) then
+  if (! $?loginsh) then
+    if ( -f /etc/csh/login.d/zz-flight-starter.csh ) then
+      if ($?prompt) then
+        source /etc/csh/login.d/zz-flight-starter.csh
+      else
+        source /etc/csh/login.d/zz-flight-starter.csh >& /dev/null
+      endif
+    endif
+  endif
+endif
+# END OpenFlightHPC flight-starter
+EOF
+  fi
+fi
