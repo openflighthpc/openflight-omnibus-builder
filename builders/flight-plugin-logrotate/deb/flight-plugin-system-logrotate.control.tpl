@@ -6,5 +6,5 @@ Architecture: all
 Maintainer: OpenFlightHPC Project <flight@openflighthpc.org>
 Description: Provides logrotate integration for OpenFlight tools
 Depends: logrotate
-Provides: flight-logrotate-system-1.0
+Provides: flight-logrotate-system-1.0, flight-plugin-logrotate
 Replaces: flight-plugin-manual-logrotate

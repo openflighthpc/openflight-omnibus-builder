@@ -15,12 +15,14 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 Provides:       flight-logrotate-system-1.0
+Provides:       flight-plugin-logrotate
 Requires:       logrotate
 Conflicts:      flight-plugin-manual-logrotate
 
 %description
 Provides logrotate integration for OpenFlight tools
 
+%prep
 %setup -q -c -T
 install -pm 644 %{SOURCE0} .
 install -pm 644 %{SOURCE1} .

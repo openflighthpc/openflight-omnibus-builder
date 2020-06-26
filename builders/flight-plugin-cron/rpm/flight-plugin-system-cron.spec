@@ -18,12 +18,14 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 Provides:       flight-cron-system-1.0
+Provides:       flight-plugin-cron
 Requires:       cronie
 Conflicts:      flight-plugin-manual-cron
 
 %description
 Provides cron integration for OpenFlight tools
 
+%prep
 %setup -q -c -T
 install -pm 644 %{SOURCE0} .
 install -pm 644 %{SOURCE1} .

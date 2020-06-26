@@ -5,5 +5,5 @@ Priority: optional
 Architecture: all
 Maintainer: OpenFlightHPC Project <flight@openflighthpc.org>
 Description: Provides manually managed cron integration for OpenFlight tools
-Provides: flight-cron-system-1.0
+Provides: flight-cron-system-1.0, flight-plugin-cron
 Replaces: flight-plugin-system-cron

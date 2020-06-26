@@ -15,11 +15,13 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 Provides:       flight-sudo-system-1.0
+Provides:       flight-plugin-sudo
 Conflicts:      flight-plugin-system-sudo
 
 %description
 Provides manually managed sudo integration for OpenFlight tools
 
+%prep
 %setup -q -c -T
 install -pm 644 %{SOURCE0} .
 install -pm 644 %{SOURCE1} .
