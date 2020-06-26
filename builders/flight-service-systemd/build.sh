@@ -34,11 +34,11 @@ elif [ -f /etc/lsb-release ]; then
   wget https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/builders/${NAME}/dist/flight-service.service
   mkdir -p lib/systemd/system
   mv flight-service.service lib/systemd/system
-  mkdir usr/share/doc/${NAME}
+  mkdir -p usr/share/doc/${NAME}
   mv LICENSE.txt usr/share/doc/${NAME}
   popd
 
-  dpkg-deb --build ${NAME}_${VERSION}-$REL
+  fakeroot dpkg-deb --build ${NAME}_${VERSION}-$REL
   popd
 
   mv $HOME/${NAME}/*.deb pkg

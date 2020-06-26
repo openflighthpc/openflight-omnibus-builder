@@ -40,7 +40,7 @@ elif [ -f /etc/lsb-release ]; then
   mv ../${NAME}-${VERSION}/* opt/flight/usr/lib/env/types
   popd
 
-  dpkg-deb --build ${NAME}_${VERSION}-$REL
+  fakeroot dpkg-deb --build ${NAME}_${VERSION}-$REL
   popd
 
   mv $HOME/${NAME}/*.deb pkg

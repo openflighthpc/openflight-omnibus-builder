@@ -41,7 +41,7 @@ elif [ -f /etc/lsb-release ]; then
   tar -C opt/flight/usr/lib/desktop/types/.doom -xzf $d/dist/flight-desktop-type-1.0.0.tar.gz
   popd
 
-  dpkg-deb --build ${NAME}_${VERSION}-$REL
+  fakeroot dpkg-deb --build ${NAME}_${VERSION}-$REL
   popd
 
   mv $HOME/${NAME}/*.deb pkg

@@ -85,10 +85,10 @@ elif [ -f /etc/lsb-release ]; then
   cp -v flight-plugin-system-starter_${VERSION}-${REL}/etc/xdg/* \
      flight-plugin-manual-starter_${VERSION}-${REL}/opt/flight/etc/plugin/xdg
 
-  dpkg-deb --build flight-starter_${VERSION}-${REL}
-  dpkg-deb --build flight-starter-banner_${VERSION}-${REL}
-  dpkg-deb --build flight-plugin-system-starter_${VERSION}-${REL}
-  dpkg-deb --build flight-plugin-manul-starter_${VERSION}-${REL}
+  fakeroot dpkg-deb --build flight-starter_${VERSION}-${REL}
+  fakeroot dpkg-deb --build flight-starter-banner_${VERSION}-${REL}
+  fakeroot dpkg-deb --build flight-plugin-system-starter_${VERSION}-${REL}
+  fakeroot dpkg-deb --build flight-plugin-manul-starter_${VERSION}-${REL}
   popd
 
   mv $HOME/flight-starter/*.deb pkg

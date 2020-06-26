@@ -28,7 +28,7 @@ build() {
         $d/deb/$NAME.control.tpl > \
         $HOME/${NAME}/${NAME}_${VERSION}-$REL/DEBIAN/control
 
-    pushd ${NAME}-${VERSION}-$REL
+    pushd ${NAME}_${VERSION}-$REL
     wget https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/LICENSE.txt
     wget https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/builders/flight-plugin-${PLUGIN}/dist/openflight-sudoers
     case $TYPE in
@@ -48,11 +48,11 @@ build() {
         echo "Couldn't determine plugin type to build."
         ;;
     esac
-    mkdir usr/share/doc/${NAME}
+    mkdir -p usr/share/doc/${NAME}
     mv LICENSE.txt usr/share/doc/${NAME}
     popd
 
-    dpkg-deb --build ${NAME}_${VERSION}-$REL
+    fakeroot dpkg-deb --build ${NAME}_${VERSION}-$REL
     popd
 
     mv $HOME/${NAME}/*.deb pkg
