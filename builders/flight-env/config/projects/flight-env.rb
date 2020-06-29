@@ -31,11 +31,11 @@ friendly_name 'Flight Environment'
 
 install_dir '/opt/flight/opt/env'
 
-VERSION = '1.4.0-rc6'
+VERSION = '1.4.0'
 override 'flight-env', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-env'
