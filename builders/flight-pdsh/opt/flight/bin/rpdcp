@@ -1,0 +1,3 @@
+#!/bin/bash
+export PDSH_GENDERS_FILE="${flight_ROOT:-/opt/flight}"/etc/genders
+exec "${flight_ROOT:-/opt/flight}"/opt/pdsh/embedded/bin/rpdcp "$@"

@@ -50,8 +50,11 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-%w(dshbak pdcp pdsh rpdcp).each do |f|
+%w(dshbak nodeattr).each do |f|
   extra_package_file "/opt/flight/bin/#{f}"
+end
+%w(pdcp pdsh rpdcp).each do |f|
+  extra_package_file "opt/flight/bin/#{f}"
 end
 
 package :rpm do

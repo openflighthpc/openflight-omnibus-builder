@@ -53,4 +53,3 @@ build do
   make "-j #{workers}", env: env
   make "-j #{workers} install", env: env
 end
-

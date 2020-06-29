@@ -35,15 +35,4 @@ license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
 build do
-  block do
-    FileUtils.mkdir_p '/opt/flight/bin'
-    %w(dshbak pdcp pdsh rpdcp).each do |exe|
-      path = File.expand_path("/opt/flight/opt/pdsh/embedded/bin/#{exe}")
-      copy(
-        path,
-        "/opt/flight/bin",
-        preserve: true,
-      )
-    end
-  end
 end
