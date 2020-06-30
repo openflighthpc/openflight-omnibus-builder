@@ -31,11 +31,11 @@ friendly_name 'Flight Action'
 
 install_dir '/opt/flight/opt/action'
 
-VERSION = '0.3.3'
+VERSION = '0.4.0'
 override 'flight-action', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 0
 
 dependency 'preparation'
 dependency 'flight-action'
@@ -63,6 +63,7 @@ end
   opt/flight/etc/banner/tips.d/40-power.rc
   opt/flight/libexec/commands/action
   opt/flight/libexec/commands/power
+  opt/flight/libexec/commands/estate
   opt/flight/opt/action/bin/action
 ).each do |f|
   extra_package_file f
