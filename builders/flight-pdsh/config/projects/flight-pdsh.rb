@@ -35,7 +35,7 @@ VERSION = '2.34'
 override 'flight-pdsh', version: VERSION
 
 build_version VERSION
-build_iteration 0
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-pdsh'
@@ -50,11 +50,12 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-%w(dshbak nodeattr).each do |f|
-  extra_package_file "/opt/flight/bin/#{f}"
+%w(dshbak nodeattr pdcp pdsh rpdcp).each do |f|
+  extra_package_file "opt/flight/opt/pdsh/bin/#{f}"
 end
-%w(pdcp pdsh rpdcp).each do |f|
-  extra_package_file "opt/flight/bin/#{f}"
+extra_package_file "opt/flight/etc/genders"
+%w(sh csh).each do |ext|
+  extra_package_file "opt/flight/etc/profile.d/90-pdsh.#{ext}"
 end
 
 package :rpm do

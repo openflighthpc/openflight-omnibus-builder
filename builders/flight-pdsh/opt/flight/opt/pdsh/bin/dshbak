@@ -1,0 +1,2 @@
+#!/bin/bash
+exec "${flight_ROOT:-/opt/flight}"/opt/pdsh/embedded/bin/dshbak "$@"

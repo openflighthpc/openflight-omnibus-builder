@@ -23,31 +23,5 @@
 #
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
-#===============================================================================
-name "pdsh"
-
-license "GPLv2"
-license_file "COPYING"
-skip_transitive_dependency_licensing true
-
-default_version "2.34"
-
-version("2.34") do
-  source sha256: "b47b3e4662736ef44b6fe86e3d380f95e591863e69163aa0592e9f9f618521e9"
-end
-
-source url: "https://github.com/chaos/pdsh/releases/download/pdsh-#{version}/pdsh-#{version}.tar.gz"
-
-relative_path "pdsh-#{version}"
-
-build do
-  env = with_standard_compiler_flags(with_embedded_path)
-  configure_options = ["--with-ssh",
-                       "--with-rcmd-rank-list=ssh,rsh,exec",
-                       "--with-genders",
-                       "--with-opt-dir=#{install_dir}/embedded",
-  ]
-  configure(*configure_options, env: env)
-  make "-j #{workers}", env: env
-  make "-j #{workers} install", env: env
-end
+#==============================================================================
+export PATH=/opt/flight/opt/pdsh/bin:$PATH
