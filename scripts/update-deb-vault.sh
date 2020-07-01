@@ -1,6 +1,6 @@
 #!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,7 +25,7 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-# Publishes built debs to an s3-backed deb repo
+# Updates vault repo
 set -e
 if [ ! -z "${DEBUG}" ]; then
   set -x
@@ -44,8 +44,6 @@ done
 
 while getopts "s:t:a:d:" opt; do
   case $opt in
-    s) SOURCE_DIR=$OPTARG ;;
-    t) TARGET_PREFIX=$OPTARG ;;
     a) ARCH=$OPTARG ;;
     d) DIST=$OPTARG ;;
     \?)
@@ -55,38 +53,30 @@ while getopts "s:t:a:d:" opt; do
   esac
 done
 
-if [ -z "${SOURCE_DIR}" ]; then
-  echo "Source directory must be specified."
-  exit 1
-fi
+TARGET_PREFIX="repo.openflighthpc.org/openflight-vault/ubuntu"
 
-if [ -z "${TARGET_PREFIX}" ]; then
-  echo "Target bucket prefix must be specified."
-  exit 1
-fi
+case $ARCH in
+  amd64)
+    echo Updating for arch: $ARCH
+    ARCH=binary-$ARCH
+    ;;
+  *)
+    echo "No arch specified; specify '-a amd64'."
+    exit 1
+    ;;
+esac
 
-# distribution targets
-DIST_TARGETS="bionic focal"
-if [[ "$DIST_TARGETS" != *"$DIST"* ]] ; then
-    # Prompt for user input of target distribution
-    echo "Unknown distribution: $DIST"
-    echo "Distribution should be one of: $DIST_TARGETS"
-    echo "This is expected for noarch debs which don't include distribution in release tag"
-    echo
-    read -p "Which distribution target to use? ($DIST_TARGETS) " dist
-    if [[ "$DIST_TARGETS" != *"$dist"* ]] ; then
-        echo "$dist is invalid, exiting..."
-        exit 1
-    elif [[ "$dist" == "" ]] ; then
-        echo "No answer provided, exiting..."
-        exit 1
-    else
-        DIST=$dist
-    fi
-fi
+case $DIST in
+  bionic)
+    echo Updating for distro: $DIST
+    ;;
+  *)
+    echo "No dist specified; specify '-d bionic'." # or '-d focal'."
+    exit 1
+    ;;
+esac
 
 TOPLEVEL_DIR="/tmp/${TARGET_PREFIX}"
-TOPLEVEL_PREFIX="${TARGET_PREFIX}"
 
 TARGET_DIR="/tmp/${TARGET_PREFIX}/dists/${DIST}"
 TARGET_PREFIX="${TARGET_PREFIX}/dists/${DIST}"
@@ -95,38 +85,22 @@ TARGET_PREFIX="${TARGET_PREFIX}/dists/${DIST}"
 mkdir -p $TARGET_DIR
 aws --region "${REGION}" s3 sync --delete "s3://${TARGET_PREFIX}" $TARGET_DIR
 
-# copy the deb in and update the repo
-NOARCH_TARGETS="binary-amd64"
-
-if [ "$ARCH" == "binary-all" ] ; then
-    for arch in $NOARCH_TARGETS ; do
-        mkdir -pv $TARGET_DIR/main/$arch
-        cp -rv $SOURCE_DIR/*.deb $TARGET_DIR/main/$arch
-        # create a list of packages, allowing multiple versions
-        cd $TOPLEVEL_DIR
-        dpkg-scanpackages -m dists/$DIST/main/$arch > dists/$DIST/main/$arch/Packages
-        cat dists/$DIST/main/$arch/Packages | gzip -9c > dists/$DIST/main/$arch/Packages.gz
-        cd -
-    done
-else
-    mkdir -pv $TARGET_DIR/main/$ARCH/
-    cp -rv $SOURCE_DIR/*.deb $TARGET_DIR/main/$ARCH/
-    # create a list of packages, allowing multiple versions
-    cd $TOPLEVEL_DIR
-    dpkg-scanpackages -m dists/$DIST/main/$ARCH > dists/$DIST/main/$ARCH/Packages
-    cat dists/$DIST/main/$ARCH/Packages | gzip -9c > dists/$DIST/main/$ARCH/Packages.gz
-    cd -
-fi
+mkdir -pv $TARGET_DIR/main/$ARCH/
+# create a list of packages, allowing multiple versions
+cd $TOPLEVEL_DIR
+dpkg-scanpackages -m dists/$DIST/main/$ARCH > dists/$DIST/main/$ARCH/Packages
+cat dists/$DIST/main/$ARCH/Packages | gzip -9c > dists/$DIST/main/$ARCH/Packages.gz
+cd -
 
 # Create distro release file
 cd $TARGET_DIR
 cat << EOF > Release
 Origin: OpenFlightHPC
-Label: OpenFlightHPC Development Packages
+Label: OpenFlightHPC Vault Packages
 Codename: $DIST
 Architectures: $(echo "$ARCH" |sed 's/binary-//g')
 Components: main
-Description: OpenFlightHPC Development Packages for Ubuntu $DIST
+Description: OpenFlightHPC Vault Packages for Ubuntu $DIST
 $(apt-ftparchive release .)
 EOF
 
@@ -138,10 +112,3 @@ cd -
 
 # sync the repo state back to s3
 aws --region "${REGION}" s3 sync --delete $TARGET_DIR s3://$TARGET_PREFIX --acl public-read
-
-# Notify slack
-if [ "$ARCH" == "binary-all" ] ; then ARCH="binary-amd64" ; fi
-export PACKAGE=$(echo "$DEB" |sed 's/.*\///g')
-export REPO=$(echo "$TARGET_PREFIX" |sed 's/.*org\///g')
-export PACKAGE_URL=https://$TARGET_PREFIX/main/$ARCH/$PACKAGE
-$SCRIPT_DIR/slack-update.sh

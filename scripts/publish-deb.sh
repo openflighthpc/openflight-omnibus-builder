@@ -54,6 +54,8 @@ fi
 # Check Slack notifications configured
 $SCRIPT_DIR/slack-check.sh
 
+$SCRIPT_DIR/committed-check.sh "$1"
+
 export DEB="$1"
 SOURCE_DIR=$(mktemp -d /tmp/publish-rpm.XXXXXX)
 ARCH="binary-$(dpkg-deb -I $DEB  |grep '^ Architecture' |awk '{print $2}')"

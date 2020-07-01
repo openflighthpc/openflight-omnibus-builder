@@ -90,11 +90,11 @@ TARGET_DIR="/tmp/${TARGET_PREFIX}"
 
 # make sure we're operating on the latest data in the source bucket
 mkdir -p $SOURCE_DIR
-aws --region "${REGION}" s3 sync "s3://${SOURCE_PREFIX}" $SOURCE_DIR
+aws --region "${REGION}" s3 sync --delete "s3://${SOURCE_PREFIX}" $SOURCE_DIR
 
 # make sure we're operating on the latest data in the target bucket
 mkdir -p $TARGET_DIR
-aws --region "${REGION}" s3 sync "s3://${TARGET_PREFIX}" $TARGET_DIR
+aws --region "${REGION}" s3 sync --delete "s3://${TARGET_PREFIX}" $TARGET_DIR
 
 # copy the deb in and update the repo
 NOARCH_TARGETS="binary-amd64"
@@ -150,11 +150,11 @@ fi
 cd $TARGET_DIR
 cat << EOF > Release
 Origin: OpenFlightHPC
-Label: OpenFlightHPC Production Packages
+Label: OpenFlightHPC Packages
 Codename: $DIST
 Architectures: $(echo "$ARCH" |sed 's/binary-//g')
 Components: main
-Description: OpenFlightHPC Production Packages for Ubuntu $DIST
+Description: OpenFlightHPC Packages for Ubuntu $DIST
 $(apt-ftparchive release .)
 EOF
 
@@ -168,7 +168,7 @@ cd -
 aws --region "${REGION}" s3 sync --delete $TARGET_DIR s3://$TARGET_PREFIX --acl public-read
 
 # Notify slack
-if [ "$ARCH" == "noarch" ] ; then ARCH="binary-amd64" ; fi
+if [ "$ARCH" == "binary-all" ] ; then ARCH="binary-amd64" ; fi
 export PACKAGE=$(echo "$matches" |sed 's/.*\///g')
 export REPO=$(echo "$TARGET_PREFIX" |sed 's/.*org\///g')
 export PACKAGE_URL=https://$TARGET_PREFIX/main/$ARCH/$PACKAGE
