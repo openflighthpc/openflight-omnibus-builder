@@ -10,8 +10,13 @@ if which yum &>/dev/null; then
     rpmbuild --rebuild python-websockify-0.8.0-13.el7.src.rpm
     mv $HOME/rpmbuild/RPMS/noarch/python3-websockify-0.8.0-*.rpm pkg
   else
-    echo "Not required/supported on CentOS 7"
+    echo "$0: not required/supported on CentOS 7"
   fi
+elif [ -f /etc/lsb-release ]; then
+  cd "$(dirname "$0")"
+  mkdir -p pkg
+  cd pkg
+  wget https://downloads.sourceforge.net/project/virtualgl/2.6.3/virtualgl_2.6.3_amd64.deb
 else
-  echo "Not required/supported on CentOS 7"
+  echo "$0: unable to determine distro"
 fi
