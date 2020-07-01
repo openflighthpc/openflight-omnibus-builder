@@ -1,6 +1,6 @@
 Name:           flight-user-suite
-Version:        2020.2
-Release:        4
+Version:        %{_flight_pkg_version}
+Release:        %{_flight_pkg_rel}
 Summary:        The Flight User Suite collection of HPC environment tools
 
 Group:          OpenFlight/Environment
@@ -33,7 +33,7 @@ The Flight User Suite collection of tools and packages for running a HPC environ
 # Nothing to do
 
 %changelog
-* Mon Jun 29 2020 Mark J. Titorenko <mark.titorenko@openflighthpc.org> - 2020.2.-4
+* Mon Jun 29 2020 Mark J. Titorenko <mark.titorenko@openflighthpc.org> - 2020.2-4
 - Cleaned up requires
 * Wed Apr  8 2020 Stu Franks <stu.franks@openflighthpc.org> - 2020.2-1
 - Bumped env & desktop version to support CentOS 8
