@@ -98,7 +98,3 @@ package :deb do
   # provides are further prefixed with `:`
   section "::flight-ruby-system-#{RUBY_SYSTEM} :flight-ruby-#{RUBY_VERSION.split('.')[0..1].join('.')} :flight-bundler-#{BUNDLER_VERSION}"
 end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
