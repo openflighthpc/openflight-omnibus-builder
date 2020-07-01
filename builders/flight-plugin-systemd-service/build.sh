@@ -30,7 +30,7 @@ build() {
 
     pushd ${NAME}_${VERSION}-$REL
     wget https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/LICENSE.txt
-    wget https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/builders/${NAME}/dist/flight-service.service
+    wget https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/builders/flight-plugin-systemd-service/dist/flight-service.service
 
     case $TYPE in
       system)
