@@ -13,3 +13,4 @@ cat <<EOF | curl --data @- -X POST -H "Authorization: Bearer $SLACK_TOKEN" -H 'C
   "as_user": true
 }
 EOF
+echo

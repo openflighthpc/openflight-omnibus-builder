@@ -116,3 +116,7 @@ package :deb do
   # provides are further prefixed with `:`
   section "::flight-env-system-#{ENV_SYSTEM}"
 end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+end
