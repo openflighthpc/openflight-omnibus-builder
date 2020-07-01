@@ -4,7 +4,7 @@ d="$(pwd)"
 mkdir -p pkg
 
 NAME=flight-desktop-types
-VERSION=1.0.3
+VERSION=1.0.4
 REL=1
 
 if [ -f /etc/redhat-release ]; then
