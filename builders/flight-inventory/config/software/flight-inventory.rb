@@ -1,4 +1,3 @@
-#!/bin/bash
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
@@ -25,20 +24,33 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name 'flight-inventory'
+default_version '0.0.0'
 
-if [[ -d /opt/flight/bin ]]; then
-  echo Can not install flight-runway as it appears to already exist! >&2
-  exit 1
-fi
+source git: 'https://github.com/openflighthpc/flight-inventory'
 
-echo <<EOF
-Installing flight-runway from the upstream repo!
+dependency 'flight-runway'
+whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
-Do not attempt to build flight-runway through omnibus lest they create conflicts
-EOF
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
 
-yum install -e0 -y https://repo.openflighthpc.org/openflight/centos/7/x86_64/openflighthpc-release-3-1.noarch.rpm
-yum install -e0 -y flight-runway
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
 
-chown -R vagrant /opt/flight
+  # Moves the project into place
+  [
+    'Gemfile', 'Gemfile.lock', 'bin', 'etc', 'lib', 'libexec',
+    'LICENSE.txt', 'README.md'
+  ].each do |file|
+    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
 
+  # Installs the gems to the shared `vendor/share`
+  flags = [
+    "--without development test",
+    '--path vendor'
+  ].join(' ')
+  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+end

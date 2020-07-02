@@ -1,4 +1,3 @@
-#!/bin/bash
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
@@ -25,20 +24,19 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name "flight-runway"
+default_version "0.0.0"
 
-if [[ -d /opt/flight/bin ]]; then
-  echo Can not install flight-runway as it appears to already exist! >&2
-  exit 1
-fi
+Dir.mktmpdir do |tmpdir|
+  source path: tmpdir
+end
 
-echo <<EOF
-Installing flight-runway from the upstream repo!
-
-Do not attempt to build flight-runway through omnibus lest they create conflicts
-EOF
-
-yum install -e0 -y https://repo.openflighthpc.org/openflight/centos/7/x86_64/openflighthpc-release-3-1.noarch.rpm
-yum install -e0 -y flight-runway
-
-chown -R vagrant /opt/flight
-
+build do
+  raise "Flight Runway is not installed!" if ! File.exists?('/opt/flight/bin/flight')
+  bundle_version = Bundler.with_unbundled_env do
+    `/opt/flight/bin/bundle --version | sed 's/Bundler version //g'`.chomp
+  end
+  if bundle_version != '2.1.4'
+    raise "Flight Runway has incorrect bundle version: #{bundle_version} (expected 2.1.4)"
+  end
+end
