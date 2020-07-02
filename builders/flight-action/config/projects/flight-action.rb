@@ -61,6 +61,7 @@ end
 
 %w(
   opt/flight/etc/banner/tips.d/40-power.rc
+  opt/flight/etc/banner/tips.d/40-estate.rc
   opt/flight/libexec/commands/action
   opt/flight/libexec/commands/power
   opt/flight/libexec/commands/estate
