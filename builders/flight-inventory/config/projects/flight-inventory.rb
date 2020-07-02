@@ -50,12 +50,8 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dep_versions = {
-  'flight-runway': {
-                     gte: '1.1.0',
-                     lt: '1.2.0',
-                   }
-}
+runtime_dependency 'flight-ruby-system-2.0'
+runtime_dependency 'flight-runway'
 
 # Updates the version in the libexec file
 path = File.expand_path('../../opt/flight/libexec/commands/inventory', __dir__)
@@ -69,19 +65,7 @@ unless original == updated
   exit 1
 end
 
-
-if ohai['platform_family'] == 'rhel'
-  runtime_dep_versions.each do |k,v|
-    runtime_dependency "#{k} >= #{v[:gte]}, #{k} < #{v[:lt]}"
-  end
-elsif ohai['platform_family'] == 'debian'
-  runtime_dep_versions.each do |k,v|
-    runtime_dependency "#{k} (>= #{v[:gte]}), #{k} (<< #{v[:lt]})"
-  end
-end
-
 extra_package_file 'opt/flight/libexec/commands/inventory'
-
 
 package :rpm do
   vendor 'Alces Flight Ltd'
