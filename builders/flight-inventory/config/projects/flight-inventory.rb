@@ -35,7 +35,7 @@ VERSION = '2.0.0.rc0'
 override 'flight-inventory', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 0
 
 dependency 'preparation'
 dependency 'flight-inventory'
