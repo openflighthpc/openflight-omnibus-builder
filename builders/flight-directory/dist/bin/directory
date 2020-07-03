@@ -1,0 +1,7 @@
+#!/bin/bash
+ROOT=/opt/flight/opt/directory
+export LESSSECURE=1
+export LESS="-R -F"
+export PYTHONPATH=${ROOT}/lib
+export PYTHONPYCACHEPREFIX="$HOME/.cache/cpython"
+exec ${ROOT}/lib/directory/directory "$@"
