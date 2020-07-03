@@ -39,39 +39,41 @@ license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
 build do
-  [
-    'pkg/bin',
-    'pkg/dist'
-  ].each do |path|
-    copy(
-      path,
-      File.expand_path(install_dir),
-      preserve: true
-    )
-  end
+  block do
+    [
+      'pkg/bin',
+      'pkg/dist'
+    ].each do |path|
+      copy(
+        path,
+        File.expand_path(install_dir),
+        preserve: true
+      )
+    end
 
-  [
-    'pkg/ruby/openflight',
-    'pkg/ruby/openflight.rb'
-  ].each do |path|
-    copy(
-      path,
-      Dir.glob(
-        File.expand_path("#{install_dir}/embedded/lib/ruby/site_ruby/*")
-      ).first,
-      preserve: true
-    )
-  end
+    [
+      'pkg/ruby/openflight',
+      'pkg/ruby/openflight.rb'
+    ].each do |path|
+      copy(
+        path,
+        Dir.glob(
+          File.expand_path("#{install_dir}/embedded/lib/ruby/site_ruby/*")
+        ).first,
+        preserve: true
+      )
+    end
 
-  [
-    'bin',
-    'etc',
-    'libexec',
-  ].each do |path|
-    copy(
-      path,
-      "/opt/flight",
-      preserve: true,
-    )
+    [
+      'bin',
+      'etc',
+      'libexec',
+    ].each do |path|
+      copy(
+        path,
+        "/opt/flight",
+        preserve: true,
+      )
+    end
   end
 end
