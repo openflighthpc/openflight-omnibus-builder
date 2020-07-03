@@ -75,12 +75,8 @@ Vagrant.configure("2") do |config|
   config.vm.define "ubuntu2004", autostart: false do |build|
     build.vm.box = 'ubuntu/focal64'
     build.vm.provision "shell", path: "vagrant/provision.sh"
-    if File.exist?('.vagrant/machines/ubuntu2002/virtualbox/action_provision')
-      if File.directory?(code_path)
-        build.vm.synced_folder code_path, "/code"
-      end
-    else
-      config.vm.synced_folder ".", "/vagrant", disabled: true
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
     end
   end
 
@@ -90,12 +86,8 @@ Vagrant.configure("2") do |config|
       s.path = "vagrant/provision.sh"
       s.args = ["test"]
     end
-    if File.exist?('.vagrant/machines/ubuntu2002-test/virtualbox/action_provision')
-      if File.directory?(code_path)
-        build.vm.synced_folder code_path, "/code"
-      end
-    else
-      config.vm.synced_folder ".", "/vagrant", disabled: true
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
     end
   end
 end
