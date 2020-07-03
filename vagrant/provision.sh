@@ -109,7 +109,7 @@ EOF
     fi
   elif which apt &>/dev/null; then
     apt-get update
-    apt-get -y install ruby ruby-dev libffi-dev gcc make autoconf fakeroot
+    apt-get -y install ruby ruby-dev libffi-dev gcc make autoconf fakeroot awscli dpkg-dev
 
     # required for building flight-desktop-restapi
     apt-get -y install libpam0g-dev
