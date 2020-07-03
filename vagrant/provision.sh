@@ -114,6 +114,9 @@ EOF
     # required for building flight-desktop-restapi
     apt-get -y install libpam0g-dev
 
+    # required for building flight-directory
+    apt-get -y install libssl-dev
+
     gem install bundler:1.17.3
     gem install bundler:2.1.4
   fi
