@@ -13,7 +13,7 @@ if [ -f /etc/redhat-release ]; then
     exit 1
   fi
   yum install -y epel-release
-  yum install -y -e0 https://repo.openflighthpc.org/openflight/centos/$DIST/x86_64/openflighthpc-release-2-1.noarch.rpm
+  yum install -y -e0 https://repo.openflighthpc.org/pub/centos/$DIST/openflighthpc-release-latest.noarch.rpm
   yum makecache
 elif [ -f /etc/debian_version ]; then
   DIST="$(lsb_release -cs)"
