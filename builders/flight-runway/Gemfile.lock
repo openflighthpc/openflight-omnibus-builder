@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/openflighthpc/omnibus
-  revision: 43aaada291d82e720b05eaea88bd5241947f4631
+  revision: dcce079f6ce662806f7204d857f99f1048f80331
   specs:
     omnibus (7.0.7)
       aws-sdk-s3 (~> 1)

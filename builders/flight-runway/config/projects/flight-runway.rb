@@ -35,7 +35,7 @@ VERSION = '1.1.4'
 override 'flight-runway', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-runway'
@@ -46,9 +46,13 @@ license_file 'LICENSE.txt'
 
 description 'Integrated platform for Flight tools.'
 
+strip_build true
+
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
+exclude '**/lib/*.a'
+exclude '**/lib/*.la'
 
 RUBY_SYSTEM = '2.0'
 
