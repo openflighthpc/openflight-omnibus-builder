@@ -102,7 +102,7 @@ EOF
     yum install -y -e0 pam-devel
 
     if [[ $CENTOS_VER == 8 ]] ; then
-      yum install python3-pip python3-devel python2-devel
+      yum install -y python3-pip python3-devel python2-devel
       pip3 install awscli --upgrade --user
     else
       yum install -y -e0 awscli
