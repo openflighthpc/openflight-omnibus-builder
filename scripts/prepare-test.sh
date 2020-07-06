@@ -14,6 +14,9 @@ if [ -f /etc/redhat-release ]; then
   fi
   yum install -y epel-release
   yum install -y -e0 https://repo.openflighthpc.org/pub/centos/$DIST/openflighthpc-release-latest.noarch.rpm
+  if [ "$DIST" == 8 ]; then
+    yum config-manager --set-enabled PowerTools
+  fi
   yum makecache
 elif [ -f /etc/debian_version ]; then
   DIST="$(lsb_release -cs)"
