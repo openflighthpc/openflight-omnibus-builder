@@ -28,7 +28,7 @@ name "paint-gem"
 default_version "2.1.0"
 
 license "MIT"
-license_file "https://raw.githubusercontent.com/janlelis/paint/master/MIT-LICENSE.txt"
+license_file "https://raw.githubusercontent.com/janlelis/paint/main/MIT-LICENSE.txt"
 skip_transitive_dependency_licensing true
 
 dependency "ruby"

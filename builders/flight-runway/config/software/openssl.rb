@@ -30,6 +30,7 @@ default_version "1.0.2u"
 source url: "https://www.openssl.org/source/old/#{version[0..-2]}/openssl-#{version}.tar.gz", extract: :lax_tar
 
 version("1.1.1d") { source sha256: "1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2" }
+version("1.1.1c") { source sha256: "f6fb3079ad15076154eda9413fed42877d668e7069d9b87396d0804fdb3f4c90" }
 version("1.1.0i") { source sha256: "ebbfc844a8c8cc0ea5dc10b86c9ce97f401837f3fa08c17b2cdadc118253cf99" }
 version("1.1.0l") { source sha256: "74a2f756c64fd7386a29184dc0344f4831192d61dc2481a93a4c5dd727f41148" }
 version("1.1.0h") { source sha256: "5835626cde9e99656585fc7aaa2302a73a7e1340bf8c14fd635a62c66802a517" }
@@ -73,6 +74,12 @@ build do
   ]
 
   configure_args += ["--with-fipsdir=#{install_dir}/embedded", "fips"] if fips_mode?
+
+  if rhel? && platform_version.start_with?("8") && version.satisfies?(">= 1.1.1c")
+    # enable md2 on RHEL8 to retain sufficient compatibility with
+    # distro libcrypto for using `rpm` command.
+    configure_args << "enable-md2"
+  end
 
   configure_cmd =
     if aix?
