@@ -85,11 +85,14 @@ case $ARCH in
 esac
 
 case $DIST in
+  stable)
+    echo Updating for distro: $DIST
+    ;;
   bionic)
     echo Updating for distro: $DIST
     ;;
   *)
-    echo "No dist specified; specify '-d bionic'." # or '-d focal'."
+    echo "No dist specified; specify '-d stable', '-d bionic' or '-d focal'."
     exit 1
     ;;
 esac
@@ -107,6 +110,11 @@ mkdir -pv $TARGET_DIR/main/$ARCH/
 # create a list of packages, allowing multiple versions
 cd $TOPLEVEL_DIR
 dpkg-scanpackages -m dists/$DIST/main/$ARCH > dists/$DIST/main/$ARCH/Packages
+if [ -e dists/$DIST/main/$ARCH/Packages -a ! -s dists/$DIST/main/$ARCH/Packages ]; then
+  # no packages, bailing
+  echo "No packages found."
+  exit
+fi
 cat dists/$DIST/main/$ARCH/Packages | gzip -9c > dists/$DIST/main/$ARCH/Packages.gz
 cd -
 
@@ -115,10 +123,11 @@ cd $TARGET_DIR
 cat << EOF > Release
 Origin: OpenFlightHPC
 Label: OpenFlightHPC ${TARGET_INFO}Packages
-Codename: $DIST
+Suite: openflighthpc
+Codename: stable
 Architectures: $(echo "$ARCH" |sed 's/binary-//g')
 Components: main
-Description: OpenFlightHPC ${TARGET_INFO}Packages for Ubuntu $DIST
+Description: OpenFlightHPC ${TARGET_INFO}Packages for Ubuntu
 $(apt-ftparchive release .)
 EOF
 

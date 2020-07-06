@@ -33,8 +33,13 @@ fi
 
 export SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
+if [ "$1" == "--dist" ]; then
+  DIST=true
+  shift
+fi
+
 if [ -z "$1" ]; then
-  echo "Usage: $0 <deb>"
+  echo "Usage: $0 [--dist] <deb>"
   exit 1
 elif [ ! -f "$1" ]; then
   echo "$0: not found: $1"
@@ -60,8 +65,13 @@ export DEB="$1"
 SOURCE_DIR=$(mktemp -d /tmp/publish-rpm.XXXXXX)
 ARCH="binary-$(dpkg-deb -I $DEB  |grep '^ Architecture' |awk '{print $2}')"
 # Use current VMs distribution as it doesn't look like there's a way of determining distribution from the package itself
-DIST="$(lsb_release -cs)"
-echo "Using this system's distribution for package: $DIST"
+if [ "$DIST" == "true" ]; then
+  DIST="$(lsb_release -cs)"
+  echo "Using this system's distribution for package: $DIST"
+else
+  DIST="stable"
+  echo "Using default Ubuntu distribution for package: $DIST"
+fi
 cp $DEB $SOURCE_DIR
 $SCRIPT_DIR/publish-debs.sh -s "$SOURCE_DIR" -t "repo.openflighthpc.org/openflight-dev/ubuntu" -d $DIST -a "$ARCH"
 rm -rf $SOURCE_DIR

@@ -66,7 +66,7 @@ if [ -z "${TARGET_PREFIX}" ]; then
 fi
 
 # distribution targets
-DIST_TARGETS="bionic focal"
+DIST_TARGETS="stable bionic focal"
 if [[ "$DIST_TARGETS" != *"$DIST"* ]] ; then
     # Prompt for user input of target distribution
     echo "Unknown distribution: $DIST"
@@ -123,10 +123,11 @@ cd $TARGET_DIR
 cat << EOF > Release
 Origin: OpenFlightHPC
 Label: OpenFlightHPC Development Packages
-Codename: $DIST
+Suite: openflighthpc
+Codename: stable
 Architectures: $(echo "$ARCH" |sed 's/binary-//g')
 Components: main
-Description: OpenFlightHPC Development Packages for Ubuntu $DIST
+Description: OpenFlightHPC Development Packages for Ubuntu
 $(apt-ftparchive release .)
 EOF
 

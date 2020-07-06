@@ -18,8 +18,8 @@ if [ -f /etc/redhat-release ]; then
 elif [ -f /etc/debian_version ]; then
   DIST="$(lsb_release -cs)"
   apt-key adv --fetch-keys https://repo.openflighthpc.org/openflighthpc-archive-key.asc
-  apt-add-repository "deb https://repo.openflighthpc.org/openflight/ubuntu bionic main"
-  apt-add-repository "deb https://repo.openflighthpc.org/openflight-dev/ubuntu bionic main"
+  apt-add-repository "deb https://repo.openflighthpc.org/openflight/ubuntu stable main"
+  apt-add-repository "deb https://repo.openflighthpc.org/openflight-dev/ubuntu stable main"
 else
   echo "$0: unable to determine distro"
 fi
