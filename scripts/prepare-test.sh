@@ -13,7 +13,7 @@ if [ -f /etc/redhat-release ]; then
     exit 1
   fi
   yum install -y epel-release
-  yum install -y -e0 https://repo.openflighthpc.org/pub/centos/$DIST/openflighthpc-release-latest.noarch.rpm
+  yum install -y https://repo.openflighthpc.org/pub/centos/$DIST/openflighthpc-release-latest.noarch.rpm
   if [ "$DIST" == 8 ]; then
     yum config-manager --set-enabled PowerTools
   fi
