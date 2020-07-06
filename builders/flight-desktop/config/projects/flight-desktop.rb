@@ -35,7 +35,7 @@ VERSION = '1.3.0'
 override 'flight-desktop', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-desktop'
@@ -79,9 +79,10 @@ if ohai['platform_family'] == 'rhel'
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
       # provides are prefixed with `:`
-      # neither 'apg' or 'python-websockify' are available on RHEL8
+      # neither 'apg' or 'python-websockify' are available on RHEL8,
+      # but we provide them in the openflight repos.
       # note: xorg-x11-apps is only available in PowerTools
-      priority "xorg-x11-apps netpbm-progs :flight-desktop-system-#{DESKTOP_SYSTEM}"
+      priority "xorg-x11-apps netpbm-progs apg python3-websockify :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   else
     package :rpm do
