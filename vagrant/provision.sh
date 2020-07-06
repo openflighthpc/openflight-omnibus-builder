@@ -117,6 +117,9 @@ EOF
     # required for building flight-directory
     apt-get -y install libssl-dev
 
+    # required for building genders as part of flight-pdsh
+    apt-get -y install -y -e0 flex byacc
+
     gem install bundler:1.17.3
     gem install bundler:2.1.4
   fi
