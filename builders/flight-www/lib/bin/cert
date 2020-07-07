@@ -69,6 +69,8 @@ class CertWWW < Hashie::Dash
       s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
       s.bool '--manual', 'Disable automatic LetsEncrypt certificate renewal'
       s.bool '--auto', 'Enable automatic LetsEncrypt certificate renewal'
+      s.bool '--skip-cert', 'Do not generate a new certificate'
+      s.bool '--skip-restart', 'Do not restart the service'
       s.on '--help', '-h', 'Display the help output' do
         $stderr.puts s
         exit
@@ -101,6 +103,8 @@ class CertWWW < Hashie::Dash
   property :auto
   property :manual
   property :domain
+  property :skip_cert
+  property :skip_restart
 
   attr_reader :cert_type, :letsencrypt_domain
 
@@ -161,9 +165,9 @@ class CertWWW < Hashie::Dash
   end
 
   def run
-    generate_certificates
+    generate_certificates unless skip_cert
     process_auto_renewal_flags
-    restart_service
+    restart_service unless skip_restart
   end
 
   def letsencrypt_fullchain
