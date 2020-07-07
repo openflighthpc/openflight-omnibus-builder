@@ -32,13 +32,21 @@ require 'rubygems'
 require 'bundler'
 Bundler.require(:default)
 
+require 'fileutils'
+
 class CertWWW < Hashie::Dash
+  def self.root_join(*a)
+    File.join(ENV['flight_ROOT'] || raise('Missing flight_ROOT!') , *a)
+  end
+
   HTTPS_SCRIPT = File.join(__dir__, 'https')
+  SSL_DIR = root_join('etc/www/ssl')
 
   def self.slop
     @slop ||= Slop::Options.new.tap do |s|
       s.bool '--self-signed', 'Enable self signed certificates'
       s.bool '--lets-encrypt', 'Enable certificates with LetsEncrypt'
+      s.string '--domain', 'The domain associated with LetsEncrypt certificates'
       s.bool '--renewal', 'Enable automatic certificate renewal'
       s.bool '--manual', 'Disable automatic certificate renewal'
       s.bool '--skip', 'Do not regenerate the certificate'
@@ -58,12 +66,24 @@ class CertWWW < Hashie::Dash
     exit 130
   end
 
+  def self.run_certbot_create(domain)
+    system([
+      'sudo certbot certonly --nginx',
+      # "-c #{root_join('letsencrypt/cli.ini')}",
+      "--nginx-ctl #{root_join('opt/www/embedded/sbin/nginx')}",
+      "--nginx-server-root #{root_join('/etc/www')}",
+      "--config-dir #{root_join('etc/letsencrypt')}",
+      "--domain #{domain}"
+    ].join(' '))
+  end
+
   property :self_signed
   property :lets_encrypt
   property :cron
   property :renewal
   property :manual
   property :skip
+  property :domain
 
   def run
     generate_certificates
@@ -86,14 +106,31 @@ class CertWWW < Hashie::Dash
     end
   end
 
+  def safe_domain
+    domain || raise('--domain is required!')
+  end
+
+  def letsencrypt_fullchain
+    self.class.root_join('etc/letsencrypt/live', safe_domain, 'fullchain.pem')
+  end
+
+  def letsencrypt_privkey
+    self.class.root_join('etc/letsencrypt/live', safe_domain, 'privkey.pem')
+  end
+
   def generate_certificates
     if cert_type == :self_signed
       system("#{HTTPS_SCRIPT} __create_self_signed")
     else
-      raise NotImplementedError
+      self.class.run_certbot_create(safe_domain)
+      FileUtils.mkdir_p SSL_DIR
+      FileUtils.ln_sf letsencrypt_fullchain, File.join(SSL_DIR, 'fullchain.pem')
+      FileUtils.ln_sf letsencrypt_privkey, File.join(SSL_DIR, 'key.pem') # NOTE: Intentionally key.pem not privkey.pem
     end
   end
 end
 
-CertWWW.run(*ARGV)
+Bundler.with_original_env do
+  CertWWW.run(*ARGV)
+end
 
