@@ -67,8 +67,8 @@ class CertWWW < Hashie::Dash
       s.bool '--self-signed', 'Enable self signed certificates'
       s.bool '--lets-encrypt', 'Enable certificates with LetsEncrypt'
       s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
-      s.bool '--renewal', 'Enable automatic certificate renewal'
-      s.bool '--manual', 'Disable automatic certificate renewal'
+      s.bool '--manual', 'Disable automatic LetsEncrypt certificate renewal'
+      s.bool '--auto', 'Enable automatic LetsEncrypt certificate renewal'
       s.bool '--skip', 'Do not regenerate the certificate'
       s.on '--help', '-h', 'Display the help output' do
         $stderr.puts s
@@ -99,8 +99,7 @@ class CertWWW < Hashie::Dash
 
   property :self_signed
   property :lets_encrypt
-  property :cron
-  property :renewal
+  property :auto
   property :manual
   property :skip
   property :domain
@@ -146,6 +145,19 @@ class CertWWW < Hashie::Dash
       ERROR
       exit 1
     end
+
+    # Prevents --auto/--manual and self signed from being used in weird combos
+    if manual && auto
+      $stderr.puts 'Can not use --auto with --manual'
+      exit 1
+    end
+    if auto && (cert_type == 'self_signed')
+      $stderr.puts 'Auto renewal of self signed certificates is not supported'
+      exit 1
+    end
+
+    # Force manual renewal when switching to self-signed
+    self.manual = true if self_signed
 
     config.write if save
   end
