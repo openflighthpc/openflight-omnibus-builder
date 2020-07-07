@@ -33,10 +33,30 @@ require 'bundler'
 Bundler.require(:default)
 
 require 'fileutils'
+require 'yaml'
 
 class CertWWW < Hashie::Dash
   def self.root_join(*a)
     File.join(ENV['flight_ROOT'] || raise('Missing flight_ROOT!') , *a)
+  end
+
+  class Config < Hashie::Dash
+    PATH = CertWWW.root_join('etc/cert-gen.yaml')
+
+    def self.read
+      if File.exists? PATH
+        new YAML.load(File.read(PATH), symbolize_names: true)
+      else
+        new
+      end
+    end
+
+    property :letsencrypt_domain
+    property :cert_type
+
+    def write
+      File.write(PATH, YAML.dump(self.to_h))
+    end
   end
 
   HTTPS_SCRIPT = File.join(__dir__, 'https')
@@ -46,7 +66,7 @@ class CertWWW < Hashie::Dash
     @slop ||= Slop::Options.new.tap do |s|
       s.bool '--self-signed', 'Enable self signed certificates'
       s.bool '--lets-encrypt', 'Enable certificates with LetsEncrypt'
-      s.string '--domain', 'The domain associated with LetsEncrypt certificates'
+      s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
       s.bool '--renewal', 'Enable automatic certificate renewal'
       s.bool '--manual', 'Disable automatic certificate renewal'
       s.bool '--skip', 'Do not regenerate the certificate'
@@ -85,44 +105,68 @@ class CertWWW < Hashie::Dash
   property :skip
   property :domain
 
+  attr_reader :cert_type, :letsencrypt_domain
+
+  def initialize(**_)
+    # Run the base initializer + variable plus local variable definitions
+    super
+    config = Config.read
+    save = false
+
+    # Populate the cert_type from the config + sanity check
+    if self_signed && lets_encrypt
+      $stderr.puts <<~ERROR.chomp
+        Can not use --self-signed with --lets-encrypt
+      ERROR
+      exit 1
+    elsif self_signed
+      save = true
+      @cert_type = config.cert_type = 'self_signed'
+    elsif lets_encrypt
+      save = true
+      @cert_type = config.cert_type = 'lets_encrypt'
+    elsif config.cert_type
+      @cert_type = config.cert_type
+    else
+      save = true
+      @cert_type = config.cert_type = 'lets_encrypt'
+    end
+
+    # Populate the domain + sanity check
+    if domain
+      save = true
+      @letsencrypt_domain = config.letsencrypt_domain = domain
+    elsif config.letsencrypt_domain && cert_type == 'lets_encrypt'
+      @letsencrypt_domain = config.letsencrypt_domain
+      puts "Using cached domain: #{letsencrypt_domain}"
+    elsif cert_type == 'lets_encrypt'
+      $stderr.puts <<~ERROR.chomp
+        A domain is required when using LetsEncrypt!
+        Either supply it with --domain DOMAIN or enable self signed certificates with --self-signed
+      ERROR
+      exit 1
+    end
+
+    config.write if save
+  end
+
   def run
     generate_certificates
   end
 
-  def cert_type
-    @cert_type ||= begin
-      if self_signed && lets_encrypt
-        $stderr.puts <<~ERROR.chomp
-          Can not use --self-signed with --lets-encrypt
-        ERROR
-        exit 1
-      elsif self_signed
-        :self_signed
-      elsif lets_encrypt
-        :lets_encrypt
-      else
-        raise NotImplementedError
-      end
-    end
-  end
-
-  def safe_domain
-    domain || raise('--domain is required!')
-  end
-
   def letsencrypt_fullchain
-    self.class.root_join('etc/letsencrypt/live', safe_domain, 'fullchain.pem')
+    self.class.root_join('etc/letsencrypt/live', letsencrypt_domain, 'fullchain.pem')
   end
 
   def letsencrypt_privkey
-    self.class.root_join('etc/letsencrypt/live', safe_domain, 'privkey.pem')
+    self.class.root_join('etc/letsencrypt/live', letsencrypt_domain, 'privkey.pem')
   end
 
   def generate_certificates
-    if cert_type == :self_signed
+    if cert_type == 'self_signed'
       system("#{HTTPS_SCRIPT} __create_self_signed")
     else
-      self.class.run_certbot_create(safe_domain)
+      self.class.run_certbot_create(letsencrypt_domain)
       FileUtils.mkdir_p SSL_DIR
       FileUtils.ln_sf letsencrypt_fullchain, File.join(SSL_DIR, 'fullchain.pem')
       FileUtils.ln_sf letsencrypt_privkey, File.join(SSL_DIR, 'key.pem') # NOTE: Intentionally key.pem not privkey.pem
