@@ -1,0 +1,99 @@
+#!/usr/bin/env ruby
+#==============================================================================
+# Copyright (C) 2019-present Alces Flight Ltd.
+#
+# This file is part of Alces Flight Omnibus Builder.
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which is available at
+# <https://www.eclipse.org/legal/epl-2.0>, or alternative license
+# terms made available by Alces Flight Ltd - please direct inquiries
+# about licensing to licensing@alces-flight.com.
+#
+# This project is distributed in the hope that it will be useful, but
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
+# OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
+# PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more
+# details.
+#
+# You should have received a copy of the Eclipse Public License 2.0
+# along with this project. If not, see:
+#
+#  https://opensource.org/licenses/EPL-2.0
+#
+# For more information on Alces Flight Omnibus Builder, please visit:
+# https://github.com/alces-flight/alces-flight-omnibus-builder
+#===============================================================================
+
+# Require the default gems
+ENV['BUNDLE_GEMFILE'] ||= File.join(__dir__, '../Gemfile')
+require 'rubygems'
+require 'bundler'
+Bundler.require(:default)
+
+class CertWWW < Hashie::Dash
+  HTTPS_SCRIPT = File.join(__dir__, 'https')
+
+  def self.slop
+    @slop ||= Slop::Options.new.tap do |s|
+      s.bool '--self-signed', 'Enable self signed certificates'
+      s.bool '--lets-encrypt', 'Enable certificates with LetsEncrypt'
+      s.bool '--renewal', 'Enable automatic certificate renewal'
+      s.bool '--manual', 'Disable automatic certificate renewal'
+      s.bool '--skip', 'Do not regenerate the certificate'
+      s.on '--help', '-h', 'Display the help output' do
+        $stderr.puts s
+        exit
+      end
+    end
+  end
+
+  def self.run(*argv)
+    parser = slop.parser.tap(&:reset)
+    results = parser.parse(argv)
+    new(**results.to_h).run
+  rescue Interrupt
+    $stderr.puts 'Received Interrupt!'
+    exit 130
+  end
+
+  property :self_signed
+  property :lets_encrypt
+  property :cron
+  property :renewal
+  property :manual
+  property :skip
+
+  def run
+    generate_certificates
+  end
+
+  def cert_type
+    @cert_type ||= begin
+      if self_signed && lets_encrypt
+        $stderr.puts <<~ERROR.chomp
+          Can not use --self-signed with --lets-encrypt
+        ERROR
+        exit 1
+      elsif self_signed
+        :self_signed
+      elsif lets_encrypt
+        :lets_encrypt
+      else
+        raise NotImplementedError
+      end
+    end
+  end
+
+  def generate_certificates
+    if cert_type == :self_signed
+      system("#{HTTPS_SCRIPT} __create_self_signed")
+    else
+      raise NotImplementedError
+    end
+  end
+end
+
+CertWWW.run(*ARGV)
+
