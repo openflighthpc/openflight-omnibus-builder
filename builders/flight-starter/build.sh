@@ -5,7 +5,7 @@ mkdir -p pkg
 
 NOW=2020.2
 NEXT=2020.3
-VERSION=${NOW}.5
+VERSION=${NOW}.6
 REL=1
 
 if [ -f /etc/redhat-release ]; then
