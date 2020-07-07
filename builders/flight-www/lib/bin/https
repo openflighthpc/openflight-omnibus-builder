@@ -31,7 +31,7 @@ CERT_DIR=$(mktemp -d /tmp/flight-www-certs.XXXXXX)
 clean_up() {
   rm -rf "${CERT_DIR}"
 }
- trap clean_up EXIT
+trap clean_up EXIT
 
 assert_user_is_root() {
     if [[ "$( id -u )" != "0" ]] ; then
@@ -50,14 +50,10 @@ format() {
 }
 
 create_private_key() {
-    format "To enable HTTPs SSL certificates need to be generated.  We will" \
-        "step you through generating self-signed certificates that are" \
-        "valid for 10 years.\n"
+    format "We will now step you through generating self-signed certificates that are" \
+        "valid for 10 years."
     format "You will be asked to enter a passphrase and to provide details" \
         "about your organization.\n"
-    format "When you are ready press enter to continue or Ctrl-C to abort.\n"
-
-    read -s
 
     mkdir -p "${CERT_DIR}"
     cd "${CERT_DIR}"
@@ -68,8 +64,6 @@ create_private_key() {
 create_certs() {
     format "\nWe will now generate a public key.  You will be asked to enter" \
         "the passphrase you provided earlier.\n"
-    format "When you are ready press enter to continue or Ctrl-C to abort.\n"
-    read -s
 
     openssl rsa -in "${CERT_DIR}"/privkey.pem -out "${CERT_DIR}"/key.pem
     openssl x509 -in "${CERT_DIR}"/cert.csr \
@@ -93,10 +87,7 @@ reload_www_service() {
 }
 
 enable_https() {
-    echo "CERT_DIR=${CERT_DIR}"
-    create_private_key
-    create_certs
-    install_certs
+    bootstrap_self_signed
     mv "${flight_ROOT}"/etc/www/http.d/https.conf{.disabled,}
     reload_www_service
 }
@@ -111,6 +102,20 @@ usage() {
     prog="flight www"
     echo "Usage: ${prog} enable-https|disable-https"
     echo "Enable or disable HTTPs support for the flight www service."
+}
+
+# Will auto generate a self signed certificate if required
+bootstrap_self_signed() {
+    if [ ! -f "${flight_ROOT}/etc/www/ssl/fullchain.pem" ]; then
+        format "In order to enable HTTPs a set of SSL certificates need to be generated."
+        format "Please see 'flight cert-gen --help' on how to generate certificates with LetsEncrypt."
+        format "\nStarting SSL certificate generation..."
+        # Slows down the CLI to prevent the user from being bombarded with text
+        sleep 1
+        create_private_key
+        create_certs
+        install_certs
+    fi
 }
 
 # NOTE: The __* commands are not part of the public interface and are solely
