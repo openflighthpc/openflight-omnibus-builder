@@ -162,6 +162,7 @@ class CertWWW < Hashie::Dash
 
   def run
     generate_certificates
+    process_auto_renewal_flags
   end
 
   def letsencrypt_fullchain
@@ -181,6 +182,23 @@ class CertWWW < Hashie::Dash
       FileUtils.ln_sf letsencrypt_fullchain, File.join(SSL_DIR, 'fullchain.pem')
       FileUtils.ln_sf letsencrypt_privkey, File.join(SSL_DIR, 'key.pem') # NOTE: Intentionally key.pem not privkey.pem
     end
+  end
+
+  def process_auto_renewal_flags
+    if auto
+      puts 'Your certificate will be automatically renewed close to its expiry'
+      File.write cron_path, <<~CRON
+        #!/bin/bash
+        #{self.class.root_join('bin/flexec')} ruby #{File.expand_path(__FILE__)}
+      CRON
+    elsif manual && File.exists?(cron_path)
+      puts 'Your certificiate will no longer be automatically renewed'
+      FileUtils.rm cron_path
+    end
+  end
+
+  def cron_path
+    self.class.root_join('etc/cron/daily/renew-ssl-cert')
   end
 end
 
