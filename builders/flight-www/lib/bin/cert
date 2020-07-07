@@ -163,6 +163,7 @@ class CertWWW < Hashie::Dash
   def run
     generate_certificates
     process_auto_renewal_flags
+    restart_service
   end
 
   def letsencrypt_fullchain
@@ -200,9 +201,13 @@ class CertWWW < Hashie::Dash
   def cron_path
     self.class.root_join('etc/cron/daily/renew-ssl-cert')
   end
+
+  def restart_service
+    system("#{self.class.root_join('bin/flexec')} flight service restart www")
+  end
 end
 
-Bundler.with_original_env do
+Bundler.with_unbundled_env do
   CertWWW.run(*ARGV)
 end
 
