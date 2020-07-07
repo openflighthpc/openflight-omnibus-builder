@@ -83,6 +83,7 @@ create_certs() {
 
 install_certs() {
     mkdir -p "${flight_ROOT}"/etc/www/ssl
+    rm -f "${flight_ROOT}"/etc/www/ssl/fullchain.pem "${flight_ROOT}"/etc/www/ssl/key.pem
     cp "${CERT_DIR}"/cert.pem "${flight_ROOT}"/etc/www/ssl/fullchain.pem
     cp "${CERT_DIR}"/key.pem "${flight_ROOT}"/etc/www/ssl/key.pem
 }
