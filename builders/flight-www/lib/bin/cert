@@ -69,7 +69,6 @@ class CertWWW < Hashie::Dash
       s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
       s.bool '--manual', 'Disable automatic LetsEncrypt certificate renewal'
       s.bool '--auto', 'Enable automatic LetsEncrypt certificate renewal'
-      s.bool '--skip', 'Do not regenerate the certificate'
       s.on '--help', '-h', 'Display the help output' do
         $stderr.puts s
         exit
@@ -86,10 +85,10 @@ class CertWWW < Hashie::Dash
     exit 130
   end
 
-  def self.run_certbot_create(domain)
+  def self.run_certbot(domain)
     system([
-      'sudo certbot certonly --nginx',
-      # "-c #{root_join('letsencrypt/cli.ini')}",
+      "sudo certbot certonly --nginx",
+      "#{'-n' unless $stdout.tty?}",
       "--nginx-ctl #{root_join('opt/www/embedded/sbin/nginx')}",
       "--nginx-server-root #{root_join('/etc/www')}",
       "--config-dir #{root_join('etc/letsencrypt')}",
@@ -101,7 +100,6 @@ class CertWWW < Hashie::Dash
   property :lets_encrypt
   property :auto
   property :manual
-  property :skip
   property :domain
 
   attr_reader :cert_type, :letsencrypt_domain
@@ -178,7 +176,7 @@ class CertWWW < Hashie::Dash
     if cert_type == 'self_signed'
       system("#{HTTPS_SCRIPT} __create_self_signed")
     else
-      self.class.run_certbot_create(letsencrypt_domain)
+      self.class.run_certbot(letsencrypt_domain)
       FileUtils.mkdir_p SSL_DIR
       FileUtils.ln_sf letsencrypt_fullchain, File.join(SSL_DIR, 'fullchain.pem')
       FileUtils.ln_sf letsencrypt_privkey, File.join(SSL_DIR, 'key.pem') # NOTE: Intentionally key.pem not privkey.pem
