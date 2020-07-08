@@ -36,6 +36,15 @@ require 'fileutils'
 require 'yaml'
 require 'ostruct'
 
+# TODO: Eventually package certbot with the app and remove this condition
+unless system('which certbot 2>/dev/null')
+  $stderr.puts <<~ERROR
+    Generating certificates requires 'certbot' to be installed!
+    Please contact your system administrator for further assistance
+  ERROR
+  exit 1
+end
+
 class CertWWW < Hashie::Dash
   include Hashie::Extensions::IgnoreUndeclared
 
