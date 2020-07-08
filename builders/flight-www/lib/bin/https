@@ -27,7 +27,9 @@
 #===============================================================================
 set -e
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CERT_DIR=$(mktemp -d /tmp/flight-www-certs.XXXXXX)
+
 clean_up() {
   rm -rf "${CERT_DIR}"
 }
@@ -100,8 +102,8 @@ disable_https() {
 usage() {
     local prog
     prog="flight www"
-    echo "Usage: ${prog} enable-https|disable-https"
-    echo "Enable or disable HTTPs support for the flight www service."
+    echo "Usage: ${prog} enable-https|disable-https|cert-gen"
+    echo "Enable/disable HTTPs support and generate SSL certificates"
 }
 
 # Will auto generate a self signed certificate if required
@@ -139,6 +141,11 @@ main() {
             create_private_key
             create_certs
             install_certs
+            ;;
+        cert-gen)
+            shift
+            clean_up
+            exec $flight_ROOT/bin/flexec ruby $DIR/cert "$@"
             ;;
         --help | help)
             usage
