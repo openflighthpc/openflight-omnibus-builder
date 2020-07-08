@@ -24,30 +24,21 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-www'
-default_version '1.0.0'
+name "enforce-flight-runway"
+description "enforce existence of flight-runway"
+default_version "1.0.0"
 
-dependency 'enforce-flight-runway'
-dependency 'zlib'
-dependency 'nginx'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
+license :project_license
 skip_transitive_dependency_licensing true
 
 build do
-  env = with_standard_compiler_flags(with_embedded_path)
-
-  # Copies the content of 'lib' over the install directory
-  root = File.expand_path('../../lib', __dir__)
-  Dir.glob(File.join(root, '**/*')).each do |src|
-    copy src, File.join(install_dir, src.sub(root, ''))
+  block do
+    raise "Flight Runway is not installed!" if ! File.exists?('/opt/flight/bin/flight')
+    bundle_version = Bundler.with_unbundled_env do
+      `/opt/flight/bin/bundle --version | sed 's/Bundler version //g'`.chomp
+    end
+    if bundle_version != '2.1.4'
+      raise "Flight Runway has incorrect bundle version: #{bundle_version} (expected 2.1.4)"
+    end
   end
-
-  # Installs the gems
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
 end
