@@ -1,7 +1,7 @@
 : '
 : NAME: inventory
 : SYNOPSIS: Manage asset inventory data
-: VERSION: 2.0.0.rc0
+: VERSION: 2.0.0.rc1
 : '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
@@ -30,6 +30,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
+export RUBYOPT='-W0'
 export FLIGHT_CWD=$(pwd)
 cd /opt/flight/opt/inventory
 export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
