@@ -1,6 +1,6 @@
 Name:           flight-starter
 Version:        %{_flight_pkg_version}
-Release:        %{_flight_pkg_rel}
+Release:        %{_flight_pkg_rel}%{?dist}
 Summary:        Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
 Group:          OpenFlight/Environment
@@ -14,6 +14,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:     noarch
 Requires:      flight-runway, flight-starter-banner => %{_flight_pkg_now}.0, flight-starter-banner < %{_flight_pkg_next}.0~, flight-starter-system-1.0
+%{?el8:Recommends:    flight-plugin-system-starter}
 
 %description
 Profile scripts and infrastructure for activating an OpenFlight HPC environment
@@ -84,6 +85,7 @@ install -p -m 644 $RPM_BUILD_ROOT/etc/xdg/flight.cshrc $RPM_BUILD_ROOT/opt/fligh
 
 %package -n flight-plugin-system-starter
 Summary: Provides profile script integration for Flight Starter
+Release: %{_flight_pkg_rel}
 Requires: flight-starter
 Requires: setup
 Provides: flight-starter-system-1.0
@@ -96,6 +98,7 @@ Provides profile script integration for Flight Starter
 
 %package -n flight-plugin-manual-starter
 Summary: Provides manually managed profile script integration for Flight Starter
+Release: %{_flight_pkg_rel}
 Requires: flight-starter
 Provides: flight-starter-system-1.0
 Conflicts: flight-plugin-system-starter
@@ -107,6 +110,7 @@ Provides manually managed profile script integration for Flight Starter
 
 %package banner
 Summary: OpenFlightHPC branded banner for Flight Starter
+Release: %{_flight_pkg_rel}
 Requires: flight-starter
 Provides: flight-starter-banner-system-1.0
 %description banner

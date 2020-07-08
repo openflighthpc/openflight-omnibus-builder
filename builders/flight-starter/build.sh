@@ -6,7 +6,7 @@ mkdir -p pkg
 NOW=2020.2
 NEXT=2020.3
 VERSION=${NOW}.6
-REL=1
+REL=2
 
 if [ -f /etc/redhat-release ]; then
   echo "Building RPM package..."
