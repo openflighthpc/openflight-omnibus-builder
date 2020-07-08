@@ -35,7 +35,7 @@ VERSION = '0.4.0'
 override 'flight-action', version: VERSION
 
 build_version VERSION
-build_iteration 0
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-action'
@@ -52,12 +52,6 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
-
-if ohai['platform_family'] == 'rhel'
-  # XXX Perhaps this should be changed to a recommends.
-  runtime_dependency 'awscli'
-elsif ohai['platform_family'] == 'debian'
-end
 
 %w(
   opt/flight/etc/banner/tips.d/40-power.rc
