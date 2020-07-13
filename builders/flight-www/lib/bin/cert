@@ -50,6 +50,9 @@ module FlightWWW
     CLI_CERT_TYPES = ['self-signed', 'lets-encrypt'].map do |type|
                        [type, type.sub('-', '_')]
                      end.flatten
+    NGINX_BIN = root_join('opt/www/embedded/sbin/nginx')
+    NGINX_ROOT = root_join('etc/www')
+    LETS_ENCRYPT_CONFIG_DIR = root_join('etc/letsencrypt')
 
     def self.slop
       @slop ||= Slop::Options.new.tap do |s|
@@ -76,14 +79,12 @@ module FlightWWW
     end
 
     def self.run_certbot(domain)
-      system([
-        "sudo certbot certonly --nginx",
-        "#{'-n' unless $stdout.tty?}",
-        "--nginx-ctl #{root_join('opt/www/embedded/sbin/nginx')}",
-        "--nginx-server-root #{root_join('/etc/www')}",
-        "--config-dir #{root_join('etc/letsencrypt')}",
-        "--domain #{domain}"
-      ].join(' '))
+      certbot_cmd = ['certbot', 'certonly', '-n', '--nginx', '--nginx-ctl', NGINX_BIN,
+        '--nginx-server-root', NGINX_ROOT, '--config-dir', LETS_ENCRYPT_CONFIG_DIR,
+        '--domain', domain
+      ]
+      certbot_cmd << '-n' unless $stdout.tty?
+      system(*certbot_cmd)
     end
 
     attr_reader :config
