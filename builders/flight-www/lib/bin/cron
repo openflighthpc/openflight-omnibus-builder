@@ -1,0 +1,98 @@
+#!/usr/bin/env ruby
+#==============================================================================
+# Copyright (C) 2019-present Alces Flight Ltd.
+#
+# This file is part of Alces Flight Omnibus Builder.
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which is available at
+# <https://www.eclipse.org/legal/epl-2.0>, or alternative license
+# terms made available by Alces Flight Ltd - please direct inquiries
+# about licensing to licensing@alces-flight.com.
+#
+# This project is distributed in the hope that it will be useful, but
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
+# OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
+# PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more
+# details.
+#
+# You should have received a copy of the Eclipse Public License 2.0
+# along with this project. If not, see:
+#
+#  https://opensource.org/licenses/EPL-2.0
+#
+# For more information on Alces Flight Omnibus Builder, please visit:
+# https://github.com/alces-flight/alces-flight-omnibus-builder
+#===============================================================================
+
+# Require the default gems
+ENV['BUNDLE_GEMFILE'] ||= File.join(__dir__, '../Gemfile')
+require 'rubygems'
+require 'bundler'
+Bundler.require(:default)
+
+require_relative '../lib/shared'
+
+require 'ostruct'
+
+module FlightWWW
+  class CronCLI
+    def self.slop
+      @slop ||= Slop::Options.new(suppress_errors: true).tap do |s|
+        s.bool '--disable', 'Disable (instead of enable) automatic certificate renewal'
+        s.on '--help', '-h', 'Display this help output' do
+          $stderr.puts s
+          exit
+        end
+      end
+    end
+
+    def self.run(*argv)
+      parser = slop.parser.tap(&:reset)
+      results = parser.parse(argv)
+      os = OpenStruct.new(results.to_h)
+      new(os)
+    rescue Interrupt
+      $stderr.puts 'Received Interrupt!'
+      exit 130
+    end
+
+    def initialize(slop)
+      config = Config.read
+
+      if slop.disable && File.exists?(Config::CRON_PATH)
+        FileUtils.rm Config::CRON_PATH
+        puts <<~INFO.chomp
+          Automatic renewal has been disabled
+        INFO
+      elsif slop.disable
+        $stderr.puts <<~WARN.chomp
+          Automatic renewal is already disabled!
+        WARN
+      elsif config.self_signed?
+        $stderr.puts <<~ERROR.chomp
+          Automatic renewal is not support for self signed certificates!
+        ERROR
+        exit 1
+      elsif File.exists? Config::CRON_PATH
+        $stderr.puts <<~WARN.chomp
+          Automatic renewal is already enabled!
+          It can be disabled with: --disable
+        WARN
+      else
+        File.write Config::CRON_PATH, <<~CRON.chomp
+          #!/bin/bash
+          #{Config.root_join('bin/flexec')} ruby #{File.expand_path('cert', __dir__)}
+        CRON
+        puts <<~INFO.chomp
+          Automatic renewal has been enabled
+        INFO
+      end
+    end
+  end
+end
+
+Bundler.with_unbundled_env do
+  FlightWWW::CronCLI.run(*ARGV)
+end

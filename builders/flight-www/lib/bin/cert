@@ -61,7 +61,7 @@ module FlightWWW
     FLEXEC = root_join('bin/flexec')
 
     def self.slop
-      @slop ||= Slop::Options.new.tap do |s|
+      @slop ||= Slop::Options.new(suppress_errors: true).tap do |s|
         s.string '--cert-type', 'Select the certificate type: lets-encrypt|self-signed'
         s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
         s.string '--email', 'The email address associated with the LetsEncrypt certificate'
@@ -149,6 +149,10 @@ module FlightWWW
     def run
       if self_signed?
         system("#{HTTPS_SCRIPT} __create_self_signed")
+        if File.exists? Config::CRON_PATH
+          $stderr.puts "Disabling auto-renewal for self signed certificates"
+          FileUtils.rm Config::CRON_PATH
+        end
       else
         run_certbot
       end

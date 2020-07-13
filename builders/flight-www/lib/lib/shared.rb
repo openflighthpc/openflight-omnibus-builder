@@ -46,6 +46,7 @@ module FlightWWW
     end
 
     CONFIG_PATH = root_join('etc/www/cert-gen.yaml')
+    CRON_PATH = root_join('etc/cron/daily/www-cert-gen')
 
     def self.read
       data = if File.exists? CONFIG_PATH
