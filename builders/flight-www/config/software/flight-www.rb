@@ -40,9 +40,9 @@ build do
 
   # Copies the content of 'lib' over the install directory
   root = File.expand_path('../../lib', __dir__)
-  Dir.glob(File.join(root, '**/*')).each do |src|
-    copy src, File.join(install_dir, src.sub(root, ''))
-  end
+  Dir.glob(File.join(root, '**/*'))
+    .select { |f| File.file?(f) }
+    .each { |src| copy src, File.join(install_dir, src.sub(root, '')) }
 
   # Installs the gems
   flags = [
