@@ -55,11 +55,12 @@ class CertWWW < Hashie::Dash
   HTTPS_SCRIPT = File.join(__dir__, 'https')
   SSL_DIR = root_join('etc/www/ssl')
   CONFIG_PATH = root_join('etc/cert-gen.yaml')
+  CERT_TYPES = ['self_signed', 'lets_encrypt']
 
   def self.slop
     @slop ||= Slop::Options.new.tap do |s|
-      s.bool '--lets-encrypt', 'Enable certificates with LetsEncrypt'
-      s.bool '--self-signed', 'Enable self signed certificates'
+      s.string '--cert-type', 'Select the certificate type: lets-encrypt|self-signed'
+
       s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
       s.bool '--auto', 'Enable automatic LetsEncrypt certificate renewal'
       s.bool '--manual', 'Disable automatic LetsEncrypt certificate renewal'
@@ -105,21 +106,29 @@ class CertWWW < Hashie::Dash
     end
 
     # Updates the cert_type + sanity check
-    if slop.self_signed && slop.lets_encrypt
+    if CERT_TYPES.map { |t| [t, t.sub('_', '-')] }.flattern.include?(slop.cert_type)
+      config.cert_type = slop.cert_type.sub('-', '_')
+    elsif slop.cert_type
       $stderr.puts <<~ERROR.chomp
-        Can not use --self-signed with --lets-encrypt
+        Unrecognized certificate type: #{slop.cert_type}
+        Please select either: lets-encrypt or self-signed
       ERROR
       exit 1
-    elsif slop.self_signed
-      config.cert_type = 'self_signed'
-    elsif slop.lets_encrypt || (config.cert_type != 'self_signed')
+    elsif CERT_TYPES.include?(config.cert_type)
+      # noop
+    elsif config.cert_type
+      $stderr.puts <<~ERROR.chomp
+        An unexpected error has occurred! Please provide the --cert-type flag and try again.
+      ERROR
+      exit 1
+    else
       config.cert_type = 'lets_encrypt'
     end
 
     # Update the domain + sanity check
-    if slop.domain && slop.self_signed
+    if slop.domain && ['self_signed', 'self-signed'].include?(slop.cert_type)
       $stderr.puts <<~ERROR.chomp
-        Can not use --self-signed with --domain
+        Can not use --domain with --cert-type #{slop.cert_type}
       ERROR
       exit 1
     elsif slop.domain
@@ -137,6 +146,7 @@ class CertWWW < Hashie::Dash
     end
 
     # Ensure the final configured config is valid
+    # TODO: Move renewals to a different CLI
     if config.cert_type == 'self_signed' && config.cron
       $stderr.puts <<~ERROR.chomp
         Automatic renewal of self signed is unsupported!
@@ -146,7 +156,7 @@ class CertWWW < Hashie::Dash
     elsif config.cert_type == 'lets_encrypt' && config.letsencrypt_domain.nil?
       $stderr.puts <<~ERROR.chomp
         LetsEncrypt certificates require a domain!
-        Please try again with the following flags: --lets-encrypt --domain YOUR_DOMAIN
+        Please try again with the following flags: --cert-type lets-encrypt --domain YOUR_DOMAIN
       ERROR
       exit 1
     end
