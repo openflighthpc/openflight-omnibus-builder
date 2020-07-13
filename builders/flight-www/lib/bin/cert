@@ -48,6 +48,8 @@ module FlightWWW
 
     HTTPS_SCRIPT = File.join(__dir__, 'https')
     SSL_DIR = root_join('etc/www/ssl')
+    SSL_FULLCHAIN = File.join(SSL_DIR, 'fullchain.pem')
+    SSL_PRIVKEY = File.join(SSL_DIR, 'key.pem')
     CLI_CERT_TYPES = ['self-signed', 'lets-encrypt'].map do |type|
                        [type, type.sub('-', '_')]
                      end.flatten
@@ -55,9 +57,6 @@ module FlightWWW
     NGINX_ROOT = root_join('etc/www')
     LETS_ENCRYPT_CONFIG_DIR = root_join('etc/letsencrypt')
     FLEXEC = root_join('bin/flexec')
-    CERTBOT_NOT_RENEWED = <<~CERTBOT.chomp
-      Certificate not yet due for renewal; no action taken.
-    CERTBOT
 
     def self.slop
       @slop ||= Slop::Options.new.tap do |s|
@@ -84,14 +83,13 @@ module FlightWWW
       exit 130
     end
 
-    attr_reader :config, :force_restart
+    attr_reader :config
     def_delegators :@config, :letsencrypt_domain, :letsencrypt_email,
                    :lets_encrypt?, :self_signed?
 
     def initialize(slop)
       Config.update do |config|
         @config = config
-        @force_restart = false
 
         # Updates the cert_type + sanity check
         if CLI_CERT_TYPES.include?(slop.cert_type)
@@ -119,7 +117,6 @@ module FlightWWW
           ERROR
           exit 1
         elsif slop.domain != config.letsencrypt_domain
-          @force_restart = true
           config.letsencrypt_domain = slop.domain
         elsif config.lets_encrypt? && !config.letsencrypt_domain?
           $stderr.puts <<~ERROR.chomp
@@ -174,7 +171,7 @@ module FlightWWW
       end
 
       puts 'Generating LetsEncrypt certificate, please wait...'
-      stdout, error, status = Open3.capture3('certbot', 'certonly', '-n', '--nginx',
+      _, error, status = Open3.capture3('certbot', 'certonly', '-n', '--nginx',
         '--domain', letsencrypt_domain, '--email', letsencrypt_email, '--agree-tos',
         '--nginx-ctl', NGINX_BIN, '--nginx-server-root', NGINX_ROOT,
         '--config-dir', LETS_ENCRYPT_CONFIG_DIR
@@ -184,21 +181,12 @@ module FlightWWW
       # NOTE: If the domain has been previously used it *may* still be in certbot's cache
       #       This means certbot *may* not regenerate the certificate
       #       However the service still needs updating if the domain has changed
-      if status.success? && (force_restart || !stdout.include?(CERTBOT_NOT_RENEWED))
+      if status.success?
         FileUtils.mkdir_p SSL_DIR
-        FileUtils.ln_sf letsencrypt_fullchain, File.join(SSL_DIR, 'fullchain.pem')
-        FileUtils.ln_sf letsencrypt_privkey, File.join(SSL_DIR, 'key.pem')
+        FileUtils.ln_sf letsencrypt_fullchain, SSL_FULLCHAIN
+        FileUtils.ln_sf letsencrypt_privkey, SSL_PRIVKEY
 
-        if stdout.include?(CERTBOT_NOT_RENEWED)
-          puts 'Restarting the service with the updated domain'
-        else
-          puts 'Generated a new LetsEncrypt certificate'
-        end
         system(FLEXEC, 'flight', 'service', 'restart', 'www')
-      # Do not restart the server if the certificate has not been renewed
-      elsif status.success?
-        $stdout.puts 'The existing LetsEncrypt certificate is not up for renewal!'
-        exit 2
       # Report to the user some other error has occurred
       else
         $stderr.puts <<~ERROR
