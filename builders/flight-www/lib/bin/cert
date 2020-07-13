@@ -118,7 +118,7 @@ module FlightWWW
             Using --domain with self signed certificates is not supported
           ERROR
           exit 1
-        elsif slop.domain != config.letsencrypt_domain
+        elsif slop.domain
           config.letsencrypt_domain = slop.domain
         elsif config.lets_encrypt? && !config.letsencrypt_domain?
           $stderr.puts <<~ERROR.chomp
