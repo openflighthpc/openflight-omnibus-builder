@@ -102,7 +102,7 @@ disable_https() {
 usage() {
     local prog
     prog="flight www"
-    echo "Usage: ${prog} enable-https|disable-https|cert-gen"
+    echo "Usage: ${prog} enable-https|disable-https|cert-gen|cron-renewal"
     echo "Enable/disable HTTPs support and generate SSL certificates"
 }
 
@@ -146,6 +146,11 @@ main() {
             shift
             clean_up
             exec $flight_ROOT/bin/flexec ruby $DIR/cert "$@"
+            ;;
+        cron-renewal)
+            shift
+            clean_up
+            exec $flight_ROOT/bin/flexec ruby $DIR/cron "$@"
             ;;
         --help | help)
             usage
