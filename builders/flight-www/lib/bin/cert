@@ -55,6 +55,9 @@ module FlightWWW
     NGINX_ROOT = root_join('etc/www')
     LETS_ENCRYPT_CONFIG_DIR = root_join('etc/letsencrypt')
     FLEXEC = root_join('bin/flexec')
+    CERTBOT_NOT_RENEWED = <<~CERTBOT.chomp
+      Certificate not yet due for renewal; no action taken.
+    CERTBOT
 
     def self.slop
       @slop ||= Slop::Options.new.tap do |s|
@@ -176,13 +179,18 @@ module FlightWWW
         exit 1
       end
 
-      _s, error, status = Open3.capture3('certbot', 'certonly', '-n', '--nginx',
+      puts 'Generating LetsEncrypt certificate, please wait...'
+      stdout, error, status = Open3.capture3('certbot', 'certonly', '-n', '--nginx',
         '--domain', letsencrypt_domain, '--email', letsencrypt_email, '--agree-tos',
         '--nginx-ctl', NGINX_BIN, '--nginx-server-root', NGINX_ROOT,
         '--config-dir', LETS_ENCRYPT_CONFIG_DIR
       )
 
-      if status.success?
+      if status.success? && stdout.include?(CERTBOT_NOT_RENEWED)
+        $stdout.puts 'The existing LetsEncrypt certificate is not up for renewal!'
+        exit 2
+      elsif status.success?
+        puts 'Generated a new LetsEncrypt certificate'
         system(FLEXEC, 'flight', 'service', 'restart', 'www')
       else
         $stderr.puts <<~ERROR
@@ -190,6 +198,7 @@ module FlightWWW
 
           #{error}
         ERROR
+        exit 1
       end
     end
 
