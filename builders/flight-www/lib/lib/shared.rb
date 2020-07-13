@@ -66,6 +66,7 @@ module FlightWWW
       end
     end
 
+    property :letsencrypt_email
     property :letsencrypt_domain
     property :cert_type
 
@@ -79,6 +80,10 @@ module FlightWWW
 
     def cert_type?
       !(cert_type.nil? || cert_type.empty?)
+    end
+
+    def letsencrypt_email?
+      !(letsencrypt_email.nil? || letsencrypt_email.empty?)
     end
 
     def letsencrypt_domain?

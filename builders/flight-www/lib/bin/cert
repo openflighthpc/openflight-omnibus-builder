@@ -58,6 +58,7 @@ module FlightWWW
       @slop ||= Slop::Options.new.tap do |s|
         s.string '--cert-type', 'Select the certificate type: lets-encrypt|self-signed'
         s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
+        s.string '--email', 'The email address associated with the LetsEncrypt certificate'
         s.bool '--config-only', 'Only update the internal configuration, skips certificate generation'
         s.on '--help', '-h', 'Display this help output' do
           $stderr.puts s
@@ -78,17 +79,9 @@ module FlightWWW
       exit 130
     end
 
-    def self.run_certbot(domain)
-      certbot_cmd = ['certbot', 'certonly', '-n', '--nginx', '--nginx-ctl', NGINX_BIN,
-        '--nginx-server-root', NGINX_ROOT, '--config-dir', LETS_ENCRYPT_CONFIG_DIR,
-        '--domain', domain
-      ]
-      certbot_cmd << '-n' unless $stdout.tty?
-      system(*certbot_cmd)
-    end
-
     attr_reader :config
-    def_delegators :@config, :letsencrypt_domain, :lets_encrypt?, :self_signed?
+    def_delegators :@config, :letsencrypt_domain, :letsencrypt_email,
+                   :lets_encrypt?, :self_signed?
 
     def initialize(slop)
       Config.update do |config|
@@ -116,7 +109,7 @@ module FlightWWW
         # Update the domain + sanity check
         if slop.domain && config.self_signed?
           $stderr.puts <<~ERROR.chomp
-            Can not use --domain with self signed certificates
+            Using --domain with self signed certificates is not supported
           ERROR
           exit 1
         elsif slop.domain
@@ -125,6 +118,22 @@ module FlightWWW
           $stderr.puts <<~ERROR.chomp
             Can not use LetsEncrypt without a domain
             Please specify it with: --domain DOMAIN
+          ERROR
+          exit 1
+        end
+
+        # Update the email + sanity check
+        if slop.email && config.self_signed?
+          $stderr.puts <<~ERROR.chomp
+            Using --email with self signed certificates is not supported
+          ERROR
+          exit 1
+        elsif slop.email
+          config.letsencrypt_email = slop.email
+        elsif config.lets_encrypt? && !config.letsencrypt_email?
+          $stderr.puts <<~ERROR.chomp
+            Can not use LetsEncrypt without an email
+            Please specify it with: --email ADDRESS
           ERROR
           exit 1
         end
@@ -148,11 +157,18 @@ module FlightWWW
       if self_signed?
         system("#{HTTPS_SCRIPT} __create_self_signed")
       else
-        self.class.run_certbot(letsencrypt_domain)
+        run_certbot
         FileUtils.mkdir_p SSL_DIR
         FileUtils.ln_sf letsencrypt_fullchain, File.join(SSL_DIR, 'fullchain.pem')
         FileUtils.ln_sf letsencrypt_privkey, File.join(SSL_DIR, 'key.pem') # NOTE: Intentionally key.pem not privkey.pem
       end
+    end
+
+    def run_certbot
+      system('certbot', 'certonly', '-n', '--nginx', '--nginx-ctl', NGINX_BIN,
+        '--nginx-server-root', NGINX_ROOT, '--config-dir', LETS_ENCRYPT_CONFIG_DIR,
+        '--domain', letsencrypt_domain, '--email', letsencrypt_email, '--agree-tos'
+      )
     end
 
     def restart_service
