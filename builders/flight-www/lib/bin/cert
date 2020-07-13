@@ -59,6 +59,7 @@ module FlightWWW
     LETSENCRYPT_LOG_DIR = root_join('var/log/letsencrypt')
     LETSENCRYPT_WORK_DIR = root_join('var/lib/letsencrypt')
     FLEXEC = root_join('bin/flexec')
+    DISABLED_FILE = root_join('etc/www/http.d/https.conf.disabled')
 
     def self.slop
       @slop ||= Slop::Options.new(suppress_errors: true).tap do |s|
@@ -164,7 +165,14 @@ module FlightWWW
       end
 
       # Restart the service!
-      system(FLEXEC, 'flight', 'service', 'restart', 'www')
+      if File.exists? DISABLED_FILE
+        $stderr.puts <<~WARN.chomp
+          The https server is correctly disabled! It can be enabled with
+          #{FLEXEC} flight www enable-https
+        WARN
+      else
+        system(FLEXEC, 'flight', 'service', 'restart', 'www')
+      end
     end
 
     def letsencrypt_fullchain
