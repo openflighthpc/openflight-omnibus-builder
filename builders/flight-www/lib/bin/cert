@@ -149,13 +149,22 @@ module FlightWWW
     def run
       if self_signed?
         system("#{HTTPS_SCRIPT} __create_self_signed")
-        if File.exists? Config::CRON_PATH
+        status = $?.exitstatus
+        if status == 0 && File.exists?(Config::CRON_PATH)
           $stderr.puts "Disabling auto-renewal for self signed certificates"
           FileUtils.rm Config::CRON_PATH
+        elsif status != 0
+          $stderr.puts <<~ERROR.chomp
+            Failed to generate the self signed certificate!
+          ERROR
+          exit status
         end
       else
         run_certbot
       end
+
+      # Restart the service!
+      system(FLEXEC, 'flight', 'service', 'restart', 'www')
     end
 
     def letsencrypt_fullchain
@@ -192,8 +201,6 @@ module FlightWWW
         FileUtils.mkdir_p SSL_DIR
         FileUtils.ln_sf letsencrypt_fullchain, SSL_FULLCHAIN
         FileUtils.ln_sf letsencrypt_privkey, SSL_PRIVKEY
-
-        system(FLEXEC, 'flight', 'service', 'restart', 'www')
       # Report to the user some other error has occurred
       else
         $stderr.puts <<~ERROR
