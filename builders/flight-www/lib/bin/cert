@@ -32,198 +32,135 @@ require 'rubygems'
 require 'bundler'
 Bundler.require(:default)
 
-require 'fileutils'
-require 'yaml'
+require 'forwardable'
 require 'ostruct'
 
-# TODO: Eventually package certbot with the app and remove this condition
-unless system('which certbot 2>/dev/null')
-  $stderr.puts <<~ERROR
-    Generating certificates requires 'certbot' to be installed!
-    Please contact your system administrator for further assistance
-  ERROR
-  exit 1
-end
+require_relative '../lib/shared'
 
-class CertWWW < Hashie::Dash
-  include Hashie::Extensions::IgnoreUndeclared
+module FlightWWW
+  class CertCLI
+    extend Forwardable
 
-  def self.root_join(*a)
-    File.join(ENV['flight_ROOT'] || raise('Missing flight_ROOT!') , *a)
-  end
+    def self.root_join(*a)
+      Config.root_join(*a)
+    end
 
-  HTTPS_SCRIPT = File.join(__dir__, 'https')
-  SSL_DIR = root_join('etc/www/ssl')
-  CONFIG_PATH = root_join('etc/cert-gen.yaml')
-  CERT_TYPES = ['self_signed', 'lets_encrypt']
+    HTTPS_SCRIPT = File.join(__dir__, 'https')
+    SSL_DIR = root_join('etc/www/ssl')
+    CLI_CERT_TYPES = ['self-signed', 'lets-encrypt'].map do |type|
+                       [type, type.sub('-', '_')]
+                     end.flatten
 
-  def self.slop
-    @slop ||= Slop::Options.new.tap do |s|
-      s.string '--cert-type', 'Select the certificate type: lets-encrypt|self-signed'
-
-      s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
-      s.bool '--auto', 'Enable automatic LetsEncrypt certificate renewal'
-      s.bool '--manual', 'Disable automatic LetsEncrypt certificate renewal'
-      s.bool '--config-only', 'Only update the internal configuration, skips certificate generation'
-      s.on '--help', '-h', 'Display this help output' do
-        $stderr.puts s
-        exit
+    def self.slop
+      @slop ||= Slop::Options.new.tap do |s|
+        s.string '--cert-type', 'Select the certificate type: lets-encrypt|self-signed'
+        s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
+        s.bool '--config-only', 'Only update the internal configuration, skips certificate generation'
+        s.on '--help', '-h', 'Display this help output' do
+          $stderr.puts s
+          exit
+        end
       end
     end
-  end
 
-  def self.run(*argv)
-    parser = slop.parser.tap(&:reset)
-    results = parser.parse(argv)
-    new(OpenStruct.new results.to_h).run
-  rescue Interrupt
-    $stderr.puts 'Received Interrupt!'
-    exit 130
-  end
-
-  def self.run_certbot(domain)
-    system([
-      "sudo certbot certonly --nginx",
-      "#{'-n' unless $stdout.tty?}",
-      "--nginx-ctl #{root_join('opt/www/embedded/sbin/nginx')}",
-      "--nginx-server-root #{root_join('/etc/www')}",
-      "--config-dir #{root_join('etc/letsencrypt')}",
-      "--domain #{domain}"
-    ].join(' '))
-  end
-
-  property :letsencrypt_domain
-  property :cert_type
-  property :cron
-  property :config_only
-
-  def initialize(slop)
-    # Create the initial config object
-    config = if File.exists? CONFIG_PATH
-      OpenStruct.new YAML.load(File.read(CONFIG_PATH), symbolize_names: true)
-    else
-      OpenStruct.new
+    def self.run(*argv)
+      parser = slop.parser.tap(&:reset)
+      results = parser.parse(argv)
+      os = OpenStruct.new(results.to_h)
+      new(os).tap do |cli|
+        cli.run unless os.config_only
+      end
+    rescue Interrupt
+      $stderr.puts 'Received Interrupt!'
+      exit 130
     end
 
-    # Updates the cert_type + sanity check
-    if CERT_TYPES.map { |t| [t, t.sub('_', '-')] }.flattern.include?(slop.cert_type)
-      config.cert_type = slop.cert_type.sub('-', '_')
-    elsif slop.cert_type
-      $stderr.puts <<~ERROR.chomp
-        Unrecognized certificate type: #{slop.cert_type}
-        Please select either: lets-encrypt or self-signed
-      ERROR
-      exit 1
-    elsif CERT_TYPES.include?(config.cert_type)
-      # noop
-    elsif config.cert_type
-      $stderr.puts <<~ERROR.chomp
-        An unexpected error has occurred! Please provide the --cert-type flag and try again.
-      ERROR
-      exit 1
-    else
-      config.cert_type = 'lets_encrypt'
+    def self.run_certbot(domain)
+      system([
+        "sudo certbot certonly --nginx",
+        "#{'-n' unless $stdout.tty?}",
+        "--nginx-ctl #{root_join('opt/www/embedded/sbin/nginx')}",
+        "--nginx-server-root #{root_join('/etc/www')}",
+        "--config-dir #{root_join('etc/letsencrypt')}",
+        "--domain #{domain}"
+      ].join(' '))
     end
 
-    # Update the domain + sanity check
-    if slop.domain && ['self_signed', 'self-signed'].include?(slop.cert_type)
-      $stderr.puts <<~ERROR.chomp
-        Can not use --domain with --cert-type #{slop.cert_type}
-      ERROR
-      exit 1
-    elsif slop.domain
-      config.letsencrypt_domain = slop.domain
+    attr_reader :config
+    def_delegators :@config, :letsencrypt_domain, :lets_encrypt?, :self_signed?
+
+    def initialize(slop)
+      Config.update do |config|
+        @config = config
+
+        # Updates the cert_type + sanity check
+        if CLI_CERT_TYPES.include?(slop.cert_type)
+          config.cert_type = slop.cert_type
+        elsif slop.cert_type
+          $stderr.puts <<~ERROR.chomp
+            Unrecognized certificate type: #{slop.cert_type}
+            Please select either: lets-encrypt or self-signed
+          ERROR
+          exit 1
+        elsif config.cert_type?
+          # noop
+        else
+          # Default the command to LetsEncrypt
+          $stderr.puts <<~WARN.chomp
+            Defaulting to LetsEncrypt
+          WARN
+          config.cert_type = 'lets_encrypt'
+        end
+
+        # Update the domain + sanity check
+        if slop.domain && config.self_signed?
+          $stderr.puts <<~ERROR.chomp
+            Can not use --domain with self signed certificates
+          ERROR
+          exit 1
+        elsif slop.domain
+          config.letsencrypt_domain = slop.domain
+        elsif config.lets_encrypt? && !config.letsencrypt_domain?
+          $stderr.puts <<~ERROR.chomp
+            Can not use LetsEncrypt without a domain
+            Please specify it with: --domain DOMAIN
+          ERROR
+          exit 1
+        end
+      end
     end
 
-    # Update cron + sanity check
-    if slop.manual && slop.auto
-      $stderr.puts 'Can not use --auto with --manual'
-      exit 1
-    elsif slop.auto
-      config.cron = true
-    elsif slop.manual
-      config.cron = false
-    end
-
-    # Ensure the final configured config is valid
-    # TODO: Move renewals to a different CLI
-    if config.cert_type == 'self_signed' && config.cron
-      $stderr.puts <<~ERROR.chomp
-        Automatic renewal of self signed is unsupported!
-        Please try again with the following flag: --manual
-      ERROR
-      exit 1
-    elsif config.cert_type == 'lets_encrypt' && config.letsencrypt_domain.nil?
-      $stderr.puts <<~ERROR.chomp
-        LetsEncrypt certificates require a domain!
-        Please try again with the following flags: --cert-type lets-encrypt --domain YOUR_DOMAIN
-      ERROR
-      exit 1
-    end
-
-    # Updates the crontab based on the config
-    if config.cron
-      File.write cron_path, <<~CRON
-        #!/bin/bash
-        #{self.class.root_join('bin/flexec')} ruby #{File.expand_path(__FILE__)}
-      CRON
-    else
-      FileUtils.rm_f cron_path
-    end
-
-    # Saves the new config
-    File.write CONFIG_PATH, YAML.dump(config.to_h)
-
-    # Generates the underlining DASH
-    super(config_only: slop.config_only, **config.to_h)
-  end
-
-  def run
-    unless config_only
+    def run
       generate_certificates
       restart_service
-      puts
     end
 
-    if cron
-      puts "Your certificate will be automatically renewed close to its expiry"
-    elsif cert_type == 'lets_encrypt'
-      $stderr.puts <<~ERROR
-        Currently your certificate will not be renewed when it expires!
-        Automatic renewal can be enabled with: --auto --config-only
-      ERROR
+    def letsencrypt_fullchain
+      self.class.root_join('etc/letsencrypt/live', letsencrypt_domain, 'fullchain.pem')
     end
-  end
 
-  def letsencrypt_fullchain
-    self.class.root_join('etc/letsencrypt/live', letsencrypt_domain, 'fullchain.pem')
-  end
-
-  def letsencrypt_privkey
-    self.class.root_join('etc/letsencrypt/live', letsencrypt_domain, 'privkey.pem')
-  end
-
-  def generate_certificates
-    if cert_type == 'self_signed'
-      system("#{HTTPS_SCRIPT} __create_self_signed")
-    else
-      self.class.run_certbot(letsencrypt_domain)
-      FileUtils.mkdir_p SSL_DIR
-      FileUtils.ln_sf letsencrypt_fullchain, File.join(SSL_DIR, 'fullchain.pem')
-      FileUtils.ln_sf letsencrypt_privkey, File.join(SSL_DIR, 'key.pem') # NOTE: Intentionally key.pem not privkey.pem
+    def letsencrypt_privkey
+      self.class.root_join('etc/letsencrypt/live', letsencrypt_domain, 'privkey.pem')
     end
-  end
 
-  def cron_path
-    self.class.root_join('etc/cron/daily/renew-ssl-cert')
-  end
+    def generate_certificates
+      if self_signed?
+        system("#{HTTPS_SCRIPT} __create_self_signed")
+      else
+        self.class.run_certbot(letsencrypt_domain)
+        FileUtils.mkdir_p SSL_DIR
+        FileUtils.ln_sf letsencrypt_fullchain, File.join(SSL_DIR, 'fullchain.pem')
+        FileUtils.ln_sf letsencrypt_privkey, File.join(SSL_DIR, 'key.pem') # NOTE: Intentionally key.pem not privkey.pem
+      end
+    end
 
-  def restart_service
-    system("#{self.class.root_join('bin/flexec')} flight service restart www")
+    def restart_service
+      system("#{self.class.root_join('bin/flexec')} flight service restart www")
+    end
   end
 end
 
 Bundler.with_unbundled_env do
-  CertWWW.run(*ARGV)
+  FlightWWW::CertCLI.run(*ARGV)
 end
 
