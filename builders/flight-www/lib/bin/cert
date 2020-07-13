@@ -176,14 +176,24 @@ module FlightWWW
         exit 1
       end
 
-      system('certbot', 'certonly', '-n', '--nginx', '--nginx-ctl', NGINX_BIN,
-        '--nginx-server-root', NGINX_ROOT, '--config-dir', LETS_ENCRYPT_CONFIG_DIR,
-        '--domain', letsencrypt_domain, '--email', letsencrypt_email, '--agree-tos'
+      _s, error, status = Open3.capture3('certbot', 'certonly', '-n', '--nginx',
+        '--domain', letsencrypt_domain, '--email', letsencrypt_email, '--agree-tos',
+        '--nginx-ctl', NGINX_BIN, '--nginx-server-root', NGINX_ROOT,
+        '--config-dir', LETS_ENCRYPT_CONFIG_DIR
       )
+
+      if status.success?
+        system(FLEXEC, 'flight', 'service', 'restart', 'www')
+      else
+        $stderr.puts <<~ERROR
+          Failed to generate the LetsEncrypt certificate with the following error:
+
+          #{error}
+        ERROR
+      end
     end
 
     def restart_service
-      system("#{self.class.root_join('bin/flexec')} flight service restart www")
     end
   end
 end
