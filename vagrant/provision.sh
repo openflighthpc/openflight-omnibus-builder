@@ -135,4 +135,14 @@ EOF
   hostname -s > /etc/hostname
 fi
 
+cd /opt
+git clone https://github.com/openflighthpc/openflight-repo
+cd openflight-repo
+bundle install --path=vendor
+cat <<'EOF' >> /etc/profile.d/openflight-repo.sh
+repo() {
+  /vagrant/scripts/repo "$@"
+}
+EOF
+
 install_guest_additions_if_necessary
