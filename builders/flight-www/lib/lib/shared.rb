@@ -26,7 +26,7 @@
 #===============================================================================
 
 # TODO: Eventually package certbot with the app and remove this condition
-unless system('which certbot 2>/dev/null')
+unless system('which certbot 2>/dev/null 1>&2')
   $stderr.puts <<~ERROR
     Generating certificates requires 'certbot' to be installed!
     Please contact your system administrator for further assistance

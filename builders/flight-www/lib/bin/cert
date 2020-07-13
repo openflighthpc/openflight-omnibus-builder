@@ -34,6 +34,7 @@ Bundler.require(:default)
 
 require 'forwardable'
 require 'ostruct'
+require 'open3'
 
 require_relative '../lib/shared'
 
@@ -53,6 +54,7 @@ module FlightWWW
     NGINX_BIN = root_join('opt/www/embedded/sbin/nginx')
     NGINX_ROOT = root_join('etc/www')
     LETS_ENCRYPT_CONFIG_DIR = root_join('etc/letsencrypt')
+    FLEXEC = root_join('bin/flexec')
 
     def self.slop
       @slop ||= Slop::Options.new.tap do |s|
@@ -165,6 +167,15 @@ module FlightWWW
     end
 
     def run_certbot
+      stdout, _e, _s = Open3.capture3(FLEXEC, 'flight', 'service', 'status', 'www')
+      unless stdout.include?('active')
+        $stderr.puts <<~ERROR.chomp
+          The www service does not appear to be running, please start it and try again:
+          #{FLEXEC} flight service start www
+        ERROR
+        exit 1
+      end
+
       system('certbot', 'certonly', '-n', '--nginx', '--nginx-ctl', NGINX_BIN,
         '--nginx-server-root', NGINX_ROOT, '--config-dir', LETS_ENCRYPT_CONFIG_DIR,
         '--domain', letsencrypt_domain, '--email', letsencrypt_email, '--agree-tos'
