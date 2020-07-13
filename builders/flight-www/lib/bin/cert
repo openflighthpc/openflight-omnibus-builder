@@ -55,7 +55,9 @@ module FlightWWW
                      end.flatten
     NGINX_BIN = root_join('opt/www/embedded/sbin/nginx')
     NGINX_ROOT = root_join('etc/www')
-    LETS_ENCRYPT_CONFIG_DIR = root_join('etc/letsencrypt')
+    LETSENCRYPT_CONFIG_DIR = root_join('etc/letsencrypt')
+    LETSENCRYPT_LOG_DIR = root_join('var/log/letsencrypt')
+    LETSENCRYPT_WORK_DIR = root_join('var/lib/letsencrypt')
     FLEXEC = root_join('bin/flexec')
 
     def self.slop
@@ -174,7 +176,8 @@ module FlightWWW
       _, error, status = Open3.capture3('certbot', 'certonly', '-n', '--nginx',
         '--domain', letsencrypt_domain, '--email', letsencrypt_email, '--agree-tos',
         '--nginx-ctl', NGINX_BIN, '--nginx-server-root', NGINX_ROOT,
-        '--config-dir', LETS_ENCRYPT_CONFIG_DIR
+        '--config-dir', LETSENCRYPT_CONFIG_DIR, '--logs-dir', LETSENCRYPT_LOG_DIR,
+        '--work-dir', LETSENCRYPT_WORK_DIR
       )
 
       # Rebuild the links and restart the service if required
