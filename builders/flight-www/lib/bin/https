@@ -102,8 +102,25 @@ disable_https() {
 usage() {
     local prog
     prog="flight www"
-    echo "Usage: ${prog} enable-https|disable-https|cert-gen|cron-renewal"
-    echo "Enable/disable HTTPs support and generate SSL certificates"
+    echo "USAGE:"
+    echo
+    echo "${prog} cert-gen|cron-renewal|enable-https|disable-https"
+    echo
+    echo 'DESCRIPTION:'
+    echo
+    format 'An SSL certificate needs to be generated before the https server can' \
+      'be started. The "enable-https" command will bootstrap this process' \
+      'with a self-signed certificate (if required).'
+    echo
+    format 'Support for LetsEncrypt has been provided with the "cert-gen"' \
+      'command. The server requires a publicly available DNS entry before' \
+      'proceeding. See "cert-gen --help" for more details.'
+    echo
+    format 'The "cron-renewal" command will setup automatic LetsEncrypt' \
+      'renewal once the initial certificate has been generated.'
+    echo
+    format 'The "enable-https|disable-https" commands can be used to toggle' \
+      'the https server; as opposed to http only.'
 }
 
 # Will auto generate a self signed certificate if required
