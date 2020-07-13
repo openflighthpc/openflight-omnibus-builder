@@ -84,13 +84,14 @@ module FlightWWW
       exit 130
     end
 
-    attr_reader :config
+    attr_reader :config, :force_restart
     def_delegators :@config, :letsencrypt_domain, :letsencrypt_email,
                    :lets_encrypt?, :self_signed?
 
     def initialize(slop)
       Config.update do |config|
         @config = config
+        @force_restart = false
 
         # Updates the cert_type + sanity check
         if CLI_CERT_TYPES.include?(slop.cert_type)
@@ -117,7 +118,8 @@ module FlightWWW
             Using --domain with self signed certificates is not supported
           ERROR
           exit 1
-        elsif slop.domain
+        elsif slop.domain != config.letsencrypt_domain
+          @force_restart = true
           config.letsencrypt_domain = slop.domain
         elsif config.lets_encrypt? && !config.letsencrypt_domain?
           $stderr.puts <<~ERROR.chomp
@@ -146,8 +148,11 @@ module FlightWWW
     end
 
     def run
-      generate_certificates
-      restart_service
+      if self_signed?
+        system("#{HTTPS_SCRIPT} __create_self_signed")
+      else
+        run_certbot
+      end
     end
 
     def letsencrypt_fullchain
@@ -156,17 +161,6 @@ module FlightWWW
 
     def letsencrypt_privkey
       self.class.root_join('etc/letsencrypt/live', letsencrypt_domain, 'privkey.pem')
-    end
-
-    def generate_certificates
-      if self_signed?
-        system("#{HTTPS_SCRIPT} __create_self_signed")
-      else
-        run_certbot
-        FileUtils.mkdir_p SSL_DIR
-        FileUtils.ln_sf letsencrypt_fullchain, File.join(SSL_DIR, 'fullchain.pem')
-        FileUtils.ln_sf letsencrypt_privkey, File.join(SSL_DIR, 'key.pem') # NOTE: Intentionally key.pem not privkey.pem
-      end
     end
 
     def run_certbot
@@ -186,12 +180,26 @@ module FlightWWW
         '--config-dir', LETS_ENCRYPT_CONFIG_DIR
       )
 
-      if status.success? && stdout.include?(CERTBOT_NOT_RENEWED)
+      # Rebuild the links and restart the service if required
+      # NOTE: If the domain has been previously used it *may* still be in certbot's cache
+      #       This means certbot *may* not regenerate the certificate
+      #       However the service still needs updating if the domain has changed
+      if status.success? && (force_restart || !stdout.include?(CERTBOT_NOT_RENEWED))
+        FileUtils.mkdir_p SSL_DIR
+        FileUtils.ln_sf letsencrypt_fullchain, File.join(SSL_DIR, 'fullchain.pem')
+        FileUtils.ln_sf letsencrypt_privkey, File.join(SSL_DIR, 'key.pem')
+
+        if stdout.include?(CERTBOT_NOT_RENEWED)
+          puts 'Restarting the service with the updated domain'
+        else
+          puts 'Generated a new LetsEncrypt certificate'
+        end
+        system(FLEXEC, 'flight', 'service', 'restart', 'www')
+      # Do not restart the server if the certificate has not been renewed
+      elsif status.success?
         $stdout.puts 'The existing LetsEncrypt certificate is not up for renewal!'
         exit 2
-      elsif status.success?
-        puts 'Generated a new LetsEncrypt certificate'
-        system(FLEXEC, 'flight', 'service', 'restart', 'www')
+      # Report to the user some other error has occurred
       else
         $stderr.puts <<~ERROR
           Failed to generate the LetsEncrypt certificate with the following error:
@@ -200,9 +208,6 @@ module FlightWWW
         ERROR
         exit 1
       end
-    end
-
-    def restart_service
     end
   end
 end
