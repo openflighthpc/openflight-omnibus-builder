@@ -102,25 +102,42 @@ disable_https() {
 usage() {
     local prog
     prog="flight www"
-    echo "USAGE:"
-    echo
-    echo "${prog} cert-gen|cron-renewal|enable-https|disable-https"
-    echo
-    echo 'DESCRIPTION:'
-    echo
-    format 'An SSL certificate needs to be generated before the https server can' \
-      'be started. The "enable-https" command will bootstrap this process' \
-      'with a self-signed certificate (if required).'
-    echo
-    format 'Support for LetsEncrypt has been provided with the "cert-gen"' \
-      'command. The server requires a publicly available DNS entry before' \
-      'proceeding. See "cert-gen --help" for more details.'
-    echo
-    format 'The "cron-renewal" command will setup automatic LetsEncrypt' \
-      'renewal once the initial certificate has been generated.'
-    echo
-    format 'The "enable-https|disable-https" commands can be used to toggle' \
-      'the https server; as opposed to http only.'
+    cat <<DOC
+USAGE:
+
+${prog} cert-gen|cron-renewal|enable-https|disable-https
+
+DESCRIPTION:
+The embedded nginx server ships with HTTP support and can be started using the
+'flight service start www' command.
+
+The '$prog' utilites are used to manage HTTPS support. By default the
+HTTPS server is disabled as it requires an SSL certificate. It is strongly
+recommended that a LetsEncrypt certificate is generated for HTTPS.
+
+You will require a publicly available DNS entry and an email address before a
+LetsEncrypt certificate can be issued. The HTTP server also needs running so
+LetsEncrypt can preform the DNS challenge.
+
+The SSL certificate are generated using the '$prog cert-gen' command.
+The following command will generate a LetsEncrypt certificate:
+'$prog cert-gen --cert-type lets-encrypt --domain DOMAIN --email EMAIL'
+
+Once the LetsEncrypt certificate has been generated it will need to be
+periodically renewed. This process can be automated by running:
+'$prog cron-renewal'
+
+Finally the HTTPS server is ready to be enabled:
+'$prog enable-https'
+
+Alternatively HTTPS can be enabled using an self-signed SSL certificate.
+This is not recommended as its inheritly insecure. Run the following to
+generate a self-signed certificate:
+'$prog cert-gen --cert-type self-signed'
+
+Self signed certificates are valid for 10 years and therefore automatic
+renewal is not supported. The HTTPS server will still need to be enabled.
+DOC
 }
 
 # Will auto generate a self signed certificate if required

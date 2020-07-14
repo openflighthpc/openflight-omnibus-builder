@@ -169,7 +169,7 @@ module FlightWWW
         system(FLEXEC, 'flight', 'service', 'restart', 'www')
       else
         $stderr.puts <<~WARN.chomp
-          The https server is correctly disabled! It can be enabled with
+          The https server is currently disabled! It can be enabled with
           #{FLEXEC} flight www enable-https
         WARN
       end
