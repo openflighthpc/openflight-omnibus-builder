@@ -39,10 +39,16 @@ build do
   env = with_standard_compiler_flags(with_embedded_path)
 
   # Copies the content of 'lib' over the install directory
-  root = File.expand_path('../../lib', __dir__)
-  Dir.glob(File.join(root, '**/*'))
-    .select { |f| File.file?(f) }
-    .each { |src| copy src, File.join(install_dir, src.sub(root, '')) }
+  block do
+    root = File.expand_path('../../lib', __dir__)
+    Dir.glob(File.join(root, '**/*'))
+      .select { |f| File.file?(f) }
+      .each do |src|
+      dst = File.join(install_dir, src.sub(root, ''))
+      FileUtils.mkdir_p File.dirname(dst)
+      FileUtils.cp src, dst
+    end
+  end
 
   # Installs the gems
   flags = [
