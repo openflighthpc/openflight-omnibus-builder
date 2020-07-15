@@ -42,6 +42,8 @@ dependency 'flight-www'
 dependency 'flight-landing-page'
 dependency 'version-manifest'
 
+replace 'flight-landing-page'
+
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
@@ -66,6 +68,10 @@ require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
+
+config_file '/opt/flight/opt/www/landing-page/overridden'
+config_file '/opt/flight/opt/www/landing-page/overridden/content'
+config_file '/opt/flight/opt/www/landing-page/overridden/layouts'
 
 package :rpm do
   vendor 'Alces Flight Ltd'

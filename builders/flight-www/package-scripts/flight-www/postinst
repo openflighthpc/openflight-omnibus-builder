@@ -25,6 +25,15 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+
+# If upgrading from an older version landing page overrides will be in the
+# wrong location.
+if [ -d /opt/flight/opt/landing-page/www/overridden ]; then
+    echo "Syncing old landing-page overrides"
+    rsync -a /opt/flight/opt/landing-page/www/overridden \
+             /opt/flight/opt/www/landing-page/
+fi
+
 /opt/flight/bin/flight landing-page compile
 
 exit 0
