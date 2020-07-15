@@ -116,7 +116,7 @@ module FlightWWW
         # Update the domain + sanity check
         if slop.domain && config.self_signed?
           $stderr.puts <<~ERROR.chomp
-            Using --domain with self signed certificates is not supported
+            Using --domain with self-signed certificates is not supported
           ERROR
           exit 1
         elsif slop.domain
@@ -132,7 +132,7 @@ module FlightWWW
         # Update the email + sanity check
         if slop.email && config.self_signed?
           $stderr.puts <<~ERROR.chomp
-            Using --email with self signed certificates is not supported
+            Using --email with self-signed certificates is not supported
           ERROR
           exit 1
         elsif slop.email
@@ -152,11 +152,11 @@ module FlightWWW
         system("#{HTTPS_SCRIPT} __create_self_signed")
         status = $?.exitstatus
         if status == 0 && File.exists?(Config::CRON_PATH)
-          $stderr.puts "Disabling auto-renewal for self signed certificates"
+          $stderr.puts "Disabling auto-renewal for self-signed certificates"
           FileUtils.rm Config::CRON_PATH
         elsif status != 0
           $stderr.puts <<~ERROR.chomp
-            Failed to generate the self signed certificate!
+            Failed to generate the self-signed certificate!
           ERROR
           exit status
         end
