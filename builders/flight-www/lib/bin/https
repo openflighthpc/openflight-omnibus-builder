@@ -103,40 +103,72 @@ usage() {
     local prog
     prog="flight www"
     cat <<DOC
+
 USAGE:
 
-${prog} cert-gen|cron-renewal|enable-https|disable-https
+  ${prog} cert-gen|cron-renewal|enable-https|disable-https
 
 DESCRIPTION:
-The embedded nginx server ships with HTTP support and can be started using the
-'flight service start www' command.
 
-The '$prog' utilites are used to manage HTTPS support. By default the
-HTTPS server is disabled as it requires an SSL certificate. It is strongly
-recommended that a LetsEncrypt certificate is generated for HTTPS.
+  Manage HTTPS configuration and SSL certificates for the Alces Flight web
+  server
 
-You will require a publicly available DNS entry and an email address before a
-LetsEncrypt certificate can be issued. The HTTP server also needs running so
-LetsEncrypt can preform the DNS challenge.
+COMMANDS:
 
-The SSL certificate are generated using the '$prog cert-gen' command.
-The following command will generate a LetsEncrypt certificate:
-'$prog cert-gen --cert-type lets-encrypt --domain DOMAIN --email EMAIL'
+  cert-gen:      Generate and renew SSL certificates
+  cron-renewal:  Manage automatic renewal of SSL certificates
+  enable-https:  Enable HTTPS
+  disable-https: Disable HTTPS
 
-Once the LetsEncrypt certificate has been generated it will need to be
-periodically renewed. This process can be automated by running:
-'$prog cron-renewal'
+  Certificate Generation:
 
-Finally the HTTPS server is ready to be enabled:
-'$prog enable-https'
+  By default the HTTPS server is disabled as it requires an SSL certificate.
+  The '$prog' utilities support the generation of Let's Encrypt and
+  self-signed certificates.  We recommended that a Let's Encrypt certificate
+  is generated where possible.
 
-Alternatively HTTPS can be enabled using an self-signed SSL certificate.
-This is not recommended as its inheritly insecure. Run the following to
-generate a self-signed certificate:
-'$prog cert-gen --cert-type self-signed'
+  In order to generate a Let's Encrypt certificate, you will require a
+  publicly available DNS entry and an email address.  The HTTP server will
+  also need to be running to allow Let's Encrypt to successfully preform a DNS
+  challenge.  Once ready, A Let's Encrypt certificate can be generated with
+  the following command:
 
-Self signed certificates are valid for 10 years and therefore automatic
-renewal is not supported. The HTTPS server will still need to be enabled.
+  '$prog cert-gen --cert-type lets-encrypt --domain DOMAIN --email EMAIL'
+
+  Alternatively, a self-signed SSL certificate valid for 10 years can be
+  generated, buy running the following command:
+
+  '$prog cert-gen --cert-type self-signed'
+
+
+  Certificate Renewal:
+
+  A Let's Encrypt certificate will need to be periodically renewed.  You
+  can enable automatic renewal of Let's Encrypt certificates by running:
+
+  '$prog cron-renewal'
+
+  Self-signed certificates are valid for 10 years and automatic renewal is not
+  supported.
+
+
+  Enabling and disabling HTTPS:
+  
+  Once an SSL certificate has been generated, HTTPS support can be enabled
+  with the following command:
+
+  '$prog enable-https'
+
+  HTTPS support can be disabled at any time with the following command:
+
+  '$prog disable-https'
+
+
+  Changing SSL certificate type:
+
+  If you wish to change the SSL certificate type you can do so by generating a
+  new certificate of the appropriate type.  The new certificate will be
+  automatically used by the server from that point onwards.
 DOC
 }
 
@@ -144,7 +176,7 @@ DOC
 bootstrap_self_signed() {
     if [ ! -f "${flight_ROOT}/etc/www/ssl/fullchain.pem" ]; then
         format "In order to enable HTTPs a set of SSL certificates need to be generated."
-        format "Please see 'flight cert-gen --help' on how to generate certificates with LetsEncrypt."
+        format "Please see 'flight cert-gen --help' on how to generate certificates with Let's Encrypt."
         format "\nStarting SSL certificate generation..."
         # Slows down the CLI to prevent the user from being bombarded with text
         sleep 1
