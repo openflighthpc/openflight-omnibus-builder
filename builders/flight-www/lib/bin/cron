@@ -81,7 +81,7 @@ module FlightWWW
           It can be disabled with: --disable
         WARN
       else
-        File.write Config::CRON_PATH, <<~CRON.chomp
+        File.write Config::CRON_PATH, <<~CRON
           #!/bin/bash
           #{Config.root_join('bin/flexec')} ruby #{File.expand_path('cert', __dir__)}
         CRON
