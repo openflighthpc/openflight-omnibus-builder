@@ -24,7 +24,7 @@ format() {
 
 compile() {
     export FLIGHT_CWD=$(pwd)
-    cd /opt/flight/opt/landing-page/www
+    cd /opt/flight/opt/www/landing-page
     flexec bundle exec nanoc compile --verbose
 }
 

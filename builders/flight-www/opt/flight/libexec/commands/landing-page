@@ -34,9 +34,4 @@ if [ "$UID" != 0 ]; then
   exec sudo "${flight_ROOT}"/bin/flight "$(basename "$0")" "$@"
 fi
 
-#export FLIGHT_CWD=$(pwd)
-#cd /opt/flight/opt/landing-page
-#export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
-#flexec bundle exec bin/landing-page "$@"
-
-"${flight_ROOT}"/opt/landing-page/bin/landing-page "$@"
+"${flight_ROOT}"/opt/www/bin/landing-page "$@"

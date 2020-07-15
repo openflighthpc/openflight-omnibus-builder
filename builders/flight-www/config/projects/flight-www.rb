@@ -39,6 +39,7 @@ build_iteration 0
 
 dependency 'preparation'
 dependency 'flight-www'
+dependency 'flight-landing-page'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
@@ -51,13 +52,15 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 override :nginx, version: '1.14.2'
+# override 'flight-landing-page', version: '0.0.5'
+override 'flight-landing-page', version: 'merge-into-flight-www-package'
 
 WWW_SYSTEM = '1.0'
 runtime_dependency 'flight-plugin-cron'
 runtime_dependency 'flight-runway'
+runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-landing-page'
 
 require 'find'
 Find.find('opt') do |o|
