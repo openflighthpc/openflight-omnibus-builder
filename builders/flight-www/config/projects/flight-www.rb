@@ -31,11 +31,11 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.1.0.rc3'
+VERSION = '1.1.0'
 override 'flight-www', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration '0.1'
 
 dependency 'preparation'
 dependency 'flight-www'
@@ -54,8 +54,7 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 override :nginx, version: '1.14.2'
-# override 'flight-landing-page', version: '0.0.5'
-override 'flight-landing-page', version: 'merge-into-flight-www-package'
+override 'flight-landing-page', version: '0.0.6'
 
 WWW_SYSTEM = '1.0'
 runtime_dependency 'flight-plugin-cron'
