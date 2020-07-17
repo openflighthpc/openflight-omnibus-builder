@@ -36,6 +36,11 @@ skip_transitive_dependency_licensing true
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
+  # Install to a subdirectory so our Gemfile doesn't clash with the one from
+  # landing-page.
+  id = install_dir
+  install_dir = "#{id}/https"
+
   # Copies the content of 'lib' over the install directory
   block do
     root = File.expand_path('../../lib', __dir__)
