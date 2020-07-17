@@ -40,6 +40,7 @@ build_iteration '1'
 dependency 'preparation'
 dependency 'flight-www'
 dependency 'flight-landing-page'
+dependency 'https-management'
 dependency 'version-manifest'
 
 replace 'flight-landing-page'

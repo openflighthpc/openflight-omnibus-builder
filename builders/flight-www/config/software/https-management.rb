@@ -24,18 +24,34 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-www'
+name 'https-management'
 default_version '1.0.0'
 
-dependency 'zlib'
-dependency 'nginx'
+dependency 'enforce-flight-runway'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
 build do
+  env = with_standard_compiler_flags(with_embedded_path)
+
+  # Copies the content of 'lib' over the install directory
   block do
-    true
+    root = File.expand_path('../../lib', __dir__)
+    Dir.glob(File.join(root, '**/*'))
+      .select { |f| File.file?(f) }
+      .each do |src|
+        dst = File.join(install_dir, src.sub(root, ''))
+        FileUtils.mkdir_p File.dirname(dst)
+        FileUtils.cp src, dst
+    end
   end
+
+  # Installs the gems
+  flags = [
+    "--without development test",
+    '--path vendor'
+  ].join(' ')
+  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
 end
