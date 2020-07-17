@@ -24,33 +24,48 @@ fi
 VERSION=$1
 case $VERSION in
   17.11)
-    TAG="slurm-17-11-13-2-flight1"
-    REL="slurm-17.11.13-2.flight1"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-17-11-13-2-flight2"
+      REL="flight-slurm-17.11.13-2.flight2"
+    else
+      TAG="slurm-17-11-13-2-flight1"
+      REL="slurm-17.11.13-2.flight1"
+    fi
     libssh2=true
     ;;
   18.08)
-    TAG="slurm-18-08-9-1-flight1"
-    REL="slurm-18.08.9.flight1"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-18-08-9-1-flight2"
+      REL="flight-slurm-18.08.9.flight2"
+    else
+      TAG="slurm-18-08-9-1-flight1"
+      REL="slurm-18.08.9.flight1"
+    fi
     libssh2=true
     ;;
   19.05)
-    TAG="slurm-19-05-6-1-flight2"
-    REL="slurm-19.05.6.flight2"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-19-05-7-1-flight1"
+      REL="flight-slurm-19.05.7.flight1"
+    else
+      TAG="slurm-19-05-7-1-flight1"
+      REL="slurm-19.05.7.flight1"
+    fi
     ;;
   20.02|latest)
-    TAG="slurm-20-02-3-1-flight1"
-    REL="slurm-20.02.3.flight1"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-20-02-3-1-flight2"
+      REL="flight-slurm-20.02.3.flight2"
+    else
+      TAG="slurm-20-02-3-1-flight1"
+      REL="slurm-20.02.3.flight1"
+    fi
     ;;
   *)
     echo "$0: unrecognized Slurm version: $VERSION"
     exit 1
   ;;
 esac
-
-if [ -z "$nonflight" ]; then
-  TAG="flight-${TAG}"
-  REL="flight-${REL}"
-fi
 
 mkdir -p $HOME/flight-slurm
 cd $HOME/flight-slurm
