@@ -36,27 +36,28 @@ skip_transitive_dependency_licensing true
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
-  # Install to a subdirectory so our Gemfile doesn't clash with the one from
-  # landing-page.
-  id = install_dir
-  install_dir = "#{id}/https"
-
-  # Copies the content of 'lib' over the install directory
   block do
-    root = File.expand_path('../../lib', __dir__)
-    Dir.glob(File.join(root, '**/*'))
-      .select { |f| File.file?(f) }
-      .each do |src|
-        dst = File.join(install_dir, src.sub(root, ''))
-        FileUtils.mkdir_p File.dirname(dst)
-        FileUtils.cp src, dst
-    end
-  end
+    # Install to a subdirectory so our Gemfile doesn't clash with the one from
+    # landing-page.
+    install_dir = "#{install_dir()}/https"
+    FileUtils.mkdir_p install_dir
 
-  # Installs the gems
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+    # Moves the project into place.  NOTE: the funky way to locate the sources
+    # as the source files live with the builder and are not yet an upstream
+    # project.
+    [
+      'Gemfile', 'Gemfile.lock', 'bin', 'lib',
+      # 'LICENSE.txt', 'README.md'
+    ].each do |file|
+      src = File.join(File.expand_path('../../lib/', __dir__), file)
+      copy src, File.expand_path("#{install_dir}/#{file}/..")
+    end
+
+    # Installs the gems
+    flags = [
+      "--without development test",
+      '--path vendor'
+    ].join(' ')
+    command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+  end
 end
