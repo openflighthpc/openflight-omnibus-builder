@@ -95,8 +95,13 @@ enable_https() {
 }
 
 disable_https() {
-    mv "${flight_ROOT}"/etc/www/http.d/https.conf{,.disabled}
-    reload_www_service
+    if [ -f "${flight_ROOT}/etc/www/http.d/https.conf" ]; then
+      mv "${flight_ROOT}"/etc/www/http.d/https.conf{,.disabled}
+      reload_www_service
+    else
+      echo 'The HTTPS server is already disabled'
+      exit 1
+    fi
 }
 
 # Will auto generate a self signed certificate if required
