@@ -89,7 +89,7 @@ reload_www_service() {
 }
 
 enable_https() {
-    bootstrap_self_signed
+    error_without_certificate
     mv "${flight_ROOT}"/etc/www/http.d/https.conf{.disabled,}
     reload_www_service
 }
@@ -97,6 +97,16 @@ enable_https() {
 disable_https() {
     mv "${flight_ROOT}"/etc/www/http.d/https.conf{,.disabled}
     reload_www_service
+}
+
+# Will auto generate a self signed certificate if required
+error_without_certificate() {
+    if [ ! -f "${flight_ROOT}/etc/www/ssl/fullchain.pem" ]; then
+        format "In order to enable HTTPs a set of SSL certificates need to be generated."
+        format "Please run the following to generate the certificates with Let's Encrypt."
+        format "${flight_ROOT}/bin/flight www cert-gen --letsencrypt --domain DOMAIN --email EMAIL"
+        exit 1
+    fi
 }
 
 usage() {
@@ -170,20 +180,6 @@ COMMANDS:
   new certificate of the appropriate type.  The new certificate will be
   automatically used by the server from that point onwards.
 DOC
-}
-
-# Will auto generate a self signed certificate if required
-bootstrap_self_signed() {
-    if [ ! -f "${flight_ROOT}/etc/www/ssl/fullchain.pem" ]; then
-        format "In order to enable HTTPs a set of SSL certificates need to be generated."
-        format "Please see 'flight cert-gen --help' on how to generate certificates with Let's Encrypt."
-        format "\nStarting SSL certificate generation..."
-        # Slows down the CLI to prevent the user from being bombarded with text
-        sleep 1
-        create_private_key
-        create_certs
-        install_certs
-    fi
 }
 
 # NOTE: The __* commands are not part of the public interface and are solely
