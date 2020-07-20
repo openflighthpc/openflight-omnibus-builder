@@ -74,6 +74,18 @@ config_file '/opt/flight/opt/www/landing-page/overridden'
 config_file '/opt/flight/opt/www/landing-page/overridden/content'
 config_file '/opt/flight/opt/www/landing-page/overridden/layouts'
 
+# Update the version numbering in files
+File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
+  content = File.read path
+  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
+  File.write path, content
+end
+File.expand_path('../../lib/bin/https', __dir__).tap do |path|
+  content = File.read path
+  content.sub!(/VERSION=.*/, "VERSION='#{VERSION}'")
+  File.write path, content
+end
+
 package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides

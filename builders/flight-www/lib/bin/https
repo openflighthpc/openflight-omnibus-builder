@@ -29,6 +29,7 @@ set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CERT_DIR=$(mktemp -d /tmp/flight-www-certs.XXXXXX)
+VERSION='1.1.0-rc5'
 
 clean_up() {
   rm -rf "${CERT_DIR}"
@@ -90,8 +91,13 @@ reload_www_service() {
 
 enable_https() {
     error_without_certificate
-    mv "${flight_ROOT}"/etc/www/http.d/https.conf{.disabled,}
-    reload_www_service
+    if [ -f "${flight_ROOT}/etc/www/http.d/https.conf" ]; then
+      echo 'The HTTPS server is already enabled'
+      exit 1
+    else
+      mv "${flight_ROOT}"/etc/www/http.d/https.conf{.disabled,}
+      reload_www_service
+    fi
 }
 
 disable_https() {
@@ -132,13 +138,16 @@ USAGE:
 
 DESCRIPTION:
 
-  Will ${cmd} the HTTPS server and restart the www service
+  $(echo "$cmd" | sed 's/.*/\u&/') the HTTPS server and restart the www service
 DOC
         exit
         ;;
       -*|--*=) # unsupported flags
         echo "Error: Unsupported flag $1" >&2
         exit 1
+        ;;
+      *)
+        shift
         ;;
     esac
   done
@@ -147,6 +156,9 @@ DOC
 usage() {
     local prog
     prog="flight www"
+
+    "${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/runway/bin/banner title='flight www' version="$VERSION"
+
     cat <<DOC
 
 USAGE:
