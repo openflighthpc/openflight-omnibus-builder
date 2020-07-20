@@ -60,6 +60,7 @@ module FlightWWW
     LETSENCRYPT_WORK_DIR = root_join('var/lib/letsencrypt')
     FLIGHT = root_join('bin/flight')
     HTTPS_CONFIG = root_join('etc/www/http.d/https.conf')
+    CERTBOT_BIN = root_join('opt/certbot/bin/certbot')
 
     def self.slop
       @slop ||= Slop::Options.new(suppress_errors: true).tap do |s|
@@ -194,7 +195,7 @@ module FlightWWW
       end
 
       puts 'Generating LetsEncrypt certificate, please wait...'
-      _, error, status = Open3.capture3('certbot', 'certonly', '-n', '--nginx',
+      _, error, status = Open3.capture3(CERTBOT_BIN, 'certonly', '-n', '--nginx',
         '--domain', letsencrypt_domain, '--email', letsencrypt_email, '--agree-tos',
         '--nginx-ctl', NGINX_BIN, '--nginx-server-root', NGINX_ROOT,
         '--config-dir', LETSENCRYPT_CONFIG_DIR, '--logs-dir', LETSENCRYPT_LOG_DIR,

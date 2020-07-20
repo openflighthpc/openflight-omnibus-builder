@@ -31,11 +31,11 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.1.0-rc4'
+VERSION = '1.1.0-rc5'
 override 'flight-www', version: VERSION
 
 build_version VERSION
-build_iteration '2'
+build_iteration '1'
 
 dependency 'preparation'
 dependency 'flight-www'
@@ -63,6 +63,7 @@ runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
+runtime_dependency 'flight-certbot'
 
 require 'find'
 Find.find('opt') do |o|

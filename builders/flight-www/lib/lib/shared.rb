@@ -25,15 +25,6 @@
 # https://github.com/alces-flight/alces-flight-omnibus-builder
 #===============================================================================
 
-# TODO: Eventually package certbot with the app and remove this condition
-unless system('which certbot 2>/dev/null 1>&2')
-  $stderr.puts <<~ERROR
-    Generating certificates requires 'certbot' to be installed!
-    Please contact your system administrator for further assistance
-  ERROR
-  exit 1
-end
-
 require 'yaml'
 require 'fileutils'
 
