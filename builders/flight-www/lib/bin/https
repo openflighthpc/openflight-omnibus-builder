@@ -114,6 +114,36 @@ error_without_certificate() {
     fi
 }
 
+process_bash_cmd_usage() {
+    local prog
+    local cmd
+    cmd="$1"
+    shift
+
+    while (( "$#" )); do
+    case "$1" in
+      -h|--help)
+        prog="flight www ${cmd}-https"
+        cat <<DOC
+
+USAGE:
+
+  ${prog} [--help]
+
+DESCRIPTION:
+
+  Will ${cmd} the HTTPS server and restart the www service
+DOC
+        exit
+        ;;
+      -*|--*=) # unsupported flags
+        echo "Error: Unsupported flag $1" >&2
+        exit 1
+        ;;
+    esac
+  done
+}
+
 usage() {
     local prog
     prog="flight www"
@@ -196,11 +226,13 @@ main() {
     case "$1" in
         enable-https)
             shift
+            process_bash_cmd_usage 'enable' "${@}"
             enable_https "${@}"
             ;;
 
         disable-https)
             shift
+            process_bash_cmd_usage 'disable' "${@}"
             disable_https "${@}"
           ;;
         __create_self_signed)
