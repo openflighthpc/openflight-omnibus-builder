@@ -46,18 +46,6 @@ mkdir -p $(dirname "${log_file}")
 pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
-# HACK: Work around a limitation in the configuraiton of action-server.  The
-# config file for action server is overwritten when the application starts.
-# action-server expects the required JWT shared secret to be set as an
-# environment variable.  The line below is a hack to make this work for now.
-# This will eventually be replaced with a better solution.
-#
-# XXX Add the shared secret below and uncomment the line.
-
-#export jwt_shared_secret="..."
-
-# ENDHACK
-
 addr=tcp://127.0.0.1:917
 tool_bg "${flight_ROOT}"/bin/ruby \
   "${flight_ROOT}"/opt/action-api/bin/puma --bind $addr \
