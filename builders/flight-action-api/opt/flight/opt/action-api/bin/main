@@ -1,0 +1,84 @@
+#!/bin/bash
+#==============================================================================
+# Copyright (C) 2019-present Alces Flight Ltd.
+#
+# This file is part of Alces Flight Omnibus Builder.
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which is available at
+# <https://www.eclipse.org/legal/epl-2.0>, or alternative license
+# terms made available by Alces Flight Ltd - please direct inquiries
+# about licensing to licensing@alces-flight.com.
+#
+# This project is distributed in the hope that it will be useful, but
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
+# OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
+# PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more
+# details.
+#
+# You should have received a copy of the Eclipse Public License 2.0
+# along with this project. If not, see:
+#
+#  https://opensource.org/licenses/EPL-2.0
+#
+# For more information on Alces Flight Omnibus Builder, please visit:
+# https://github.com/alces-flight/alces-flight-omnibus-builder
+#===============================================================================
+set -e
+
+assert_user_is_root() {
+    if [[ "$( id -u )" != "0" ]] ; then
+        echo "Must be root to run this script" >&2
+        exit 1
+    fi
+}
+
+usage() {
+    local prog
+    prog="flight action-api"
+
+    "${flight_ROOT:-/opt/flight}"/bin/ruby \
+        "${flight_ROOT:-/opt/flight}"/opt/runway/bin/banner \
+        title="${prog}" version=0.5.0
+
+    cat <<EOF
+USAGE:
+
+${prog} generate-token
+
+DESCRIPTION:
+
+  Generate an authentication token for use by the flight-action client.
+EOF
+}
+
+generate_token() {
+    cd /opt/flight/opt/action-api/
+    RUBYOPT="-W0" /opt/flight/bin/flexec bundle exec rake token:user[3650] RACK_ENV=production
+    cd "${FLIGHT_CWD}"
+}
+
+main() {
+    assert_user_is_root
+
+    case "$1" in
+        generate-token)
+            generate_token
+            ;;
+
+        --help | help)
+            usage
+            exit 0
+            ;;
+
+        *)
+            usage
+            exit 2
+            ;;
+    esac
+}
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
