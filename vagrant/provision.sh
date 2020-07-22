@@ -106,7 +106,7 @@ EOF
     su vagrant -c 'pip3 install pipenv --user'
 
     if [[ $CENTOS_VER == 8 ]] ; then
-      yum install -y python3-pip python3-devel python2-devel
+      yum install -y python3-devel python2-devel
       pip3 install awscli --upgrade --user
     else
       yum install -y -e0 awscli
@@ -131,6 +131,10 @@ EOF
 
     # required for building genders as part of flight-pdsh
     apt-get -y install -y -e0 flex byacc
+
+    # required for building flight-certbot
+    apt-get -y install python3-pip
+    su vagrant -c 'pip3 install pipenv --user'
 
     gem install bundler:1.17.3
     gem install bundler:2.1.4
