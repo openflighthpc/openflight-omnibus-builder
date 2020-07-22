@@ -35,7 +35,7 @@ VERSION = '0.1.0'
 override 'flight-certbot', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-certbot'
@@ -50,6 +50,8 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
+runtime_dependency 'python3'
+
 if ohai['platform_family'] == 'rhel'
   rhel_rel = ohai['platform_version'].split('.').first.to_i
   if rhel_rel == 8
@@ -61,12 +63,8 @@ if ohai['platform_family'] == 'rhel'
       vendor 'Alces Flight Ltd'
     end
   end
-
-  runtime_dependency 'python3'
 elsif ohai['platform_family'] == 'debian'
   package :deb do
     vendor 'Alces Flight Ltd'
   end
-
-  runtime_dependency 'python'
 end
