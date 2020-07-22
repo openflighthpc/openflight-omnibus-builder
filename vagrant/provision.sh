@@ -101,6 +101,10 @@ EOF
     # required for building flight-desktop-restapi
     yum install -y -e0 pam-devel
 
+    # required for building flight-certbot
+    yum install -y -e0 python3-pip
+    su vagrant -c 'pip3 install pipenv --user'
+
     if [[ $CENTOS_VER == 8 ]] ; then
       yum install -y python3-pip python3-devel python2-devel
       pip3 install awscli --upgrade --user
