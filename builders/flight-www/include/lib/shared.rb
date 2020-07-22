@@ -58,8 +58,8 @@ module FlightWWW
       end
     end
 
-    property :letsencrypt_email
-    property :letsencrypt_domain
+    property :email
+    property :domain
     property :cert_type
 
     def lets_encrypt?
@@ -74,12 +74,12 @@ module FlightWWW
       !(cert_type.nil? || cert_type.empty?)
     end
 
-    def letsencrypt_email?
-      !(letsencrypt_email.nil? || letsencrypt_email.empty?)
+    def email?
+      !(email.nil? || email.empty?)
     end
 
-    def letsencrypt_domain?
-      !(letsencrypt_domain.nil? || letsencrypt_domain.empty?)
+    def domain?
+      !(domain.nil? || domain.empty?)
     end
 
     # NOTE: This method must not be cached! The config is a dynamic object that

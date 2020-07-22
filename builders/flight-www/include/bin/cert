@@ -88,8 +88,7 @@ module FlightWWW
     end
 
     attr_reader :config
-    def_delegators :@config, :letsencrypt_domain, :letsencrypt_email,
-                   :lets_encrypt?, :self_signed?
+    def_delegators :@config, :domain, :email, :lets_encrypt?, :self_signed?
 
     def initialize(slop)
       Config.update do |config|
@@ -114,34 +113,31 @@ module FlightWWW
           config.cert_type = 'lets_encrypt'
         end
 
-        # Update the domain + sanity check
-        if slop.domain && config.self_signed?
-          $stderr.puts <<~ERROR.chomp
-            Using --domain with self-signed certificates is not supported
-          ERROR
-          exit 1
-        elsif slop.domain
-          config.letsencrypt_domain = slop.domain
-        elsif config.lets_encrypt? && !config.letsencrypt_domain?
-          $stderr.puts <<~ERROR.chomp
-            Can not use LetsEncrypt without a domain
-            Please specify it with: --domain DOMAIN
-          ERROR
-          exit 1
-        end
+        # Sets the domain and email if provided from the CLI
+        config.email = slop.email if slop.email
+        config.domain = slop.domain if slop.domain
 
-        # Update the email + sanity check
-        if slop.email && config.self_signed?
+        # Ensures the --domain and --email flags are provided (if required)
+        # They maybe already specified in the config and self-signed certs do not require an email
+        required_flags = if lets_encrypt?
+                           [:domain, :email]
+                         else
+                           [:domain]
+                         end
+        missing_flags = required_flags.reject { |f| config.send(f) }
+        unless missing_flags.empty?
+          type = lets_encrypt? ? 'LetsEncrypt' : 'Self Signed'
+          if missing_flags.length == 1
+            name = missing_flags.first
+            prep = (name == :domain) ? 'a domain' : 'an email'
+            flag = "flag: --#{name} #{name.upcase}"
+          else
+            prep = 'a domain and email'
+            flag = "flags: --domain DOMAIN --email EMAIL"
+          end
           $stderr.puts <<~ERROR.chomp
-            Using --email with self-signed certificates is not supported
-          ERROR
-          exit 1
-        elsif slop.email
-          config.letsencrypt_email = slop.email
-        elsif config.lets_encrypt? && !config.letsencrypt_email?
-          $stderr.puts <<~ERROR.chomp
-            Can not use LetsEncrypt without an email
-            Please specify it with: --email ADDRESS
+            #{type} certificate can not be generated without #{prep}
+            Please provide the following #{flag}
           ERROR
           exit 1
         end
@@ -177,11 +173,11 @@ module FlightWWW
     end
 
     def letsencrypt_fullchain
-      self.class.root_join('etc/letsencrypt/live', letsencrypt_domain, 'fullchain.pem')
+      self.class.root_join('etc/letsencrypt/live', domain, 'fullchain.pem')
     end
 
     def letsencrypt_privkey
-      self.class.root_join('etc/letsencrypt/live', letsencrypt_domain, 'privkey.pem')
+      self.class.root_join('etc/letsencrypt/live', domain, 'privkey.pem')
     end
 
     def run_certbot
@@ -196,7 +192,7 @@ module FlightWWW
 
       puts 'Generating LetsEncrypt certificate, please wait...'
       _, error, status = Open3.capture3(CERTBOT_BIN, 'certonly', '-n', '--nginx',
-        '--domain', letsencrypt_domain, '--email', letsencrypt_email, '--agree-tos',
+        '--domain', domain, '--email', email, '--agree-tos',
         '--nginx-ctl', NGINX_BIN, '--nginx-server-root', NGINX_ROOT,
         '--config-dir', LETSENCRYPT_CONFIG_DIR, '--logs-dir', LETSENCRYPT_LOG_DIR,
         '--work-dir', LETSENCRYPT_WORK_DIR
