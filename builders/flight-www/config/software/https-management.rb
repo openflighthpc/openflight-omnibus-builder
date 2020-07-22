@@ -49,7 +49,7 @@ build do
       'Gemfile', 'Gemfile.lock', 'bin', 'lib',
       # 'LICENSE.txt', 'README.md'
     ].each do |file|
-      src = File.join(File.expand_path('../../lib/', __dir__), file)
+      src = File.join(File.expand_path('../../include/', __dir__), file)
       copy src, File.expand_path("#{install_dir}/#{file}/..")
     end
 
