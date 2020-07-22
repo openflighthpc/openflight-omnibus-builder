@@ -36,19 +36,6 @@ skip_transitive_dependency_licensing true
 build do
   env = with_embedded_path("PIPENV_VENV_IN_PROJECT" => 'true')
 
-  # Ensures pipenv is installed
-  command(<<~CMD, env: env)
-    which pipenv
-    if [ "$?" -ne 0 ]; then
-      cat <<ERROR
-Can not build flight-certbot without pipenv. Please run:
-sudo pip3 install --upgrade pip
-pip3 install pipenv --user
-ERROR
-      exit 1
-    fi
-  CMD
-
   # Copies the pip files to the install dir
   ['Pipfile', 'Pipfile.lock'].each do |file|
     copy file, File.join(install_dir, file)
