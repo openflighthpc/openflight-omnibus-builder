@@ -24,43 +24,36 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-action'
+name 'flight-power'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-action'
+homepage 'https://github.com/openflighthpc/flight-power'
 friendly_name 'Flight Action'
 
-install_dir '/opt/flight/opt/action'
+install_dir '/opt/flight/opt/power'
 
 VERSION = '0.4.0'
-override 'flight-action', version: VERSION
+override 'flight-power', version: VERSION
 
 build_version VERSION
 build_iteration 1
 
 dependency 'preparation'
-dependency 'flight-action'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Execute predefined actions on flight clusters'
+description 'Execute power actions on flight clusters'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-runway'
-runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
+runtime_dependency 'flight-action'
 
 %w(
-  opt/flight/libexec/commands/action
-  opt/flight/opt/action/bin/action
-  opt/flight/etc/service/types/action/configuration.yml
-  opt/flight/etc/service/types/action/configure.sh
-  opt/flight/etc/service/types/action/metadata.yml
+  opt/flight/etc/banner/tips.d/40-power.rc
+  opt/flight/libexec/commands/power
 ).each do |f|
   extra_package_file f
 end
