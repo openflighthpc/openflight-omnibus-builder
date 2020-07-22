@@ -71,6 +71,13 @@ module FlightWWW
         cert.sign key, OpenSSL::Digest::SHA256.new
       end
     end
+
+    def to_fullchain
+      <<~PEM
+        #{certificate.to_pem.chomp}
+        #{key.to_s}
+      PEM
+    end
   end
 
   class CertCLI
@@ -180,17 +187,9 @@ module FlightWWW
 
     def run
       if self_signed?
-        system("#{HTTPS_SCRIPT} __create_self_signed")
-        status = $?.exitstatus
-        if status == 0 && File.exists?(Config::CRON_PATH)
-          $stderr.puts "Disabling auto-renewal for self-signed certificates"
-          FileUtils.rm Config::CRON_PATH
-        elsif status != 0
-          $stderr.puts <<~ERROR.chomp
-            Failed to generate the self-signed certificate!
-          ERROR
-          exit status
-        end
+        builder = SelfSigned.new(domain, email)
+        File.write SSL_FULLCHAIN, builder.to_fullchain
+        File.write SSL_PRIVKEY, builder.key.to_s
       else
         run_certbot
       end
