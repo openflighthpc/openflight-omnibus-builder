@@ -102,7 +102,6 @@ EOF
     yum install -y -e0 pam-devel
 
     # required for building flight-certbot
-    yum reinstall -y -e0 glibc-common # The default box doesn't have en_GB.UTF-8 correctly setup
     yum install -y -e0 python3-pip
     su vagrant -c 'pip3 install pipenv --user'
 
@@ -111,6 +110,14 @@ EOF
       pip3 install awscli --upgrade --user
     else
       yum install -y -e0 awscli
+
+      # NOTE: The default centos7 box does not have it's locale setup correctly
+      #       This causes python3 CLI application (aka pipenv) to break in weird and
+      #       wonderful ways. Reinstalling glibc-common fixes this issue
+      #
+      #       This is a bug in the individual boxes, not the builder/pipenv. Doing
+      #       something similar for the other distros may or may not be required
+      yum reinstall -y -e0 glibc-common
     fi
   elif which apt &>/dev/null; then
     apt-get update
