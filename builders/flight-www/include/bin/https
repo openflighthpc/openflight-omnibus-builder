@@ -28,13 +28,7 @@
 set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-CERT_DIR=$(mktemp -d /tmp/flight-www-certs.XXXXXX)
 VERSION='1.1.0-rc5'
-
-clean_up() {
-  rm -rf "${CERT_DIR}"
-}
-trap clean_up EXIT
 
 assert_user_is_root() {
     if [[ "$( id -u )" != "0" ]] ; then
@@ -50,39 +44,6 @@ format() {
     else
         echo -e "$@"
     fi
-}
-
-create_private_key() {
-    format "We will now step you through generating self-signed certificates that are" \
-        "valid for 10 years."
-    format "You will be asked to enter a passphrase and to provide details" \
-        "about your organization.\n"
-
-    mkdir -p "${CERT_DIR}"
-    cd "${CERT_DIR}"
-    openssl req -new > "${CERT_DIR}"/cert.csr
-    cd - 1>/dev/null
-}
-
-create_certs() {
-    format "\nWe will now generate a public key.  You will be asked to enter" \
-        "the passphrase you provided earlier.\n"
-
-    openssl rsa -in "${CERT_DIR}"/privkey.pem -out "${CERT_DIR}"/key.pem
-    openssl x509 -in "${CERT_DIR}"/cert.csr \
-        -out "${CERT_DIR}"/cert.pem \
-        -req \
-        -signkey "${CERT_DIR}"/key.pem \
-        -days 3650
-    cat "${CERT_DIR}"/key.pem >> "${CERT_DIR}"/cert.pem
-}
-
-
-install_certs() {
-    mkdir -p "${flight_ROOT}"/etc/www/ssl
-    rm -f "${flight_ROOT}"/etc/www/ssl/fullchain.pem "${flight_ROOT}"/etc/www/ssl/key.pem
-    cp "${CERT_DIR}"/cert.pem "${flight_ROOT}"/etc/www/ssl/fullchain.pem
-    cp "${CERT_DIR}"/key.pem "${flight_ROOT}"/etc/www/ssl/key.pem
 }
 
 reload_www_service() {
@@ -210,7 +171,7 @@ COMMANDS:
 
 
   Enabling and disabling HTTPS:
-  
+
   Once an SSL certificate has been generated, HTTPS support can be enabled
   with the following command:
 
@@ -247,12 +208,6 @@ main() {
             process_bash_cmd_usage 'disable' "${@}"
             disable_https "${@}"
           ;;
-        __create_self_signed)
-            shift
-            create_private_key
-            create_certs
-            install_certs
-            ;;
         cert-gen)
             shift
             clean_up
