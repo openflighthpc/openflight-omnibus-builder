@@ -35,10 +35,44 @@ Bundler.require(:default)
 require 'forwardable'
 require 'ostruct'
 require 'open3'
+require 'openssl'
 
 require_relative '../lib/shared'
 
 module FlightWWW
+  SelfSigned = Struct.new(:domain, :email) do
+    def key
+      @key ||= OpenSSL::PKey::RSA.new(2048)
+    end
+
+    def subject
+      "/CN=#{domain}".tap do |str|
+        str << "/emailAddress=#{email}" if email
+      end
+    end
+
+    def certificate
+      @certificate ||= OpenSSL::X509::Certificate.new.tap do |cert|
+        cert.subject = cert.issuer = OpenSSL::X509::Name.parse(subject)
+        cert.not_before = Time.now
+        cert.not_after = Time.now + 10 * 365 * 24 * 60 * 60 # Valid for 10 years
+        cert.public_key = key.public_key
+        cert.serial = rand(2**(8*20)-1)
+        cert.version = 2
+
+        ef = OpenSSL::X509::ExtensionFactory.new
+        ef.subject_certificate = cert
+        ef.issuer_certificate = cert
+        cert.add_extension ef.create_extension("basicConstraints","CA:TRUE")
+        cert.add_extension ef.create_extension("subjectKeyIdentifier", "hash")
+        cert.add_extension ef.create_extension("authorityKeyIdentifier", "keyid:always,issuer:always")
+        cert.add_extension(ef.create_extension("keyUsage","keyCertSign, cRLSign" ))
+
+        cert.sign key, OpenSSL::Digest::SHA256.new
+      end
+    end
+  end
+
   class CertCLI
     extend Forwardable
 
