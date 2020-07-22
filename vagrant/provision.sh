@@ -102,6 +102,7 @@ EOF
     yum install -y -e0 pam-devel
 
     # required for building flight-certbot
+    yum reinstall -y -e0 glibc-common # The default box doesn't have en_GB.UTF-8 correctly setup
     yum install -y -e0 python3-pip
     su vagrant -c 'pip3 install pipenv --user'
 
