@@ -52,6 +52,8 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
+runtime_dependency 'flight-service'
+runtime_dependency 'flight-service-system-1.0'
 
 %w(
   opt/flight/etc/banner/tips.d/40-power.rc
@@ -60,6 +62,9 @@ runtime_dependency 'flight-ruby-system-2.0'
   opt/flight/libexec/commands/power
   opt/flight/libexec/commands/estate
   opt/flight/opt/action/bin/action
+  opt/flight/etc/service/types/action/configuration.yml
+  opt/flight/etc/service/types/action/configure.sh
+  opt/flight/etc/service/types/action/metadata.yml
 ).each do |f|
   extra_package_file f
 end

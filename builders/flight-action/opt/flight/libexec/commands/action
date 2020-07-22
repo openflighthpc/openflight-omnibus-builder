@@ -1,6 +1,6 @@
 : '
 : NAME: action
-: SYNOPSIS: Execute predefined actions on flight clusters
+: SYNOPSIS: Execute predefined actions on Flight clusters
 : VERSION: 0.3.3
 : '
 #==============================================================================
