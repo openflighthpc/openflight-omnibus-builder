@@ -23,7 +23,7 @@
 #  https://opensource.org/licenses/EPL-2.0
 #
 # For more information on Flight Action, please visit:
-# https://github.com/alces-flight/action-client-ruby
+# https://github.com/alces-flight/flight-action
 # ==============================================================================
 begin
   lib_dir = File.expand_path(File.join(__FILE__, '../../lib'))
@@ -39,16 +39,16 @@ begin
   require 'active_support/core_ext/module'
   require 'active_support/core_ext/module/delegation'
 
-  require 'action_client/config'
+  require 'flight_action/config'
 
-  require 'action_client/patches'
-  require 'action_client/errors'
-  require 'action_client/formatter'
-  require 'action_client/records'
-  require 'action_client/cli'
+  require 'flight_action/patches'
+  require 'flight_action/errors'
+  require 'flight_action/formatter'
+  require 'flight_action/records'
+  require 'flight_action/cli'
 
   Dir.chdir(ENV.fetch('FLIGHT_CWD','.'))
-  ActionClient::CLI.new.run
+  FlightAction::CLI.new.run
 rescue Interrupt
   if Kernel.const_defined?(:Paint)
     $stderr.puts "\n#{Paint['WARNING', :underline, :yellow]}: Cancelled by user"

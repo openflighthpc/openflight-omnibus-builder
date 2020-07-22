@@ -26,7 +26,7 @@
 #===============================================================================
 name 'flight-action-api'
 maintainer 'Alces Flight Ltd'
-homepage "https://github.com/openflighthpc/flight-action-server"
+homepage "https://github.com/openflighthpc/flight-action-api"
 friendly_name 'Flight Action API'
 
 install_dir '/opt/flight/opt/action-api'

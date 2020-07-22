@@ -27,7 +27,7 @@
 name 'flight-action-api'
 default_version '0.0.0'
 
-source git: 'https://github.com/openflighthpc/action-server'
+source git: 'https://github.com/openflighthpc/flight-action-api'
 
 dependency 'enforce-flight-runway'
 

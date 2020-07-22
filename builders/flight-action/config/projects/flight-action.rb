@@ -26,7 +26,7 @@
 #===============================================================================
 name 'flight-action'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/action-client-ruby'
+homepage 'https://github.com/openflighthpc/flight-action'
 friendly_name 'Flight Action'
 
 install_dir '/opt/flight/opt/action'

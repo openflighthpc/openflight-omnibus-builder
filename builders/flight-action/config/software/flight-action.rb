@@ -27,7 +27,7 @@
 name 'flight-action'
 default_version 'develop'
 
-source git: 'https://github.com/openflighthpc/action-client-ruby'
+source git: 'https://github.com/openflighthpc/flight-action'
 
 dependency 'enforce-flight-runway'
 whitelist_file Regexp.new("vendor/ruby/.*\.so$")
