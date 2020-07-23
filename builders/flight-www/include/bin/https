@@ -210,12 +210,10 @@ main() {
           ;;
         cert-gen)
             shift
-            clean_up
             exec $flight_ROOT/bin/flexec ruby $DIR/cert "$@"
             ;;
         cron-renewal)
             shift
-            clean_up
             exec $flight_ROOT/bin/flexec ruby $DIR/cron "$@"
             ;;
         --help | help)
