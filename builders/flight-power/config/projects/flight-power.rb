@@ -31,7 +31,7 @@ friendly_name 'Flight Action'
 
 install_dir '/opt/flight/opt/power'
 
-VERSION = '0.4.0'
+VERSION = '1.0.0'
 override 'flight-power', version: VERSION
 
 build_version VERSION
