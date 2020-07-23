@@ -194,6 +194,8 @@ module FlightWWW
     end
 
     def run
+      FileUtils.mkdir_p SSL_DIR # Ensure the directory exists
+
       if self_signed?
         puts "Generating a Self Signed certificate with a 10 year expiry. Please wait..."
         builder = SelfSigned.new(domain, email)
