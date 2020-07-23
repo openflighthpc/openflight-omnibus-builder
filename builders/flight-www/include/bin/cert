@@ -103,8 +103,8 @@ module FlightWWW
     def self.slop
       @slop ||= Slop::Options.new(suppress_errors: true).tap do |s|
         s.string '--cert-type', 'Select the certificate type: lets-encrypt|self-signed'
-        s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
-        s.string '--email', 'The email address associated with the LetsEncrypt certificate. Use empty string to unset'
+        s.string '--domain', 'The domain associated with the certificate'
+        s.string '--email', "The email address associated with the Let's Encrypt certificate. Use empty string to unset"
         s.bool '--config-only', 'Only update the internal configuration, skips certificate generation'
         s.on '--help', '-h', 'Display this help output' do
           $stderr.puts s
@@ -146,7 +146,7 @@ module FlightWWW
         else
           # Default the command to LetsEncrypt
           $stderr.puts <<~WARN.chomp
-            Defaulting to LetsEncrypt
+            Defaulting to Let's Encrypt
           WARN
           config.cert_type = 'lets_encrypt'
         end
@@ -175,7 +175,7 @@ module FlightWWW
                          end
         missing_flags = required_flags.reject { |f| config.send(f) }
         unless missing_flags.empty?
-          type = lets_encrypt? ? 'LetsEncrypt' : 'Self Signed'
+          type = lets_encrypt? ? "Let's Encrypt" : 'Self-signed'
           if missing_flags.length == 1
             name = missing_flags.first
             prep = (name == :domain) ? 'a domain' : 'an email'
@@ -197,7 +197,7 @@ module FlightWWW
       FileUtils.mkdir_p SSL_DIR # Ensure the directory exists
 
       if self_signed?
-        puts "Generating a Self Signed certificate with a 10 year expiry. Please wait..."
+        puts "Generating a self-signed certificate with a 10 year expiry. Please wait..."
         builder = SelfSigned.new(domain, email)
         File.write SSL_FULLCHAIN, builder.to_fullchain
         File.write SSL_PRIVKEY, builder.key.to_s
@@ -234,7 +234,7 @@ module FlightWWW
         exit 1
       end
 
-      puts 'Generating a LetsEncrypt certificate, please wait...'
+      puts "Generating a Let's Encrypt certificate, please wait..."
       _, error, status = Open3.capture3(CERTBOT_BIN, 'certonly', '-n', '--nginx',
         '--domain', domain, '--email', email, '--agree-tos',
         '--nginx-ctl', NGINX_BIN, '--nginx-server-root', NGINX_ROOT,
@@ -253,7 +253,7 @@ module FlightWWW
       # Report to the user some other error has occurred
       else
         $stderr.puts <<~ERROR
-          Failed to generate the LetsEncrypt certificate with the following error:
+          Failed to generate the Let's Encrypt certificate with the following error:
 
           #{error}
         ERROR

@@ -72,7 +72,7 @@ module FlightWWW
         WARN
       elsif config.self_signed?
         $stderr.puts <<~ERROR.chomp
-          Automatic renewal is not support for self signed certificates!
+          Automatic renewal is not support for self-signed certificates!
         ERROR
         exit 1
       elsif File.exists? Config::CRON_PATH
