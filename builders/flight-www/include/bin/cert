@@ -73,10 +73,7 @@ module FlightWWW
     end
 
     def to_fullchain
-      <<~PEM
-        #{certificate.to_pem.chomp}
-        #{key.to_s}
-      PEM
+      certificate.to_pem
     end
   end
 
