@@ -80,7 +80,7 @@ File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
   content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
   File.write path, content
 end
-File.expand_path('../../lib/bin/https', __dir__).tap do |path|
+File.expand_path('../../include/bin/https', __dir__).tap do |path|
   content = File.read path
   content.sub!(/VERSION=.*/, "VERSION='#{VERSION}'")
   File.write path, content
