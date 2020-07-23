@@ -107,7 +107,7 @@ module FlightWWW
       @slop ||= Slop::Options.new(suppress_errors: true).tap do |s|
         s.string '--cert-type', 'Select the certificate type: lets-encrypt|self-signed'
         s.string '--domain', 'The domain associated with the LetsEncrypt certificate'
-        s.string '--email', 'The email address associated with the LetsEncrypt certificate'
+        s.string '--email', 'The email address associated with the LetsEncrypt certificate. Use empty string to unset'
         s.bool '--config-only', 'Only update the internal configuration, skips certificate generation'
         s.on '--help', '-h', 'Display this help output' do
           $stderr.puts s
@@ -154,9 +154,20 @@ module FlightWWW
           config.cert_type = 'lets_encrypt'
         end
 
-        # Sets the domain and email if provided from the CLI
-        config.email = slop.email if slop.email
-        config.domain = slop.domain if slop.domain
+        # Process the email flag
+        if slop.email&.empty?
+          config.email = nil
+        elsif slop.email
+          config.email = slop.email
+        end
+
+        # Process the domain flag
+        if slop.domain&.empty?
+          $stderr.puts 'The domain can not be an empty string, interpreted as missing!'
+          config.domain = nil
+        elsif slop.domain
+          config.domain = slop.domain
+        end
 
         # Ensures the --domain and --email flags are provided (if required)
         # They maybe already specified in the config and self-signed certs do not require an email
