@@ -91,9 +91,6 @@ module FlightWWW
     SSL_DIR = root_join('etc/www/ssl')
     SSL_FULLCHAIN = File.join(SSL_DIR, 'fullchain.pem')
     SSL_PRIVKEY = File.join(SSL_DIR, 'key.pem')
-    CLI_CERT_TYPES = ['self-signed', 'lets-encrypt'].map do |type|
-                       [type, type.sub('-', '_')]
-                     end.flatten
     NGINX_BIN = root_join('opt/www/embedded/sbin/nginx')
     NGINX_ROOT = root_join('etc/www')
     LETSENCRYPT_CONFIG_DIR = root_join('etc/letsencrypt')
@@ -136,7 +133,7 @@ module FlightWWW
         @config = config
 
         # Updates the cert_type + sanity check
-        if CLI_CERT_TYPES.include?(slop.cert_type)
+        if Config::ALL_TYPES.include?(slop.cert_type)
           config.cert_type = slop.cert_type
         elsif slop.cert_type
           $stderr.puts <<~ERROR.chomp

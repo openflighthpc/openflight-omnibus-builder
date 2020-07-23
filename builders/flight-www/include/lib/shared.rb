@@ -36,6 +36,11 @@ module FlightWWW
       File.join(ENV['flight_ROOT'] || raise('Missing flight_ROOT!') , *a)
     end
 
+    # All the possible user inputs which will be interpreted as valid
+    LETS_ENCRYPT_TYPES = ['lets-encrypt', 'lets_encrypt', 'letsencrypt', 'letsEncrypt', 'LetsEncrypt', 'LETS_ENCRYPT']
+    SELF_SIGNED_TYPES = ['self-signed', 'self_signed', 'selfsigned', 'selfSigned', 'SelfSigned', 'SELF_SIGNED']
+    ALL_TYPES = [*LETS_ENCRYPT_TYPES, *SELF_SIGNED_TYPES]
+
     CONFIG_PATH = root_join('etc/www/cert-gen.yaml')
     CRON_PATH = root_join('etc/cron/daily/www-cert-gen')
 
@@ -86,18 +91,16 @@ module FlightWWW
     # is updated by scripts. This method must reflect these changes
     def resolved_cert_type
       case cert_type.to_s
-      when 'lets-encrypt', 'lets_encrypt', 'letsencrypt'
+      when *LETS_ENCRYPT_TYPES
         :lets_encrypt
-      when 'self-signed', 'self_signed', 'selfsigned', ''
-        # NOTE: unset values default to :self_signed without error
+      when *SELF_SIGNED_TYPES
         :self_signed
       else
         $stderr.puts <<~WARN.chomp
-          An unexpected error has occurred!
-          The previously cached certificate type is unrecognized: #{cert_type}
+          An unexpected error has occurred! The previously cached certificate type is unrecognized: #{cert_type}
           Attempting to fallback onto self-signed, your mileage may vary
         WARN
-        self.cert_type = 'self_signed'
+        self.cert_type = 'self-signed'
         :self_signed
       end
     end
