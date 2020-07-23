@@ -187,6 +187,7 @@ module FlightWWW
 
     def run
       if self_signed?
+        puts "Generating a Self Signed certificate with a 10 year expiry. Please wait..."
         builder = SelfSigned.new(domain, email)
         File.write SSL_FULLCHAIN, builder.to_fullchain
         File.write SSL_PRIVKEY, builder.key.to_s
@@ -223,7 +224,7 @@ module FlightWWW
         exit 1
       end
 
-      puts 'Generating LetsEncrypt certificate, please wait...'
+      puts 'Generating a LetsEncrypt certificate, please wait...'
       _, error, status = Open3.capture3(CERTBOT_BIN, 'certonly', '-n', '--nginx',
         '--domain', domain, '--email', email, '--agree-tos',
         '--nginx-ctl', NGINX_BIN, '--nginx-server-root', NGINX_ROOT,
