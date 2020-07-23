@@ -28,7 +28,7 @@
 set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-VERSION='1.1.0-rc5'
+VERSION='1.1.0-rc6'
 
 assert_user_is_root() {
     if [[ "$( id -u )" != "0" ]] ; then
