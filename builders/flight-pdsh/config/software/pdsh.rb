@@ -45,6 +45,7 @@ build do
   configure_options = ["--with-ssh",
                        "--with-rcmd-rank-list=ssh,rsh,exec",
                        "--with-genders",
+                       "--with-readline",
                        "--with-opt-dir=#{install_dir}/embedded",
   ]
   configure(*configure_options, env: env)

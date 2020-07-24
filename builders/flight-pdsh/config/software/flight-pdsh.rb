@@ -29,6 +29,7 @@ default_version '0.0.0'
 
 dependency "genders"
 dependency "pdsh"
+dependency 'readline'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
