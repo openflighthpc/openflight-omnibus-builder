@@ -38,7 +38,9 @@ build_version VERSION
 build_iteration 1
 
 dependency 'preparation'
-dependency 'flight-pdsh'
+dependency "genders"
+dependency "pdsh"
+dependency 'readline'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
