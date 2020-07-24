@@ -32,7 +32,7 @@ friendly_name 'Flight pdsh'
 install_dir '/opt/flight/opt/pdsh'
 
 VERSION = '2.34'
-override 'flight-pdsh', version: VERSION
+override 'pdsh', version: VERSION
 
 build_version VERSION
 build_iteration 1
