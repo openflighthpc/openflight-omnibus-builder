@@ -1,3 +1,29 @@
+#==============================================================================
+# Copyright (C) 2019-present Alces Flight Ltd.
+#
+# This file is part of OpenFlight Omnibus Builder.
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which is available at
+# <https://www.eclipse.org/legal/epl-2.0>, or alternative license
+# terms made available by Alces Flight Ltd - please direct inquiries
+# about licensing to licensing@alces-flight.com.
+#
+# This project is distributed in the hope that it will be useful, but
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
+# OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
+# PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more
+# details.
+#
+# You should have received a copy of the Eclipse Public License 2.0
+# along with this project. If not, see:
+#
+#  https://opensource.org/licenses/EPL-2.0
+#
+# For more information on OpenFlight Omnibus Builder, please visit:
+# https://github.com/openflighthpc/openflight-omnibus-builder
+#===============================================================================
 name "readline"
 default_version "8.0"
 
@@ -6,6 +32,9 @@ default_version "8.0"
 # http://lists.osgeo.org/pipermail/grass-user/2003-September/010290.html
 # http://trac.sagemath.org/attachment/ticket/14405/readline-tinfo.diff
 dependency "ncurses"
+
+license 'GPL-3.0'
+license_file 'COPYING'
 
 source :url => "ftp://ftp.gnu.org/gnu/readline/readline-#{version}.tar.gz"
 
@@ -30,5 +59,4 @@ build do
   command configure_command, :env => env
   command "make", :env => env
   command "make install", :env => env
-
 end
