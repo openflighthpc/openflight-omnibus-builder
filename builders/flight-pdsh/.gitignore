@@ -8,3 +8,4 @@ files/**/cache/
 vendor
 vendor
 local
+gpl-3.0.txt
