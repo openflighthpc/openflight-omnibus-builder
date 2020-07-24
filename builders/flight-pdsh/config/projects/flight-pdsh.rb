@@ -33,9 +33,10 @@ install_dir '/opt/flight/opt/pdsh'
 
 VERSION = '2.34'
 override 'pdsh', version: VERSION
+override 'readline', version: '6.0'
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency "genders"
