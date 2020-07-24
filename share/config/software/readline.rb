@@ -7,8 +7,10 @@ default_version "8.0"
 # http://trac.sagemath.org/attachment/ticket/14405/readline-tinfo.diff
 dependency "ncurses"
 
-source :url => "ftp://ftp.gnu.org/gnu/readline/readline-8.0.tar.gz",
-       :md5 => "7e6c1f16aee3244a69aba6e438295ca3"
+source :url => "ftp://ftp.gnu.org/gnu/readline/readline-#{version}.tar.gz"
+
+version('6.0') { source :md5 => "b7f65a48add447693be6e86f04a63019" }
+version('8.0') { source :md5 => "7e6c1f16aee3244a69aba6e438295ca3" }
 
 relative_path "#{name}-#{version}"
 
