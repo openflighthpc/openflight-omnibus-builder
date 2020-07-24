@@ -50,6 +50,9 @@ build do
     "--with-genders-file=/opt/flight/etc/genders",
   ]
   configure(*configure_options, env: env)
-  make "-j #{workers}", env: env
-  make "-j #{workers} install", env: env
+
+  # There appears to be a race condition in genders make file which means it
+  # can't be reliable compiled in a multi-threaded manner
+  make "-j 1", env: env
+  make "-j 1 install", env: env
 end
