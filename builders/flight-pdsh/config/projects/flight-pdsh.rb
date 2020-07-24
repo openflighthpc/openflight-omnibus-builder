@@ -44,8 +44,8 @@ dependency "pdsh"
 dependency 'readline'
 dependency 'version-manifest'
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
+license 'GPL-3.0'
+license_file 'https://www.gnu.org/licenses/gpl-3.0.txt'
 
 description 'A high performance, parallel remote shell utility.'
 
