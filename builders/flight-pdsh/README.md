@@ -118,3 +118,16 @@ $ bundle exec kitchen login ubuntu-1204
 
 For a complete list of all commands and platforms, run `kitchen list` or
 `kitchen help`.
+
+COPYRIGHT AND LICENSE
+---------------------
+NOTICE: The program contained within this builder is licensed under EPL-2.0 as described below and the [Builder License](LICENSE.builder.txt). During the build process both `pdsh` and `readline` will be compiled into a package (`rpm`, `deb`, etc.) which is licensed under `GPL-3.0` as described in [Package License](LICENSE.package.txt).
+
+Eclipse Public License 2.0, see LICENSE.builder.txt for details.
+
+Copyright (C) 2019-present Alces Flight Ltd.
+
+This program and the accompanying materials are made available under the terms of the Eclipse Public License 2.0 which is available at https://www.eclipse.org/legal/epl-2.0, or alternative license terms made available by Alces Flight Ltd - please direct inquiries about licensing to licensing@alces-flight.com.
+
+OpenFlight Omnibus Builder is distributed in the hope that it will be useful, but WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more details.
+
