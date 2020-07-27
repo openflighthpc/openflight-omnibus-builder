@@ -45,18 +45,7 @@ dependency 'readline'
 dependency 'version-manifest'
 
 license 'GPL-3.0'
-
-# Dynamically pull in the GPL3 license
-# NOTE: All builder code is license under EPL as specified in the license headers
-license_name = 'gpl-3.0.txt'
-license_path = File.expand_path("../../#{license_name}", __dir__)
-unless File.exists? license_path
-  require 'open-uri'
-  open("https://www.gnu.org/licenses/#{license_name}") do |src|
-    File.write license_path, src.read
-  end
-end
-license_file license_name
+license_file 'LICENSE.package.txt'
 
 description 'A high performance, parallel remote shell utility.'
 
