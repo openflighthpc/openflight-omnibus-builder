@@ -1,7 +1,7 @@
 : '
 : NAME: howto
-: SYNOPSIS: View useful guides on how to use flight
-: VERSION: 0.1.1
+: SYNOPSIS: View useful guides about your flight environment
+: VERSION: 0.2.0
 : '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
