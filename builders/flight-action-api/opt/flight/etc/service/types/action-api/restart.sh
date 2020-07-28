@@ -36,12 +36,12 @@ state=1
 for _ in `seq 1 20`; do
   kill -0 "$OLD_PID" 2>/dev/null
   state=$?
-  if [ "$state" -eq 0 ]; then
+  if [ "$state" -ne 0 ]; then
     break
   fi
 done
 
-if [ "$state" -ne 0 ]; then
+if [ "$state" -eq 0 ]; then
   echo Failed to stop action-api
   exit 1
 fi
