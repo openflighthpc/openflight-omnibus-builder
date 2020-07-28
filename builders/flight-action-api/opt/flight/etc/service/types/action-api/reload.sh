@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,51 +25,8 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-action-api'
-maintainer 'Alces Flight Ltd'
-homepage "https://github.com/openflighthpc/flight-action-api"
-friendly_name 'Flight Action API'
 
-install_dir '/opt/flight/opt/action-api'
+PATH="${flight_ROOT}/bin/:${PATH}"
+"${flight_ROOT}"/opt/action-api/bin/pumactl restart --pidfile "$1"
 
-VERSION = '1.1.0'
-override 'flight-action-api', version: VERSION
-
-build_version VERSION
-build_iteration 2
-
-dependency 'preparation'
-dependency 'flight-action-api'
-dependency 'version-manifest'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Execute predefined actions on flight clusters'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-
-runtime_dependency 'flight-runway'
-runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-%w(nodes.yaml application.yaml).each do |cf|
-  config_file "/opt/flight/opt/action-api/config/#{cf}"
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
+tool_set pid=$(cat "$1")

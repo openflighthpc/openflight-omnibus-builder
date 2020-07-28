@@ -26,7 +26,25 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-PATH="${flight_ROOT}/bin/:${PATH}"
-"${flight_ROOT}"/opt/action-api/bin/pumactl restart --pidfile $1
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+OLD_PID="$1"
 
-tool_set pid=$(cat $1)
+source "$DIR"/stop.sh "$OLD_PID"
+
+# Wait up to 10ish seconds for puma to stop
+state=1
+for _ in `seq 1 20`; do
+  kill -0 "$OLD_PID" 2>/dev/null
+  state=$?
+  if [ "$state" -eq 0 ]; then
+    break
+  fi
+done
+
+if [ "$state" -ne 0 ]; then
+  echo Failed to stop action-api
+  exit 1
+fi
+
+source "$DIR"/start.sh
+
