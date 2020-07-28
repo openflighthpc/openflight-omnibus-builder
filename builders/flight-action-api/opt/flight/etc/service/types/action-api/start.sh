@@ -68,6 +68,14 @@ done
 
 # Report back the pid or error
 if [ -n "$pid" ]; then
+  # Wait a second to ensure puma is still running
+  sleep 1
+  kill -0 "$pid" 2>/dev/null
+  if [ "$?" -ne 0 ]; then
+    echo Failed to start action-api >&2
+    exit 2
+  fi
+
   tool_set pid=$pid
 else
   echo Failed to start action-api >&2
