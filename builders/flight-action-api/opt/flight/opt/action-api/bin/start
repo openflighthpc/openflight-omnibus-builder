@@ -30,10 +30,13 @@ addr="$1"
 log_file="$2"
 pid_file="$3"
 
-# Starts puma
-"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/action-api/bin/puma \
+# Exec into the ruby process so the PID doesn't change
+exec "${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/action-api/bin/puma \
   --bind "$addr" \
   --pidfile "$pid_file" \
   --environment production \
+  --redirect-stdout "$log_file" \
+  --redirect-stderr "$log_file" \
+  --redirect-append \
   --dir "${flight_ROOT}"/opt/action-api \
   >>"${log_file}" 2>&1
