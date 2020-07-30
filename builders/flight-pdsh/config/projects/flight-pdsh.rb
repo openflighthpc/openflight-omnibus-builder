@@ -41,7 +41,6 @@ build_iteration 2
 dependency 'preparation'
 dependency "genders"
 dependency "pdsh"
-dependency 'readline'
 dependency 'version-manifest'
 
 license 'GPL-3.0'

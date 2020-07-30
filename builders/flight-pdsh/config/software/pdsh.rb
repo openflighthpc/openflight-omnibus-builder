@@ -32,6 +32,8 @@ skip_transitive_dependency_licensing true
 
 default_version "2.34"
 
+dependency 'readline'
+
 version("2.34") do
   source sha256: "b47b3e4662736ef44b6fe86e3d380f95e591863e69163aa0592e9f9f618521e9"
 end
@@ -42,6 +44,10 @@ relative_path "pdsh-#{version}"
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
+  env = env.merge(
+    "LIBS" => "-ltinfo",
+    "READLINE_LIBS" => "-lreadline -lhistory -lncurses -ltinfo",
+  )
   configure_options = ["--with-ssh",
                        "--with-rcmd-rank-list=ssh,rsh,exec",
                        "--with-genders",
