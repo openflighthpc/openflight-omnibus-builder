@@ -31,15 +31,19 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.1.0.rc1'
+VERSION = '1.1.0-rc7'
 override 'flight-www', version: VERSION
 
 build_version VERSION
-build_iteration 0
+build_iteration '1'
 
 dependency 'preparation'
 dependency 'flight-www'
+dependency 'flight-landing-page'
+dependency 'https-management'
 dependency 'version-manifest'
+
+replace 'flight-landing-page'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
@@ -51,17 +55,35 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 override :nginx, version: '1.14.2'
+override 'flight-landing-page', version: '0.0.6'
 
 WWW_SYSTEM = '1.0'
 runtime_dependency 'flight-plugin-cron'
 runtime_dependency 'flight-runway'
+runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-landing-page'
+runtime_dependency 'flight-certbot'
 
 require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
+end
+
+config_file '/opt/flight/opt/www/landing-page/overridden'
+config_file '/opt/flight/opt/www/landing-page/overridden/content'
+config_file '/opt/flight/opt/www/landing-page/overridden/layouts'
+
+# Update the version numbering in files
+File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
+  content = File.read path
+  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
+  File.write path, content
+end
+File.expand_path('../../include/bin/https', __dir__).tap do |path|
+  content = File.read path
+  content.sub!(/VERSION=.*/, "VERSION='#{VERSION}'")
+  File.write path, content
 end
 
 package :rpm do

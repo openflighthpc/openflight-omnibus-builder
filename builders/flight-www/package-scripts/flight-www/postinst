@@ -1,5 +1,6 @@
+#!/bin/sh
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,18 +25,15 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-www'
-default_version '1.0.0'
 
-dependency 'zlib'
-dependency 'nginx'
+# If upgrading from an older version landing page overrides will be in the
+# wrong location.
+if [ -d /opt/flight/opt/landing-page/www/overridden ]; then
+    echo "Syncing old landing-page overrides"
+    rsync -a /opt/flight/opt/landing-page/www/overridden \
+             /opt/flight/opt/www/landing-page/
+fi
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
+/opt/flight/bin/flight landing-page compile
 
-build do
-  block do
-    true
-  end
-end
+exit 0

@@ -1,0 +1,234 @@
+#!/bin/bash
+#==============================================================================
+# Copyright (C) 2019-present Alces Flight Ltd.
+#
+# This file is part of Alces Flight Omnibus Builder.
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which is available at
+# <https://www.eclipse.org/legal/epl-2.0>, or alternative license
+# terms made available by Alces Flight Ltd - please direct inquiries
+# about licensing to licensing@alces-flight.com.
+#
+# This project is distributed in the hope that it will be useful, but
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
+# OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
+# PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more
+# details.
+#
+# You should have received a copy of the Eclipse Public License 2.0
+# along with this project. If not, see:
+#
+#  https://opensource.org/licenses/EPL-2.0
+#
+# For more information on Alces Flight Omnibus Builder, please visit:
+# https://github.com/alces-flight/alces-flight-omnibus-builder
+#===============================================================================
+set -e
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+VERSION='1.1.0-rc7'
+
+assert_user_is_root() {
+    if [[ "$( id -u )" != "0" ]] ; then
+        echo "Must be root to run this script" >&2
+        exit 1
+    fi
+}
+
+format() {
+    local columns=${COLUMNS:-`tput cols 2>&-||echo 80`}
+    if [ type fmt 1>/dev/null 2>/dev/null ] ; then
+        echo -e "$@" | fmt -w ${columns}
+    else
+        echo -e "$@"
+    fi
+}
+
+reload_www_service() {
+    "${flight_ROOT}"/bin/flight service restart www || true
+}
+
+enable_https() {
+    error_without_certificate
+    if [ -f "${flight_ROOT}/etc/www/http.d/https.conf" ]; then
+      echo 'The HTTPS server is already enabled'
+      exit 1
+    else
+      mv "${flight_ROOT}"/etc/www/http.d/https.conf{.disabled,}
+      reload_www_service
+    fi
+}
+
+disable_https() {
+    if [ -f "${flight_ROOT}/etc/www/http.d/https.conf" ]; then
+      mv "${flight_ROOT}"/etc/www/http.d/https.conf{,.disabled}
+      reload_www_service
+    else
+      echo 'The HTTPS server is already disabled'
+      exit 1
+    fi
+}
+
+# Will auto generate a self signed certificate if required
+error_without_certificate() {
+    if [ ! -f "${flight_ROOT}/etc/www/ssl/fullchain.pem" ]; then
+        format "In order to enable HTTPs a set of SSL certificates need to be generated."
+        format "Please run the following to generate the certificates with Let's Encrypt."
+        format "${flight_ROOT}/bin/flight www cert-gen --letsencrypt --domain DOMAIN --email EMAIL"
+        exit 1
+    fi
+}
+
+process_bash_cmd_usage() {
+    local prog
+    local cmd
+    cmd="$1"
+    shift
+
+    while (( "$#" )); do
+    case "$1" in
+      -h|--help)
+        prog="flight www ${cmd}-https"
+        cat <<DOC
+
+USAGE:
+
+  ${prog} [--help]
+
+DESCRIPTION:
+
+  $(echo "$cmd" | sed 's/.*/\u&/') the HTTPS server and restart the www service
+DOC
+        exit
+        ;;
+      -*|--*=) # unsupported flags
+        echo "Error: Unsupported flag $1" >&2
+        exit 1
+        ;;
+      *)
+        shift
+        ;;
+    esac
+  done
+}
+
+usage() {
+    local prog
+    prog="flight www"
+
+    "${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/runway/bin/banner title='flight www' version="$VERSION"
+
+    cat <<DOC
+
+USAGE:
+
+  ${prog} cert-gen|cron-renewal|enable-https|disable-https
+
+DESCRIPTION:
+
+  Manage HTTPS configuration and SSL certificates for the Alces Flight web
+  server
+
+COMMANDS:
+
+  cert-gen:      Generate and renew SSL certificates
+  cron-renewal:  Manage automatic renewal of SSL certificates
+  enable-https:  Enable HTTPS
+  disable-https: Disable HTTPS
+
+  Certificate Generation:
+
+  By default the HTTPS server is disabled as it requires an SSL certificate.
+  The '$prog' utilities support the generation of Let's Encrypt and
+  self-signed certificates.  We recommended that a Let's Encrypt certificate
+  is generated where possible.
+
+  In order to generate a Let's Encrypt certificate, you will require a
+  publicly available DNS entry and an email address.  The HTTP server will
+  also need to be running to allow Let's Encrypt to successfully preform a DNS
+  challenge.  Once ready, A Let's Encrypt certificate can be generated with
+  the following command:
+
+  '$prog cert-gen --cert-type lets-encrypt --domain DOMAIN --email EMAIL'
+
+  Alternatively, a self-signed SSL certificate valid for 10 years can be
+  generated, buy running the following command:
+
+  '$prog cert-gen --cert-type self-signed'
+
+
+  Certificate Renewal:
+
+  A Let's Encrypt certificate will need to be periodically renewed.  You
+  can enable automatic renewal of Let's Encrypt certificates by running:
+
+  '$prog cron-renewal'
+
+  Self-signed certificates are valid for 10 years and automatic renewal is not
+  supported.
+
+
+  Enabling and disabling HTTPS:
+
+  Once an SSL certificate has been generated, HTTPS support can be enabled
+  with the following command:
+
+  '$prog enable-https'
+
+  HTTPS support can be disabled at any time with the following command:
+
+  '$prog disable-https'
+
+
+  Changing SSL certificate type:
+
+  If you wish to change the SSL certificate type you can do so by generating a
+  new certificate of the appropriate type.  The new certificate will be
+  automatically used by the server from that point onwards.
+DOC
+}
+
+# NOTE: The __* commands are not part of the public interface and are solely
+#       used for wrapping purposes. They maybe changed/removed without warning.
+#       They intentionally do not appear in the usage
+main() {
+    assert_user_is_root
+
+    case "$1" in
+        enable-https)
+            shift
+            process_bash_cmd_usage 'enable' "${@}"
+            enable_https "${@}"
+            ;;
+
+        disable-https)
+            shift
+            process_bash_cmd_usage 'disable' "${@}"
+            disable_https "${@}"
+          ;;
+        cert-gen)
+            shift
+            exec $flight_ROOT/bin/flexec ruby $DIR/cert "$@"
+            ;;
+        cron-renewal)
+            shift
+            exec $flight_ROOT/bin/flexec ruby $DIR/cron "$@"
+            ;;
+        --help | help)
+            usage
+            exit 0
+            ;;
+
+        *)
+            usage
+            exit 2
+            ;;
+    esac
+}
+
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+fi
