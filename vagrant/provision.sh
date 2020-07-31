@@ -130,7 +130,7 @@ EOF
     apt-get -y install libssl-dev
 
     # required for building genders as part of flight-pdsh
-    apt-get -y install -y -e0 flex byacc
+    apt-get -y install flex byacc
 
     # required for building flight-certbot
     apt-get -y install python3-pip

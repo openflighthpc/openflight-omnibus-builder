@@ -29,6 +29,8 @@ default_version '0.0.0'
 
 source path: File.expand_path('../../lib', __dir__)
 
+dependency 'python3'
+
 license 'Apache-2.0'
 license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
@@ -42,10 +44,10 @@ build do
   end
 
   # Builds the virtual env
-  command(<<~CMD, env: env)
-  cd #{install_dir}
-  pipenv install
-CMD
+  command(<<-CMD, env: env)
+    cd #{install_dir}
+    pipenv install
+  CMD
 
   # Generates the bin symlinks
   block do

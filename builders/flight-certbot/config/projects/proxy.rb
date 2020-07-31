@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,47 +24,20 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-certbot'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/builders/flight-certbot'
-friendly_name 'Flight Certbot'
-
-install_dir '/opt/flight/opt/certbot'
-
-VERSION = '0.1.0'
-override 'flight-certbot', version: VERSION
-
-build_version VERSION
-build_iteration 1
-
-override 'sqlite3', version: '3.32.3.0'
-
-dependency 'preparation'
-dependency 'flight-certbot'
-dependency 'version-manifest'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Alternative openFlightHPC build of certbot'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-
-if ohai['platform_family'] == 'rhel'
-  rhel_rel = ohai['platform_version'].split('.').first.to_i
-  if rhel_rel == 8
-    package :rpm do
-      vendor 'Alces Flight Ltd'
-    end
-  else
-    package :rpm do
-      vendor 'Alces Flight Ltd'
-    end
-  end
-elsif ohai['platform_family'] == 'debian'
-  package :deb do
-    vendor 'Alces Flight Ltd'
-  end
-end
+# Usually changing the main project file causes all dependencies to be
+# rebuilt.
+#
+# Instead, this file can be used as the project build file and allows
+# building of dependencies once while iterations are made on the main
+# project file. e.g.:
+#
+#   bin/omnibus build proxy
+#
+# To force dependencies to be recompiled, increment the following
+# number (which casues the checksum of this project file to change,
+# resulting in the cache being dirtied and all dependencies being
+# rebuilt).
+#
+# PROXY-BUILD-01
+#
+eval(File.read(File.expand_path('flight-certbot.rb', __dir__)), binding, __FILE__)
