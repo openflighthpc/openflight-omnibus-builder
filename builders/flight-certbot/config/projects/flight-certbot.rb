@@ -31,7 +31,7 @@ friendly_name 'Flight Certbot'
 
 install_dir '/opt/flight/opt/certbot'
 
-VERSION = '0.1.0'
+VERSION = '1.0.0'
 override 'flight-certbot', version: VERSION
 
 build_version VERSION
