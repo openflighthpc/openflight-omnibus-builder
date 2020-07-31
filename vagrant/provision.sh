@@ -101,11 +101,23 @@ EOF
     # required for building flight-desktop-restapi
     yum install -y -e0 pam-devel
 
+    # required for building flight-certbot
+    yum install -y -e0 python3-pip
+    su vagrant -c 'pip3 install pipenv --user'
+
     if [[ $CENTOS_VER == 8 ]] ; then
-      yum install -y python3-pip python3-devel python2-devel
+      yum install -y python3-devel python2-devel
       pip3 install awscli --upgrade --user
     else
       yum install -y -e0 awscli
+
+      # NOTE: The default centos7 box does not have it's locale setup correctly
+      #       This causes python3 CLI application (aka pipenv) to break in weird and
+      #       wonderful ways. Reinstalling glibc-common fixes this issue
+      #
+      #       This is a bug in the individual boxes, not the builder/pipenv. Doing
+      #       something similar for the other distros may or may not be required
+      yum reinstall -y -e0 glibc-common
     fi
   elif which apt &>/dev/null; then
     apt-get update
@@ -118,7 +130,11 @@ EOF
     apt-get -y install libssl-dev
 
     # required for building genders as part of flight-pdsh
-    apt-get -y install -y flex byacc
+    apt-get -y install flex byacc
+
+    # required for building flight-certbot
+    apt-get -y install python3-pip
+    su vagrant -c 'pip3 install pipenv --user'
 
     gem install bundler:1.17.3
     gem install bundler:2.1.4
