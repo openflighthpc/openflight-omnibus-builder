@@ -48,9 +48,16 @@ license_file 'LICENSE.txt'
 
 description 'Alternative openFlightHPC build of certbot'
 
+strip_build true
+
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
+exclude '**/__pycache__'
+exclude '**/lib/python3.8/test'
+exclude '**/lib/python3.8/config-3.8-x86_64-linux-gnu'
+exclude '**/lib/*.a'
+exclude '**/lib/*.la'
 
 if ohai['platform_family'] == 'rhel'
   rhel_rel = ohai['platform_version'].split('.').first.to_i
