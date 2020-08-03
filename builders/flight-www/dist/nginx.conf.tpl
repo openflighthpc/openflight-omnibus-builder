@@ -1,4 +1,4 @@
-user nobody;
+user nobody %GROUP%;
 worker_processes 1;
 error_log /opt/flight/var/log/www/error.log warn;
 pid /opt/flight/var/run/www.pid;

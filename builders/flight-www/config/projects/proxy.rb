@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,27 +24,20 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-www'
-default_version '1.0.0'
-
-dependency 'zlib'
-dependency 'nginx'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
-
-build do
-  etc_dir = File.expand_path(File.join(install_dir, '..', '..', 'etc', 'www'))
-  tpl = File.read(
-    File.expand_path(File.join(__FILE__, '../../../dist/nginx.conf.tpl'))
-  )
-  if ohai['platform_family'] == 'rhel'
-    conf = tpl.sub('%GROUP%', '')
-  else
-    conf = tpl.sub('%GROUP%', 'nogroup')
-  end
-  File.write(File.join(build_dir, 'nginx.conf'), conf)
-  mkdir etc_dir
-  copy File.join(build_dir, 'nginx.conf'), File.join(etc_dir, 'nginx.conf')
-end
+# Usually changing the main project file causes all dependencies to be
+# rebuilt.
+#
+# Instead, this file can be used as the project build file and allows
+# building of dependencies once while iterations are made on the main
+# project file. e.g.:
+#
+#   bin/omnibus build proxy
+#
+# To force dependencies to be recompiled, increment the following
+# number (which casues the checksum of this project file to change,
+# resulting in the cache being dirtied and all dependencies being
+# rebuilt).
+#
+# PROXY-BUILD-01
+#
+eval(File.read(File.expand_path('flight-www.rb', __dir__)), binding, __FILE__)

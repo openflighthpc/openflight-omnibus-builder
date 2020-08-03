@@ -69,10 +69,7 @@ require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
-
-config_file '/opt/flight/opt/www/landing-page/overridden'
-config_file '/opt/flight/opt/www/landing-page/overridden/content'
-config_file '/opt/flight/opt/www/landing-page/overridden/layouts'
+extra_package_file('/opt/flight/etc/www/nginx.conf')
 
 # Update the version numbering in files
 File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
