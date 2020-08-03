@@ -41,7 +41,7 @@ build() {
     done
 
     case $TYPE in
-      system)
+      manual)
         mkdir -p opt/flight/libexec/cron
         mv crontab-generator opt/flight/libexec/cron
         chmod 750 opt/flight/libexec/cron/crontab-generator
@@ -62,7 +62,7 @@ build() {
         chmod 750 opt/flight/etc/cron/hourly/crontab-generator
         rm -f crontab-generator.cron.hourly.tpl
         ;;
-      manual)
+      system)
         mkdir -p opt/flight/libexec/cron
         mv crontab-generator opt/flight/libexec/cron
         chmod 750 opt/flight/libexec/cron/crontab-generator
@@ -101,7 +101,7 @@ build() {
 
 PLUGIN=cron
 VERSION=1.0.0
-REL=1
+REL=2
 
 build system
 build manual
