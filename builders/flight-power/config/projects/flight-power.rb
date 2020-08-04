@@ -58,6 +58,13 @@ runtime_dependency 'flight-action'
   extra_package_file f
 end
 
+# Update the version numbering in files
+File.expand_path('../../opt/flight/libexec/commands/power', __dir__).tap do |path|
+  content = File.read path
+  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
+  File.write path, content
+end
+
 if ohai['platform_family'] == 'rhel'
   rhel_rel = ohai['platform_version'].split('.').first.to_i
   if rhel_rel == 8

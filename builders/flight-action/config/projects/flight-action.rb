@@ -31,7 +31,7 @@ friendly_name 'Flight Action'
 
 install_dir '/opt/flight/opt/action'
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 override 'flight-action', version: VERSION
 
 build_version VERSION
@@ -63,6 +63,13 @@ runtime_dependency 'flight-service-system-1.0'
   opt/flight/etc/service/types/action/metadata.yml
 ).each do |f|
   extra_package_file f
+end
+
+# Update the version numbering in files
+File.expand_path('../../opt/flight/libexec/commands/action', __dir__).tap do |path|
+  content = File.read path
+  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
+  File.write path, content
 end
 
 if ohai['platform_family'] == 'rhel'

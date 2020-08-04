@@ -1,7 +1,7 @@
 : '
 : NAME: power
 : SYNOPSIS: Execute power actions
-: VERSION: 0.3.3
+: VERSION: 1.0.0
 : '
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
