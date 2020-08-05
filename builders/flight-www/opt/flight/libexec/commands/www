@@ -35,4 +35,6 @@ if [ "$UID" != 0 ]; then
 fi
 
 export FLIGHT_PROGRAM_NAME='flight www'
-"${flight_ROOT}"/opt/www/cert/bin/cert "$@"
+export FLIGHT_CWD=$(pwd)
+cd "${flight_ROOT}"/opt/www/cert
+/opt/flight/bin/flexec bundle exec bin/cert "$@"
