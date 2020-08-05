@@ -31,16 +31,18 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.1.0'
+VERSION = '1.2.0.a1'
+CERT_VERSION = '0.1.0'
 override 'flight-www', version: VERSION
+override 'flight-cert', version: CERT_VERSION
 
 build_version VERSION
-build_iteration '2'
+build_iteration '1'
 
 dependency 'preparation'
 dependency 'flight-www'
 dependency 'flight-landing-page'
-dependency 'https-management'
+dependency 'flight-cert'
 dependency 'version-manifest'
 
 replace 'flight-landing-page'
@@ -74,12 +76,7 @@ extra_package_file('/opt/flight/etc/www/nginx.conf')
 # Update the version numbering in files
 File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
   content = File.read path
-  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
-  File.write path, content
-end
-File.expand_path('../../include/bin/https', __dir__).tap do |path|
-  content = File.read path
-  content.sub!(/VERSION=.*/, "VERSION='#{VERSION}'")
+  content.sub!(/: VERSION:.*/, ": VERSION: #{CERT_VERSION}")
   File.write path, content
 end
 
