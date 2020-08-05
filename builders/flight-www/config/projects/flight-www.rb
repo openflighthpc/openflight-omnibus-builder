@@ -32,7 +32,7 @@ friendly_name 'Flight web server service'
 install_dir '/opt/flight/opt/www'
 
 VERSION = '1.2.0.a1'
-CERT_VERSION = '0.1.0'
+CERT_VERSION = '0.1.3'
 override 'flight-www', version: VERSION
 override 'flight-cert', version: CERT_VERSION
 
@@ -72,6 +72,9 @@ Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
 extra_package_file('/opt/flight/etc/www/nginx.conf')
+
+# Do not update the config file
+config_file '/opt/flight/etc/share/cert.yaml'
 
 # Update the version numbering in files
 File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
