@@ -39,7 +39,7 @@
 #
 # Uncomment this line to change the default base directory to "local"
 # -------------------------------------------------------------------
-base_dir '/home/vagrant/flight-action/local'
+base_dir '/home/vagrant/flight-power/local'
 
 append_timestamp false
 #

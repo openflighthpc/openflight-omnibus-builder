@@ -27,7 +27,7 @@
 name 'flight-power'
 maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/flight-power'
-friendly_name 'Flight Action'
+friendly_name 'Flight Power'
 
 install_dir '/opt/flight/opt/power'
 
