@@ -38,4 +38,4 @@ export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
 # this line.
 export RUBYOPT='-W0'
 
-flexec bundle exec bin/action "$@"
+flexec bundle exec bin/flight-action "$@"

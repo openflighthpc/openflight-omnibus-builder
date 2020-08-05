@@ -40,4 +40,4 @@ export RUBYOPT='-W0'
 export FLIGHT_ACTION_NAMESPACE=estate
 export FLIGHT_ACTION_DESCRIPTION="Modify your compute estate"
 
-flexec bundle exec bin/action "$@"
+flexec bundle exec bin/flight-action "$@"

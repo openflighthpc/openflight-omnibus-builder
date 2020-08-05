@@ -57,7 +57,6 @@ runtime_dependency 'flight-service-system-1.0'
 
 %w(
   opt/flight/libexec/commands/action
-  opt/flight/opt/action/bin/action
   opt/flight/etc/service/types/action/configuration.yml
   opt/flight/etc/service/types/action/configure.sh
   opt/flight/etc/service/types/action/metadata.yml

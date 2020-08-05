@@ -40,4 +40,4 @@ export RUBYOPT='-W0'
 export FLIGHT_ACTION_NAMESPACE=power
 export FLIGHT_ACTION_DESCRIPTION="Execute power actions"
 
-flexec bundle exec bin/action "$@"
+flexec bundle exec bin/flight-action "$@"
