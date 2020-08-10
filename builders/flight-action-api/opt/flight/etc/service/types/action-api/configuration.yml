@@ -5,3 +5,4 @@ values:
   - key: jwt_secret
     label: Authentication secret token.
     value:
+    length: 48

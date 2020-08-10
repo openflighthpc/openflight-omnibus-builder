@@ -61,6 +61,9 @@ require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
+%w(nodes.yaml application.yaml).each do |cf|
+  config_file "/opt/flight/opt/action-api/config/#{cf}"
+end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
