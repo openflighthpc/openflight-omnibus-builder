@@ -26,7 +26,17 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-PATH="${flight_ROOT}/bin/:${PATH}"
-"${flight_ROOT}"/opt/action-api/bin/pumactl restart --pidfile "$1"
+# Restarts the puma worker processes
+log_file="${flight_ROOT}"/var/log/action-api/puma.log
+"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/action-api/bin/pumactl restart --pidfile "$1" >>"$log_file" 2>&1
 
+# Sleeps two seconds and ensure puma is still running
+sleep 2
+kill -0 "$(cat "$1")" 2>/dev/null
+if [ "$?" -ne 0]; then
+  echo Failed to reload action-api >&2
+  exit 2
+fi
+
+# Ensures the PID remains set (it hasn't changed)
 tool_set pid=$(cat "$1")
