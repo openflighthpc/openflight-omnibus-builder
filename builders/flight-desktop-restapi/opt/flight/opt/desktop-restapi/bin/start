@@ -26,7 +26,17 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-PATH="${flight_ROOT}/bin/:${PATH}"
-"${flight_ROOT}"/opt/desktop-restapi/bin/pumactl restart --pidfile $1
+addr="$1"
+log_file="$2"
+pid_file="$3"
 
-tool_set pid=$(cat $1)
+# Exec into the ruby/puma process so the PID does not change
+exec "${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/desktop-restapi/bin/puma \
+  --bind "$addr" \
+  --pidfile "$pid_file" \
+  --environment production \
+  --redirect-stdout "$log_file" \
+  --redirect-stderr "$log_file" \
+  --redirect-append \
+  --dir "${flight_ROOT}"/opt/desktop-restapi \
+  >>"${log_file}" 2>&1

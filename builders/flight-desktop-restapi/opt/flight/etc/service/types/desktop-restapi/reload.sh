@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,50 +25,18 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-desktop-restapi'
-maintainer 'Alces Flight Ltd'
-homepage "https://github.com/openflighthpc/flight-desktop-restapi"
-friendly_name 'Flight Desktop REST API'
 
-install_dir '/opt/flight/opt/desktop-restapi'
+# Restarts the puma worker processes
+log_file="${flight_ROOT}"/var/log/desktop-restapi/puma.log
+"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/desktop-restapi/bin/pumactl restart --pidfile "$1" >>"$log_file" 2>&1
 
-VERSION = '1.0.1'
-override 'flight-desktop-restapi', version: VERSION
+# Sleeps two seconds and ensure puma is still running
+sleep 2
+kill -0 "$(cat "$1")" 2>/dev/null
+if [ "$?" -ne 0]; then
+  echo Failed to reload desktop-restapi >&2
+  exit 2
+fi
 
-build_version VERSION
-build_iteration 8
-
-dependency 'preparation'
-dependency 'flight-desktop-restapi'
-dependency 'version-manifest'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Manage interactive GUI desktop sessions'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-
-runtime_dependency 'flight-runway'
-runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-desktop'
-runtime_dependency 'flight-desktop-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
+# Ensures the PID remains set (it hasn't changed)
+tool_set pid=$(cat "$1")

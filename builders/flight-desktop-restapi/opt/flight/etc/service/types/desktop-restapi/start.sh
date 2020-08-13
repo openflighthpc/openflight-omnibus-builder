@@ -47,14 +47,7 @@ pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
 addr=tcp://127.0.0.1:915
-tool_bg "${flight_ROOT}"/bin/ruby \
-  "${flight_ROOT}"/opt/desktop-restapi/bin/puma --bind $addr \
-    --pidfile $pidfile \
-    --environment production \
-    --redirect-stdout "${log_file}" \
-    --redirect-stderr "${log_file}" \
-    --redirect-append \
-    --dir "${flight_ROOT}"/opt/desktop-restapi
+tool_bg bash "${flight_ROOT}"/opt/desktop-restapi/bin/start "$addr" "$log_file" "$pidfile"
 
 # Wait up to 10ish seconds for puma to start
 pid=''
@@ -68,8 +61,16 @@ done
 
 # Report back the pid or error
 if [ -n "$pid" ]; then
+  # Wait a second to ensure puma is still running
+  sleep 1
+  kill -0 "$pid" 2>/dev/null
+  if [ "$?" -ne 0 ]; then
+    echo Failed to start desktop-restapi >&2
+    exit 2
+  fi
+
   tool_set pid=$pid
 else
-  echo Failed to start desktop-api >&2
+  echo Failed to start desktop-restapi >&2
   exit 1
 fi
