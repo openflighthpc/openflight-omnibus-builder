@@ -37,24 +37,29 @@ if [ -f /etc/locale.conf ]; then
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
-var_dir="${flight_ROOT}"/var/action-api
-mkdir -p "${var_dir}"
-
+# Set the address, log path, var dir, and pid file path
+addr=tcp://127.0.0.1:917
 log_file="${flight_ROOT}"/var/log/action-api/puma.log
 mkdir -p $(dirname "${log_file}")
-
+var_dir="${flight_ROOT}"/var/action-api
+mkdir -p "${var_dir}"
 pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
-addr=tcp://127.0.0.1:917
-tool_bg "${flight_ROOT}"/bin/ruby \
-  "${flight_ROOT}"/opt/action-api/bin/puma --bind $addr \
-    --pidfile $pidfile \
-    --environment production \
-    --redirect-stdout "${log_file}" \
-    --redirect-stderr "${log_file}" \
-    --redirect-append \
-    --dir "${flight_ROOT}"/opt/action-api
+# NOTE: The underlining puma command needs to be contained with a wrapper script
+#       This allows puma's STDOUT and STDERR to be redirected to a log file.
+#
+#       Previously --redirect-std* flags where passed directly to puma. These
+#       work fine if the web process starts correctly. However any config errors
+#       will cause puma to crash before applying the redirects. This in effect
+#       suppresses all configuration errors.
+#
+# PS:   The bin/start script is packager specific and therefore contained within
+#       the builder repo; not the upstream source.
+#
+# PPS:  Standard redirects do not work with tool_bg as it gets passed to the
+#       underlining setsid command; not puma.
+tool_bg bash "${flight_ROOT}"/opt/action-api/bin/start "$addr" "$log_file" "$pidfile"
 
 # Wait up to 10ish seconds for puma to start
 pid=''
@@ -68,6 +73,14 @@ done
 
 # Report back the pid or error
 if [ -n "$pid" ]; then
+  # Wait a second to ensure puma is still running
+  sleep 1
+  kill -0 "$pid" 2>/dev/null
+  if [ "$?" -ne 0 ]; then
+    echo Failed to start action-api >&2
+    exit 2
+  fi
+
   tool_set pid=$pid
 else
   echo Failed to start action-api >&2
