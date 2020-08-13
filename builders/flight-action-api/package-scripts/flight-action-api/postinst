@@ -36,6 +36,7 @@ mkdir -p "${flight_ROOT:-/opt/flight}"/opt/action-api/libexec/
 #
 config_file="${flight_ROOT:-/opt/flight}"/var/lib/service/action-api.yml
 if [ ! -f "${config_file}" ]; then
+    mkdir -p "$(dirname "${config_file}")"
     secret=$( echo $(hostname --fqdn).$(date  +%s) | md5sum | cut -f1 -d' ')
     cat <<EOF > "${config_file}"
 ---
