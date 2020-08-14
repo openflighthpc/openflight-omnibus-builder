@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2019-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,7 +24,43 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name 'flight-cert'
+default_version '0.0.0'
 
-location ~ ^/desktop(.*)$ {
-  return 301 https://$host$request_uri;
-}
+source git: 'https://github.com/openflighthpc/flight-cert'
+
+dependency 'enforce-flight-runway'
+
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
+
+whitelist_file Regexp.new("vendor/ruby/.*\.so$")
+
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
+  sub_install_dir = File.join(install_dir, 'cert')
+
+  # Moves the project into place
+  block do
+    # Creates the sub install directory
+    FileUtils.mkdir_p sub_install_dir
+    [
+      'Gemfile', 'Gemfile.lock', 'bin', 'etc', 'lib',
+      'LICENSE.txt', 'README.md'
+    ].each do |file|
+      FileUtils.cp_r File.expand_path(file, project_dir), sub_install_dir
+    end
+
+    # Links the internal config to the system version
+    FileUtils.ln_sf '/opt/flight/etc/share/cert.yaml', File.expand_path('etc/config.yaml', sub_install_dir)
+  end
+
+  # Installs the gems to the shared `vendor/share`
+  flags = [
+    '--with default',
+    "--without development test",
+    '--path vendor'
+  ].join(' ')
+  command "cd #{sub_install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+end

@@ -36,15 +36,18 @@ skip_transitive_dependency_licensing true
 
 build do
   etc_dir = File.expand_path(File.join(install_dir, '..', '..', 'etc', 'www'))
-  tpl = File.read(
-    File.expand_path(File.join(__FILE__, '../../../dist/nginx.conf.tpl'))
-  )
-  if ohai['platform_family'] == 'rhel'
-    conf = tpl.sub('%GROUP%', '')
-  else
-    conf = tpl.sub('%GROUP%', 'nogroup')
+  block do
+    tpl = File.read(
+      File.expand_path(File.join(__FILE__, '../../../dist/nginx.conf.tpl'))
+    )
+    if ohai['platform_family'] == 'rhel'
+      conf = tpl.sub('%GROUP%', '')
+    else
+      conf = tpl.sub('%GROUP%', 'nogroup')
+    end
+    File.write(File.join(build_dir, 'nginx.conf'), conf)
   end
-  File.write(File.join(build_dir, 'nginx.conf'), conf)
+
   mkdir etc_dir
   copy File.join(build_dir, 'nginx.conf'), File.join(etc_dir, 'nginx.conf')
 end
