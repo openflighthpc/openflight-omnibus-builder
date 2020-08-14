@@ -2,7 +2,7 @@
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
-# This file is part of Alces Flight Omnibus Builder.
+# This file is part of OpenFlight Omnibus Builder.
 #
 # This program and the accompanying materials are made available under
 # the terms of the Eclipse Public License 2.0 which is available at
@@ -22,8 +22,8 @@
 #
 #  https://opensource.org/licenses/EPL-2.0
 #
-# For more information on Alces Flight Omnibus Builder, please visit:
-# https://github.com/alces-flight/alces-flight-omnibus-builder
+# For more information on OpenFlight Omnibus Builder, please visit:
+# https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
 pid=$(cat "$1")
