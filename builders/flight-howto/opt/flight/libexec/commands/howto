@@ -1,7 +1,7 @@
 : '
 : NAME: howto
-: SYNOPSIS: View guides about your flight environment
-: VERSION: 0.3.3
+: SYNOPSIS: View user guides for your HPC environment
+: VERSION: 0.4.0
 : '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
