@@ -41,10 +41,29 @@ build do
 
   # Moves the project into place
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'etc', 'lib', 'libexec', 'LICENSE.txt', 'README.md'
+    'Gemfile', 'Gemfile.lock', 'bin', 'lib', 'libexec', 'LICENSE.txt', 'README.md'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
+
+  # Updates the reference file
+  context = {
+    app_name: <<~CONF,
+      config :app_name, default: ENV.fetch('FLIGHT_PROGRAM_NAME', 'flight job')
+    CONF
+    templates_dir: <<~CONF
+      config :template_dir, default: '/opt/flight/usr/share/job/templates'
+    CONF
+  }
+  rendered_path = 'etc/config.reference.renderd'
+  block do
+    require 'ostruct'
+    reference = (File.read File.join(project_dir, 'etc/config.reference')).gsub(/^#<%/, '<%')
+    erb = ERB.new(reference, nil, '-')
+    bind = OpenStruct.new(context).instance_exec { self.binding }
+    File.write(File.join(project_dir, rendered_path), erb.result(bind))
+  end
+  copy rendered_path, File.expand_path('etc', install_dir)
 
   # Installs the gems to the shared `vendor/share`
   flags = [
