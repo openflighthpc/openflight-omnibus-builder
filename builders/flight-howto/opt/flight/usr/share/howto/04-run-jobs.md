@@ -1,0 +1,58 @@
+# How To Run Jobs
+
+## What is a job?
+
+A job can be loosely defined as an automated research task. For example, a job may be a `bash` script that performs a number of tasks by running a sequence of commands on input and intermediate data files and produces a result.
+
+Jobs vary in size, resource usage and run time. A job could utilise multiple CPU cores through parallel libraries or simply run on a single core.
+
+## What is a local job?
+
+A local job is the simplest kind of job - a script that is manually and directly executed on one of your nodes.
+
+## What is a batch job?
+
+A batch job is a script that is submitted to a batch job scheduler. Your OpenFlight environment can be configured with a job scheduler which can allow you to queue a number of jobs for unattended processing over a period of time, or jobs that are dependent on the output of previous jobs.
+
+## What kind of job should I use?
+
+When using an OpenFlight environment there isn't a need to monitor resource usage as closely as multi-user systems where miscommunication and overloaded resources can negatively impact research progress. With all the resources available to one user it may be quicker and easier to run local jobs by simply executing scripts through a terminal rather than using a queue system.
+
+Local jobs have the benefit over batch jobs in that they launch immediately and provide all output to a single terminal session.
+
+If you have many jobs to perform, have jobs that take a long time to complete, or have jobs that rely on other jobs to have completed first, you should learn more about using a batch job scheduler.
+
+## Running a local job
+
+Local job scripts can be written in any language supported within the research environment. In most cases this is likely to be `bash` as it's a flexible and functional shell scripting language which enables users to intuitively navigate the filesystem, launch applications and manage data output.
+
+In the event that a job script is executable, contains a shebang specifying the launch language and is in the current directory, it's as simple to run as:
+
+```
+./myjob.sh
+```
+
+## What's next?
+
+Read about:
+
+ * How to use a scheduler:
+    `flight howto show use-a-scheduler`
+
+* The useful suite of tools provided by the Flight User Suite:
+    `flight howto show use-flight-user-suite`
+
+You can find more help and documentation in the OpenFlight docs:
+
+> <https://build.openflighthpc.org/>
+> <https://use.openflighthpc.org/>
+
+## License
+
+This work is licensed under a Creative Commons Attribution-ShareAlike
+4.0 International License.
+
+See <http://creativecommons.org/licenses/by-sa/4.0/> for more
+information.
+
+Copyright (C) 2020 Alces Flight Ltd.
