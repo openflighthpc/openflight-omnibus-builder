@@ -31,7 +31,7 @@ friendly_name 'Flight Job'
 
 install_dir '/opt/flight/opt/job'
 
-VERSION = '0.1.4'
+VERSION = '1.0.0-c1'
 override 'flight-job', version: VERSION
 
 build_version VERSION
@@ -44,8 +44,7 @@ dependency 'version-manifest'
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-DESCRIPTION = 'Generate a new job from a predefined template'
-description DESCRIPTION
+description 'Generate a job script from a predefined template'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
@@ -58,7 +57,7 @@ runtime_dependency 'flight-runway'
 path = File.expand_path('../../opt/flight/libexec/commands/job', __dir__)
 original = File.read(path)
 updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
-                  .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{DESCRIPTION}")
+                  .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
 File.write(path, updated) unless original == updated
 
 Dir.glob('opt/**/*')
