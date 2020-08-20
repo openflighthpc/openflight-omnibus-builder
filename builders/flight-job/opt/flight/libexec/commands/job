@@ -1,7 +1,7 @@
 : '
 : NAME: job
 : SYNOPSIS: Generate a new job from a predefined template
-: VERSION: 0.1.2
+: VERSION: 0.1.3
 : '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
