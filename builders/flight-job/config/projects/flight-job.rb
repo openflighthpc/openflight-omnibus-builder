@@ -31,7 +31,7 @@ friendly_name 'Flight Job'
 
 install_dir '/opt/flight/opt/job'
 
-VERSION = '0.1.0'
+VERSION = '0.1.2'
 override 'flight-job', version: VERSION
 
 build_version VERSION
@@ -59,13 +59,7 @@ path = File.expand_path('../../opt/flight/libexec/commands/job', __dir__)
 original = File.read(path)
 updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
                   .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{DESCRIPTION}")
-unless original == updated
-  File.write path, updated
-  $stderr.puts <<~WARN
-    Updated the version in the libexec file! Please commit the file and try again.
-  WARN
-  exit 1
-end
+File.write(path, updated) unless original == updated
 
 Dir.glob('opt/**/*')
    .select { |p| File.file? p }

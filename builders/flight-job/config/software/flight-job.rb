@@ -24,6 +24,8 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+require 'ostruct'
+
 name 'flight-job'
 default_version '0.0.0'
 
@@ -41,29 +43,35 @@ build do
 
   # Moves the project into place
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'lib', 'libexec', 'LICENSE.txt', 'README.md'
+    'Gemfile', 'Gemfile.lock', 'bin', 'lib', 'LICENSE.txt', 'README.md'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
-  # Updates the reference file
-  context = {
-    app_name: <<~CONF,
-      config :app_name, default: ENV.fetch('FLIGHT_PROGRAM_NAME', 'flight job')
+  # Defines the context the reference template will be rendered in
+  context = OpenStruct.new(
+    program: <<~CONF,
+      config :program_name,         default: ENV.fetch('FLIGHT_PROGRAM_NAME', 'flight job')
+      config :program_application,  default: '#{project.friendly_name}'
+      config :program_description,  default: '#{project.description}'
     CONF
     templates_dir: <<~CONF
-      config :template_dir, default: '/opt/flight/usr/share/job/templates'
+      config :templates_dir, default: '/opt/flight/usr/share/job/templates'
     CONF
-  }
-  rendered_path = 'etc/config.reference.renderd'
+  ).instance_exec { self.binding }
+
+  # Renders the reference into the project directory
+  # NOTE: I believe this caches the rendered file TBC
+  rendered_path = 'etc/config.reference.rendered'
   block do
-    require 'ostruct'
-    reference = (File.read File.join(project_dir, 'etc/config.reference')).gsub(/^#<%/, '<%')
-    erb = ERB.new(reference, nil, '-')
-    bind = OpenStruct.new(context).instance_exec { self.binding }
-    File.write(File.join(project_dir, rendered_path), erb.result(bind))
+    template = File.read(File.join(project_dir, 'etc/config.reference')).gsub(/^#<%/, '<%')
+    reference = ERB.new(template, nil, '-').result(context)
+    File.write(File.join(project_dir, rendered_path), reference)
   end
-  copy rendered_path, File.expand_path('etc', install_dir)
+
+  # Installs the rendered reference config
+  mkdir File.expand_path('etc', install_dir)
+  copy rendered_path, File.expand_path('etc/config.reference', install_dir)
 
   # Installs the gems to the shared `vendor/share`
   flags = [
