@@ -1,10 +1,10 @@
 #!/bin/bash -l
 #@          cw_TEMPLATE[name]="Simple serial array (Slurm)"
 #@          cw_TEMPLATE[desc]="Submit multiple, similar jobs. Each job will be allocated a single core on the first available node."
-#@     cw_TEMPLATE[copyright]="Copyright (C) 2017 Alces Software Ltd."
+#@     cw_TEMPLATE[copyright]="Copyright (C) 2020 Alces Flight Ltd."
 #@       cw_TEMPLATE[license]="Creative Commons Attribution-ShareAlike 4.0 International"
 #==============================================================================
-# Copyright (C) 2017 Alces Software Ltd.
+# Copyright (C) 2020 Alces Flight Ltd.
 #
 # This work is licensed under a Creative Commons Attribution-ShareAlike
 # 4.0 International License.
