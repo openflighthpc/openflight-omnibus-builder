@@ -31,7 +31,7 @@ friendly_name 'Flight Inventory'
 
 install_dir '/opt/flight/opt/howto'
 
-VERSION = '0.4.1'
+VERSION = '0.4.4'
 override 'flight-howto', version: VERSION
 
 build_version VERSION
@@ -44,7 +44,7 @@ dependency 'version-manifest'
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'View guides about your flight environment'
+description 'View user guides for your HPC environment'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
