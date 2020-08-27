@@ -35,7 +35,7 @@ VERSION = '1.2.0-rc1'
 override 'flight-action-api-estate', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-action-api-estate'
@@ -52,8 +52,15 @@ description 'Estate management actions for Flight Action API'
 exclude '**/.git'
 exclude '**/.gitkeep'
 
-runtime_dependency 'flight-action-api'
 runtime_dependency 'flight-action-api-power'
+
+if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'flight-action-api >= 1.2.0'
+elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'flight-action-api (>= 1.2.0)'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
+end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
