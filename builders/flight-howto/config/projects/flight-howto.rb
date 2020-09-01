@@ -31,7 +31,7 @@ friendly_name 'Flight Inventory'
 
 install_dir '/opt/flight/opt/howto'
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 override 'flight-howto', version: VERSION
 
 build_version VERSION
@@ -56,14 +56,7 @@ runtime_dependency 'flight-runway'
 # Updates the version in the libexec file
 path = File.expand_path('../../opt/flight/libexec/commands/howto', __dir__)
 original = File.read(path)
-updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
-unless original == updated
-  File.write path, updated
-  $stderr.puts <<~WARN
-    Updated the version in the libexec file! Please commit the file and try again.
-  WARN
-  exit 1
-end
+File.write path, original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
 
 Dir.glob('opt/**/*')
    .select { |p| File.file? p }
