@@ -1,8 +1,8 @@
 #!/bin/bash -l
-#@      cw_TEMPLATE[name]="MPI multiple slot (Slurm)"
-#@      cw_TEMPLATE[desc]="Submit a job that has multiple processes that may span multiple nodes."
-#@ cw_TEMPLATE[copyright]="Copyright (C) 2020 Alces Flight Ltd."
-#@   cw_TEMPLATE[license]="Creative Commons Attribution-ShareAlike 4.0 International"
+#@      flight_JOB[name]: MPI multiple slot (Slurm)
+#@      flight_JOB[desc]: Submit a job that has multiple processes that may span multiple nodes.
+#@ flight_JOB[copyright]: Copyright (C) 2020 Alces Flight Ltd.
+#@   flight_JOB[license]: Creative Commons Attribution-ShareAlike 4.0 International
 #==============================================================================
 # Copyright (C) 2020 Alces Flight Ltd.
 #

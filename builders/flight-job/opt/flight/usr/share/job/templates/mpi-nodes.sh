@@ -1,8 +1,8 @@
 #!/bin/bash -l
-#@      cw_TEMPLATE[name]="MPI multiple node (Slurm)"
-#@      cw_TEMPLATE[desc]="Submit a single job that spans multiple nodes where you want exclusive use of each node allocated."
-#@ cw_TEMPLATE[copyright]="Copyright (C) 2020 Alces Flight Ltd."
-#@   cw_TEMPLATE[license]="Creative Commons Attribution-ShareAlike 4.0 International"
+#@      flight_JOB[name]: MPI multiple node (Slurm)
+#@      flight_JOB[desc]: Submit a single job that spans multiple nodes where you want exclusive use of each node allocated.
+#@ flight_JOB[copyright]: Copyright (C) 2020 Alces Flight Ltd.
+#@   flight_JOB[license]: Creative Commons Attribution-ShareAlike 4.0 International
 #==============================================================================
 # Copyright (C) 2020 Alces Flight Ltd.
 #

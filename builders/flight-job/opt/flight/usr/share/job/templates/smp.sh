@@ -1,8 +1,8 @@
 #!/bin/bash -l
-#@      cw_TEMPLATE[name]="SMP multiple slot (Slurm)"
-#@      cw_TEMPLATE[desc]="Submit a job that has multiple processes where all processes need to reside on a single host."
-#@ cw_TEMPLATE[copyright]="Copyright (C) 2020 Alces Flight Ltd."
-#@   cw_TEMPLATE[license]="Creative Commons Attribution-ShareAlike 4.0 International"
+#@      flight_JOB[name]: SMP multiple slot (Slurm)
+#@      flight_JOB[desc]: Submit a job that has multiple processes where all processes need to reside on a single host.
+#@ flight_JOB[copyright]: Copyright (C) 2020 Alces Flight Ltd.
+#@   flight_JOB[license]: Creative Commons Attribution-ShareAlike 4.0 International
 #==============================================================================
 # Copyright (C) 2020 Alces Flight Ltd.
 #
