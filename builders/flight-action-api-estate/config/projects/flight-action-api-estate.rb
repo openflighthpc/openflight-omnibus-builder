@@ -31,17 +31,24 @@ friendly_name 'Flight Action API estate management actions'
 
 install_dir '/opt/flight/opt/action-api'
 
-VERSION = '1.2.0-rc1'
+VERSION = '1.2.0-rc2'
 override 'flight-action-api-estate', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-action-api-estate'
 
 text_manifest_path File.join(install_dir, "version-manifest.estate-actions.txt")
 json_manifest_path File.join(install_dir, "version-manifest.estate-actions.json")
+
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
+end
+
+config_file '/opt/flight/opt/action-api/libexec/estate-grow/keys.conf'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
