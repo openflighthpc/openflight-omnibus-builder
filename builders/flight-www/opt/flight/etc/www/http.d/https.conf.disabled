@@ -27,5 +27,14 @@
 #===============================================================================
 server {
   listen 443 ssl default;
+  client_max_body_size 0;
+
+  # Include all the servers
   include /opt/flight/etc/www/server-https.d/*.conf;
+
+  # add Strict-Transport-Security to prevent man in the middle attacks
+  add_header Strict-Transport-Security "max-age=31536000";
+
+  # Use an SSL sessions cache
+  ssl_session_cache shared:SSL:1m;
 }

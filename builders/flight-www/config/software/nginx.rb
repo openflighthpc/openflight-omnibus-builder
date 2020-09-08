@@ -83,6 +83,7 @@ build do
           " --with-ipv6" \
           " --with-debug" \
           " --with-stream" \
+          " --with-stream_ssl_module" \
           " --with-cc-opt=\"-L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include\"" \
           " --with-ld-opt=-L#{install_dir}/embedded/lib", env: env
 
