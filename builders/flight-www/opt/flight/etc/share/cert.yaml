@@ -8,6 +8,7 @@ cron_path: /opt/flight/etc/cron/daily/flight-www-auto-cert-renewal
 cron_script: "#!/bin/bash\n/opt/flight/bin/flight www cert-gen\n"
 https_enable_paths:
   - /opt/flight/etc/www/http.d/https.conf
+  - /opt/flight/etc/www/http.d/https-stream.conf
   - /opt/flight/etc/www/server-http.d/redirect-http-to-https.conf
 status_command: /opt/flight/bin/flight service status www | grep active
 restart_command: /opt/flight/bin/flight service restart www | grep 'service has been restarted'
