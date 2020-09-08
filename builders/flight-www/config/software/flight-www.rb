@@ -31,7 +31,7 @@ dependency 'zlib'
 dependency 'nginx'
 
 license 'EPL-2.0'
-license_file 'LICENSE.txt'
+license_file 'LICENSE.EPL-2.0'
 skip_transitive_dependency_licensing true
 
 build do
