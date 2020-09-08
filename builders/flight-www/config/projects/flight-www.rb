@@ -31,7 +31,7 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.2.0'
+VERSION = '1.3.0'
 CERT_VERSION = '0.2.1'
 override 'flight-www', version: VERSION
 override 'flight-cert', version: CERT_VERSION
@@ -48,7 +48,7 @@ dependency 'version-manifest'
 replace 'flight-landing-page'
 
 license 'EPL-2.0'
-license_file 'LICENSE.txt'
+license_file 'LICENSE.EPL-2.0'
 
 description 'A web server for use in Flight HPC environments'
 
