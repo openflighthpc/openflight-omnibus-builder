@@ -1,4 +1,4 @@
-#!/bin/bash
+# vim: set filetype=nginx:
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
 #
@@ -25,31 +25,9 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-
-echo "Configuring"
-mkdir -p "${flight_SERVICE_etc}"
->"${flight_SERVICE_etc}/example.rc"
-for a in "$@"; do
-  IFS="=" read k v <<< "${a}"
-  echo "www_$k=\"$v\"" >> "${flight_SERVICE_etc}/www.rc"
-  case $k in
-    port)
-      # XXX - test?
-      sed -i "${flight_ROOT}"/etc/www/http.d/base-http.conf \
-          -e "s/^\s*listen\s.*;/listen ${v} default;/g"
-    ;;
-    https_port)
-      if [ -f "${flight_ROOT}"/etc/www/http.d/https.conf.disabled ] ; then
-          sed -i "${flight_ROOT}"/etc/www/http.d/https.conf.disabled \
-              -e "s/^\s*listen\s.*;/listen ${v} ssl default;/g"
-      fi
-      if [ -f "${flight_ROOT}"/etc/www/http.d/https-stream.conf.disabled ] ; then
-          sed -i "${flight_ROOT}"/etc/www/http.d/https-stream.conf.disabled \
-              -e "s/^\s*listen\s.*;/listen ${v} ssl default;/g"
-      fi
-    ;;
-    *)
-      echo "Unrecognised key: $k"
-    ;;
-  esac
-done
+stream {
+  server {
+    listen 443 ssl default;
+    include /opt/flight/etc/www/server-https-stream.d/*.conf;
+  }
+}
