@@ -4,7 +4,7 @@ selfsigned_dir: /opt/flight/etc/www/self-signed
 letsencrypt_live_dir: /opt/flight/etc/letsencrypt/live
 certbot_bin: /opt/flight/opt/certbot/bin/certbot
 certbot_plugin_flags: --nginx --nginx-ctl /opt/flight/opt/www/embedded/sbin/nginx --nginx-server-root /opt/flight/etc/www --config-dir /opt/flight/etc/letsencrypt --logs-dir /opt/flight/var/log/letsencrypt --work-dir /opt/flight/var/lib/letsencrypt
-cron_path: /opt/flight/etc/cron/daily/flight-www-auto-cert-renewal
+cron_path: /opt/flight/etc/cron/weekly/flight-www-auto-cert-renewal
 cron_script: "#!/bin/bash\n/opt/flight/bin/flight www cert-gen\n"
 https_enable_paths:
   - /opt/flight/etc/www/http.d/https.conf
