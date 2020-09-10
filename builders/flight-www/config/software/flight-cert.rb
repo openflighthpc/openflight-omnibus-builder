@@ -53,7 +53,7 @@ build do
 
     # Links the internal config to the system version
     FileUtils.mkdir_p File.expand_path('etc', sub_install_dir)
-    FileUtils.ln_sf '/opt/flight/etc/share/cert.yaml', File.expand_path('etc/config.yaml', sub_install_dir)
+    FileUtils.ln_sf '/opt/flight/etc/share/www.yaml', File.expand_path('etc/config.yaml', sub_install_dir)
   end
 
   # Defines the context the reference template will be rendered in

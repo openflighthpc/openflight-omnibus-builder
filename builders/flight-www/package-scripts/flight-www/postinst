@@ -36,18 +36,31 @@ fi
 
 /opt/flight/bin/flight landing-page compile
 
-# Copies the relevant portions of cert.yaml if the update would otherwise remove it
-config=/opt/flight/etc/share/cert.yaml
-if [ ! -f "$config" ] && [ -f "$config".rpmsave ]; then
-  cat "$config.rpmsave" | grep ^email >> "$config"
-  cat "$config.rpmsave" | grep ^domain >> "$config"
-  cat "$config.rpmsave" | grep ^cert_type >> "$config"
+# Handles upgrading from the old cert.yaml to the new www.yaml
+old=/opt/flight/etc/share/cert.yaml
+new=/opt/flight/etc/share/www.yaml
+if [ -f "$old" ]; then
+  # Attempts to disable cron with the old config
+  cp "$old" "$new"
+  /opt/flight/bin/flight www cron-renewal --disable >/dev/null 2>&1
+  disabled_cron="$?"
+  rm -f "$new"
+
+  # Extracts the relevant portions of the old config to the new one
+  cat "$old" | grep ^email >> "$new"
+  cat "$old" | grep ^domain >> "$new"
+  cat "$old" | grep ^cert_type >> "$new"
   cat <<EOF
 The configuration defaults have changed since the previous release. Please review the following:
-$config
-$config.rpmsave
+$new
+$old.rpmsave
 /opt/flight/opt/www/cert/etc/config.reference
 EOF
+
+  # Re-enables cron with the new config if required
+  if [ "$disabled_cron" -eq 0 ]; then
+    /opt/flight/bin/flight www cron-renewal >/dev/null 2>&1
+  fi
 fi
 
 exit 0
