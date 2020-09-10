@@ -27,12 +27,12 @@
 name 'flight-www'
 maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/openflight-omnibus-builders/builders/flight-www'
-friendly_name 'Flight web server service'
+friendly_name 'Flight WWW'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.2.1'
-CERT_VERSION = '0.2.1'
+VERSION = '1.3.0-rc1'
+CERT_VERSION = '0.3.2'
 override 'flight-www', version: VERSION
 override 'flight-cert', version: CERT_VERSION
 
@@ -72,9 +72,6 @@ Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
 extra_package_file('/opt/flight/etc/www/nginx.conf')
-
-# Do not update the config file
-config_file '/opt/flight/etc/share/cert.yaml'
 
 # Update the version numbering in files
 File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
