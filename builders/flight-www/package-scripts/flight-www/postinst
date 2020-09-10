@@ -36,4 +36,18 @@ fi
 
 /opt/flight/bin/flight landing-page compile
 
+# Copies the relevant portions of cert.yaml if the update would otherwise remove it
+config=/opt/flight/etc/share/cert.yaml
+if [ ! -f "$config" ] && [ -f "$config".rpmsave ]; then
+  cat "$config.rpmsave" | grep ^email >> "$config"
+  cat "$config.rpmsave" | grep ^domain >> "$config"
+  cat "$config.rpmsave" | grep ^cert_type >> "$config"
+  cat <<EOF
+The configuration defaults have changed since the previous release. Please review the following:
+$config
+$config.rpmsave
+/opt/flight/opt/www/cert/etc/config.reference
+EOF
+fi
+
 exit 0
