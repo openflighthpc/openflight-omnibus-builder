@@ -39,7 +39,7 @@ fi
 # Handles upgrading from the old cert.yaml to the new www.yaml
 old=/opt/flight/etc/share/cert.yaml
 new=/opt/flight/etc/share/www.yaml
-if [ -f "$old" ]; then
+if [ ! -f "$new" ] && [ -f "$old" ]; then
   # Attempts to disable cron with the old config
   cp "$old" "$new"
   /opt/flight/bin/flight www cron-renewal --disable >/dev/null 2>&1
