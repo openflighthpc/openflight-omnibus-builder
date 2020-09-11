@@ -36,4 +36,18 @@ fi
 
 /opt/flight/bin/flight landing-page compile
 
+cat <<EOF
+The configuration default have changed! Consider porting the new configurations from:
+/opt/flight/etc/share/cert.yaml.rpmnew
+EOF
+
+if [ -f /opt/flight/etc/cron/daily/flight-www-auto-cert-renewal ]; then
+  cat <<EOF
+Currently the SSL certificate will be check for renewal daily by:
+/opt/flight/etc/cron/daily/flight-www-auto-cert-renewal
+
+Consider removing this file and replacing it with a weekly check.
+EOF
+fi
+
 exit 0
