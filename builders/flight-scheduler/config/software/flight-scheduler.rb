@@ -41,8 +41,7 @@ build do
 
   # Moves the project into place
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'etc', 'lib',
-    'LICENSE.txt', 'README.md'
+    'Gemfile', 'Gemfile.lock', 'bin', 'etc', 'lib', 'LICENSE.txt', 'README.md'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end

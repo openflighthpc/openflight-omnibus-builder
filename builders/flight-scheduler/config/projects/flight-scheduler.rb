@@ -59,6 +59,13 @@ runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
+# Update the version numbering in files
+File.expand_path('../../opt/flight/libexec/commands/scheduler', __dir__).tap do |path|
+  content = File.read path
+  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
+  File.write path, content
+end
+
 require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
