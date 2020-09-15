@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2019-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,13 +24,12 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-scheduler-controller'
-default_version '0.0.0'
+name 'flight-scheduler'
+default_version 'develop'
 
-source git: 'https://github.com/openflighthpc/flight-scheduler-controller'
+source git: 'https://github.com/openflighthpc/flight-scheduler'
 
 dependency 'enforce-flight-runway'
-
 whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
 license 'EPL-2.0'
@@ -40,15 +39,22 @@ skip_transitive_dependency_licensing true
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
-  sub_install_dir = File.join(install_dir, 'controller')
-  mkdir sub_install_dir
-
   # Moves the project into place
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app',
-    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru'
+    'Gemfile', 'Gemfile.lock', 'bin', 'etc', 'lib',
+    'LICENSE.txt', 'README.md'
   ].each do |file|
-    copy file, File.expand_path("#{sub_install_dir}/#{file}/..")
+    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
+
+  # Update the reference doc defaults
+  block do
+    path = File.join(install_dir, 'etc/config.reference')
+    content = File.read(path)
+                  .sub(/^config :base_url.*$/, 'config :base_url, default: "http://localhost/scheduler"')
+                  .sub(/^config :program_name.*$/, 'config :program_name, default: ENV.fetch("FLIGHT_PROGRAM_NAME", "flight scheduler")')
+                  .sub(/^config :program_description.*$/, "config :program_description, default: '#{project.description}'")
+    File.write(path, content)
   end
 
   # Installs the gems to the shared `vendor/share`
@@ -56,6 +62,5 @@ build do
     "--without development test",
     '--path vendor'
   ].join(' ')
-  command "cd #{sub_install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
 end
-
