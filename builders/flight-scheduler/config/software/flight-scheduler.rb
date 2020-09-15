@@ -50,7 +50,7 @@ build do
   block do
     path = File.join(install_dir, 'etc/config.reference')
     content = File.read(path)
-                  .sub(/^config :base_url.*$/, 'config :base_url, default: "http://localhost/scheduler"')
+                  .sub(/^config :base_url.*$/, 'config :base_url, default: "http://localhost:918"')
                   .sub(/^config :program_name.*$/, 'config :program_name, default: ENV.fetch("FLIGHT_PROGRAM_NAME", "flight scheduler")')
                   .sub(/^config :program_description.*$/, "config :program_description, default: '#{project.description}'")
     File.write(path, content)
