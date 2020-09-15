@@ -41,6 +41,7 @@ build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-scheduler-controller'
+dependency 'flight-scheduler'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
