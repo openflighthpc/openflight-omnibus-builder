@@ -26,8 +26,23 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-exit 1
+set -e
 
-# # Stop puma
-# PATH="${flight_ROOT}/bin/:${PATH}"
-# "${flight_ROOT}"/opt/action-api/bin/pumactl stop  --pidfile $1
+# Prevent PIDFILE conflicts via a temporary directory
+TMP_DIR=$(mktemp -d flight-scheduler-daemon.stop.XXXXXXXX)
+pushd "$TMP_DIR" >/dev/null
+
+# Setup the trap directory to be remove
+function cleanup() {
+  popd >/dev/null
+  rm -rf "$TMP_DIR"
+}
+trap cleanup EXIT
+
+# Setup the non-managed PIDFILE
+echo "$1" > flight-scheduler-daemon.pid
+
+# Stop the daemon
+"$flight_ROOT"/bin/flexec \
+  "$flight_ROOT"/opt/scheduler-daemon/bin/flight-scheduler-daemon.rb \
+  stop

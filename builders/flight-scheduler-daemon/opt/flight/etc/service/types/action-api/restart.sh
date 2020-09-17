@@ -26,27 +26,29 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-exit 1
+set -e
 
-# DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-# OLD_PID="$1"
+# Prevent PIDFILE conflicts via a temporary directory
+TMP_DIR=$(mktemp -d flight-scheduler-daemon.restart.XXXXXXXX)
+pushd "$TMP_DIR" >/dev/null
 
-# source "$DIR"/stop.sh "$OLD_PID"
+# Setup the trap directory to be remove
+function cleanup() {
+  popd >/dev/null
+  rm -rf "$TMP_DIR"
+}
+trap cleanup EXIT
 
-# # Wait up to 10ish seconds for puma to stop
-# state=1
-# for _ in `seq 1 20`; do
-#   kill -0 "$OLD_PID" 2>/dev/null
-#   state=$?
-#   if [ "$state" -ne 0 ]; then
-#     break
-#   fi
-# done
+# Setup the non-managed PIDFILE
+echo "$1" > flight-scheduler-daemon.pid
 
-# if [ "$state" -eq 0 ]; then
-#   echo Failed to stop action-api
-#   exit 1
-# fi
+# Start the daemon
+export FLIGHT_SCHEDULER_DAEMON_PORT=919
+"$flight_ROOT"/bin/flexec \
+  "$flight_ROOT"/opt/scheduler-daemon/bin/flight-scheduler-daemon.rb \
+  restart \
+  --log_output \
+  --log_dir "$flight_ROOT"/var/log/scheduler-daemon
 
-# source "$DIR"/start.sh
-
+# Set the PID in the managed file
+tool_set pid=$(cat flight-scheduler-daemon.pid)
