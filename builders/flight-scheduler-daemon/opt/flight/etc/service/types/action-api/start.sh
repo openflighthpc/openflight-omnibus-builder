@@ -39,13 +39,15 @@ function cleanup() {
 }
 trap cleanup EXIT
 
+# Creates the log directory
+LOG_DIR="$flight_ROOT"/var/log/scheduler-daemon
+mkdir -p "$LOG_DIR"
+
 # Start the daemon
 export FLIGHT_SCHEDULER_DAEMON_PORT=919
-"$flight_ROOT"/bin/flexec \
+"$flight_ROOT"/bin/flexec ruby \
   "$flight_ROOT"/opt/scheduler-daemon/bin/flight-scheduler-daemon.rb \
-  start \
-  --log_output \
-  --log_dir "$flight_ROOT"/var/log/scheduler-daemon
+  start --log_output --log_dir "$LOG_DIR"
 
 # Set the PID in the managed file
 tool_set pid=$(cat flight-scheduler-daemon.pid)

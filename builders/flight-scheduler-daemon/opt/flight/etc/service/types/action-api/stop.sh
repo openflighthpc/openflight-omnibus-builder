@@ -43,6 +43,6 @@ trap cleanup EXIT
 echo "$1" > flight-scheduler-daemon.pid
 
 # Stop the daemon
-"$flight_ROOT"/bin/flexec \
+"$flight_ROOT"/bin/flexec ruby \
   "$flight_ROOT"/opt/scheduler-daemon/bin/flight-scheduler-daemon.rb \
   stop
