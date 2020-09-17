@@ -40,7 +40,7 @@ function cleanup() {
 trap cleanup EXIT
 
 # Setup the non-managed PIDFILE
-echo "$1" > flight-scheduler-daemon.pid
+cp "$1" flight-scheduler-daemon.pid
 
 # Creates the log directory
 LOG_DIR="$flight_ROOT"/var/log/scheduler-daemon
