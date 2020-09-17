@@ -1,0 +1,13 @@
+/opt/flight/var/log/scheduler-daemon/*.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    delaycompress
+    notifempty
+    create 640 nobody adm
+    sharedscripts
+      postrotate
+      /opt/flight/bin/flexec /opt/flight/opt/scheduler-daemon reload
+    endscript
+}
