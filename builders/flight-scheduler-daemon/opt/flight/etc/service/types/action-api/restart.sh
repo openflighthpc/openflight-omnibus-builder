@@ -42,13 +42,15 @@ trap cleanup EXIT
 # Setup the non-managed PIDFILE
 echo "$1" > flight-scheduler-daemon.pid
 
-# Start the daemon
+# Creates the log directory
+LOG_DIR="$flight_ROOT"/var/log/scheduler-daemon
+mkdir -p "$LOG_DIR"
+
+# Restart the daemon
 export FLIGHT_SCHEDULER_DAEMON_PORT=919
-"$flight_ROOT"/bin/flexec \
+"$flight_ROOT"/bin/flexec ruby \
   "$flight_ROOT"/opt/scheduler-daemon/bin/flight-scheduler-daemon.rb \
-  restart \
-  --log_output \
-  --log_dir "$flight_ROOT"/var/log/scheduler-daemon
+  restart --log_output --log_dir "$LOG_DIR"
 
 # Set the PID in the managed file
 tool_set pid=$(cat flight-scheduler-daemon.pid)
