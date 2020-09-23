@@ -54,11 +54,11 @@ case $VERSION in
     ;;
   20.02|latest)
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-20-02-3-1-flight2"
-      REL="flight-slurm-20.02.3.flight2"
+      TAG="flight-slurm-20-02-5-1-flight1"
+      REL="flight-slurm-20.02.5.flight1"
     else
-      TAG="slurm-20-02-3-1-flight1"
-      REL="slurm-20.02.3.flight1"
+      TAG="slurm-20-02-5-1-flight1"
+      REL="slurm-20.02.5.flight1"
     fi
     ;;
   *)
