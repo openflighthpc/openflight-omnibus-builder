@@ -115,7 +115,7 @@ if [ "$1" != "test" ]; then
 
     if [[ $CENTOS_VER == 8 ]] ; then
       yum install -y python3-devel python2-devel
-      pip3 install awscli --upgrade --user
+      su vagrant -c 'pip3 install awscli --upgrade --user'
     else
       yum install -y -e0 awscli
 
