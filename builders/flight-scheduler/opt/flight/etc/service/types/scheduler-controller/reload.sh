@@ -26,11 +26,10 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-# Restarts the puma worker processes
-log_file="${flight_ROOT}"/var/log/scheduler-controller/puma.log
-"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/scheduler/controller/bin/pumactl restart --pidfile "$1" >>"$log_file" 2>&1
+# Restarts the falcon worker processes
+kill -s SIGHUP $(cat "$1")
 
-# Sleeps two seconds and ensure puma is still running
+# Sleeps two seconds and ensure falcon is still running
 sleep 2
 kill -0 "$(cat "$1")" 2>/dev/null
 if [ "$?" -ne 0]; then

@@ -36,34 +36,21 @@ fi
 export LANG=${LANG:-en_US.UTF-8}
 
 # Set the address, log path, var dir, and pid file path
-addr=tcp://127.0.0.1:918
+addr=http://127.0.0.1:918
 log_file="${flight_ROOT}"/var/log/scheduler-controller/puma.log
-mkdir -p $(dirname "${log_file}")
-var_dir="${flight_ROOT}"/var/scheduler-controller
-mkdir -p "${var_dir}"
-pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
-rm "${pidfile}"
 
-# NOTE: The underlining puma command needs to be contained with a wrapper script
-#       This allows puma's STDOUT and STDERR to be redirected to a log file.
-#
-#       Previously --redirect-std* flags where passed directly to puma. These
-#       work fine if the web process starts correctly. However any config errors
-#       will cause puma to crash before applying the redirects. This in effect
-#       suppresses all configuration errors.
-#
-# PS:   The bin/start script is packager specific and therefore contained within
-#       the builder repo; not the upstream source.
-#
-# PPS:  Standard redirects do not work with tool_bg as it gets passed to the
-#       underlining setsid command; not puma.
-tool_bg bash "${flight_ROOT}"/opt/scheduler/controller/bin/start "$addr" "$log_file" "$pidfile"
+# The wrapper script which redirects falcon's logs and allows logrotate to
+# reopen the file descriptors. The first argument must be the log path, all
+# subsequent arguments are directly passed to falcon
+tool_bg "${flight_ROOT}"/bin/ruby \
+  "${flight_ROOT}"/opt/scheduler/controller/bin/start \
+  "$log_file" --threaded -n 2 -b "$addr"
 
-# Wait up to 10ish seconds for puma to start
+# Wait up to 10ish seconds for falcon to start
 pid=''
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$(ps -ax | grep $addr | grep "\spuma\s" | awk '{ print $1 }')
+  pid=$(ps -ax | grep $addr | grep "\sfalcon\s" | awk '{ print $1 }')
   if [ -n "$pid" ]; then
     break
   fi
@@ -71,7 +58,7 @@ done
 
 # Report back the pid or error
 if [ -n "$pid" ]; then
-  # Wait a second to ensure puma is still running
+  # Wait a second to ensure falcon is still running
   sleep 1
   kill -0 "$pid" 2>/dev/null
   if [ "$?" -ne 0 ]; then

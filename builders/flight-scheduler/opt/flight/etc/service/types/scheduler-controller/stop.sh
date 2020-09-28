@@ -26,6 +26,5 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-# Stop puma
-PATH="${flight_ROOT}/bin/:${PATH}"
-"${flight_ROOT}"/opt/scheduler/controller/bin/pumactl stop  --pidfile $1
+# Stop falcon
+kill -s SIGINT $(cat "$1")

@@ -31,7 +31,7 @@ OLD_PID="$1"
 
 source "$DIR"/stop.sh "$OLD_PID"
 
-# Wait up to 10ish seconds for puma to stop
+# Wait up to 10ish seconds for falcon to stop
 state=1
 for _ in `seq 1 20`; do
   kill -0 "$OLD_PID" 2>/dev/null

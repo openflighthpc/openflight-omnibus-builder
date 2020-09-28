@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env ruby
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
 #
@@ -26,17 +26,28 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-addr="$1"
-log_file="$2"
-pid_file="$3"
+# Removes the log path as the first argument of ARGV, this is required otherwise
+# it will be passed to falcon
+log_path = ARGV.shift
 
-# Exec into the ruby process so the PID doesn't change
-exec "${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/scheduler/controller/bin/puma \
-  --bind "$addr" \
-  --pidfile "$pid_file" \
-  --environment production \
-  --redirect-stdout "$log_file" \
-  --redirect-stderr "$log_file" \
-  --redirect-append \
-  --dir "${flight_ROOT}"/opt/scheduler/controller \
-  >>"${log_file}" 2>&1
+# Redirects $stderr to the specified log_path
+# NOTE: This has only be tested in threaded mode where all children share $stderr
+#       It still needs testing in forking mode, where the children are separate
+FileUtils.mkdir_p File.dirname(log_path)
+$stderr = File.open(log_path, 'a')
+
+# Sets up SIGUSR2 to reopen the log file as this is not natively supported by falcon
+trap('SIGUSR2') do
+  begin
+    # Ensure the old descriptor is closed
+    $stderr.close
+  rescue
+    # NOOP
+  ensure
+    # Reopen the file descriptor
+    $stderr.reopen($stderr.path, 'a')
+  end
+end
+
+# Loads the falcon script
+load File.expand_path('falcon', __dir__)
