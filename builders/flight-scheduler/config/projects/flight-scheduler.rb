@@ -31,8 +31,8 @@ friendly_name 'Flight Scheduler'
 
 install_dir '/opt/flight/opt/scheduler'
 
-VERSION = '0.1.2'
-SERVER_VERSION = '0.1.0'
+VERSION = '0.2.0'
+SERVER_VERSION = '0.2.0'
 override 'flight-scheduler-controller', version: SERVER_VERSION
 override 'flight-scheduler', version: VERSION
 

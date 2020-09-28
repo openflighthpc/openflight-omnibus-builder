@@ -37,7 +37,7 @@ export LANG=${LANG:-en_US.UTF-8}
 
 # Set the address, log path, var dir, and pid file path
 addr=http://127.0.0.1:918
-log_file="${flight_ROOT}"/var/log/scheduler-controller/puma.log
+log_file="${flight_ROOT}"/var/log/scheduler-controller/falcon.log
 
 # The wrapper script which redirects falcon's logs and allows logrotate to
 # reopen the file descriptors. The first argument must be the log path, all
@@ -50,7 +50,7 @@ tool_bg "${flight_ROOT}"/bin/ruby \
 pid=''
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$(ps -ax | grep $addr | grep "\sfalcon\s" | awk '{ print $1 }')
+  pid=$(ps -ax | grep $addr | grep "falcon" | awk '{ print $1 }')
   if [ -n "$pid" ]; then
     break
   fi

@@ -33,8 +33,10 @@ log_path = ARGV.shift
 # Redirects $stderr to the specified log_path
 # NOTE: This has only be tested in threaded mode where all children share $stderr
 #       It still needs testing in forking mode, where the children are separate
+require 'fileutils'
 FileUtils.mkdir_p File.dirname(log_path)
 $stderr = File.open(log_path, 'a')
+$stderr.sync = true # Do not buffer internally within ruby
 
 # Sets up SIGUSR2 to reopen the log file as this is not natively supported by falcon
 trap('SIGUSR2') do
@@ -46,6 +48,7 @@ trap('SIGUSR2') do
   ensure
     # Reopen the file descriptor
     $stderr.reopen($stderr.path, 'a')
+    $stderr.sync = true # Do not buffer internally within ruby
   end
 end
 
