@@ -37,7 +37,7 @@ override 'flight-scheduler-controller', version: SERVER_VERSION
 override 'flight-scheduler', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-scheduler-controller'
