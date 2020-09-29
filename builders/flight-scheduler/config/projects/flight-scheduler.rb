@@ -31,13 +31,20 @@ friendly_name 'Flight Scheduler'
 
 install_dir '/opt/flight/opt/scheduler'
 
-VERSION = '0.2.0'
-SERVER_VERSION = '0.2.0'
+CLIENT_VERSION = '0.2.0'
+SERVER_VERSION = '0.2.1'
+
+# Currently the package version needs to encompass both the client and server
+# For the time being it should be the larger of the two
+# This requires "strategic" version bumps to remain compatible with previous releases
+# Change the following line as necessary
+VERSION = SERVER_VERSION
+
 override 'flight-scheduler-controller', version: SERVER_VERSION
-override 'flight-scheduler', version: VERSION
+override 'flight-scheduler', version: CLIENT_VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-scheduler-controller'

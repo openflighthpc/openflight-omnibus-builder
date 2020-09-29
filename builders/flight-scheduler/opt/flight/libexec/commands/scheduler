@@ -1,7 +1,7 @@
 : '
 : NAME: scheduler
 : SYNOPSIS: Schedule jobs to run on the cluster
-: VERSION: 0.2.0
+: VERSION: 0.2.1
 : '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
