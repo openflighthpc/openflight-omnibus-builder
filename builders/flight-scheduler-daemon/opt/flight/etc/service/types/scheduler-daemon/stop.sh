@@ -32,6 +32,9 @@ set -e
 TMP_DIR=$(mktemp -d flight-scheduler-daemon.stop.XXXXXXXX)
 pushd "$TMP_DIR" >/dev/null
 
+# Set the pid directory as the current DIR
+export PID_DIR=$(pwd)
+
 # Setup the trap directory to be remove
 function cleanup() {
   popd >/dev/null
