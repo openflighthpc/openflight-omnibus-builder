@@ -35,6 +35,9 @@ if [ -f /etc/locale.conf ]; then
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
+# Move to the source code dirctory
+cd "$flight_ROOT"/opt/scheduler/controller
+
 # Set the address, log path, var dir, and pid file path
 addr=http://127.0.0.1:918
 log_file="${flight_ROOT}"/var/log/scheduler-controller/falcon.log
