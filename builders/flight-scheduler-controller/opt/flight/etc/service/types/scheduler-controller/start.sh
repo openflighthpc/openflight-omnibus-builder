@@ -36,7 +36,7 @@ fi
 export LANG=${LANG:-en_US.UTF-8}
 
 # Move to the source code dirctory
-cd "$flight_ROOT"/opt/scheduler/controller
+cd "$flight_ROOT"/opt/scheduler-controller
 
 # Set the address, log path, var dir, and pid file path
 addr=http://127.0.0.1:918
@@ -46,7 +46,7 @@ log_file="${flight_ROOT}"/var/log/scheduler-controller/falcon.log
 # reopen the file descriptors. The first argument must be the log path, all
 # subsequent arguments are directly passed to falcon
 tool_bg "${flight_ROOT}"/bin/ruby \
-  "${flight_ROOT}"/opt/scheduler/controller/bin/start \
+  "${flight_ROOT}"/opt/scheduler-controller/bin/start \
   "$log_file" --threaded -n 2 -b "$addr"
 
 # Wait up to 10ish seconds for falcon to start

@@ -1,8 +1,3 @@
-: '
-: NAME: scheduler
-: SYNOPSIS: Command line tools for the Flight Scheduler
-: VERSION: 0.3.0
-: '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
 #
@@ -29,14 +24,35 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name 'flight-scheduler-controller'
+default_version '0.0.0'
 
-export FLIGHT_CWD=$(pwd)
-cd /opt/flight/opt/scheduler
-export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
+source git: 'https://github.com/openflighthpc/flight-scheduler-controller'
 
-# Disable warnings about use of the double splat (`**`) operator.  When
-# libraries are updated these warning will go away and we can then remove
-# this line.
-export RUBYOPT='-W0'
+dependency 'enforce-flight-runway'
 
-flexec bundle exec bin/scheduler "$@"
+whitelist_file Regexp.new("vendor/ruby/.*\.so$")
+
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
+
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
+
+  # Moves the project into place
+  [
+    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app', 'lib',
+    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru'
+  ].each do |file|
+    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
+
+  # Installs the gems to the shared `vendor/share`
+  flags = [
+    "--without development test",
+    '--path vendor'
+  ].join(' ')
+  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+end
+

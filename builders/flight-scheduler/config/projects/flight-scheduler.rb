@@ -27,34 +27,23 @@
 name 'flight-scheduler'
 maintainer 'Alces Flight Ltd'
 homepage "https://github.com/openflighthpc/flight-scheduler"
-friendly_name 'Flight Scheduler'
+friendly_name 'Flight Scheduler CLI tools'
 
 install_dir '/opt/flight/opt/scheduler'
 
-CLIENT_VERSION = '0.2.0'
-SERVER_VERSION = '0.2.1'
-
-# Currently the package version needs to encompass both the client and server
-# For the time being it should be the larger of the two
-# This requires "strategic" version bumps to remain compatible with previous releases
-# Change the following line as necessary
-VERSION = SERVER_VERSION
-
-override 'flight-scheduler-controller', version: SERVER_VERSION
-override 'flight-scheduler', version: CLIENT_VERSION
-
+VERSION = '0.3.0'
+override 'flight-scheduler', version: VERSION
 build_version VERSION
 build_iteration 1
 
 dependency 'preparation'
-dependency 'flight-scheduler-controller'
 dependency 'flight-scheduler'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Schedule jobs to run on the cluster'
+description 'Command line tools for the Flight Scheduler'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
@@ -62,17 +51,6 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-
-# Update the version numbering in files
-File.expand_path('../../opt/flight/libexec/commands/scheduler', __dir__).tap do |path|
-  content = File.read path
-  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
-  File.write path, content
-end
 
 require 'find'
 Find.find('opt') do |o|

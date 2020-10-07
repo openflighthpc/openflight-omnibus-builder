@@ -1,8 +1,3 @@
-: '
-: NAME: scheduler
-: SYNOPSIS: Command line tools for the Flight Scheduler
-: VERSION: 0.3.0
-: '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
 #
@@ -29,14 +24,47 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name 'flight-scheduler-controller'
+maintainer 'Alces Flight Ltd'
+homepage "https://github.com/openflighthpc/flight-scheduler-controller"
+friendly_name 'Flight Scheduler Controller'
 
-export FLIGHT_CWD=$(pwd)
-cd /opt/flight/opt/scheduler
-export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
+install_dir '/opt/flight/opt/scheduler-controller'
 
-# Disable warnings about use of the double splat (`**`) operator.  When
-# libraries are updated these warning will go away and we can then remove
-# this line.
-export RUBYOPT='-W0'
+VERSION = '0.3.0'
+override 'flight-scheduler-controller', version: VERSION
+build_version VERSION
+build_iteration 1
 
-flexec bundle exec bin/scheduler "$@"
+dependency 'preparation'
+dependency 'flight-scheduler-controller'
+dependency 'version-manifest'
+
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+
+description 'Central controller for the Flight Scheduler'
+
+exclude '**/.git'
+exclude '**/.gitkeep'
+exclude '**/bundler/git'
+
+runtime_dependency 'flight-runway'
+runtime_dependency 'flight-ruby-system-2.0'
+runtime_dependency 'flight-www'
+runtime_dependency 'flight-www-system-1.0'
+runtime_dependency 'flight-service'
+runtime_dependency 'flight-service-system-1.0'
+
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
+end
+
+package :rpm do
+  vendor 'Alces Flight Ltd'
+end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+end
