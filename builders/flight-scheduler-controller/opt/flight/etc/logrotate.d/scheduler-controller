@@ -6,9 +6,5 @@
     compress
     delaycompress
     notifempty
-    create 640 nobody adm
-    sharedscripts
-      postrotate
-      [ -f /opt/flight/var/run/service/scheduler-controller.pid ] && kill -s USR2  `cat /opt/flight/var/run/service/scheduler-controller.pid`
-    endscript
+    copytruncate
 }
