@@ -27,8 +27,6 @@
 #===============================================================================
 set -e
 
-# Required to support initializers.
-export USER=$(whoami)
 # Required to correctly handle output parsing.
 if [ -f /etc/locale.conf ]; then
   . /etc/locale.conf
@@ -37,7 +35,8 @@ export LANG=${LANG:-en_US.UTF-8}
 
 # Set the bind address
 export FLIGHT_SCHEDULER_BIND_ADDRESS=http://0.0.0.0:918
-"$flight_ROOT"/opt/flight/scheduler/controller/bin/falcon-host
+log_path="$flight_ROOT"/opt/flight/var/log/scheduler-controller/falcon.log
+tool_bg "${flight_ROOT}/opt/flight/scheduler-controller/bin/falcon-host >${log_path} 2>&1"
 
 # Wait up to 10ish seconds for falcon to start
 pid=''
