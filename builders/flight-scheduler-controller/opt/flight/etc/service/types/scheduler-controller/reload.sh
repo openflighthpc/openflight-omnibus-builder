@@ -27,15 +27,16 @@
 #===============================================================================
 
 # Restarts the falcon worker processes
-kill -s SIGHUP $(cat "$1")
+pid=$("$flight_ROOT"/opt/scheduler-controller/get-falcon-pid.rb "$flight_ROOT"/opt/scheduler-controller/supervisor.ipc)
+kill -s SIGHUP "$pid"
 
 # Sleeps two seconds and ensure falcon is still running
 sleep 2
-kill -0 "$(cat "$1")" 2>/dev/null
+pid=$("$flight_ROOT"/opt/scheduler-controller/get-falcon-pid.rb "$flight_ROOT"/opt/scheduler-controller/supervisor.ipc)
 if [ "$?" -ne 0]; then
   echo Failed to reload scheduler-controller >&2
   exit 2
 fi
 
 # Ensures the PID remains set (it hasn't changed)
-tool_set pid=$(cat "$1")
+tool_set pid="$pid"

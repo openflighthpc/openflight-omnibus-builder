@@ -26,5 +26,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-# Stop falcon
-kill -s SIGINT $(cat "$1")
+pid=$("$flight_ROOT"/opt/scheduler-controller/get-falcon-pid.rb "$flight_ROOT"/opt/scheduler-controller/supervisor.ipc)
+if [ "$pid" ]; then
+  kill -s SIGINT "$pid"
+fi

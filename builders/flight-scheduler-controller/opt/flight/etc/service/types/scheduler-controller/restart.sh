@@ -26,15 +26,12 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-OLD_PID="$1"
-
-source "$DIR"/stop.sh "$OLD_PID"
+# NOTE: The PID is determined via the supervisor.ipc socket
+bash "$DIR"/stop.sh
 
 # Wait up to 10ish seconds for falcon to stop
-state=1
 for _ in `seq 1 20`; do
-  kill -0 "$OLD_PID" 2>/dev/null
+  "$flight_ROOT"/opt/scheduler-controller/get-falcon-pid.rb "$flight_ROOT"/opt/scheduler-controller/supervisor.ipc
   state=$?
   if [ "$state" -ne 0 ]; then
     break
@@ -46,5 +43,4 @@ if [ "$state" -eq 0 ]; then
   exit 1
 fi
 
-source "$DIR"/start.sh
-
+bash "$DIR"/start.sh

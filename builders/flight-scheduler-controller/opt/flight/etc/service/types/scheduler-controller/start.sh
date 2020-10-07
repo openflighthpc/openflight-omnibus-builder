@@ -35,25 +35,15 @@ if [ -f /etc/locale.conf ]; then
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
-# Move to the source code dirctory
-cd "$flight_ROOT"/opt/scheduler-controller
-
-# Set the address, log path, var dir, and pid file path
-addr=http://127.0.0.1:918
-log_file="${flight_ROOT}"/var/log/scheduler-controller/falcon.log
-
-# The wrapper script which redirects falcon's logs and allows logrotate to
-# reopen the file descriptors. The first argument must be the log path, all
-# subsequent arguments are directly passed to falcon
-tool_bg "${flight_ROOT}"/bin/ruby \
-  "${flight_ROOT}"/opt/scheduler-controller/bin/start \
-  "$log_file" --threaded -n 2 -b "$addr"
+# Set the bind address
+export FLIGHT_SCHEDULER_BIND_ADDRESS=http://0.0.0.0:918
+"$flight_ROOT"/opt/flight/scheduler/controller/bin/falcon-host
 
 # Wait up to 10ish seconds for falcon to start
 pid=''
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$(ps -ax | grep $addr | grep "falcon" | awk '{ print $1 }')
+  pid=$("$flight_ROOT"/opt/scheduler-controller/get-falcon-pid.rb "$flight_ROOT"/opt/scheduler-controller/supervisor.ipc)
   if [ -n "$pid" ]; then
     break
   fi
