@@ -49,12 +49,13 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
+runtime_dependency 'flight-runway'
+runtime_dependency 'flight-scheduler'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
+runtime_dependency 'flight-www'
+runtime_dependency 'flight-www-system-1.0'
 
 require 'find'
 Find.find('opt') do |o|
