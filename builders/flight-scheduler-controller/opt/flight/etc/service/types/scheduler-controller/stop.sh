@@ -27,7 +27,7 @@
 #===============================================================================
 
 app_root="$flight_ROOT/opt/scheduler-controller"
-pid=$("$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc)
+pid=$("$flight_ROOT"/bin/ruby "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc)
 if [ "$pid" ]; then
   kill -s SIGINT "$pid"
 fi

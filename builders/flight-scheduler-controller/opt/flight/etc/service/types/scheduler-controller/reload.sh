@@ -28,12 +28,12 @@
 
 # Restarts the falcon worker processes
 app_root="$flight_ROOT/opt/scheduler-controller"
-pid=$("$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc)
+pid=$("$flight_ROOT"/bin/ruby "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc)
 kill -s SIGHUP "$pid"
 
 # Sleeps two seconds and ensure falcon is still running
 sleep 2
-pid=$("$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc)
+pid=$("$flight_ROOT"/bin/ruby "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc)
 if [ "$?" -ne 0]; then
   echo Failed to reload scheduler-controller >&2
   exit 2
