@@ -43,7 +43,7 @@ build do
   # Moves the project into place
   [
     'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app', 'lib',
-    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru'
+    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'etc'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
