@@ -51,11 +51,20 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-runway'
-runtime_dependency 'flight-scheduler'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
+
+# TODO: Add an upper bound or convert into a -system-1.0 dependency
+#       before production release
+if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'flight-scheduler >= 0.3.0'
+elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'flight-scheduler (>= 0.3.0)'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
+end
 
 require 'find'
 Find.find('opt') do |o|
