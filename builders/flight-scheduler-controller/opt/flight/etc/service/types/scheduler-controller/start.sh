@@ -33,10 +33,13 @@ if [ -f /etc/locale.conf ]; then
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
+# Setup the log directory
+log_path="$flight_ROOT"/var/log/scheduler-controller/falcon.log
+mkdir -p $(dirname "$log_path")
+
 # Set the bind address
 export FLIGHT_SCHEDULER_BIND_ADDRESS=http://0.0.0.0:918
 app_root="$flight_ROOT/opt/scheduler-controller"
-log_path="$flight_ROOT"/opt/flight/var/log/scheduler-controller/falcon.log
 tool_bg "${app_root}/bin/falcon-host "${app_root}"/falcon.rb >${log_path} 2>&1"
 
 # Wait up to 10ish seconds for falcon to start
