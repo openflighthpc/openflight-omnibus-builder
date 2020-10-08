@@ -30,8 +30,9 @@
 bash "$DIR"/stop.sh
 
 # Wait up to 10ish seconds for falcon to stop
+app_root="$flight_ROOT/opt/scheduler-controller"
 for _ in `seq 1 20`; do
-  "$flight_ROOT"/opt/scheduler-controller/get-falcon-pid.rb "$flight_ROOT"/opt/scheduler-controller/supervisor.ipc
+  "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc
   state=$?
   if [ "$state" -ne 0 ]; then
     break
