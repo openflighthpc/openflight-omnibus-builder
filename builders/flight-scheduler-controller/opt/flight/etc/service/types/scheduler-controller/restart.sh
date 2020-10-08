@@ -26,6 +26,9 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
+# Get the source directory
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # NOTE: The PID is determined via the supervisor.ipc socket
 bash "$DIR"/stop.sh
 
