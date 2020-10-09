@@ -1,0 +1,8 @@
+---
+title: "Flight Scheduler Controller"
+text: |
+values:
+  - key: FLIGHT_SCHEDULER_CONTROLLER_URL
+    label: Flight Scheduler controller URL.
+    value: "http://127.0.0.1:918/v0/ws"
+    length: 64
