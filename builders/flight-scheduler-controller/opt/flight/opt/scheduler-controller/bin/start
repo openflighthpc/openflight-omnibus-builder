@@ -34,4 +34,4 @@ log_path="$flight_ROOT"/var/log/scheduler-controller/falcon.log
 mkdir -p $(dirname "$log_path")
 
 # Set the bind address and start the server
-"$flight_ROOT"/bin/ruby "$DIR"/bin/falcon-host "$DIR"/falcon.rb >"$log_path" 2>&1
+"$flight_ROOT"/bin/ruby "$DIR"/bin/falcon-host "$DIR"/falcon.rb >>"$log_path" 2>&1
