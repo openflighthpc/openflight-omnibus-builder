@@ -1,0 +1,10 @@
+# Rotate Flight WWW logs
+/opt/flight/var/log/scheduler-controller/*.log {
+    daily
+    missingok
+    rotate 7
+    compress
+    delaycompress
+    notifempty
+    copytruncate
+}
