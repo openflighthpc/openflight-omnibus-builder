@@ -31,7 +31,7 @@ friendly_name 'Flight Scheduler Daemon'
 
 install_dir '/opt/flight/opt/scheduler-daemon'
 
-VERSION = '0.4.3'
+VERSION = '0.5.0'
 override 'flight-scheduler-daemon', version: VERSION
 
 build_version VERSION
