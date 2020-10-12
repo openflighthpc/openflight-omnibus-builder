@@ -31,7 +31,7 @@ friendly_name 'Flight Scheduler CLI tools'
 
 install_dir '/opt/flight/opt/scheduler'
 
-VERSION = '0.3.0'
+VERSION = '0.4.1'
 override 'flight-scheduler', version: VERSION
 build_version VERSION
 build_iteration 1

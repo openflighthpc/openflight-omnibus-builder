@@ -1,0 +1,13 @@
+---
+title: "Flight Scheduler Controller"
+text: |
+values:
+  - key: FLIGHT_SCHEDULER_BIND_ADDRESS
+    label: Address to bind to (listen on).
+    value: "http://0.0.0.0:918"
+    length: 64
+
+  - key: FLIGHT_SCHEDULER_ENV_VAR_PREFIX
+    label: Prefix for environment variables set in a job's context.
+    value: ''
+    length: 64
