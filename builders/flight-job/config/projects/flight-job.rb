@@ -35,7 +35,7 @@ VERSION = '1.1.0'
 override 'flight-job', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-job'
@@ -52,6 +52,13 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-runway'
+
+# Moves the correct howto version into place
+howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(\.[abcr].*)?\Z/, '')}", __dir__)
+howto_dst = File.expand_path("../../opt/flight/usr/share/howto/flight-job.md", __dir__)
+raise "Could not locate: #{howto_src}" unless File.exists? howto_src
+FileUtils.rm_f howto_dst
+FileUtils.cp howto_src, howto_dst
 
 # Updates the version in the libexec file
 path = File.expand_path('../../opt/flight/libexec/commands/job', __dir__)
