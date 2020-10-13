@@ -57,6 +57,7 @@ runtime_dependency 'flight-runway'
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(\.[abcr].*)?\Z/, '')}", __dir__)
 howto_dst = File.expand_path("../../opt/flight/usr/share/howto/flight-job.md", __dir__)
 raise "Could not locate: #{howto_src}" unless File.exists? howto_src
+FileUtils.mkdir_p File.dirname(howto_dst)
 FileUtils.rm_f howto_dst
 FileUtils.cp howto_src, howto_dst
 

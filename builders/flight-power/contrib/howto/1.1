@@ -1,0 +1,107 @@
+# Flight Power
+
+Manage the power state of the nodes
+
+~~~
+$ flight power --help
+  NAME:
+
+    flight power
+
+  DESCRIPTION:
+
+    Execute power actions
+
+  COMMANDS:
+
+    cycle  Power cycle a node or group
+    help   Display global or [command] help documentation
+    off    Power off a node or group
+    on     Power on a node or group
+    status Get the power status for a node or group
+
+  GLOBAL OPTIONS:
+
+    -h, --help
+        Display help documentation
+
+    --version
+        Display version information
+~~~
+
+## Check Node Status
+
+A node's state can be checked with the `status` command.
+
+When a node is running:
+
+~~~
+$ flight status node01
+ON
+~~~
+
+When a node is offline:
+
+~~~
+$ flight status node01
+OFF
+~~~
+
+NOTE: Various other transitionary states maybe returned by this command.
+The exact values depends on the node type but include `PENDING` and `STOPPING`.
+Typically this can be resolved by waiting awhile for the node to finish
+the transition to `ON` or `OFF`.
+
+## Turn a Node On/Off
+
+A node can be turned on with the `on` command. The `OK` response means the
+request has been processed without any immediate problems. It does not
+mean the node has turned on.
+
+~~~
+$ flight status node01
+OK
+~~~
+
+Similarly a node can be turned off with the `off` command. Once again the
+`OK` response means there wasn't an immediate problem. The command
+will issue a confirmation prompt before proceeding. This prompt can be
+bypassed with the `--confirm` flag.
+
+~~~
+$ flight power off node01
+Power off node01, confirm to proceed [y/n]? y
+OK
+
+$ flight power off node01 --confirm
+OK
+~~~
+
+## Reboot (Cycle) a Node
+
+A node can be rebooted with the `cycle` command. Similarly to the `off`
+command, the `OK` response means there wasn't an immediate problem.
+The confirmation prompt can be bypassed with the `--confirm`
+
+~~~
+$ flight power cycle node01
+OK
+
+$ flight power cycle node01 --confirm
+OK
+~~~
+
+## Running Over Multiple Nodes
+
+A command can be ran over multiple nodes using the `--group` flag.
+The `--group` flag can be combined with all the above commands,
+but the following examples use `status` for brevity.
+
+Individual nodes can be specified using a comma separated list:
+
+~~~
+$ flight power status --group node01,node02
+node01: ON
+node02: ON
+~~~
+
