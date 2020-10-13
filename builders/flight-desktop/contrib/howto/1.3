@@ -1,0 +1,172 @@
+# Flight Desktop
+
+Manage interactive desktop sessions
+
+~~~
+$ flight desktop --help
+  NAME:
+
+    flight desktop
+
+  DESCRIPTION:
+
+    Manage interactive GUI desktop sessions.
+
+  COMMANDS:
+
+    avail   Show available desktop types
+    clean   Clean up one or more exited desktop sessions
+    doctor  Perform diagnostics and display results
+    help    Display global or [command] help documentation
+    kill    Terminate an interactive desktop session
+    list    List interactive desktop sessions
+    prepare Prepare a desktop type for use
+    set     Set or display default settings
+    show    Show information about a desktop session
+    start   Start an interactive desktop session
+    verify  Verify prerequisites are met for a desktop type
+
+  ALIASES:
+
+    av avail
+    k  kill
+    ls list
+    s  start
+    st start
+
+  GLOBAL OPTIONS:
+
+    -h, --help
+        Display help documentation
+
+    --version
+        Display version information
+~~~
+
+## List Available Desktop Types
+
+The different types of desktop sessions can be returned with `avail`:
+
+~~~
+┌──────────┬───────────────────────────────────────────────────────────────────────────────────────┬────────────┐
+│ Name     │ Summary                                                                               │ State      │
+├──────────┼───────────────────────────────────────────────────────────────────────────────────────┼────────────┤
+│ chrome   │ Full-screen Google Chrome browser session.                                            │ Unverified │
+│          │                                                                                       │            │
+│          │  > https://www.google.com/chrome/                                                     │            │
+│          │                                                                                       │            │
+│ gnome    │ GNOME v3, a free and open-source desktop environment for Unix-like operating systems. │ Unverified │
+│          │                                                                                       │            │
+│          │  > https://www.gnome.org/                                                             │            │
+│          │                                                                                       │            │
+│ terminal │ Preconfigured terminal for Flight HPC environments.                                   │ Unverified │
+...
+└──────────┴───────────────────────────────────────────────────────────────────────────────────────┴────────────┘
+~~~
+
+## Verifying and Installing a Desktop
+
+Before a desktop can be used, it must be installed and verified. Please contact your system administrator
+if the `verify` command fails. The `prepare` command requires requires root privileges to install the
+required packages.
+
+~~~
+$ flight desktop verify gnome
+Verifying desktop type gnome:
+
+   > ✅ Flight Desktop prerequisites 
+   > ❌ Prerequisite: polkit policies
+   > ❌ Package group: X Window System
+   > ❌ Package group: Fonts         
+   > ❌ Package group: GNOME         
+   > ❌ Package: evince 
+   > ❌ Package: firefox 
+
+Desktop type gnome has missing prerequisites:
+
+ * Configuration: polkit policies
+ * Package group: X Window System
+ * Package group: Fonts
+ * Package group: GNOME
+ * Package: evince
+ * Package: firefox
+
+Before this desktop type can be used, it must be prepared by your
+cluster administrator using the 'prepare' command, i.e.:
+
+  flight desktop prepare gnome
+~~~
+
+Once the required packages are installed, the desktop will verify successfully:
+
+~~~
+$ flight desktop verify terminal
+Verifying desktop type terminal:
+
+   > ✅ Flight Desktop prerequisites 
+   > ✅ Package: xorg-x11-server-utils 
+   > ✅ Package: xterm 
+
+Desktop type terminal has been verified.
+~~~
+
+## Starting a Session
+
+A new session can be created with the `start` command:
+
+~~~
+$ flight desktop start terminal
+Starting a 'terminal' desktop session:
+
+   > ✅ Starting session 
+
+A 'terminal' desktop session has been started.
+
+== Session details ==
+
+  Identity: 7d6d8b87-e32c-4f16-8362-9e15f90e69e2
+      Type: terminal
+   Host IP: 10.10.0.1
+  Hostname: master
+      Port: 5923
+   Display: :1
+  Password: XXXXXXXX
+
+This desktop session is not directly accessible from outside of your
+cluster as it is running on a machine that only provides internal
+cluster access.  In order to access your desktop session you will need
+to perform port forwarding using 'ssh'.
+
+Refer to 'flight desktop show 7d6d8b87' for more details.
+
+If prompted, you should supply the following password: XXXXXXX
+~~~
+
+The session is now ready to be accessed with your favourite vnc client.
+
+## List Running Sessions
+
+The running sessions are returned by the `list` command:
+
+~~~
+$ flight desktop list
+┌──────────┬──────────┬───────────┬────────────┬────────────────┬──────────┬────────┐
+│ Identity │ Type     │ Host name │ IP address │ Display (Port) │ Password │ State  │
+├──────────┼──────────┼───────────┼────────────┼────────────────┼──────────┼────────┤
+│ 7d6d8b87 │ terminal │ master    │ 10.10.0.1  │ :1 (5923)      │ XXXXXXXX │ Active │
+└──────────┴──────────┴───────────┴────────────┴────────────────┴──────────┴────────┘
+~~~
+
+## Terminate a Session
+
+A session is terminated using the `kill` command. It takes either the shortened or
+full ID.
+
+~~~
+$ flight desktop kill 7d6d8b87
+Killing desktop session 7d6d8b87-e32c-4f16-8362-9e15f90e69e2:
+
+   > ✅ Terminating session 
+
+Desktop session '7d6d8b87-e32c-4f16-8362-9e15f90e69e2' has been terminated.
+~~~
