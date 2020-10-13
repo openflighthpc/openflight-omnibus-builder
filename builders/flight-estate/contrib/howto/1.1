@@ -1,0 +1,96 @@
+# Flight Estate
+
+Manage the instance types and size of your compute estate
+
+~~~
+$ flight estate --help
+  NAME:
+
+    flight estate
+
+  DESCRIPTION:
+
+    Modify your compute estate
+
+  COMMANDS:
+
+    change Change the machine type for a node or group
+    grow   Add additional nodes to your compute estate
+    help   Display global or [command] help documentation
+    shrink Remove nodes from your compute estate
+
+  GLOBAL OPTIONS:
+
+    -h, --help
+        Display help documentation
+
+    --version
+        Display version information
+~~~
+
+## Change a Machine's Instance Type
+
+The instance types of the machines can be modified using the `change` command.
+
+text. For the purposes of this guide, it is assumed that `general-small` and
+`general-large` are valid instance types. The exact list of types can be found
+in the help text:
+
+~~~
+$ flight estate change --help
+~~~
+
+To change the instance type of a single node:
+
+~~~
+$ flight estate change node01 general-large
+Change machine type for node01. If powered on it will be rebooted. Confirm to proceed [y/n]?
+Powering off...
+OK
+Changing machine type...
+OK
+Powering on...
+OK
+~~~
+
+Changing the instance type of a running node will trigger a reboot. This is
+because the instance type can only be changed whilst offline. The `--confirm`
+can be used to bypass the confirmation message
+
+~~~
+$ flight estate change node01 general-large --confirm
+Powering off...
+OK
+Changing machine type...
+OK
+Powering on...
+OK
+~~~
+
+Multiple nodes' instance types can be changed simultaneously with the `--group`
+flag. The flag takes a comma separated list of machine names.
+
+~~~
+$ flight estate change --group node01,node02 general-small
+Change machine type for group node01,node02. If powered on it will be rebooted. Confirm to proceed [y/n]?
+~~~
+
+## Add Additional Machines
+
+Additional machines can be added to the compute estate with the `grow` command. The
+request will be processed and the new machines will be available shortly.
+
+```
+$ flight estate grow 20 general-small
+Your request has been received and will be processed shortly.
+```
+
+## Remove Machines
+
+The compute estate can be reduced in size with the `shrink` command. The request
+will be processed and the new machines will be available shortly.
+
+```
+$ flight estate shrink 10 general-small
+Your request has been received and will be processed shortly.
+```
