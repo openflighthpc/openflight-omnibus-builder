@@ -31,7 +31,7 @@ friendly_name 'Flight Action API estate management actions'
 
 install_dir '/opt/flight/opt/action-api'
 
-VERSION = '1.2.0-rc4'
+VERSION = '1.2.0'
 override 'flight-action-api-estate', version: VERSION
 
 build_version VERSION
@@ -61,11 +61,10 @@ exclude '**/.gitkeep'
 
 runtime_dependency 'flight-action-api-power'
 
-# TODO: Make this a simple dependency on 1.2.0
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-action-api >= 1.2.0~rc1'
+  runtime_dependency 'flight-action-api >= 1.2.0'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'flight-action-api (>= 1.2.0~rc1)'
+  runtime_dependency 'flight-action-api (>= 1.2.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
