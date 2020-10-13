@@ -107,7 +107,7 @@ package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
-  priority ":flight-env-system-#{ENV_SYSTEM}"
+  priority "flight-howto-system-1.0 :flight-env-system-#{ENV_SYSTEM}"
 end
 
 package :deb do
@@ -115,5 +115,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "::flight-env-system-#{ENV_SYSTEM}"
+  section "::flight-env-system-#{ENV_SYSTEM} flight-howto-system-1.0"
 end
