@@ -37,7 +37,7 @@ build do
   block do
     # Moves the project into place
     [
-      'estate-change',
+      'estate-change', 'estate-grow', 'estate-shrink'
     ].each do |action|
       libexec_dir = File.expand_path(File.join(install_dir, 'libexec'))
       FileUtils.mkdir_p File.join(libexec_dir, action)

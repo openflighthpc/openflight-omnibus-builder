@@ -31,11 +31,11 @@ friendly_name 'Flight Action API'
 
 install_dir '/opt/flight/opt/action-api'
 
-VERSION = '1.1.0'
+VERSION = '1.2.0'
 override 'flight-action-api', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-action-api'
@@ -61,6 +61,13 @@ require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
+
+File.expand_path('../../opt/flight/libexec/commands/action-api', __dir__).tap do |path|
+  content = File.read path
+  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
+  File.write path, content
+end
+
 %w(nodes.yaml application.yaml).each do |cf|
   config_file "/opt/flight/opt/action-api/config/#{cf}"
 end

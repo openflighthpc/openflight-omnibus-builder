@@ -31,7 +31,7 @@ friendly_name 'Flight Action API estate management actions'
 
 install_dir '/opt/flight/opt/action-api'
 
-VERSION = '1.1.0'
+VERSION = '1.2.0'
 override 'flight-action-api-estate', version: VERSION
 
 build_version VERSION
@@ -43,6 +43,13 @@ dependency 'flight-action-api-estate'
 text_manifest_path File.join(install_dir, "version-manifest.estate-actions.txt")
 json_manifest_path File.join(install_dir, "version-manifest.estate-actions.json")
 
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
+end
+
+config_file '/opt/flight/opt/action-api/libexec/estate-grow/keys.conf'
+
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 license_file_path 'LICENSE.estate-actions'
@@ -52,8 +59,15 @@ description 'Estate management actions for Flight Action API'
 exclude '**/.git'
 exclude '**/.gitkeep'
 
-runtime_dependency 'flight-action-api'
 runtime_dependency 'flight-action-api-power'
+
+if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'flight-action-api >= 1.2.0'
+elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'flight-action-api (>= 1.2.0)'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
+end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
