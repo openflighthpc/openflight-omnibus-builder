@@ -36,4 +36,9 @@ fi
 
 /opt/flight/bin/flight landing-page compile
 
+# Move the deprecated shared config into the internal directory tree
+if [ -e /opt/flight/etc/share/cert.yaml ]; then
+  mv /opt/flight/etc/share/cert.yaml /opt/flight/opt/www/cert/etc/config.yaml
+fi
+
 exit 0
