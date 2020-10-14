@@ -80,23 +80,18 @@ if ohai['platform_family'] == 'rhel'
   if rhel_rel == 8
     package :rpm do
       vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
+      priority "flight-howto-system-1.0"
     end
   else
     package :rpm do
       vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
+      priority "flight-howto-system-1.0"
     end
   end
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-  # repurposed 'priority' field to set RPM recommends/provides
-  # provides are prefixed with `:`
-  priority "flight-howto-system-1.0"
 end
 
 package :deb do

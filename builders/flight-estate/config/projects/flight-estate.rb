@@ -51,13 +51,6 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-action'
 
-%w(
-  opt/flight/etc/banner/tips.d/40-estate.rc
-  opt/flight/libexec/commands/estate
-).each do |f|
-  extra_package_file f
-end
-
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(\.[abcr].*)?\Z/, '')}", __dir__)
 howto_relative = "opt/flight/usr/share/howto/flight-estate.md"
@@ -66,6 +59,13 @@ raise "Could not locate: #{howto_src}" unless File.exists? howto_src
 FileUtils.mkdir_p File.dirname(howto_dst)
 FileUtils.rm_f howto_dst
 FileUtils.cp howto_src, howto_dst
+
+%w(
+  opt/flight/etc/banner/tips.d/40-estate.rc
+  opt/flight/libexec/commands/estate
+).each do |f|
+  extra_package_file f
+end
 extra_package_file howto_relative
 
 # Update the version numbering in files
@@ -80,23 +80,18 @@ if ohai['platform_family'] == 'rhel'
   if rhel_rel == 8
     package :rpm do
       vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
+      priority "flight-howto-system-1.0"
     end
   else
     package :rpm do
       vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
+      priority "flight-howto-system-1.0"
     end
   end
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-  # repurposed 'priority' field to set RPM recommends/provides
-  # provides are prefixed with `:`
-  priority "flight-howto-system-1.0"
 end
 
 package :deb do
