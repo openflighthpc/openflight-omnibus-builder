@@ -52,7 +52,7 @@ exclude '**/bundler/git'
 runtime_dependency 'flight-action'
 
 # Moves the correct howto version into place
-howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(\.[abcr].*)?\Z/, '')}", __dir__)
+howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
 howto_relative = "opt/flight/usr/share/howto/flight-power.md"
 howto_dst = File.expand_path("../../#{howto_relative}", __dir__)
 raise "Could not locate: #{howto_src}" unless File.exists? howto_src

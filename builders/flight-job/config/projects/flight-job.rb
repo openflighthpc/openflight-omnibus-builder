@@ -54,7 +54,7 @@ runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-runway'
 
 # Moves the correct howto version into place
-howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(\.[abcr].*)?\Z/, '')}", __dir__)
+howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
 howto_dst = File.expand_path("../../opt/flight/usr/share/howto/flight-job.md", __dir__)
 raise "Could not locate: #{howto_src}" unless File.exists? howto_src
 FileUtils.mkdir_p File.dirname(howto_dst)
