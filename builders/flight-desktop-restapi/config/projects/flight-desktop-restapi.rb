@@ -35,7 +35,7 @@ VERSION = '1.0.2'
 override 'flight-desktop-restapi', version: VERSION
 
 build_version VERSION
-build_iteration 8
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-desktop-restapi'
