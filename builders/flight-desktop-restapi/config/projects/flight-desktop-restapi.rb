@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop REST API'
 
 install_dir '/opt/flight/opt/desktop-restapi'
 
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 override 'flight-desktop-restapi', version: VERSION
 
 build_version VERSION
