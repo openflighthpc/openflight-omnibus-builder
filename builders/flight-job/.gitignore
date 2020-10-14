@@ -8,4 +8,4 @@ files/**/cache/
 vendor
 vendor
 local
-opt/flight/usr/share/howto/job.md
+opt/flight/usr/share/howto/flight-job.md
