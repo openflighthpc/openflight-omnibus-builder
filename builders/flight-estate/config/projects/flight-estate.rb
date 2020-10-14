@@ -51,13 +51,22 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-action'
 
+%w(
+  opt/flight/etc/banner/tips.d/40-estate.rc
+  opt/flight/libexec/commands/estate
+).each do |f|
+  extra_package_file f
+end
+
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(\.[abcr].*)?\Z/, '')}", __dir__)
-howto_dst = File.expand_path("../../opt/flight/usr/share/howto/flight-estate.md", __dir__)
+howto_relative = "opt/flight/usr/share/howto/flight-estate.md"
+howto_dst = File.expand_path("../../#{howto_relative}", __dir__)
 raise "Could not locate: #{howto_src}" unless File.exists? howto_src
 FileUtils.mkdir_p File.dirname(howto_dst)
 FileUtils.rm_f howto_dst
 FileUtils.cp howto_src, howto_dst
+extra_package_file howto_relative
 
 # Update the version numbering in files
 File.expand_path('../../opt/flight/libexec/commands/estate', __dir__).tap do |path|
@@ -65,12 +74,6 @@ File.expand_path('../../opt/flight/libexec/commands/estate', __dir__).tap do |pa
   content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
   File.write path, content
 end
-
-# Glob after updating the opt directory
-Dir.glob('opt/**/*')
-   .select { |p| File.file? p }
-   .each { |p| extra_package_file p }
-
 
 if ohai['platform_family'] == 'rhel'
   rhel_rel = ohai['platform_version'].split('.').first.to_i

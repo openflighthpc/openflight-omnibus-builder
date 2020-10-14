@@ -57,16 +57,12 @@ runtime_dependency 'flight-env-types'
 
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(\.[abcr].*)?\Z/, '')}", __dir__)
-howto_dst = File.expand_path("../../opt/flight/usr/share/howto/flight-env.md", __dir__)
+howto_relative = "opt/flight/usr/share/howto/flight-env.md"
+howto_dst = File.expand_path("../../#{howto_relative}", __dir__)
 raise "Could not locate: #{howto_src}" unless File.exists? howto_src
 FileUtils.mkdir_p File.dirname(howto_dst)
 FileUtils.rm_f howto_dst
 FileUtils.cp howto_src, howto_dst
-
-# Glob after updating the opt directory
-Dir.glob('opt/**/*')
-   .select { |p| File.file? p }
-   .each { |p| extra_package_file p }
 
 if ohai['platform_family'] == 'rhel'
   # vim-common provides xxd a dependency required by Gridware
@@ -103,6 +99,18 @@ elsif ohai['platform_family'] == 'debian'
     runtime_dependency dep
   end
 end
+
+%w(
+  opt/flight/libexec/commands/env
+  opt/flight/etc/env.rc
+  opt/flight/etc/env.cshrc
+  opt/flight/etc/profile.d/10-env.csh
+  opt/flight/etc/profile.d/10-env.sh
+  opt/flight/etc/banner/tips.d/10-env.rc
+).each do |f|
+  extra_package_file f
+end
+extra_package_file howto_relative
 
 package :rpm do
   vendor 'Alces Flight Ltd'
