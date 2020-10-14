@@ -55,10 +55,6 @@ runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-desktop-types'
 
-Dir.glob('opt/**/*')
-   .select { |p| File.file? p }
-   .each { |p| extra_package_file p }
-
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(\.[abcr].*)?\Z/, '')}", __dir__)
 howto_dst = File.expand_path("../../opt/flight/usr/share/howto/flight-desktop.md", __dir__)
@@ -66,6 +62,11 @@ raise "Could not locate: #{howto_src}" unless File.exists? howto_src
 FileUtils.mkdir_p File.dirname(howto_dst)
 FileUtils.rm_f howto_dst
 FileUtils.cp howto_src, howto_dst
+
+# Glob after updating the opt directory
+Dir.glob('opt/**/*')
+   .select { |p| File.file? p }
+   .each { |p| extra_package_file p }
 
 if ohai['platform_family'] == 'rhel'
   runtime_dependency 'tigervnc-server-minimal'

@@ -68,6 +68,7 @@ updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
                   .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
 File.write(path, updated) unless original == updated
 
+# Glob after updating the opt directory
 Dir.glob('opt/**/*')
    .select { |p| File.file? p }
    .each { |p| extra_package_file p }
