@@ -31,11 +31,11 @@ friendly_name 'Flight Console api'
 
 install_dir '/opt/flight/opt/console-api'
 
-VERSION = '0.0.2'
+VERSION = '1.0.0'
 override 'flight-console-api', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-console-api'
@@ -49,6 +49,7 @@ description 'API to provide browser access to an interactive terminal console'
 exclude '**/.git'
 exclude '**/.gitkeep'
 
+runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-nodejs'
 runtime_dependency 'flight-js-system-1.0'
 runtime_dependency 'flight-www'
