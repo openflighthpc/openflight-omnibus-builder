@@ -60,6 +60,8 @@ Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
 
+config_file "#{install_dir}/etc/config.json"
+
 package :rpm do
   vendor 'Alces Flight Ltd'
 end

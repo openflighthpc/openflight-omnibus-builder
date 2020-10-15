@@ -25,4 +25,21 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-exit 0
+
+# Update the session secret if unset
+cat <<RUBY | /opt/flight/bin/ruby
+require 'json'
+require 'securerandom'
+
+# Load the existing config
+path = File.join(ENV['flight_ROOT'], 'opt/console-api/etc/config.json')
+data = JSON.load File.read(path)
+
+# Update the secret if unset
+if data["session"]["secret"].to_s.empty?
+  data["session"]["secret"] = SecureRandom.base64(20)
+
+  # Save the config
+  File.write(path, JSON.pretty_generate(data))
+end
+RUBY
