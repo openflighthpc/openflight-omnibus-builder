@@ -1,5 +1,5 @@
 Name:           flight-webapp-suite
-Version:        2020.2
+Version:        2020.3
 Release:        1
 Summary:        The Flight Webapp Suite collection of HPC environment webapps
 
@@ -8,8 +8,9 @@ License:        EPL-2.0
 
 URL:            https://openflighthpc.org
 
-BuildArch:     noarch
-Requires:      flight-console-api => 0.0.2, flight-console-webapp => 0.0.5, flight-desktop-restapi => 1.0.1, flight-desktop-restapi < 1.1.0~, flight-desktop-webapp => 1.2.0, flight-desktop-restapi < 1.3.0~
+BuildArch:      noarch
+Requires:       flight-console-api => 1.0.0, flight-console-webapp => 1.0.0
+Requires:       flight-desktop-restapi => 1.0.2, flight-desktop-webapp => 1.2.0
 
 %description
 The Flight Webapp Suite collection of webapps for accessing a HPC environment.
@@ -52,6 +53,8 @@ EOF
 /opt/flight/bin/flight service disable www
 
 %changelog
+* Mon Oct 19 2020 William McCumstie <william.mccumstie@alces-flight.com> - 2020.3
+- Bump flight-console-* versions to 1.0.0 and flight-desktop-restapi to 1.0.2
 * Fri May 22 2020 Ben Armston <ben.armston@alces-flight.com> - 2020.2-1
 - Added post installation and uninstallation scripts.
 * Mon May 18 2020 Ben Armston <ben.armston@alces-flight.com> - 2020.2-0
