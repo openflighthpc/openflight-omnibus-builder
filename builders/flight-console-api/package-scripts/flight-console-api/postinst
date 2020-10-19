@@ -1,6 +1,6 @@
 #!/bin/sh
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -43,3 +43,6 @@ if data["session"]["secret"].to_s.empty?
   File.write(path, JSON.pretty_generate(data))
 end
 RUBY
+
+/opt/flight/bin/flight service reload www 1>/dev/null 2>&1
+exit 0
