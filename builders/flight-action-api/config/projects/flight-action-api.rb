@@ -35,7 +35,7 @@ VERSION = '1.2.0'
 override 'flight-action-api', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-action-api'

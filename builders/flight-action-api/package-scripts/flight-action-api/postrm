@@ -1,6 +1,6 @@
 #!/bin/sh
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,27 +25,7 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-mkdir -p "${flight_ROOT:-/opt/flight}"/opt/action-api/libexec/
-
-# The application needs an authentication secret which can be used to "sign"
-# the JWT tokens it creates.  This needs to be globally uniq, but otherwise
-# has no particular format.
-#
-# Unfortunately, `flight service configure SERVICE` does not have a
-# non-interactive mode.  We do our best to emulate such a thing here. 
-#
-config_file="${flight_ROOT:-/opt/flight}"/var/lib/service/action-api.yml
-if [ ! -f "${config_file}" ]; then
-    mkdir -p "$(dirname "${config_file}")"
-    secret=$( echo $(hostname --fqdn).$(date  +%s) | md5sum | cut -f1 -d' ')
-    cat <<EOF > "${config_file}"
----
-jwt_secret: ${secret}
-EOF
-    flight_ROOT="${flight_ROOT:-/opt/flight}" /bin/bash \
-        "${flight_ROOT:-/opt/flight}"/etc/service/types/action-api/configure.sh \
-        jwt_secret="${secret}"
-fi
 
 /opt/flight/bin/flight service reload www 1>/dev/null 2>&1
 exit 0
+
