@@ -35,7 +35,7 @@ VERSION = '1.2.0'
 override 'flight-desktop-webapp', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 4
 
 dependency 'preparation'
 dependency 'flight-desktop-webapp'
