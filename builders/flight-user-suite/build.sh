@@ -4,8 +4,8 @@ d="$(pwd)"
 mkdir -p pkg
 
 NAME=flight-user-suite
-VERSION=2020.2
-REL=5
+VERSION=2020.3
+REL=1
 
 if [ -f /etc/redhat-release ]; then
   echo "Building RPM package..."
