@@ -29,7 +29,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 OLD_PID="$1"
 
-source "$DIR"/stop.sh "$OLD_PID"
+bash "$DIR"/stop.sh "$OLD_PID"
 
 # Wait up to 10ish seconds for puma to stop
 state=1
@@ -46,5 +46,4 @@ if [ "$state" -eq 0 ]; then
   exit 1
 fi
 
-source "$DIR"/start.sh
-
+bash "$DIR"/start.sh
