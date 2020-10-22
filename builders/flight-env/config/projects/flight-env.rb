@@ -35,7 +35,7 @@ VERSION = '1.4.0'
 override 'flight-env', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-env'
