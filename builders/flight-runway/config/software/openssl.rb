@@ -44,6 +44,13 @@ version("1.0.1s") { source sha256: "e7e81d82f3cd538ab0cdba494006d44aab9dd96b7f62
 relative_path "openssl-#{version}"
 
 build do
+  # Ensure openssl does not build on RHEL 8
+  block do
+    if ohai['platform_family'] == 'rhel' && ohai['platform_version'].split('.').first.to_i == 8
+      raise 'Embedded OpenSSL is not compatible with RHEL 8'
+    end
+  end
+
   env = with_standard_compiler_flags(with_embedded_path)
   if aix?
     env["M4"] = "/opt/freeware/bin/m4"

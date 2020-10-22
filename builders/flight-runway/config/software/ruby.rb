@@ -28,9 +28,20 @@ skip_transitive_dependency_licensing true
 default_version "2.6.6"
 
 dependency "zlib"
-dependency "openssl"
 dependency "libffi"
 dependency "libyaml"
+
+# NOTE: The embedded openssl is not compatible on RHEL8,
+#       using the system version instead
+if ohai['platform_family'] == 'rhel' && ohai['platform_version'].split('.').first.to_i == 8
+  whitelist_file(/embedded\/lib\/ruby\/.+\/openssl\.so/)
+  whitelist_file(/embedded\/lib\/ruby\/.+\/digest\/md5\.so/)
+  whitelist_file(/embedded\/lib\/ruby\/.+\/digest\/rmd160\.so/)
+  whitelist_file(/embedded\/lib\/ruby\/.+\/digest\/sha1\.so/)
+  whitelist_file(/embedded\/lib\/ruby\/.+\/digest\/sha2\.so/)
+else
+  dependency 'openssl'
+end
 
 version("2.7.1")      { source sha256: "d418483bdd0000576c1370571121a6eb24582116db0b7bb2005e90e250eae418" }
 version("2.7.0")      { source sha256: "8c99aa93b5e2f1bc8437d1bbbefd27b13e7694025331f77245d0c068ef1f8cbe" }

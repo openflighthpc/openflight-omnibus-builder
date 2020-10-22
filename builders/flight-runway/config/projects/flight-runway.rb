@@ -35,7 +35,7 @@ VERSION = '1.1.4'
 override 'flight-runway', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 4
 
 dependency 'preparation'
 dependency 'flight-runway'
@@ -62,14 +62,9 @@ BUNDLER_VERSION = '2.1.4'
 override :bundler, version: BUNDLER_VERSION
 override :rubygems, version: '3.1.2'
 
-# This override is required to provide improved parity with the
-# version of `openssl` available in RHEL8 (1.1.1c at the time of
-# writing).
-if ohai['platform_family'] == 'rhel'
-  rhel_rel = ohai['platform_version'].split('.').first.to_i
-  if rhel_rel == 8
-    override :openssl, version: '1.1.1d'
-  end
+# Use the system version of OpenSSL on RHEL8
+if ohai['platform_family'] == 'rhel' && ohai['platform_version'].split('.').first.to_i == 8
+  runtime_dependency 'openssl-libs'
 elsif ohai['platform_family'] == 'debian'
   override :openssl, version: '1.1.1d'
 end
