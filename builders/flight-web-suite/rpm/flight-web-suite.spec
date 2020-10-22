@@ -79,6 +79,7 @@ The console-webapp and desktop-webapp need configuring.
 This can be done by running the following:
   /opt/flight/bin/flight service configure console-webapp
   /opt/flight/bin/flight service configure desktop-webapp
+
 EOF
 
 %changelog
