@@ -35,7 +35,7 @@ VERSION = '1.1.0'
 override 'flight-power', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'version-manifest'
