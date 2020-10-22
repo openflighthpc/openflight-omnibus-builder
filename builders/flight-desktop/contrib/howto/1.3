@@ -48,20 +48,20 @@ $ flight desktop --help
 The different types of desktop sessions can be returned with `avail`:
 
 ~~~
-┌──────────┬───────────────────────────────────────────────────────────────────────────────────────┬────────────┐
-│ Name     │ Summary                                                                               │ State      │
-├──────────┼───────────────────────────────────────────────────────────────────────────────────────┼────────────┤
-│ chrome   │ Full-screen Google Chrome browser session.                                            │ Unverified │
-│          │                                                                                       │            │
-│          │  > https://www.google.com/chrome/                                                     │            │
-│          │                                                                                       │            │
-│ gnome    │ GNOME v3, a free and open-source desktop environment for Unix-like operating systems. │ Unverified │
-│          │                                                                                       │            │
-│          │  > https://www.gnome.org/                                                             │            │
-│          │                                                                                       │            │
-│ terminal │ Preconfigured terminal for Flight HPC environments.                                   │ Unverified │
++----------+---------------------------------------------------------------------------------------+------------+
+| Name     | Summary                                                                               | State      |
++----------+---------------------------------------------------------------------------------------+------------+
+| chrome   | Full-screen Google Chrome browser session.                                            | Unverified |
+|          |                                                                                       |            |
+|          |  > https://www.google.com/chrome/                                                     |            |
+|          |                                                                                       |            |
+| gnome    | GNOME v3, a free and open-source desktop environment for Unix-like operating systems. | Unverified |
+|          |                                                                                       |            |
+|          |  > https://www.gnome.org/                                                             |            |
+|          |                                                                                       |            |
+| terminal | Preconfigured terminal for Flight HPC environments.                                   | Unverified |
 ...
-└──────────┴───────────────────────────────────────────────────────────────────────────────────────┴────────────┘
++----------+---------------------------------------------------------------------------------------+------------+
 ~~~
 
 ## Verifying and Installing a Desktop
@@ -74,13 +74,13 @@ required packages.
 $ flight desktop verify gnome
 Verifying desktop type gnome:
 
-   > ✅ Flight Desktop prerequisites 
-   > ❌ Prerequisite: polkit policies
-   > ❌ Package group: X Window System
-   > ❌ Package group: Fonts         
-   > ❌ Package group: GNOME         
-   > ❌ Package: evince 
-   > ❌ Package: firefox 
+   > OK Flight Desktop prerequisites 
+   > NO Prerequisite: polkit policies
+   > OK Package group: X Window System
+   > NO Package group: Fonts         
+   > OK Package group: GNOME         
+   > NO Package: evince 
+   > NO Package: firefox 
 
 Desktop type gnome has missing prerequisites:
 
@@ -103,9 +103,9 @@ Once the required packages are installed, the desktop will verify successfully:
 $ flight desktop verify terminal
 Verifying desktop type terminal:
 
-   > ✅ Flight Desktop prerequisites 
-   > ✅ Package: xorg-x11-server-utils 
-   > ✅ Package: xterm 
+   > OK Flight Desktop prerequisites 
+   > OK Package: xorg-x11-server-utils 
+   > OK Package: xterm 
 
 Desktop type terminal has been verified.
 ~~~
@@ -118,7 +118,7 @@ A new session can be created with the `start` command:
 $ flight desktop start terminal
 Starting a 'terminal' desktop session:
 
-   > ✅ Starting session 
+   > OK Starting session 
 
 A 'terminal' desktop session has been started.
 
@@ -150,11 +150,11 @@ The running sessions are returned by the `list` command:
 
 ~~~
 $ flight desktop list
-┌──────────┬──────────┬───────────┬────────────┬────────────────┬──────────┬────────┐
-│ Identity │ Type     │ Host name │ IP address │ Display (Port) │ Password │ State  │
-├──────────┼──────────┼───────────┼────────────┼────────────────┼──────────┼────────┤
-│ 7d6d8b87 │ terminal │ master    │ 10.10.0.1  │ :1 (5923)      │ XXXXXXXX │ Active │
-└──────────┴──────────┴───────────┴────────────┴────────────────┴──────────┴────────┘
++----------+----------+-----------+------------+----------------+----------+--------+
+| Identity | Type     | Host name | IP address | Display (Port) | Password | State  |
++----------+----------+-----------+------------+----------------+----------+--------+
+| 7d6d8b87 | terminal | master    | 10.10.0.1  | :1 (5923)      | XXXXXXXX | Active |
++----------+----------+-----------+------------+----------------+----------+--------+
 ~~~
 
 ## Terminate a Session
@@ -166,7 +166,7 @@ full ID.
 $ flight desktop kill 7d6d8b87
 Killing desktop session 7d6d8b87-e32c-4f16-8362-9e15f90e69e2:
 
-   > ✅ Terminating session 
+   > OK Terminating session 
 
 Desktop session '7d6d8b87-e32c-4f16-8362-9e15f90e69e2' has been terminated.
 ~~~
