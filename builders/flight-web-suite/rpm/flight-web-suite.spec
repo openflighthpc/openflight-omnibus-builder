@@ -71,15 +71,15 @@ cat <<EOF 1>&2
 HTTPs support needs to be enabled for flight-www
 ================================================
 To enable HTTPs support run '/opt/flight/bin/flight www enable-https'.
-EOF
 
-%postun
-/opt/flight/bin/flight service stop console-api
-/opt/flight/bin/flight service stop desktop-restapi
-/opt/flight/bin/flight service stop www
-/opt/flight/bin/flight service disable console-api
-/opt/flight/bin/flight service disable desktop-restapi
-/opt/flight/bin/flight service disable www
+================================================
+Configure Web Applications
+================================================
+The console-webapp and desktop-webapp need configuring.
+This can be done by running the following:
+  /opt/flight/bin/flight service configure console-webapp
+  /opt/flight/bin/flight service configure desktop-webapp
+EOF
 
 %changelog
 * Tue Oct 20 2020 William McCumstie <william.mccumstie@alces-flight.com> - 2020.3-2
