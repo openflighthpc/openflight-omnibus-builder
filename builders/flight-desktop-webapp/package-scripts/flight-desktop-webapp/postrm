@@ -26,5 +26,6 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 /opt/flight/bin/flight landing-page compile
+/opt/flight/bin/flight service reload www 1>/dev/null 2>&1
 
 exit 0

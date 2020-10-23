@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -31,11 +31,11 @@ friendly_name 'Flight Console api'
 
 install_dir '/opt/flight/opt/console-api'
 
-VERSION = '0.0.2'
+VERSION = '1.0.0'
 override 'flight-console-api', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-console-api'
@@ -49,6 +49,7 @@ description 'API to provide browser access to an interactive terminal console'
 exclude '**/.git'
 exclude '**/.gitkeep'
 
+runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-nodejs'
 runtime_dependency 'flight-js-system-1.0'
 runtime_dependency 'flight-www'
@@ -58,6 +59,8 @@ require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
+
+config_file "#{install_dir}/etc/config.json"
 
 package :rpm do
   vendor 'Alces Flight Ltd'

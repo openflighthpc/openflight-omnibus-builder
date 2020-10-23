@@ -46,4 +46,6 @@ EOF
         "${flight_ROOT:-/opt/flight}"/etc/service/types/action-api/configure.sh \
         jwt_secret="${secret}"
 fi
+
+/opt/flight/bin/flight service reload www 1>/dev/null 2>&1
 exit 0
