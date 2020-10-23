@@ -16,9 +16,36 @@ Replaces: <%= replaces.join(', ') %>
 <% end -%>
 Section: <%= section[0] == ':' ? 'misc' : section  %>
 Priority: <%= priority %>
-<% if section[0] == ':' -%>
-Recommends: <%= section[1..-1].split(' ').join(', ') %>
-<% end -%>
+<%
+if section[0] == ':'
+  provides = []
+  recommends = []
+  section[1..-1].split(' ').each do |name|
+    if name[0] == ':'
+      # this is a 'provides'
+      provides << name[1..-1]
+    else
+      # this is a 'recommends'
+      recommends << name
+    end
+  end
+
+  unless recommends.empty?
+-%>
+Recommends: <%= recommends.join(', ') %>
+<%
+  end
+-%>
+<%
+  unless provides.empty?
+-%>
+Provides: <%= provides.join(', ') %>
+<%
+  end
+-%>
+<%
+end
+-%>
 Homepage: <%= homepage %>
 <% lines = description.split("\n") -%>
 <% firstline, *remainder = lines -%>

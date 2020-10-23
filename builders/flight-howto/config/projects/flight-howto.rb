@@ -31,7 +31,7 @@ friendly_name 'Flight Inventory'
 
 install_dir '/opt/flight/opt/howto'
 
-VERSION = '1.0.2'
+VERSION = '1.0.3'
 override 'flight-howto', version: VERSION
 
 build_version VERSION
@@ -64,8 +64,15 @@ Dir.glob('opt/**/*')
 
 package :rpm do
   vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends/provides
+  # provides are prefixed with `:`
+  priority ":flight-howto-system-1.0"
 end
 
 package :deb do
   vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section "::flight-howto-system-1.0"
 end

@@ -35,7 +35,7 @@ VERSION = '1.1.0'
 override 'flight-job', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-job'
@@ -53,6 +53,14 @@ exclude '**/bundler/git'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-runway'
 
+# Moves the correct howto version into place
+howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
+howto_dst = File.expand_path("../../opt/flight/usr/share/howto/flight-job.md", __dir__)
+raise "Could not locate: #{howto_src}" unless File.exists? howto_src
+FileUtils.mkdir_p File.dirname(howto_dst)
+FileUtils.rm_f howto_dst
+FileUtils.cp howto_src, howto_dst
+
 # Updates the version in the libexec file
 path = File.expand_path('../../opt/flight/libexec/commands/job', __dir__)
 original = File.read(path)
@@ -60,14 +68,22 @@ updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
                   .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
 File.write(path, updated) unless original == updated
 
+# Glob after updating the opt directory
 Dir.glob('opt/**/*')
    .select { |p| File.file? p }
    .each { |p| extra_package_file p }
 
 package :rpm do
   vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends/provides
+  # provides are prefixed with `:`
+  priority "flight-howto-system-1.0"
 end
 
 package :deb do
   vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section ":flight-howto-system-1.0"
 end

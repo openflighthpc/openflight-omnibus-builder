@@ -1,0 +1,154 @@
+# Flight ENV
+
+Manage and access HPC environment
+
+~~~
+$ flight env --help
+  NAME:
+
+    flight env
+
+  DESCRIPTION:
+
+    Manage and access HPC application environments.
+
+  COMMANDS:
+
+    activate     Activate an application environment
+    avail        Show available application environment types
+    create       Create a new application environment
+    deactivate   Deactivate the current application environment
+    help         Display global or [command] help documentation
+    info         Show information about an application environment type
+    list         List configured application environments
+    purge        Purge an existing application environment
+    set-default  Set the default application environment
+    show-active  Show currently active application environment
+    show-default Show the default application environment
+    switch       Switch to a different application environment
+
+  GLOBAL OPTIONS:
+
+    -h, --help 
+        Display help documentation
+
+    --version 
+        Display version information
+~~~
+
+## List Available Environments
+
+The available environments can be found with the `avail` command:
+
+~~~
+$ flight env avail
++-------------+-------------------------------------------------------------------------+
+| Name        | Summary                                                                 |
++-------------+-------------------------------------------------------------------------+
+...
+| gridware    | Tool for installing and managing scientific applications and libraries. |
+|             |                                                                         |
+|             |  > https://gridware.alces-flight.com/                                   |
+|             |                                                                         |
+| modules     | Provides dynamic modification of a user's environment.                  |
+|             |                                                                         |
+|             |  > http://modules.sourceforge.net/                                      |
+...
++-------------+-------------------------------------------------------------------------+
+~~~
+
+## Install, List and Remove an Environment
+
+An environment needs to be installed before it can be used. This is done using the
+`create` command. You will need log out and in again before activating the environment.
+
+~~~
+$ flight env create gridware
+Creating environment gridware@default
+   > OK Verifying prerequisites
+   > OK Fetching prerequisite (tcl) 
+   > OK Extracting prerequisite (tcl) 
+   > OK Building prerequisite (tcl)
+   > OK Installing prerequisite (tcl) 
+   > OK Fetching prerequisite (modules) 
+   > OK Extracting prerequisite (modules) 
+   > OK Building prerequisite (modules) 
+   > OK Installing prerequisite (modules) 
+   > OK Fetching prerequisite (gridware) 
+   > OK Extracting prerequisite (gridware) 
+   > OK Installing prerequisite (gridware) 
+   > OK Configuring repo: main 
+   > OK Creating environment (gridware@default) 
+Environment gridware@default has been created
+~~~
+
+The environments which have been installed can be retrieved with the `list` command:
+
+~~~
+$ flight env list
++------------------+-------+
+| Name             | Scope |
++------------------+-------+
+| gridware@default | user  |
++------------------+-------+
+~~~
+
+The environment can be removed with the `purge` command:
+
+~~~
+$ flight env purge gridware@default
+Purge environment gridware@default? yes
+Purging environment gridware@default
+   > OK Deleting environment tree (gridware@default) 
+Environment gridware@default has been purge
+
+$ flight env list
+No configured environments.
+~~~
+
+## Temporarily Enable/Disable an Environment
+
+An environment can be temporarily enabled using the `activate` command. This will enable
+the environment within the current shell but will not affect the default.
+
+~~~
+$ flight env activate gridware
+$ gridware --help
+NAME:
+  
+  gridware
+...
+~~~
+NOTE: The environment will need to be recreated if it was purged in the previous step
+
+To retrieve the currently activate environment:
+
+~~~
+$ flight env show-active
+gridware@default
+~~~
+
+The environment can be disabled using the `deactivate` command:
+
+~~~
+$ flight env deactivate
+$ gridware --help
+-bash: gridware: command not found
+~~~
+
+## Permanently Enable an Environment
+
+An environment can be permanently set as the login environment with the
+`set-default` command:
+
+~~~
+$ flight env set-default gridware
+Default environment set to: gridware@default
+~~~
+
+This default can be removed with the `--remove` command:
+
+~~~
+$ flight env set-default --remove
+~~~
+

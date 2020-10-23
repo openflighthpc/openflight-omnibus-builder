@@ -35,7 +35,7 @@ VERSION = '1.4.0'
 override 'flight-env', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-env'
@@ -54,6 +54,15 @@ ENV_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-env-types'
+
+# Moves the correct howto version into place
+howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
+howto_relative = "opt/flight/usr/share/howto/flight-env.md"
+howto_dst = File.expand_path("../../#{howto_relative}", __dir__)
+raise "Could not locate: #{howto_src}" unless File.exists? howto_src
+FileUtils.mkdir_p File.dirname(howto_dst)
+FileUtils.rm_f howto_dst
+FileUtils.cp howto_src, howto_dst
 
 if ohai['platform_family'] == 'rhel'
   # vim-common provides xxd a dependency required by Gridware
@@ -101,12 +110,13 @@ end
 ).each do |f|
   extra_package_file f
 end
+extra_package_file howto_relative
 
 package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
-  priority ":flight-env-system-#{ENV_SYSTEM}"
+  priority "flight-howto-system-1.0 :flight-env-system-#{ENV_SYSTEM}"
 end
 
 package :deb do
@@ -114,5 +124,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "::flight-env-system-#{ENV_SYSTEM}"
+  section "::flight-env-system-#{ENV_SYSTEM} flight-howto-system-1.0"
 end

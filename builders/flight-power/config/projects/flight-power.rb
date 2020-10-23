@@ -35,7 +35,7 @@ VERSION = '1.1.0'
 override 'flight-power', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'version-manifest'
@@ -51,12 +51,22 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-action'
 
+# Moves the correct howto version into place
+howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
+howto_relative = "opt/flight/usr/share/howto/flight-power.md"
+howto_dst = File.expand_path("../../#{howto_relative}", __dir__)
+raise "Could not locate: #{howto_src}" unless File.exists? howto_src
+FileUtils.mkdir_p File.dirname(howto_dst)
+FileUtils.rm_f howto_dst
+FileUtils.cp howto_src, howto_dst
+
 %w(
   opt/flight/etc/banner/tips.d/40-power.rc
   opt/flight/libexec/commands/power
 ).each do |f|
   extra_package_file f
 end
+extra_package_file howto_relative
 
 # Update the version numbering in files
 File.expand_path('../../opt/flight/libexec/commands/power', __dir__).tap do |path|
@@ -70,14 +80,24 @@ if ohai['platform_family'] == 'rhel'
   if rhel_rel == 8
     package :rpm do
       vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
+      priority "flight-howto-system-1.0"
     end
   else
     package :rpm do
       vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
+      priority "flight-howto-system-1.0"
     end
   end
 end
 
 package :deb do
   vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section ":flight-howto-system-1.0"
 end

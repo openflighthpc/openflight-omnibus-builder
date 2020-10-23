@@ -55,6 +55,15 @@ runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-desktop-types'
 
+# Moves the correct howto version into place
+howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
+howto_relative = "opt/flight/usr/share/howto/flight-desktop.md"
+howto_dst = File.expand_path("../../#{howto_relative}", __dir__)
+raise "Could not locate: #{howto_src}" unless File.exists? howto_src
+FileUtils.mkdir_p File.dirname(howto_dst)
+FileUtils.rm_f howto_dst
+FileUtils.cp howto_src, howto_dst
+
 if ohai['platform_family'] == 'rhel'
   runtime_dependency 'tigervnc-server-minimal'
   runtime_dependency 'xorg-x11-xauth'
@@ -71,6 +80,7 @@ end
 ).each do |f|
   extra_package_file f
 end
+extra_package_file howto_relative
 
 if ohai['platform_family'] == 'rhel'
   rhel_rel = ohai['platform_version'].split('.').first.to_i
@@ -82,14 +92,14 @@ if ohai['platform_family'] == 'rhel'
       # neither 'apg' or 'python-websockify' are available on RHEL8,
       # but we provide them in the openflight repos.
       # note: xorg-x11-apps is only available in PowerTools
-      priority "xorg-x11-apps netpbm-progs apg python3-websockify :flight-desktop-system-#{DESKTOP_SYSTEM}"
+      priority "xorg-x11-apps netpbm-progs apg python3-websockify flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   else
     package :rpm do
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
       # provides are prefixed with `:`
-      priority ":flight-desktop-system-#{DESKTOP_SYSTEM}"
+      priority "flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   end
 end
@@ -99,5 +109,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section ":netpbm x11-apps apg websockify :flight-desktop-system-#{DESKTOP_SYSTEM}"
+  section ":netpbm x11-apps apg websockify flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
 end
