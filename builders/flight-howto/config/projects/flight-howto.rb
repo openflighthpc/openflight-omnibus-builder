@@ -35,7 +35,7 @@ VERSION = '1.0.3'
 override 'flight-howto', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-howto'
