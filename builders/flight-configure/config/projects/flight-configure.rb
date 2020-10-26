@@ -53,6 +53,8 @@ exclude '**/bundler/git'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 
+config_file "/opt/flight/opt/configure/etc/XX-overrides.conf"
+
 # Updates the version in the libexec file
 path = File.expand_path('../../opt/flight/libexec/commands/configure', __dir__)
 original = File.read(path)
