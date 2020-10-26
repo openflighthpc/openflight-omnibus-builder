@@ -1,5 +1,7 @@
+# NOTE: The following copyright header applies to this software file
+COPYRIGHT_HEADER = <<~HEADER.chomp
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,6 +26,8 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+HEADER
+
 name 'flight-configure'
 default_version '0.0.0'
 
@@ -53,4 +57,52 @@ build do
     '--path vendor'
   ].join(' ')
   command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+
+  # Defines the flight specific applications
+  block do
+    File.write File.join(install_dir, 'etc', '10-flight.conf'), <<~CONF
+#{COPYRIGHT_HEADER}
+
+#===============================================================================
+# Flight Ecosystem Configuration
+# This document augments the base configuration to be compatible with the flight
+# tool suite. It should not be updated directly as any changes maybe lost on
+# the next update.
+#
+# Instead, installation specific configuration should be located in:
+# 'etc/XX-overrides.conf'
+#===============================================================================
+
+#===============================================================================
+# Program Configuration
+# Set various program/CLI parameters
+#===============================================================================
+@_program_application = "#{project.friendly_name}"
+@_program_name        = ENV.fetch("FLIGHT_PROGRAM_NAME", "flight configure")
+@_program_description = "#{project.description}"
+@_program_version     = "#{version}"
+
+#===============================================================================
+# Ensure flight_ROOT is set
+# NOTE: This is not used internally
+#===============================================================================
+flight_root = ENV.fetch("flight_ROOT", '/opt/flight')
+
+#===============================================================================
+# Redefine paths to match flight-service
+#===============================================================================
+@applications_path  = File.join(flight_root, 'etc/service/types')
+@data_path          = File.join(flight_root, 'var/lib/service')
+
+#===============================================================================
+# Enclude flight_ROOT in the subsystem calls
+#===============================================================================
+@script_env["flight_ROOT"] = flight_root
+
+#===============================================================================
+# Log into it's own directory
+#===============================================================================
+@log_dir = File.join(flight_root, "var/log/configure")
+CONF
+  end
 end

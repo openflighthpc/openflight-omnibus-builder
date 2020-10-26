@@ -31,7 +31,7 @@ friendly_name 'Flight Configure'
 
 install_dir '/opt/flight/opt/configure'
 
-VERSION = '0.1.0'
+VERSION = '0.2.0'
 override 'flight-configure', version: VERSION
 
 build_version VERSION
@@ -53,3 +53,12 @@ exclude '**/bundler/git'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 
+# Updates the version in the libexec file
+path = File.expand_path('../../opt/flight/libexec/commands/configure', __dir__)
+original = File.read(path)
+File.write path, original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
+
+# Include the opt directory
+Dir.glob('opt/**/*')
+   .select { |p| File.file? p }
+   .each { |p| extra_package_file p }
