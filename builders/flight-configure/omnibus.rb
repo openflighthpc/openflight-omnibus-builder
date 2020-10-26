@@ -74,7 +74,7 @@ append_timestamp false
 # Load additional software
 # ------------------------------
 # software_gems ['omnibus-software', 'my-company-software']
-# local_software_dirs ['/path/to/local/software']
+local_software_dirs [File.expand_path('../../share', __dir__)]
 
 # Windows architecture defaults
 # ------------------------------
