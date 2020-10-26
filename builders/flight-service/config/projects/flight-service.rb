@@ -31,7 +31,7 @@ friendly_name 'Manage HPC environment services'
 
 install_dir '/opt/flight/opt/service'
 
-VERSION = '1.1.2'
+VERSION = '1.2.0-rc1'
 override 'flight-service', version: VERSION
 
 build_version VERSION
@@ -54,6 +54,15 @@ SERVICE_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'dialog'
+
+# TODO: Change this to the following before release:
+# runtime_dependency "flight-configure-system-1.0"
+runtime_dependency "flight-configure"
+
+# Updates the version in the libexec file
+path = File.expand_path('../../opt/flight/libexec/commands/service', __dir__)
+original = File.read(path)
+File.write path, original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
 
 require 'find'
 Find.find('opt') do |o|
