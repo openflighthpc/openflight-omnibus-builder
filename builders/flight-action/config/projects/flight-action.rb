@@ -31,7 +31,7 @@ friendly_name 'Flight Action'
 
 install_dir '/opt/flight/opt/action'
 
-VERSION = '1.2.0'
+VERSION = '1.3.0-rc1'
 override 'flight-action', version: VERSION
 
 build_version VERSION
