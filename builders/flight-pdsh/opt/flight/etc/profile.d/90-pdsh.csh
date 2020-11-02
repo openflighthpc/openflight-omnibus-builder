@@ -24,4 +24,24 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #==============================================================================
-set path=(/opt/flight/opt/pdsh/bin $path)
+
+if ( -r "$flight_ROOT"/etc/pdsh.cshrc ) then
+  source "$flight_ROOT"/etc/pdsh.cshrc
+endif
+
+switch ("$flight_PDSH_priority")
+  case "":
+    set path=("$flight_ROOT"/opt/pdsh/bin $path)
+    breaksw
+  case "embedded":
+    set path=("$flight_ROOT"/opt/pdsh/bin $path)
+    breaksw
+  case "disabled":
+    # NOOP
+    breaksw
+  default:
+    set path=($path "$flight_ROOT"/opt/pdsh/bin)
+    breaksw
+endsw
+
+unset $(env | grep ^flight_PDSH | cut -f1 -d= | xargs)
