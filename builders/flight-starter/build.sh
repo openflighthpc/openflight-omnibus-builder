@@ -3,9 +3,10 @@ cd "$(dirname "$0")"
 d="$(pwd)"
 mkdir -p pkg
 
-NOW=2020.2
-NEXT=2020.3
-VERSION=${NOW}.6
+NOW=2020.3
+NEXT=2020.4
+VERSION=${NOW}.0~rc1
+TAG=$(echo "$VERSION" | sed "s/~/-/g")
 REL=2
 
 if [ -f /etc/redhat-release ]; then
@@ -13,6 +14,7 @@ if [ -f /etc/redhat-release ]; then
   cd rpm
   rpmbuild -bb flight-starter.spec \
            --define "_flight_pkg_version $VERSION" \
+           --define "_flight_pkg_tag $TAG" \
            --define "_flight_pkg_rel $REL" \
            --define "_flight_pkg_now $NOW" \
            --define "_flight_pkg_next $NEXT"
@@ -61,9 +63,9 @@ elif [ -f /etc/lsb-release ]; then
       $d/deb/flight-starter-banner.control.tpl > \
       $HOME/flight-starter/flight-starter-banner_${VERSION}-${REL}/DEBIAN/control
 
-  wget https://github.com/openflighthpc/flight-starter/archive/${VERSION}.tar.gz
-  tar xzf ${VERSION}.tar.gz
-  mv flight-starter-${VERSION}/dist/* flight-starter_${VERSION}-${REL}
+  wget https://github.com/openflighthpc/flight-starter/archive/${TAG}.tar.gz
+  tar xzf ${TAG}.tar.gz
+  mv flight-starter-${TAG}/dist/* flight-starter_${VERSION}-${REL}
 
   # flight-starter-banner
   for a in /opt/flight/etc/flight-starter.rc \

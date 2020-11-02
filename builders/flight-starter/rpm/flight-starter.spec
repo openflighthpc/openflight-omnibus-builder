@@ -8,7 +8,7 @@ License:        EPL-2.0
 
 URL:            https://openflighthpc.org
 %undefine _disable_source_fetch
-Source0:        https://github.com/openflighthpc/%{name}/archive/%{version}.tar.gz
+Source0:        https://github.com/openflighthpc/%{name}/archive/%{_flight_pkg_tag}.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -20,7 +20,7 @@ Requires:      flight-runway, flight-starter-banner => %{_flight_pkg_now}.0, fli
 Profile scripts and infrastructure for activating an OpenFlight HPC environment
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{_flight_pkg_tag}
 
 %build
 
@@ -50,6 +50,8 @@ install -p -m 644 $RPM_BUILD_ROOT/etc/xdg/flight.cshrc $RPM_BUILD_ROOT/opt/fligh
 /opt/flight/libexec/commands/*
 %dir /opt/flight/libexec/flight-starter/
 /opt/flight/libexec/flight-starter/*
+%dir /opt/flight/lib/flight-starter-patches/
+/opt/flight/lib/flight-starter-patches/*
 %exclude /opt/flight/libexec/flight-starter/banner
 
 %changelog
