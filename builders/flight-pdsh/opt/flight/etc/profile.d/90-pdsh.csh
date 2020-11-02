@@ -29,10 +29,11 @@ if ( -r "$flight_ROOT"/etc/pdsh.cshrc ) then
   source "$flight_ROOT"/etc/pdsh.cshrc
 endif
 
+if ( ! $?flight_PDSH_priority ) then
+  set flight_PDSH_priority='embedded'
+endif
+
 switch ("$flight_PDSH_priority")
-  case "":
-    set path=("$flight_ROOT"/opt/pdsh/bin $path)
-    breaksw
   case "embedded":
     set path=("$flight_ROOT"/opt/pdsh/bin $path)
     breaksw
@@ -43,5 +44,3 @@ switch ("$flight_PDSH_priority")
     set path=($path "$flight_ROOT"/opt/pdsh/bin)
     breaksw
 endsw
-
-unset $(env | grep ^flight_PDSH | cut -f1 -d= | xargs)

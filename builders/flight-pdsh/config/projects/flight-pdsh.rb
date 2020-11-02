@@ -36,7 +36,7 @@ override 'pdsh', version: VERSION
 override 'readline', version: '6.0'
 
 build_version VERSION
-build_iteration 2
+build_iteration 3
 
 dependency 'preparation'
 dependency "genders"
@@ -65,6 +65,7 @@ package :rpm do
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
   # priority ""
+  priority ":flight-starter"
 end
 
 package :deb do
@@ -73,4 +74,5 @@ package :deb do
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
   # section ""
+  section ":flight-starter"
 end
