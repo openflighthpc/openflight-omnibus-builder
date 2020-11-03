@@ -1,0 +1,4 @@
+pdsh:
+  priority:
+    var: 'flight_PDSH_priority'
+    file: 'pdsh'

@@ -52,6 +52,7 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
+extra_package_file "opt/flight/etc/flight-config-map.d/pdsh.yaml"
 %w(dshbak nodeattr pdcp pdsh rpdcp).each do |f|
   extra_package_file "opt/flight/opt/pdsh/bin/#{f}"
 end
