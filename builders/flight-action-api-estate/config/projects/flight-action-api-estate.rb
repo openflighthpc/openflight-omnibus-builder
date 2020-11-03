@@ -35,7 +35,7 @@ VERSION = '1.3.0-rc2'
 override 'flight-action-api-estate', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-action-api-estate'
