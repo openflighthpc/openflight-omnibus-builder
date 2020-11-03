@@ -35,7 +35,7 @@ VERSION = '0.2.1'
 override 'flight-configure', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-configure'

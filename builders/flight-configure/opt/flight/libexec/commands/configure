@@ -1,7 +1,7 @@
 : '
 : NAME: configure
 : SYNOPSIS: Configure flight services and applications
-: VERSION: 0.2.0
+: VERSION: 0.2.1
 : ROOT: true
 : '
 #==============================================================================
@@ -30,6 +30,10 @@
 # For more information on Flight Environment, please visit:
 # https://github.com/openflighthpc/flight-configure
 # ==============================================================================
+if [ "$UID" != 0 ]; then
+  exec sudo "${flight_ROOT:-/opt/flight}"/bin/flight "$(basename "$0")" "$@"
+fi
+
 export FLIGHT_CWD=$(pwd)
 cd /opt/flight/opt/configure
 export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
