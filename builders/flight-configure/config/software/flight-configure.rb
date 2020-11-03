@@ -70,7 +70,7 @@ build do
 # the next update.
 #
 # Instead, installation specific configuration should be located in:
-# 'etc/XX-overrides.conf'
+# 'etc/ZZ-overrides.conf'
 #===============================================================================
 
 #===============================================================================

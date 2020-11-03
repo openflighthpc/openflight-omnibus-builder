@@ -31,7 +31,7 @@ friendly_name 'Flight Configure'
 
 install_dir '/opt/flight/opt/configure'
 
-VERSION = '0.2.0'
+VERSION = '0.2.1'
 override 'flight-configure', version: VERSION
 
 build_version VERSION
@@ -53,7 +53,7 @@ exclude '**/bundler/git'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 
-config_file "/opt/flight/opt/configure/etc/XX-overrides.conf"
+config_file "/opt/flight/opt/configure/etc/ZZ-overrides.conf"
 
 # Updates the version in the libexec file
 path = File.expand_path('../../opt/flight/libexec/commands/configure', __dir__)
