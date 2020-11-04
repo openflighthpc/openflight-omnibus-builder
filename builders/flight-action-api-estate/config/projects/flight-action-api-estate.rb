@@ -31,11 +31,11 @@ friendly_name 'Flight Action API estate management actions'
 
 install_dir '/opt/flight/opt/action-api'
 
-VERSION = '1.3.0-rc4'
+VERSION = '1.3.0-rc5'
 override 'flight-action-api-estate', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-action-api-estate'
