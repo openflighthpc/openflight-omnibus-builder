@@ -63,8 +63,10 @@ runtime_dependency 'flight-action-api-power'
 
 if ohai['platform_family'] == 'rhel'
   runtime_dependency 'flight-action-api >= 1.2.0'
+  runtime_dependency 'nmap-ncat'
 elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'flight-action-api (>= 1.2.0)'
+  runtime_dependnecy 'netcat'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
