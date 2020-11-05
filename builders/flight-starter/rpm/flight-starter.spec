@@ -12,9 +12,12 @@ Source0:        https://github.com/openflighthpc/%{name}/archive/%{_flight_pkg_t
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildArch:     noarch
-Requires:      flight-runway, flight-starter-banner => %{_flight_pkg_now}.0, flight-starter-banner < %{_flight_pkg_next}.0~, flight-starter-system-1.0
+BuildArch:      noarch
+Requires:       flight-runway, flight-starter-banner => %{_flight_pkg_now}.0, flight-starter-banner < %{_flight_pkg_next}.0~, flight-starter-system-1.0
 %{?el8:Recommends:    flight-plugin-system-starter}
+
+# Required in the post install script
+Requires:       diffutils
 
 %description
 Profile scripts and infrastructure for activating an OpenFlight HPC environment
@@ -43,7 +46,7 @@ install -p -m 644 $RPM_BUILD_ROOT/etc/xdg/flight.cshrc $RPM_BUILD_ROOT/opt/fligh
 /opt/flight/etc/banner/banner.d/*
 /opt/flight/etc/banner/tips.d/*
 %config(noreplace) /opt/flight/etc/setup-sshkey.rc
-%config(noreplace) /opt/flight/etc/flight-config-map.yml
+/opt/flight/etc/flight-config-map.d/*
 /opt/flight/etc/profile.d/*
 /opt/flight/etc/setup.sh
 /opt/flight/etc/setup.csh
@@ -53,6 +56,18 @@ install -p -m 644 $RPM_BUILD_ROOT/etc/xdg/flight.cshrc $RPM_BUILD_ROOT/opt/fligh
 %dir /opt/flight/lib/flight-starter-patches/
 /opt/flight/lib/flight-starter-patches/*
 %exclude /opt/flight/libexec/flight-starter/banner
+
+%post
+old=/opt/flight/etc/flight-config-map.yml
+new=/opt/flight/etc/flight-config-map.d/zz-cluster.yml
+sys=/opt/flight/etc/flight-config-map.d/cluster.yml
+if [ -e "$old" ]; then
+  if cmp "$old" "$sys" >/dev/null; then
+    rm -f "$old"
+  else
+    mv "$old" "$new"
+  fi
+fi
 
 %changelog
 * Wed Jun 24 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.2.x
