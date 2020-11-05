@@ -95,9 +95,10 @@ flight_root = ENV.fetch("flight_ROOT", '/opt/flight')
 @data_path          = File.join(flight_root, 'var/lib/service')
 
 #===============================================================================
-# Enclude flight_ROOT in the subsystem calls
+# Enclude flight_ROOT and flight_SERVICE_etc in the subsystem calls
 #===============================================================================
 @script_env["flight_ROOT"] = flight_root
+@script_env["flight_SERVICE_etc"] = File.join(flight_root, "var/lib/service")
 
 #===============================================================================
 # Log into it's own directory

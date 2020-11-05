@@ -31,11 +31,11 @@ friendly_name 'Flight Configure'
 
 install_dir '/opt/flight/opt/configure'
 
-VERSION = '0.2.1'
+VERSION = '0.3.1'
 override 'flight-configure', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-configure'
