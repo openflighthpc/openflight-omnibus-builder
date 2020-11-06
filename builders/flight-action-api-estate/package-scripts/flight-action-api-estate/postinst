@@ -1,3 +1,4 @@
+#!/bin/sh
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
@@ -24,24 +25,37 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-action-api-estate'
-default_version '0.0.0'
 
-source git: 'https://github.com/openflighthpc/flight-action-api'
+# This should be removed once the version is released
+cat <<EOF
+The machine type definitions have changed with this release.  The previous
+definitions were:
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
+  general-small      -> t2.small
+  general-large      -> t2.large
+  compute-2C-3.75GB  -> c4.large
+  compute-8C-15GB    -> c4.2xlarge
+  gpu-1GPU-8C-61GB   -> p3.2xlarge
+  gpu-4GPU-32C-244GB -> p3.8xlarge
 
-build do
-  block do
-    # Moves the project into place
-    [
-      'estate-change', 'estate-grow', 'estate-shrink', 'estate-show'
-    ].each do |action|
-      libexec_dir = File.expand_path(File.join(install_dir, 'libexec'))
-      FileUtils.mkdir_p File.join(libexec_dir, action)
-      copy File.join('libexec', action), libexec_dir
-    end
-  end
-end
+The new definitions are:
+
+  general-small  -> t3.medium
+  general-medium -> t3.xlarge
+  general-large  -> t3.2xlarge
+  compute-small  -> c5.large
+  compute-medium -> c5.xlarge
+  compute-large  -> c5.2xlarge
+  gpu-small      -> p3.2xlarge
+  gpu-medium     -> p3.8xlarge
+  gpu-large      -> p3.16xlarge
+  mem-small      -> r5.large
+  mem-medium     -> r5.xlarge
+  mem-large      -> r5.2xlarge
+
+Your nodes have not been changed.  You may wish to consider changing your
+nodes accordingly.  This can be done by running:
+
+  /opt/flight/bin/flight estate change NODE
+
+EOF
