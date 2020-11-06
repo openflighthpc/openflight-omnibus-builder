@@ -31,7 +31,7 @@ friendly_name 'Flight Action API'
 
 install_dir '/opt/flight/opt/action-api'
 
-VERSION = '1.3.0-rc2'
+VERSION = '1.3.0'
 override 'flight-action-api', version: VERSION
 
 build_version VERSION
