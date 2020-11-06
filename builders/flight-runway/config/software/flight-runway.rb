@@ -31,13 +31,6 @@ source git: 'https://github.com/openflighthpc/flight-runway'
 
 dependency "ruby"
 dependency "rb-readline"
-if rhel? && platform_version.start_with?("8")
-  # In EL8, parts of `git` that link to curl have shared library
-  # dependencies that are incompatible with our embedded openssl build
-  # which causes issues when bundler needs to handle git repos, so we
-  # include curl in the embedded build.
-  dependency "curl"
-end
 dependency "bundler"
 dependency 'paint-gem'
 
