@@ -31,13 +31,15 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.2.1'
+VERSION = '1.3.0-rc1'
 CERT_VERSION = '0.2.1'
 override 'flight-www', version: VERSION
 override 'flight-cert', version: CERT_VERSION
+override :nginx, version: '1.14.2'
+override 'flight-landing-page', version: '1.1.0-rc1'
 
 build_version VERSION
-build_iteration '3'
+build_iteration '1'
 
 dependency 'preparation'
 dependency 'flight-www'
@@ -56,9 +58,6 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-override :nginx, version: '1.14.2'
-override 'flight-landing-page', version: '1.0.0'
-
 WWW_SYSTEM = '1.0'
 runtime_dependency 'flight-plugin-cron'
 runtime_dependency 'flight-runway'
@@ -66,6 +65,7 @@ runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-certbot'
+runtime_dependency 'flight-landing-page-content'
 
 require 'find'
 Find.find('opt') do |o|

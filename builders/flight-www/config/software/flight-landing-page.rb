@@ -47,6 +47,20 @@ build do
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
+  # Remove the content that ships with the flight-landing-page git repo and
+  # add the required directory structure. The content will be provided by
+  # another package.
+  [
+    'default', 'types',
+  ].each do |dir|
+    delete File.expand_path(File.join(install_dir, 'landing-page', dir))
+  end
+  [
+    'content', 'layouts',
+  ].each do |file|
+    mkdir File.expand_path(File.join(install_dir, 'landing-page', 'default', file))
+  end
+
   # Installs the gems to the shared `vendor/share`
   flags = [
     "--without development test",
