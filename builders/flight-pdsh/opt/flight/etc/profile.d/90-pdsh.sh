@@ -24,4 +24,21 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #==============================================================================
-export PATH=/opt/flight/opt/pdsh/bin:$PATH
+
+if [ -r "$flight_ROOT"/etc/pdsh.rc ]; then
+  source "$flight_ROOT"/etc/pdsh.rc
+fi
+
+case ${flight_PDSH_priority:-embedded} in
+  embedded)
+    export PATH="$flight_ROOT"/opt/pdsh/bin:$PATH
+    ;;
+  disabled)
+    # NOOP
+    ;;
+  *) # "system" is the canonical trigger term here
+    export PATH=$PATH:"$flight_ROOT"/opt/pdsh/bin
+    ;;
+esac
+
+unset $(declare | grep ^flight_PDSH | cut -f1 -d= | xargs)
