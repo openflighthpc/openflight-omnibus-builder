@@ -24,70 +24,45 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-www'
+name 'flight-headnode-landing-page'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/openflight-omnibus-builders/builders/flight-www'
+homepage 'https://github.com/openflighthpc/openflight-omnibus-builders/builders/flight-headnode-landing-page'
 friendly_name 'Flight web server service'
 
-install_dir '/opt/flight/opt/www'
+install_dir '/opt/flight/opt/www/landing-page'
 
-VERSION = '1.3.0'
-CERT_VERSION = '0.2.1'
-override 'flight-www', version: VERSION
-override 'flight-cert', version: CERT_VERSION
-override :nginx, version: '1.14.2'
-override 'flight-landing-page', version: '1.1.0'
+VERSION = '1.1.0'
+override 'flight-headnode-landing-page', version: VERSION
 
 build_version VERSION
 build_iteration '1'
 
 dependency 'preparation'
-dependency 'flight-www'
-dependency 'flight-landing-page'
-dependency 'flight-cert'
+dependency 'flight-headnode-landing-page'
 dependency 'version-manifest'
 
-replace 'flight-landing-page'
+if ohai['platform_family'] == 'rhel'
+  conflict 'flight-www < 1.3.0'
+elsif ohai['platform_family'] == 'debian'
+  conflict 'flight-www (< 1.3.0)'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
+end
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'A web server for use in Flight HPC environments'
+description 'A headnode landing page for use in Flight HPC environments'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-WWW_SYSTEM = '1.0'
-runtime_dependency 'flight-plugin-cron'
-runtime_dependency 'flight-runway'
-runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-certbot'
-runtime_dependency 'flight-landing-page-content'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-extra_package_file('/opt/flight/etc/www/nginx.conf')
-
-# Do not update the config file
-config_file '/opt/flight/etc/share/cert.yaml'
-
-# Update the version numbering in files
-File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
-  content = File.read path
-  content.sub!(/: VERSION:.*/, ": VERSION: #{CERT_VERSION}")
-  File.write path, content
-end
-
 package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
-  priority ":flight-www-system-#{WWW_SYSTEM}"
+  priority ":flight-landing-page-content"
 end
 
 package :deb do
@@ -95,5 +70,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "::flight-www-system-#{WWW_SYSTEM}"
+  section "::flight-landing-page-content"
 end

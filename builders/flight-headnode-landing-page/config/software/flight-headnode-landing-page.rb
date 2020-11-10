@@ -24,47 +24,17 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-landing-page'
+name 'flight-headnode-landing-page'
 default_version '0.0.0'
 
 source git: 'https://github.com/openflighthpc/flight-landing-page'
-
-dependency 'enforce-flight-runway'
-whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
 build do
-  env = with_standard_compiler_flags(with_embedded_path)
-
-  # Moves the project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'bin', 'landing-page',
-    'LICENSE.txt', 'README.md'
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
-  end
-
-  # Remove the content that ships with the flight-landing-page git repo and
-  # add the required directory structure. The content will be provided by
-  # another package.
-  [
-    'default', 'types',
-  ].each do |dir|
-    delete File.expand_path(File.join(install_dir, 'landing-page', dir))
-  end
-  [
-    'content', 'layouts',
-  ].each do |file|
-    mkdir File.expand_path(File.join(install_dir, 'landing-page', 'default', file))
-  end
-
-  # Installs the gems to the shared `vendor/share`
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+  type = 'headnode'
+  # Moves the content for the landing page into place.
+  copy "landing-page/types/#{type}", "#{install_dir}/default"
 end
