@@ -31,7 +31,7 @@ friendly_name 'Flight Action API power actions'
 
 install_dir '/opt/flight/opt/action-api'
 
-VERSION = '1.1.0'
+VERSION = '1.4.0-rc1'
 override 'flight-action-api-power', version: VERSION
 
 build_version VERSION
