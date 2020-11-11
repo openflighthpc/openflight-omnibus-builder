@@ -35,13 +35,23 @@ skip_transitive_dependency_licensing true
 
 build do
   block do
+    libexec_dir = File.expand_path(File.join(install_dir, 'libexec'))
+
     # Moves the project into place
     [
       'estate-change', 'estate-grow', 'estate-shrink', 'estate-show'
     ].each do |action|
-      libexec_dir = File.expand_path(File.join(install_dir, 'libexec'))
       FileUtils.mkdir_p File.join(libexec_dir, action)
       copy File.join('libexec', action), libexec_dir
+    end
+
+    # Move the helper scripts into place
+    helpers_dir = File.join(libexec_dir, 'helpers')
+    FileUtils.mkdir_p helpers_dir
+    [
+      'aws-machine-type-definitions.sh', 'azure-machine-type-definitions.sh'
+    ].each do |script|
+      copy File.join('libexec/helpers', script), helpers_dir
     end
   end
 end
