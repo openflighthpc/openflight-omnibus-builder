@@ -32,7 +32,7 @@ friendly_name 'Flight Action API estate management actions'
 install_dir '/opt/flight/opt/action-api'
 
 # NOTE: Remove tilda from runtime_dependency on next production release
-VERSION = '1.4.0-rc2'
+VERSION = '1.4.0-rc3'
 override 'flight-action-api-estate', version: VERSION
 
 build_version VERSION
