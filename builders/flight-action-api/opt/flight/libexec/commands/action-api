@@ -1,7 +1,7 @@
 : '
 : NAME: action-api
 : SYNOPSIS: Flight Action API server
-: VERSION: 1.4.0-rc1
+: VERSION: 1.4.0-rc3
 : ROOT: true
 : '
 #==============================================================================

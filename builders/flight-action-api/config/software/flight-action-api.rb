@@ -49,6 +49,9 @@ build do
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
+  # Create the blank nodes file
+  touch File.join(install_dir, 'config/nodes.yaml')
+
   # Create the libexec directory where other packages will install scripts.
   mkdir File.expand_path("#{install_dir}/libexec/")
 
