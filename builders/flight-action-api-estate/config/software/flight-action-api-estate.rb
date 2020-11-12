@@ -49,7 +49,9 @@ build do
     helpers_dir = File.join(libexec_dir, 'helpers')
     FileUtils.mkdir_p helpers_dir
     [
-      'aws-machine-type-definitions.sh', 'azure-machine-type-definitions.sh'
+      'aws-machine-type-definitions.sh',
+      'azure-machine-type-definitions.sh',
+      'basic-machine-type-definitions.sh'
     ].each do |script|
       copy File.join('libexec/helpers', script), helpers_dir
     end
