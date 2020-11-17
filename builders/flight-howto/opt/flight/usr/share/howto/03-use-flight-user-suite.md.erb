@@ -1,3 +1,7 @@
+<%
+  PRODUCT_SHORT   ||= 'OpenFlight'
+  PRODUCT_DOMAIN  ||= 'openflighthpc.org'
+-%>
 # How To Use Flight User Suite
 
 ## What is Flight User Suite?
@@ -8,14 +12,14 @@ The tools are non-intrusive to the research environment, defaulting to a “deac
 
 Flight User Suite is made up of the following tools:
 
- * Flight Runway: the foundation of the OpenFlight environment, providing the `flight` command entry point for accessing the other OpenFlight tools.
+ * Flight Runway: the foundation of the <%= PRODUCT_SHORT -%> environment, providing the `flight` command entry point for accessing the other <%= PRODUCT_SHORT -%> tools.
  * Flight Env: a tool for the management of various software package ecosystems, providing access to a wide variety of HPC applications.
  * Flight Desktop: an intuitive tool for launching VNC-ready virtual desktops for many different desktop environments (gnome, xterm, kde, etc.)
  * Flight Howto: you're using it!
 
 ## Installing Flight User Suite
 
-Usually Flight User Suite has already been installed in your OpenFlight environment, but if you're missing any of the above tools, the OpenFlight project packages tools as both RPM and DEB packages that are hosted in package repositories which can be quickly installed with a couple of commands.
+Usually Flight User Suite has already been installed in your <%= PRODUCT_SHORT -%> environment, but if you're missing any of the above tools, the <%= PRODUCT_SHORT -%> project packages tools as both RPM and DEB packages that are hosted in package repositories which can be quickly installed with a couple of commands.
 
 ### CentOS 7 and CentOS 8
 
@@ -38,10 +42,10 @@ Read about:
     `flight howto show run-jobs`
     `flight howto show use-a-scheduler`
 
-You can find more help and documentation in the OpenFlight docs:
+You can find more help and documentation in the <%= PRODUCT_SHORT -%> docs:
 
-> <https://build.openflighthpc.org/>
-> <https://use.openflighthpc.org/>
+> <https://build.<%= PRODUCT_DOMAIN -%>/>
+> <https://use.<%= PRODUCT_DOMAIN -%>/>
 
 ## License
 
