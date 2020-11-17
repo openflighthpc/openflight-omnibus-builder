@@ -1,3 +1,7 @@
+<%
+  PRODUCT_SHORT   ||= 'OpenFlight'
+  PRODUCT_DOMAIN  ||= 'openflighthpc.org'
+-%>
 # How To Run Jobs
 
 ## What is a job?
@@ -12,11 +16,11 @@ A local job is the simplest kind of job - a script that is manually and directly
 
 ## What is a batch job?
 
-A batch job is a script that is submitted to a batch job scheduler. Your OpenFlight environment can be configured with a job scheduler which can allow you to queue a number of jobs for unattended processing over a period of time, or jobs that are dependent on the output of previous jobs.
+A batch job is a script that is submitted to a batch job scheduler. Your <%= PRODUCT_SHORT -%> environment can be configured with a job scheduler which can allow you to queue a number of jobs for unattended processing over a period of time, or jobs that are dependent on the output of previous jobs.
 
 ## What kind of job should I use?
 
-When using an OpenFlight environment there isn't a need to monitor resource usage as closely as multi-user systems where miscommunication and overloaded resources can negatively impact research progress. With all the resources available to one user it may be quicker and easier to run local jobs by simply executing scripts through a terminal rather than using a queue system.
+When using an <%= PRODUCT_SHORT -%> environment there isn't a need to monitor resource usage as closely as multi-user systems where miscommunication and overloaded resources can negatively impact research progress. With all the resources available to one user it may be quicker and easier to run local jobs by simply executing scripts through a terminal rather than using a queue system.
 
 Local jobs have the benefit over batch jobs in that they launch immediately and provide all output to a single terminal session.
 
@@ -42,10 +46,10 @@ Read about:
 * The useful suite of tools provided by the Flight User Suite:
     `flight howto show use-flight-user-suite`
 
-You can find more help and documentation in the OpenFlight docs:
+You can find more help and documentation in the <%= PRODUCT_SHORT -%> docs:
 
-> <https://build.openflighthpc.org/>
-> <https://use.openflighthpc.org/>
+> <https://build.<%= PRODUCT_DOMAIN -%>/>
+> <https://use.<%= PRODUCT_DOMAIN -%>/>
 
 ## License
 
