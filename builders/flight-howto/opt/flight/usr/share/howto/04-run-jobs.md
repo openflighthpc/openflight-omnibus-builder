@@ -1,4 +1,4 @@
-# How To Run Jobs
+# running-jobs(7)
 
 ## What is a job?
 

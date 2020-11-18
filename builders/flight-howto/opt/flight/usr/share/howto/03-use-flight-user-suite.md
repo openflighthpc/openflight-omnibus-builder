@@ -1,4 +1,4 @@
-# How To Use Flight User Suite
+# flight-user-suite(7)
 
 ## What is Flight User Suite?
 

@@ -1,4 +1,4 @@
-# How To Work with the Flight Environment
+# working-with-flight(7)
 
 ## Activating the Flight System
 
