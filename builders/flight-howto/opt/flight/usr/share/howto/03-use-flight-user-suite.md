@@ -1,4 +1,4 @@
-# flight-user-suite(7)
+# Flight User Suite(7)
 
 ## What is Flight User Suite?
 

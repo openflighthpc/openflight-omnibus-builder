@@ -1,4 +1,4 @@
-# getting-started(7)
+# How To Get Started(7)
 
 ## What is OpenFlightHPC?
 

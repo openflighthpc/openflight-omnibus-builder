@@ -1,4 +1,4 @@
-# using-a-scheduler(7)
+# Using a Scheduler(7)
 
 ## What is a batch job scheduler?
 

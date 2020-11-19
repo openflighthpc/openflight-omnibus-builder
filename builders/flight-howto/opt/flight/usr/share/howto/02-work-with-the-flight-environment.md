@@ -1,4 +1,4 @@
-# working-with-flight(7)
+# Working with Flight(7)
 
 ## Activating the Flight System
 
