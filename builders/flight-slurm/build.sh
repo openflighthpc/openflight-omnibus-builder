@@ -16,7 +16,8 @@ Specify <version> to build:
   17.11
   18.08
   19.05
-  20.02 (latest)
+  20.02
+  20.11 (latest)
 EOF
   exit 1
 fi
@@ -52,7 +53,7 @@ case $VERSION in
       REL="slurm-19.05.7.flight1"
     fi
     ;;
-  20.02|latest)
+  20.02)
     if [ -z "$nonflight" ]; then
       TAG="flight-slurm-20-02-5-1-flight1"
       REL="flight-slurm-20.02.5.flight1"
@@ -60,6 +61,18 @@ case $VERSION in
       TAG="slurm-20-02-5-1-flight1"
       REL="slurm-20.02.5.flight1"
     fi
+    ;;
+  20.11|latest)
+    BUILD_FLAGS="--with slurmrestd"
+    BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-20-11-0-1-flight1"
+      REL="flight-slurm-20.11.0.flight1"
+    else
+      TAG="slurm-20-11-0-1-flight1"
+      REL="slurm-20.11.0.flight1"
+    fi
+    libjwt=true
     ;;
   *)
     echo "$0: unrecognized Slurm version: $VERSION"
@@ -90,11 +103,18 @@ if [ "$distro" == "rhel7" ]; then
        readline-devel perl-devel lua-devel hwloc-devel \
        numactl-devel hdf5-devel lz4-devel freeipmi-devel \
        rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
-       man2html python2 python3 \
+       man2html python2 python3 $BUILD_DEPS \
        pmix-devel
   if [ "$libssh2" ]; then
     # This is needed for Slurm 18.08 or 17.11.
     sudo yum install -y libssh2-devel
+  fi
+  if [ "$libjwt" ]; then
+    # This is needed for Slurm 20.11.
+    rpmbuild --rebuild ${TARGET}/../dist/libjwt-1.12.1-0.el7.src.rpm
+    sudo yum install -y ~/rpmbuild/RPMS/x86_64/libjwt-devel-1.12.1-0.el7.x86_64.rpm \
+         ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el7.x86_64.rpm
+    
   fi
 elif [ "$distro" == "rhel8" ]; then
   sudo yum config-manager --set-enabled PowerTools
@@ -102,7 +122,7 @@ elif [ "$distro" == "rhel8" ]; then
        readline-devel perl-devel lua-devel hwloc-devel \
        numactl-devel hdf5-devel lz4-devel freeipmi-devel \
        rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
-       man2html python3 python2
+       man2html python3 python2 $BUILD_DEPS
   if ! rpm -qa pmix-devel | grep -q '^pmix-devel'; then
     if [ ! -f pmix-2.1.1-1.el8.src.rpm ]; then
       wget http://vault.centos.org/8.1.1911/AppStream/Source/SPackages/pmix-2.1.1-1.el8.src.rpm
@@ -121,6 +141,11 @@ elif [ "$distro" == "rhel8" ]; then
       rpmbuild --rebuild libssh2-1.8.0-3.el7.src.rpm
       sudo yum install -y ~/rpmbuild/RPMS/x86_64/libssh2-1.8.0-3.el8.x86_64.rpm ~/rpmbuild/RPMS/x86_64/libssh2-devel-1.8.0-3.el8.x86_64.rpm
     fi
+  fi
+
+  if [ "$libjwt" ]; then
+    # This is needed for Slurm 20.11.
+    sudo yum install -y libjwt-devel
   fi
 fi
 
@@ -146,6 +171,7 @@ if [ -z "$nonflight" ]; then
            --define '_localstatedir %{_prefix}/var' \
            --define '_sharedstatedir %{_prefix}/var/lib' \
            -ta $REL.tar.bz2 \
+           $BUILD_FLAGS \
            --with hwloc \
            --with mysql \
            --with hdf5 \
@@ -157,6 +183,7 @@ if [ -z "$nonflight" ]; then
   mv $HOME/rpmbuild/RPMS/*/flight-slurm-*.rpm "$TARGET"
 else
   rpmbuild -ta $REL.tar.bz2 \
+           $BUILD_FLAGS \
            --with hwloc \
            --with mysql \
            --with hdf5 \
@@ -172,5 +199,12 @@ if [ "$libssh2" ]; then
   # This is needed for Slurm 18.08 or 17.11.
   if [ "$distro" == "rhel8" ]; then
     mv $HOME/rpmbuild/RPMS/*/libssh2-1.8.0-3.el8.* "$TARGET"
+  fi
+fi
+
+if [ "$libjwt" ]; then
+  # This is needed for Slurm 20.11.
+  if [ "$distro" == "rhel7" ]; then
+    mv ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el7.x86_64.rpm "$TARGET"
   fi
 fi
