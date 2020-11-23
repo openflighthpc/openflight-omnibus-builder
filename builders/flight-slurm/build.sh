@@ -114,7 +114,6 @@ if [ "$distro" == "rhel7" ]; then
     rpmbuild --rebuild ${TARGET}/../dist/libjwt-1.12.1-0.el7.src.rpm
     sudo yum install -y ~/rpmbuild/RPMS/x86_64/libjwt-devel-1.12.1-0.el7.x86_64.rpm \
          ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el7.x86_64.rpm
-    
   fi
 elif [ "$distro" == "rhel8" ]; then
   sudo yum config-manager --set-enabled PowerTools
@@ -145,7 +144,10 @@ elif [ "$distro" == "rhel8" ]; then
 
   if [ "$libjwt" ]; then
     # This is needed for Slurm 20.11.
-    sudo yum install -y libjwt-devel
+    sudo yum install -y check-devel
+    rpmbuild --rebuild ${TARGET}/../dist/libjwt-1.12.1-0.el7.src.rpm
+    sudo yum install -y ~/rpmbuild/RPMS/x86_64/libjwt-devel-1.12.1-0.el8.x86_64.rpm \
+         ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el8.x86_64.rpm
   fi
 fi
 
@@ -206,5 +208,7 @@ if [ "$libjwt" ]; then
   # This is needed for Slurm 20.11.
   if [ "$distro" == "rhel7" ]; then
     mv ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el7.x86_64.rpm "$TARGET"
+  elif [ "$distro" == "rhel7" ]; then
+    mv ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el8.x86_64.rpm "$TARGET"
   fi
 fi
