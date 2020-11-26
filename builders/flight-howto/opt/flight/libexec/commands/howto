@@ -1,7 +1,7 @@
 : '
 : NAME: howto
 : SYNOPSIS: View user guides for your HPC environment
-: VERSION: 1.1.0-rc3
+: VERSION: 1.1.0-rc5
 : '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
