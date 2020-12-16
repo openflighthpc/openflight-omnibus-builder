@@ -5,7 +5,7 @@ mkdir -p pkg
 
 NOW=2020.3
 NEXT=2020.4
-VERSION=${NOW}.2
+VERSION=${NOW}.3
 TAG=$(echo "$VERSION" | sed "s/~/-/g")
 REL=1
 
