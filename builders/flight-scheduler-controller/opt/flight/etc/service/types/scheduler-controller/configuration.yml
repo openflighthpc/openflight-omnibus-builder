@@ -4,7 +4,7 @@ text: |
 values:
   - key: FLIGHT_SCHEDULER_BIND_ADDRESS
     label: Address to bind to (listen on).
-    value: "http://0.0.0.0:918"
+    value: "http://127.0.0.1:918"
     length: 64
 
   - key: FLIGHT_SCHEDULER_ENV_VAR_PREFIX
