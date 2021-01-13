@@ -35,7 +35,7 @@ VERSION = '0.7.0-rc1'
 override 'flight-scheduler-daemon', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-scheduler-daemon'
@@ -55,6 +55,9 @@ runtime_dependency 'flight-runway'
 runtime_dependency 'flight-scheduler'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
+runtime_dependency 'lshw'
+
+config_file '/opt/flight/opt/scheduler-daemon/etc/flight-scheduler-daemon.yaml'
 
 require 'find'
 Find.find('opt') do |o|
