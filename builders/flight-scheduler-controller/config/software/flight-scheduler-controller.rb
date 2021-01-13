@@ -49,7 +49,7 @@ build do
   end
 
   # Set the bind address in the config
-  command "echo bind_address: 'http://0.0.0.0:918' >> #{install_dir}/etc/flight-scheduler-controller.yaml"
+  command "echo bind_address: 'http://127.0.0.1:918' >> #{install_dir}/etc/flight-scheduler-controller.yaml"
 
   # Installs the gems to the shared `vendor/share`
   flags = [
