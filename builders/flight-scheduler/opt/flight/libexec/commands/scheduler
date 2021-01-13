@@ -1,7 +1,7 @@
 : '
 : NAME: scheduler
 : SYNOPSIS: Command line tools for the Flight Scheduler
-: VERSION: 0.3.0
+: VERSION: 0.7.0-rc1
 : '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
