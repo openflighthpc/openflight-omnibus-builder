@@ -33,6 +33,11 @@ if [ -f /etc/locale.conf ]; then
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
+# Default to production environment
+if [ -z "$(echo "$RACK_ENV")" ]; then
+  export RACK_ENV=production
+fi
+
 # Start the server
 tool_bg "$flight_ROOT"/opt/scheduler-controller/bin/start
 
