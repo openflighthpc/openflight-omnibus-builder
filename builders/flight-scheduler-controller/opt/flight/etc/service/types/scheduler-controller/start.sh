@@ -41,7 +41,7 @@ pid=''
 app_root="$flight_ROOT/opt/scheduler-controller"
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$("$flight_ROOT"/bin/ruby "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc)
+  pid=$("$flight_ROOT"/bin/ruby "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc || true)
   if [ -n "$pid" ]; then
     break
   fi
