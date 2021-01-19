@@ -61,6 +61,18 @@ build do
     copy File.join('supervisor', file), File.expand_path("#{install_dir}/#{file}/..")
   end
 
+  # Update the config
+  block do
+    path = File.join(install_dir, 'etc/flight-file-manager.yaml')
+    content = [
+      File.read(path),
+      "cache_dir: /opt/flight/var/file-manager-api",
+      "log_dir: /opt/flight/var/log/file-manager-api",
+      ''
+    ].join("\n")
+    File.write path, content
+  end
+
   # Installs the gems to the shared `vendor/share`
   flags = [
     '--with default',
