@@ -1,13 +1,13 @@
 : '
-: NAME: service
-: SYNOPSIS: Manage HPC environment services
-: VERSION: 1.2.0-rc2
+: NAME: configure
+: SYNOPSIS: Configure flight services and applications
+: VERSION: 0.3.1
 : ROOT: true
 : '
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
-# This file is part of Flight Service.
+# This file is part of Flight Environment.
 #
 # This program and the accompanying materials are made available under
 # the terms of the Eclipse Public License 2.0 which is available at
@@ -15,7 +15,7 @@
 # terms made available by Alces Flight Ltd - please direct inquiries
 # about licensing to licensing@alces-flight.com.
 #
-# Flight Service is distributed in the hope that it will be useful, but
+# Flight Environment is distributed in the hope that it will be useful, but
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
 # IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
 # OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
@@ -23,17 +23,18 @@
 # details.
 #
 # You should have received a copy of the Eclipse Public License 2.0
-# along with Flight Service. If not, see:
+# along with Flight Environment. If not, see:
 #
 #  https://opensource.org/licenses/EPL-2.0
 #
-# For more information on Flight Service, please visit:
-# https://github.com/alces-flight/flight-service
+# For more information on Flight Environment, please visit:
+# https://github.com/openflighthpc/flight-configure
 # ==============================================================================
 if [ "$UID" != 0 ]; then
-  exec sudo "${flight_ROOT}"/bin/flight "$(basename "$0")" "$@"
+  exec sudo "${flight_ROOT:-/opt/flight}"/bin/flight "$(basename "$0")" "$@"
 fi
+
 export FLIGHT_CWD=$(pwd)
-cd /opt/flight/opt/service
+cd /opt/flight/opt/configure
 export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
-flexec bundle exec bin/service "$@"
+exec ${flight_ROOT:-/opt/flight}/bin/bundle exec bin/configure "$@"

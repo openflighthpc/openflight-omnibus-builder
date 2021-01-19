@@ -1,0 +1,11 @@
+*.gem
+.kitchen/
+.kitchen.local.yml
+pkg/*
+.vagrant
+bin/*
+files/**/cache/
+vendor
+vendor
+local
+opt/flight/usr/share/howto/flight-configure.md
