@@ -45,6 +45,10 @@ build do
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
+  # Ensure the etc directory exists the config is copied into it instead of
+  # becoming it.
+  FileUtils.mkdir_p File.join(install_dir,  'etc')
+
   # Moves the supervisor project into place
   # XXX: Add a supervisor specific README.md to the upstream sources
   # XXX: Decide on the future of the 'libexec' directory
