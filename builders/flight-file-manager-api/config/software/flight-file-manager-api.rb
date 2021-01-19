@@ -40,17 +40,24 @@ skip_transitive_dependency_licensing true
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
-  # Moves the project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app', 'libexec',
-    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'Rakefile',
-    '.cli-version'
-  ].each do |file|
+  # Moves the shared project into place
+  ['LICENSE.txt'].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
+
+  # Moves the supervisor project into place
+  # XXX: Add a supervisor specific README.md to the upstream sources
+  # XXX: Decide on the future of the 'libexec' directory
+  [
+    'Gemfile', 'Gemfile.lock', 'bin', 'etc/flight-file-manager.yaml', 'config', 'app',
+    'libexec', 'README.md', 'app.rb', 'config.ru'
+  ].each do |file|
+    copy File.join('supervisor', file), File.expand_path("#{install_dir}/#{file}/..")
   end
 
   # Installs the gems to the shared `vendor/share`
   flags = [
+    '--with default',
     "--without development test",
     '--path vendor'
   ].join(' ')

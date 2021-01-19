@@ -57,6 +57,8 @@ runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
+config_file File.join(install_dir, 'etc/flight-file-manager.yaml')
+
 require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
