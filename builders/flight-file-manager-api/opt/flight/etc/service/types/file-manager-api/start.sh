@@ -46,7 +46,7 @@ mkdir -p $(dirname "${log_file}")
 pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
-addr=tcp://127.0.0.1:915
+addr=tcp://127.0.0.1:920
 tool_bg bash "${flight_ROOT}"/opt/file-manager-api/bin/start "$addr" "$log_file" "$pidfile"
 
 # Wait up to 10ish seconds for puma to start
