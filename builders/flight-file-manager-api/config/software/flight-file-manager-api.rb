@@ -27,7 +27,7 @@
 name 'flight-file-manager-api'
 default_version '0.0.0'
 
-source git: 'https://github.com/openflighthpc/flight-file-manager-api'
+source git: 'https://github.com/openflighthpc/flight-file-manager'
 
 dependency 'enforce-flight-runway'
 

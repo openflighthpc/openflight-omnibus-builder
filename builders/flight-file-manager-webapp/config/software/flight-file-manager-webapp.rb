@@ -27,7 +27,7 @@
 name "flight-file-manager-webapp"
 default_version "0.0.0"
 
-source git: 'https://github.com/openflighthpc/flight-file-manager-webapp'
+source git: 'https://github.com/openflighthpc/flight-file-manager'
 
 dependency 'enforce-flight-nodejs'
 
