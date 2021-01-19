@@ -47,14 +47,16 @@ build do
 
   # Ensure the etc directory exists the config is copied into it instead of
   # becoming it.
-  FileUtils.mkdir_p File.join(install_dir,  'etc')
+  block do
+    FileUtils.mkdir_p File.join(install_dir,  'etc')
+  end
 
   # Moves the supervisor project into place
   # XXX: Add a supervisor specific README.md to the upstream sources
   # XXX: Decide on the future of the 'libexec' directory
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'etc/flight-file-manager.yaml', 'config', 'app',
-    'libexec', 'README.md', 'app.rb', 'config.ru'
+    'Gemfile', 'Gemfile.lock', 'bin', 'etc/flight-file-manager.yaml', 'config',
+    'app', 'lib', 'libexec', 'README.md', 'app.rb', 'config.ru'
   ].each do |file|
     copy File.join('supervisor', file), File.expand_path("#{install_dir}/#{file}/..")
   end
