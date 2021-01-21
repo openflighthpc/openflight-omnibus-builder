@@ -31,6 +31,7 @@ friendly_name 'Flight File Manager API'
 
 install_dir '/opt/flight/opt/file-manager-api'
 
+# TODO: Resolve TODO in the file-manager-api nginx config before release
 VERSION = '0.1.0-a2'
 override 'flight-file-manager-api', version: VERSION
 
@@ -53,7 +54,7 @@ exclude '**/bundler/git'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
+runtime_dependency 'flight-www-system-1.1'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
