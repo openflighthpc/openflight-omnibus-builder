@@ -78,3 +78,43 @@ omnibus manifest PROJECT -l warn
 
 This will output a JSON-formatted manifest containing the resolved
 version of every software definition.
+
+# License
+
+Eclipse Public License 2.0, see [LICENSE.txt](LICENSE.txt) for details.
+
+Copyright (C) 2019-present Alces Flight Ltd.
+
+This program and the accompanying materials are made available under
+the terms of the Eclipse Public License 2.0 which is available at
+[https://www.eclipse.org/legal/epl-2.0](https://www.eclipse.org/legal/epl-2.0),
+or alternative license terms made available by Alces Flight Ltd -
+please direct inquiries about licensing to
+[licensing@alces-flight.com](mailto:licensing@alces-flight.com).
+
+OpenFlight Omnibus Builder is distributed in the hope that it will be
+useful, but WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER
+EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR
+CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR
+A PARTICULAR PURPOSE. See the [Eclipse Public License 2.0](https://opensource.org/licenses/EPL-2.0) for more
+details.
+
+## Apache Sub-license
+
+Files bearing the following copyright notice must comply with
+the Apache License 2.0, see [LICENSE.apache](LICENSE.apache) for
+details.
+
+Copyright 2012-2016 Chef Software, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
