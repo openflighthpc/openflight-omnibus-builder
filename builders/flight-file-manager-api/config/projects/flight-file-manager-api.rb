@@ -31,7 +31,6 @@ friendly_name 'Flight File Manager API'
 
 install_dir '/opt/flight/opt/file-manager-api'
 
-# TODO: Resolve TODO in the file-manager-api nginx config before release
 VERSION = '0.1.0-a2'
 override 'flight-file-manager-api', version: VERSION
 
