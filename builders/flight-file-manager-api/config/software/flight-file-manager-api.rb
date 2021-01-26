@@ -45,8 +45,6 @@ build do
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
-  # Ensure the etc directory exists the config is copied into it instead of
-  # becoming it.
   block do
     FileUtils.mkdir_p File.join(install_dir,  'etc')
   end
@@ -66,7 +64,7 @@ build do
     path = File.join(install_dir, 'etc/flight-file-manager.yaml')
     content = [
       File.read(path),
-      "cache_dir: /opt/flight/var/file-manager-api",
+      "cache_dir: /opt/flight/var/cache/file-manager-api",
       "log_dir: /opt/flight/var/log/file-manager-api",
       ''
     ].join("\n")
@@ -81,4 +79,3 @@ build do
   ].join(' ')
   command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
 end
-

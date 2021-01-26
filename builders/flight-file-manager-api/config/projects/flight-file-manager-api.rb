@@ -26,12 +26,12 @@
 #===============================================================================
 name 'flight-file-manager-api'
 maintainer 'Alces Flight Ltd'
-homepage "https://github.com/openflighthpc/flight-file-manager-api"
+homepage "https://github.com/openflighthpc/flight-file-manager"
 friendly_name 'Flight File Manager API'
 
 install_dir '/opt/flight/opt/file-manager-api'
 
-VERSION = '0.1.0-a2'
+VERSION = '0.1.0-a3'
 override 'flight-file-manager-api', version: VERSION
 
 build_version VERSION
@@ -53,7 +53,7 @@ exclude '**/bundler/git'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.1'
+runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
