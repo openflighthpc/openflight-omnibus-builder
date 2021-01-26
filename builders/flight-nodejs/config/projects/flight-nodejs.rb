@@ -31,18 +31,18 @@ friendly_name 'Flight NodeJS'
 
 install_dir '/opt/flight/opt/nodejs'
 
-VERSION = '1.0.1'
+VERSION = '1.1.0-a1'
 override 'flight-nodejs', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-nodejs'
 dependency 'version-manifest'
 
 JS_SYSTEM = '1.0'
-override 'nodejs', version: '12.16.3'
+override 'nodejs', version: '14.15.4'
 override 'yarn', version: '1.22.4'
 
 license 'EPL-2.0'
