@@ -24,54 +24,47 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-file-manager-api'
-maintainer 'Alces Flight Ltd'
-homepage "https://github.com/openflighthpc/flight-file-manager"
-friendly_name 'Flight File Manager API'
+name 'flight-file-manager-backend'
+default_version '0.0.0'
 
-install_dir '/opt/flight/opt/file-manager-api'
+source git: 'https://github.com/openflighthpc/flight-file-manager'
 
-VERSION = '0.1.0-a3'
-override 'flight-file-manager-api', version: VERSION
-override 'flight-file-manager-backend', version: VERSION
-
-build_version VERSION
-build_iteration 1
-
-dependency 'preparation'
-dependency 'flight-file-manager-api'
-dependency 'flight-file-manager-backend'
-dependency 'version-manifest'
+dependency 'enforce-flight-nodejs'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
 
-description 'Manage file manager sessions'
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
 
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
+  block do
+    FileUtils.mkdir_p File.join(install_dir,  'backend')
+  end
 
-runtime_dependency 'flight-runway'
-runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-nodejs'
-runtime_dependency 'flight-js-system-1.0'
+  # Moves the shared project into place
+  ['LICENSE.txt'].each do |file|
+    copy file, File.expand_path("#{install_dir}/backend/#{file}/..")
+  end
 
-config_file File.join(install_dir, 'etc/flight-file-manager.yaml')
+  # Moves the project into place
+  [
+    'package.json', 'yarn.lock', 'src',
+    'LICENSE.txt',
+    #'README.md',
+  ].each do |file|
+    copy File.join('backend', file), File.expand_path("#{install_dir}/backend/#{file}/..")
+  end
 
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
+  command "cd #{install_dir}/backend && /opt/flight/bin/yarn install", env: env
 
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
+  block do
+    # Remove some git submodule files in some dependencies.  If these are left
+    # in, the build caching mechanism used by omnibus breaks which in turn
+    # breaks the build of this software.
+    %w(spec stone).each do |dir|
+      path = File.join(install_dir, "backend/node_modules/dropbox/generator", dir, ".git")
+      FileUtils.rm_rf(path)
+    end
+  end
 end
