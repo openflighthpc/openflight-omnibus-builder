@@ -26,7 +26,7 @@
 #===============================================================================
 name 'flight-file-manager-webapp'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-file-manager-webapp'
+homepage 'https://github.com/openflighthpc/flight-file-manager'
 friendly_name 'Flight File Manager Webapp'
 
 install_dir '/opt/flight/opt/file-manager-webapp'
