@@ -31,7 +31,7 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.3.1-rc1'
+VERSION = '1.3.0'
 CERT_VERSION = '0.2.1'
 override 'flight-www', version: VERSION
 override 'flight-cert', version: CERT_VERSION
@@ -58,7 +58,7 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-WWW_SYSTEMS = ['1.0', '1.1']
+WWW_SYSTEM = '1.0'
 runtime_dependency 'flight-plugin-cron'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
@@ -83,12 +83,11 @@ File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
   File.write path, content
 end
 
-www_system_tags = WWW_SYSTEMS.map { |v| ":flight-www-system-#{v}" }.join(' ')
 package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
-  priority www_system_tags
+  priority ":flight-www-system-#{WWW_SYSTEM}"
 end
 
 package :deb do
@@ -96,5 +95,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section ":#{www_system_tags}"
+  section "::flight-www-system-#{WWW_SYSTEM}"
 end
