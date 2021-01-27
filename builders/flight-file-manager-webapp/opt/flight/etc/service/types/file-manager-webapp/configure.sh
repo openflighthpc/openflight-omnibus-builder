@@ -15,10 +15,7 @@ if File.exist?('/opt/flight/opt/file-manager-webapp/build/config.json')
   json = File.read('/opt/flight/opt/file-manager-webapp/build/config.json')
   config = JSON.parse(json)
 else
-  config = {
-    "websocketPathPrefix" => "/ws",
-    "websocketPathIp" => "127.0.0.1",
-  }
+  config = {}
 end
 config["${key}"] = "${value}"
 new_json = JSON.pretty_generate(config)
@@ -70,7 +67,7 @@ for a in "$@"; do
       ;;
 
     hostname)
-      url="https://${v}/files/api"
+      url="https://${v}/files/api/v0"
       set_string apiRootUrl "${url}"
       ;;
     *)
