@@ -31,7 +31,7 @@ friendly_name 'Flight File Manager API'
 
 install_dir '/opt/flight/opt/file-manager-api'
 
-VERSION = '0.1.0-a4'
+VERSION = '0.1.2'
 override 'flight-file-manager-api', version: VERSION
 override 'flight-file-manager-backend', version: VERSION
 
