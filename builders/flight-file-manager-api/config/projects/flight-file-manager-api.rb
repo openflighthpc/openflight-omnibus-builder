@@ -24,50 +24,54 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-nodejs'
+name 'flight-file-manager-api'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/blob/master/builders/flight-nodejs/README.md'
-friendly_name 'Flight NodeJS'
+homepage "https://github.com/openflighthpc/flight-file-manager"
+friendly_name 'Flight File Manager API'
 
-install_dir '/opt/flight/opt/nodejs'
+install_dir '/opt/flight/opt/file-manager-api'
 
-VERSION = '1.1.0'
-override 'flight-nodejs', version: VERSION
+VERSION = '0.1.2'
+override 'flight-file-manager-api', version: VERSION
+override 'flight-file-manager-backend', version: VERSION
 
 build_version VERSION
 build_iteration 1
 
 dependency 'preparation'
-dependency 'flight-nodejs'
+dependency 'flight-file-manager-api'
+dependency 'flight-file-manager-backend'
 dependency 'version-manifest'
-
-JS_SYSTEM = '1.0'
-override 'nodejs', version: '14.15.4'
-override 'yarn', version: '1.22.4'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'NodeJS platform for Flight tools.'
+description 'Manage file manager sessions'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
+exclude '**/bundler/git'
 
-%w(node npm yarn).each do |f|
-  extra_package_file "/opt/flight/bin/#{f}"
+runtime_dependency 'flight-runway'
+runtime_dependency 'flight-ruby-system-2.0'
+runtime_dependency 'flight-www'
+runtime_dependency 'flight-www-system-1.0'
+runtime_dependency 'flight-service'
+runtime_dependency 'flight-service-system-1.0'
+runtime_dependency 'flight-nodejs'
+runtime_dependency 'flight-js-system-1.0'
+
+config_file File.join(install_dir, 'etc/flight-file-manager.yaml')
+
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
 end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
-  # repurposed 'priority' field to set RPM recommends/provides
-  # provides are prefixed with `:`
-  priority ":flight-js-system-#{JS_SYSTEM}"
 end
 
 package :deb do
   vendor 'Alces Flight Ltd'
-  # repurposed 'section' field to set DEB recommends/provides
-  # entire section is prefixed with `:` to trigger handling
-  # provides are further prefixed with `:`
-  section "::flight-js-system-#{JS_SYSTEM}"
 end

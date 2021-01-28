@@ -24,50 +24,21 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-nodejs'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/blob/master/builders/flight-nodejs/README.md'
-friendly_name 'Flight NodeJS'
+name "enforce-flight-runway"
+description "enforce existence of flight-runway"
+default_version "1.0.0"
 
-install_dir '/opt/flight/opt/nodejs'
+license :project_license
+skip_transitive_dependency_licensing true
 
-VERSION = '1.1.0'
-override 'flight-nodejs', version: VERSION
-
-build_version VERSION
-build_iteration 1
-
-dependency 'preparation'
-dependency 'flight-nodejs'
-dependency 'version-manifest'
-
-JS_SYSTEM = '1.0'
-override 'nodejs', version: '14.15.4'
-override 'yarn', version: '1.22.4'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'NodeJS platform for Flight tools.'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-
-%w(node npm yarn).each do |f|
-  extra_package_file "/opt/flight/bin/#{f}"
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-  # repurposed 'priority' field to set RPM recommends/provides
-  # provides are prefixed with `:`
-  priority ":flight-js-system-#{JS_SYSTEM}"
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-  # repurposed 'section' field to set DEB recommends/provides
-  # entire section is prefixed with `:` to trigger handling
-  # provides are further prefixed with `:`
-  section "::flight-js-system-#{JS_SYSTEM}"
+build do
+  block do
+    raise "Flight Runway is not installed!" if ! File.exists?('/opt/flight/bin/flight')
+    bundle_version = Bundler.with_unbundled_env do
+      `/opt/flight/bin/bundle --version | sed 's/Bundler version //g'`.chomp
+    end
+    if bundle_version != '2.1.4'
+      raise "Flight Runway has incorrect bundle version: #{bundle_version} (expected 2.1.4)"
+    end
+  end
 end

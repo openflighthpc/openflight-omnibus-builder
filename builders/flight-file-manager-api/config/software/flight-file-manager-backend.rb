@@ -24,50 +24,47 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-nodejs'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/blob/master/builders/flight-nodejs/README.md'
-friendly_name 'Flight NodeJS'
+name 'flight-file-manager-backend'
+default_version '0.0.0'
 
-install_dir '/opt/flight/opt/nodejs'
+source git: 'https://github.com/openflighthpc/flight-file-manager'
 
-VERSION = '1.1.0'
-override 'flight-nodejs', version: VERSION
-
-build_version VERSION
-build_iteration 1
-
-dependency 'preparation'
-dependency 'flight-nodejs'
-dependency 'version-manifest'
-
-JS_SYSTEM = '1.0'
-override 'nodejs', version: '14.15.4'
-override 'yarn', version: '1.22.4'
+dependency 'enforce-flight-nodejs'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
 
-description 'NodeJS platform for Flight tools.'
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
 
-exclude '**/.git'
-exclude '**/.gitkeep'
+  block do
+    FileUtils.mkdir_p File.join(install_dir,  'backend')
+  end
 
-%w(node npm yarn).each do |f|
-  extra_package_file "/opt/flight/bin/#{f}"
-end
+  # Moves the shared project into place
+  ['LICENSE.txt'].each do |file|
+    copy file, File.expand_path("#{install_dir}/backend/#{file}/..")
+  end
 
-package :rpm do
-  vendor 'Alces Flight Ltd'
-  # repurposed 'priority' field to set RPM recommends/provides
-  # provides are prefixed with `:`
-  priority ":flight-js-system-#{JS_SYSTEM}"
-end
+  # Moves the project into place
+  [
+    'package.json', 'yarn.lock', 'src',
+    'LICENSE.txt',
+    #'README.md',
+  ].each do |file|
+    copy File.join('backend', file), File.expand_path("#{install_dir}/backend/#{file}/..")
+  end
 
-package :deb do
-  vendor 'Alces Flight Ltd'
-  # repurposed 'section' field to set DEB recommends/provides
-  # entire section is prefixed with `:` to trigger handling
-  # provides are further prefixed with `:`
-  section "::flight-js-system-#{JS_SYSTEM}"
+  command "cd #{install_dir}/backend && /opt/flight/bin/yarn install", env: env
+
+  block do
+    # Remove some git submodule files in some dependencies.  If these are left
+    # in, the build caching mechanism used by omnibus breaks which in turn
+    # breaks the build of this software.
+    %w(spec stone).each do |dir|
+      path = File.join(install_dir, "backend/node_modules/dropbox/generator", dir, ".git")
+      FileUtils.rm_rf(path)
+    end
+  end
 end

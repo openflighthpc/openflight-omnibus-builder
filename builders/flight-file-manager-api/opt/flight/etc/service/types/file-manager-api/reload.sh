@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,33 +25,18 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'nodejs'
-default_version '0.0.0'
 
-source url: "https://nodejs.org/dist/v#{version}/node-v#{version}-linux-x64.tar.gz"
+# Restarts the puma worker processes
+log_file="${flight_ROOT}"/var/log/file-manager-api/puma.log
+"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/file-manager-api/bin/pumactl restart --pidfile "$1" >>"$log_file" 2>&1
 
-version '12.16.1' do
-  source sha256: 'b2d9787da97d6c0d5cbf24c69fdbbf376b19089f921432c5a61aa323bc070bea'
-end
+# Sleeps two seconds and ensure puma is still running
+sleep 2
+kill -0 "$(cat "$1")" 2>/dev/null
+if [ "$?" -ne 0]; then
+  echo Failed to reload file-manager-api >&2
+  exit 2
+fi
 
-version '12.16.3' do
-  source sha256: '66518c31ea7735ae5a0bb8ea27edfee846702dbdc708fea6ad4a308d43ef5652'
-end
-
-version '14.15.4' do
-  source sha256: 'b51c033d40246cd26e52978125a3687df5cd02ee532e8614feff0ba6c13a774f'
-end
-
-license 'MIT'
-license_file 'LICENSE'
-skip_transitive_dependency_licensing true
-
-relative_path "node-v#{version}-linux-x64"
-
-build do
-  block do
-    Dir.glob(File.join(project_dir, '*')).each do |path|
-      FileUtils.cp_r path, install_dir
-    end
-  end
-end
+# Ensures the PID remains set (it hasn't changed)
+tool_set pid=$(cat "$1")
