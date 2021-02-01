@@ -24,56 +24,35 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-job-script-api'
-maintainer 'Alces Flight Ltd'
-homepage "https://github.com/openflighthpc/flight-job-script-service"
-friendly_name 'Flight Job Script API'
+name "flight-job-script-webapp"
+default_version "0.0.0"
 
-install_dir '/opt/flight/opt/job-script-api'
+source git: 'https://github.com/openflighthpc/flight-job-script-service'
 
-VERSION = '0.1.0'
-override 'flight-job-script-api', version: VERSION
-
-build_version VERSION
-build_iteration 1
-
-dependency 'preparation'
-dependency 'flight-job-script-api'
-dependency 'version-manifest'
+dependency 'enforce-flight-nodejs'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
 
-description 'API server for generating job scripts'
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
 
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
+  # These are only needed to build the software.  We don't want them in the
+  # RPM.
+  build_only = %w( package.json yarn.lock public src .env .nvmrc)
 
-# RPam dependencies
-runtime_dependency 'pam'
-runtime_dependency 'audit-libs'
-runtime_dependency 'libcap-ng'
+  build_only.each do |file|
+    copy File.join('client', file), File.expand_path("#{install_dir}/#{file}/..")
+  end
 
-# Flight Dependencies
-runtime_dependency 'flight-runway'
-runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
+  copy 'LICENSE.txt', install_dir
+  copy "client/README.md", install_dir
 
-config_file File.join(install_dir, 'etc/flight-job-script-api.yaml')
+  command "cd #{install_dir} && /opt/flight/bin/yarn install", env: env
+  command "cd #{install_dir} && /opt/flight/bin/yarn run build", env: env
 
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
+  build_only.each do |file|
+    delete File.expand_path("#{install_dir}/#{file}")
+  end
 end

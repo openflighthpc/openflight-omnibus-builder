@@ -24,46 +24,37 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-job-script-api'
+name 'flight-job-script-webapp'
 maintainer 'Alces Flight Ltd'
-homepage "https://github.com/openflighthpc/flight-job-script-service"
-friendly_name 'Flight Job Script API'
+homepage 'https://github.com/openflighthpc/flight-job-script'
+friendly_name 'Flight Job Script Webapp'
 
-install_dir '/opt/flight/opt/job-script-api'
+install_dir '/opt/flight/opt/job-script-webapp'
 
-VERSION = '0.1.0'
-override 'flight-job-script-api', version: VERSION
+VERSION = '0.1.2'
+override 'flight-job-script-webapp', version: VERSION
 
 build_version VERSION
 build_iteration 1
 
 dependency 'preparation'
-dependency 'flight-job-script-api'
+dependency 'flight-job-script-webapp'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'API server for generating job scripts'
+description 'Webapp for generating job scripts'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
+exclude 'node_modules'
 
-# RPam dependencies
-runtime_dependency 'pam'
-runtime_dependency 'audit-libs'
-runtime_dependency 'libcap-ng'
-
-# Flight Dependencies
-runtime_dependency 'flight-runway'
-runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
-
-config_file File.join(install_dir, 'etc/flight-job-script-api.yaml')
+runtime_dependency 'flight-www'
+runtime_dependency 'flight-www-system-1.0'
 
 require 'find'
 Find.find('opt') do |o|
