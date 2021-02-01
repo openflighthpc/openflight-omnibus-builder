@@ -45,7 +45,7 @@ tool_bg bash "${flight_ROOT}"/opt/job-script-api/bin/start "$log_file" "$pidfile
 pid=''
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$(ps -ax | grep $addr | grep "\spuma\s" | awk '{ print $1 }')
+  pid=$(ps -ax | grep "$log_file" | grep "\spuma\s" | awk '{ print $1 }')
   if [ -n "$pid" ]; then
     break
   fi

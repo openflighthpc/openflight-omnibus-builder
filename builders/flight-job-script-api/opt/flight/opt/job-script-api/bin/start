@@ -26,8 +26,8 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-log_file="$2"
-pid_file="$3"
+log_file="$1"
+pid_file="$2"
 
 # Exec into the ruby/puma process so the PID does not change
 exec "${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/job-script-api/bin/puma \
