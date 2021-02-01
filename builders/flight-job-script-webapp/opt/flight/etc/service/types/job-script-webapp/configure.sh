@@ -64,7 +64,7 @@ for a in "$@"; do
       ;;
 
     hostname)
-      url="https://${v}/files/api/v0"
+      url="https://${v}/job-scripts/api/v0"
       set_string apiRootUrl "${url}"
       ;;
     *)
