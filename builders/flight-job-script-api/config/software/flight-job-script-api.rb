@@ -55,11 +55,15 @@ build do
   # Update the config
   block do
     path = File.join(install_dir, 'etc/flight-job-script-api.yaml')
+    usr_dir = "/opt/flight/usr/share/job-script-api"
     content = [
       File.read(path),
-      "data_dir: /opt/flight/usr/share/job-script-api"
+      "data_dir: #{usr_dir}"
     ].join("\n")
     File.write path, content
+
+    FileUtils.mkdir_p usr_dir
+    FileUtils.touch File.join(usr_dir, '.empty')
   end
 
   # Installs the gems to the shared `vendor/share`
