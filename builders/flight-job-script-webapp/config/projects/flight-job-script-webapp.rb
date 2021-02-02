@@ -44,7 +44,7 @@ dependency 'version-manifest'
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Webapp for generating job scripts'
+description 'Webapp for creating customised job scripts'
 
 exclude '**/.git'
 exclude '**/.gitkeep'

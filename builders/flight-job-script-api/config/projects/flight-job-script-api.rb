@@ -44,7 +44,7 @@ dependency 'version-manifest'
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'API server for generating job scripts'
+description 'API server for creating customised job scripts'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
