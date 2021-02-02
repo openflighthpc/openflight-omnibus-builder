@@ -55,4 +55,12 @@ build do
   build_only.each do |file|
     delete File.expand_path("#{install_dir}/#{file}")
   end
+
+  block do
+    config = { apiRootUrl: "/job-scripts/api/v0" }
+    File.write(
+      File.join(install_dir, 'build', 'config.json'),
+      config.to_json
+    )
+  end
 end
