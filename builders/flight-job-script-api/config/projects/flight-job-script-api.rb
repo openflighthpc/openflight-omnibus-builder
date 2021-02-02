@@ -69,6 +69,9 @@ require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
+Find.find('/opt/flight/usr/share/job-script-api/') do |o|
+  extra_package_file(o) if File.file?(o)
+end
 
 package :rpm do
   vendor 'Alces Flight Ltd'

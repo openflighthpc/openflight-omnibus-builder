@@ -64,6 +64,11 @@ build do
 
     FileUtils.mkdir_p usr_dir
     FileUtils.touch File.join(usr_dir, '.empty')
+
+    # Copy the example scripts into place.
+    Dir.glob(File.join(project_dir, 'api', 'usr', 'share', '*')).each do |f|
+      copy File.join('api', 'usr', 'share', File.basename(f)), usr_dir
+    end
   end
 
   # Installs the gems to the shared `vendor/share`
