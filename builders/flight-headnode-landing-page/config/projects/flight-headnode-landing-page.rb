@@ -31,7 +31,7 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www/landing-page'
 
-VERSION = '1.2.0-rc1'
+VERSION = '1.2.0-rc2'
 override 'flight-headnode-landing-page', version: VERSION
 
 build_version VERSION
