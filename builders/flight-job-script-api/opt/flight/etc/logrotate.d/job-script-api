@@ -1,4 +1,3 @@
-# Rotate Flight WWW logs
 /opt/flight/var/log/job-script-api/*.log {
     daily
     missingok
