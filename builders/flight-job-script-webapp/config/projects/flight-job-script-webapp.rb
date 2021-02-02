@@ -31,7 +31,7 @@ friendly_name 'Flight Job Script Webapp'
 
 install_dir '/opt/flight/opt/job-script-webapp'
 
-VERSION = '0.3.0'
+VERSION = '0.4.0'
 override 'flight-job-script-webapp', version: VERSION
 
 build_version VERSION
@@ -55,6 +55,7 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
+runtime_dependency 'flight-landing-page-system-1.0'
 
 require 'find'
 Find.find('opt') do |o|

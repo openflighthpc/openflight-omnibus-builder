@@ -36,10 +36,10 @@ CERT_VERSION = '0.2.1'
 override 'flight-www', version: VERSION
 override 'flight-cert', version: CERT_VERSION
 override :nginx, version: '1.14.2'
-override 'flight-landing-page', version: '1.1.0'
+override 'flight-landing-page', version: '1.2.0-rc1'
 
 build_version VERSION
-build_iteration '1'
+build_iteration '2'
 
 dependency 'preparation'
 dependency 'flight-www'
@@ -59,6 +59,7 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 WWW_SYSTEM = '1.0'
+LANDING_PAGE_SYSTEM = '1.0'
 runtime_dependency 'flight-plugin-cron'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
@@ -87,7 +88,7 @@ package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
-  priority ":flight-www-system-#{WWW_SYSTEM}"
+  priority ":flight-www-system-#{WWW_SYSTEM} :flight-landing-page-system-#{LANDING_PAGE_SYSTEM}"
 end
 
 package :deb do
@@ -95,5 +96,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "::flight-www-system-#{WWW_SYSTEM}"
+  section "::flight-www-system-#{WWW_SYSTEM} :flight-landing-page-system-#{LANDING_PAGE_SYSTEM}"
 end
