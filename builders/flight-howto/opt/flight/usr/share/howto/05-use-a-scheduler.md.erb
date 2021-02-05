@@ -1,4 +1,8 @@
-# How To Use a Scheduler
+<%
+  PRODUCT_SHORT   ||= 'OpenFlight'
+  PRODUCT_DOMAIN  ||= 'openflighthpc.org'
+-%>
+# Using a Scheduler(7)
 
 ## What is a batch job scheduler?
 
@@ -31,7 +35,7 @@ Users typically interact with compute research environments by running batch (al
 
 Both methods of running jobs can be equally as efficient, particularly on a personal, ephemeral research environment. Both classes of job can be of any type - for example, it's possible to run interactive parallel jobs and batch multi-threaded jobs across your research environment. The choice of which class of job-type you want to use will depend on the application you're running, and which method is more convenient for you to use.
 
-## Why use a job scheduler in an OpenFlight environment?
+## Why use a job scheduler in an <%= PRODUCT_SHORT -%> environment?
 
 Good question. On shared multi-user research environments, a job-scheduler is often used as a control mechanism to make sure that users don't unfairly monopolise the valuable compute resources. In extreme cases, the scheduler may be wielded by system administrators to force “good behaviour” in a shared environment, and can feel like an imposition to research environment users.
 
@@ -44,7 +48,7 @@ However, there are a number of reasons why your own job-scheduler can still be a
  * It can help prevent accidentally over-allocating CPUs or memory, which could lead to nodes failing.
  * It can help bring discipline to the environment, providing a consistent method to replicate the running of jobs in different environments.
  * Jobs queued in the scheduler can be used to trigger scaling-up the size of your research environment, with compute nodes released from the research environment when there are no jobs to run, saving you money.
- * Your OpenFlight environment comes with a job-scheduler pre-installed, ready for you to start using. The scheduler uses very few resources when idle, so you can choose to use it if you find it useful, or run jobs manually across your research environment if you prefer.
+ * Your <%= PRODUCT_SHORT -%> environment comes with a job-scheduler pre-installed, ready for you to start using. The scheduler uses very few resources when idle, so you can choose to use it if you find it useful, or run jobs manually across your research environment if you prefer.
 
 ## What's next?
 
@@ -56,10 +60,10 @@ Read about:
  * The useful suite of tools provided by the Flight User Suite:
     `flight howto show use-flight-user-suite`
 
-You can find more help and documentation in the OpenFlight docs:
+You can find more help and documentation in the <%= PRODUCT_SHORT -%> docs:
 
-> <https://build.openflighthpc.org/>
-> <https://use.openflighthpc.org/>
+> <https://build.<%= PRODUCT_DOMAIN -%>/>
+> <https://use.<%= PRODUCT_DOMAIN -%>/>
 
 ## License
 

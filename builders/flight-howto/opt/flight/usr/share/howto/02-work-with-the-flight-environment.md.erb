@@ -1,4 +1,8 @@
-# How To Work with the Flight Environment
+<%
+  PRODUCT_SHORT   ||= 'OpenFlight'
+  PRODUCT_DOMAIN  ||= 'openflighthpc.org'
+-%>
+# Working with Flight(7)
 
 ## Activating the Flight System
 
@@ -6,9 +10,9 @@ The Flight User Suite sits unobtrusively on the research environment with the `f
 
 While deactivated the `flight` command provides some quick tips for activating the system and finding out more about the flight system (`flight info`).
 
-To activate your OpenFlight environment, simply run `flight start`. When first run, this will also generate some login keys that ease SSH access within your cluster by allowing passwordless logins between nodes.
+To activate your <%= PRODUCT_SHORT -%> environment, simply run `flight start`. When first run, this will also generate some login keys that ease SSH access within your cluster by allowing passwordless logins between nodes.
 
-The OpenFlight environment can be set to automatically activate on login by running `flight set always on`.
+The <%= PRODUCT_SHORT -%> environment can be set to automatically activate on login by running `flight set always on`.
 
 ## Customising the Environment
 
@@ -33,10 +37,10 @@ Read about:
     `flight howto show run-jobs`
     `flight howto show use-a-scheduler`
 
-You can find more help and documentation in the OpenFlight docs:
+You can find more help and documentation in the <%= PRODUCT_SHORT -%> docs:
 
-> <https://build.openflighthpc.org/>
-> <https://use.openflighthpc.org/>
+> <https://build.<%= PRODUCT_DOMAIN -%>/>
+> <https://use.<%= PRODUCT_DOMAIN -%>/>
 
 ## License
 
