@@ -26,10 +26,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-app_root="$flight_ROOT/opt/scheduler-controller"
-pid=$("$flight_ROOT"/bin/ruby "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc)
+pid=$(cat "$1")
 if [ "$pid" ]; then
-  # NOTE: Sending to the process group as the PID corresponds to the wrapper
-  #       script and not the falcon process. Change as required
-  kill -s SIGINT -- "-$pid"
+  kill -s SIGINT "$pid"
 fi

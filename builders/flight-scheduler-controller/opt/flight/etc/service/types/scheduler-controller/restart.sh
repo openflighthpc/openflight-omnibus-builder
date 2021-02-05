@@ -28,14 +28,15 @@
 
 # Get the source directory
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+OLD_PID=(cat "$1")
 
 # NOTE: The PID is determined via the supervisor.ipc socket
-bash "$DIR"/stop.sh
+bash "$DIR"/stop.sh "$1"
 
 # Wait up to 10ish seconds for falcon to stop
 app_root="$flight_ROOT/opt/scheduler-controller"
 for _ in `seq 1 20`; do
-  "$flight_ROOT"/bin/ruby "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc
+  kill -0 "$OLD_PID" 2>/dev/null
   state=$?
   if [ "$state" -ne 0 ]; then
     break

@@ -38,16 +38,20 @@ if [ -z "$(echo "$RACK_ENV")" ]; then
   export RACK_ENV=production
 fi
 
+# Create a temporary pid file
+pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
+rm -f "$pidfile"
+
 # Start the server
-tool_bg "$flight_ROOT"/opt/scheduler-controller/bin/start
+tool_bg "$flight_ROOT"/opt/scheduler-controller/bin/start "$pidfile"
 
 # Wait up to 10ish seconds for falcon to start
 pid=''
-app_root="$flight_ROOT/opt/scheduler-controller"
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$("$flight_ROOT"/bin/ruby "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc || true)
-  if [ -n "$pid" ]; then
+  if [ -f "$pidfile" ]; then
+    pid=$(cat "$pidfile")
+    rm -f "$pidfile"
     break
   fi
 done
