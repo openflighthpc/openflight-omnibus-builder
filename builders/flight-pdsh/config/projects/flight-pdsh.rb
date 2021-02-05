@@ -36,7 +36,7 @@ override 'pdsh', version: VERSION
 override 'readline', version: '6.0'
 
 build_version VERSION
-build_iteration 4
+build_iteration 5
 
 dependency 'preparation'
 dependency "genders"
@@ -56,7 +56,6 @@ extra_package_file "opt/flight/etc/flight-config-map.d/pdsh.yaml"
 %w(dshbak nodeattr pdcp pdsh rpdcp).each do |f|
   extra_package_file "opt/flight/opt/pdsh/bin/#{f}"
 end
-extra_package_file "opt/flight/etc/genders"
 %w(sh csh).each do |ext|
   extra_package_file "opt/flight/etc/profile.d/90-pdsh.#{ext}"
 end
