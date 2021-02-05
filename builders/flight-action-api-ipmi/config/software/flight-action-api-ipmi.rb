@@ -24,42 +24,24 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-action-api'
+name 'flight-action-api-ipmi'
 default_version '0.0.0'
 
 source git: 'https://github.com/openflighthpc/flight-action-api'
-
-dependency 'enforce-flight-runway'
-
-whitelist_file Regexp.new("vendor/ruby/.*\.so$")
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
 build do
-  env = with_standard_compiler_flags(with_embedded_path)
-
-  # Moves the project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app',
-    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'Rakefile',
-    '.cli-version'
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  block do
+    # Moves the project into place
+    [
+      'ipmi-sel'
+    ].each do |action|
+      libexec_dir = File.expand_path(File.join(install_dir, 'libexec'))
+      FileUtils.mkdir_p File.join(libexec_dir, action)
+      copy File.join('libexec', action), libexec_dir
+    end
   end
-
-  # Create the blank nodes file
-  touch File.join(install_dir, 'config/nodes.yaml')
-
-  # Create the libexec directory where other packages will install scripts.
-  mkdir File.expand_path("#{install_dir}/libexec/")
-
-  # Installs the gems to the shared `vendor/share`
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
 end
-

@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,6 +24,7 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+
 name 'flight-action-api'
 maintainer 'Alces Flight Ltd'
 homepage "https://github.com/openflighthpc/flight-action-api"
@@ -31,7 +32,7 @@ friendly_name 'Flight Action API'
 
 install_dir '/opt/flight/opt/action-api'
 
-VERSION = '1.3.0'
+VERSION = '1.4.0-rc3'
 override 'flight-action-api', version: VERSION
 
 build_version VERSION

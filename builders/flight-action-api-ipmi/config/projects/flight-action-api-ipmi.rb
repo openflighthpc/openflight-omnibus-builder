@@ -24,42 +24,40 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-action-api'
-default_version '0.0.0'
+name 'flight-action-api-ipmi'
+maintainer 'Alces Flight Ltd'
+homepage "https://github.com/openflighthpc/flight-action-api"
+friendly_name 'Flight Action API ipmi actions'
 
-source git: 'https://github.com/openflighthpc/flight-action-api'
+install_dir '/opt/flight/opt/action-api'
 
-dependency 'enforce-flight-runway'
+VERSION = '1.4.0-rc3'
+override 'flight-action-api-ipmi', version: VERSION
 
-whitelist_file Regexp.new("vendor/ruby/.*\.so$")
+build_version VERSION
+build_iteration 1
+
+dependency 'preparation'
+dependency 'flight-action-api-ipmi'
+
+text_manifest_path File.join(install_dir, "version-manifest.ipmi-actions.txt")
+json_manifest_path File.join(install_dir, "version-manifest.ipmi-actions.json")
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
+license_file_path 'LICENSE.ipmi-actions'
 
-build do
-  env = with_standard_compiler_flags(with_embedded_path)
+description 'Power actions for Flight Action API'
 
-  # Moves the project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app',
-    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'Rakefile',
-    '.cli-version'
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
-  end
+exclude '**/.git'
+exclude '**/.gitkeep'
 
-  # Create the blank nodes file
-  touch File.join(install_dir, 'config/nodes.yaml')
+runtime_dependency 'flight-action-api'
 
-  # Create the libexec directory where other packages will install scripts.
-  mkdir File.expand_path("#{install_dir}/libexec/")
-
-  # Installs the gems to the shared `vendor/share`
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+package :rpm do
+  vendor 'Alces Flight Ltd'
 end
 
+package :deb do
+  vendor 'Alces Flight Ltd'
+end

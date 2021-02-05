@@ -24,42 +24,50 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-action-api'
-default_version '0.0.0'
+name 'flight-ipmi'
+maintainer 'Alces Flight Ltd'
+homepage 'https://github.com/openflighthpc/flight-ipmi'
+friendly_name 'Flight Power'
 
-source git: 'https://github.com/openflighthpc/flight-action-api'
+install_dir '/opt/flight/opt/ipmi'
 
-dependency 'enforce-flight-runway'
+VERSION = '1.1.0'
+override 'flight-ipmi', version: VERSION
 
-whitelist_file Regexp.new("vendor/ruby/.*\.so$")
+build_version VERSION
+build_iteration 2
+
+dependency 'preparation'
+dependency 'version-manifest'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
 
-build do
-  env = with_standard_compiler_flags(with_embedded_path)
+description 'Execute ipmi actions on flight clusters'
 
-  # Moves the project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app',
-    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'Rakefile',
-    '.cli-version'
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
-  end
+exclude '**/.git'
+exclude '**/.gitkeep'
+exclude '**/bundler/git'
 
-  # Create the blank nodes file
-  touch File.join(install_dir, 'config/nodes.yaml')
+runtime_dependency 'flight-action'
 
-  # Create the libexec directory where other packages will install scripts.
-  mkdir File.expand_path("#{install_dir}/libexec/")
-
-  # Installs the gems to the shared `vendor/share`
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+%w(
+  opt/flight/libexec/commands/ipmi
+).each do |f|
+  extra_package_file f
 end
 
+# Update the version numbering in files
+File.expand_path('../../opt/flight/libexec/commands/ipmi', __dir__).tap do |path|
+  content = File.read path
+  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
+  File.write path, content
+end
+
+package :rpm do
+  vendor 'Alces Flight Ltd'
+end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+end
