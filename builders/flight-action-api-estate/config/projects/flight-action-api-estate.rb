@@ -31,8 +31,7 @@ friendly_name 'Flight Action API estate management actions'
 
 install_dir '/opt/flight/opt/action-api'
 
-# NOTE: Remove tilda from runtime_dependency on next production release
-VERSION = '1.4.0-rc3'
+VERSION = '1.3.0'
 override 'flight-action-api-estate', version: VERSION
 
 build_version VERSION
@@ -62,12 +61,11 @@ exclude '**/.gitkeep'
 
 runtime_dependency 'flight-action-api-power'
 
-# NOTE: Remove tilda from versions on next production release
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-action-api >= 1.4.0~'
+  runtime_dependency 'flight-action-api >= 1.4.0'
   runtime_dependency 'nmap-ncat'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'flight-action-api (>= 1.4.0~)'
+  runtime_dependency 'flight-action-api (>= 1.4.0)'
   runtime_dependency 'netcat'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
