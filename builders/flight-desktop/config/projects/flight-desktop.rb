@@ -35,7 +35,7 @@ VERSION = '1.3.1'
 override 'flight-desktop', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 3
 
 dependency 'preparation'
 dependency 'flight-desktop'
