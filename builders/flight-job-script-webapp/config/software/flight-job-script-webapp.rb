@@ -40,8 +40,8 @@ build do
 
   # There is an intermittent build issue where the "yarn install" fails.
   # The "ejs" transient dependency's postinstall script assumes that "node" is
-  # on the PATH. This *should* always cause the build to fail without the PATH
-  # modification below.
+  # on the PATH. Without the PATH modification below, this *should* cause the
+  # build to fail each time "ejs" is installed, i.e., not used from cache.
   #
   # However there is a long running 'yarn' bug where it does not execute the
   # postinstall script. This means the build *may* succeed regardless.
