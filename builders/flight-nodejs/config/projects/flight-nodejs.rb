@@ -31,7 +31,7 @@ friendly_name 'Flight NodeJS'
 
 install_dir '/opt/flight/opt/nodejs'
 
-NODEJS_VERSION = '12.16.3'
+NODEJS_VERSION = '14.15.4'
 VERSION = NODEJS_VERSION
 override 'flight-nodejs', version: VERSION
 

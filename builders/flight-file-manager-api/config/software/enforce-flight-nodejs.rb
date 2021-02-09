@@ -34,5 +34,12 @@ skip_transitive_dependency_licensing true
 build do
   block do
     raise "Flight NodeJS is not installed!" if ! File.exists?('/opt/flight/bin/yarn')
+    nodejs_version = `/opt/flight/bin/node --version`.chomp
+    major, minor, _patch = nodejs_version.sub(/^v/, '').split('.')
+    if major.to_i < 14
+      raise "Flight NodeJS has incorrect version: #{nodejs_version} (expected 14.15.x)"
+    elsif major.to_i == 14 && minor.to_i < 15
+      raise "Flight NodeJS has incorrect version: #{nodejs_version} (expected 14.15.x)"
+    end
   end
 end
