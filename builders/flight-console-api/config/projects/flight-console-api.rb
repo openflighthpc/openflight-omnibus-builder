@@ -35,7 +35,7 @@ VERSION = '1.0.0'
 override 'flight-console-api', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 3
 
 dependency 'preparation'
 dependency 'flight-console-api'
@@ -51,7 +51,7 @@ exclude '**/.gitkeep'
 
 runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-nodejs'
-runtime_dependency 'flight-js-system-1.0'
+runtime_dependency 'flight-js-system-2.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
 

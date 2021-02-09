@@ -36,7 +36,7 @@ override 'flight-file-manager-api', version: VERSION
 override 'flight-file-manager-backend', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-file-manager-api'
@@ -58,8 +58,14 @@ runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-nodejs'
-runtime_dependency 'flight-js-system-1.0'
+runtime_dependency 'flight-js-system-2.0'
+if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'flight-nodejs >= 14.15.4'
+elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'flight-nodejs (>= 14.15.4)'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
+end
 
 config_file File.join(install_dir, 'etc/flight-file-manager.yaml')
 

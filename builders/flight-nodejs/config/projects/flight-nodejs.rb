@@ -31,7 +31,8 @@ friendly_name 'Flight NodeJS'
 
 install_dir '/opt/flight/opt/nodejs'
 
-VERSION = '1.1.0'
+NODEJS_VERSION = '14.15.4'
+VERSION = NODEJS_VERSION
 override 'flight-nodejs', version: VERSION
 
 build_version VERSION
@@ -41,8 +42,12 @@ dependency 'preparation'
 dependency 'flight-nodejs'
 dependency 'version-manifest'
 
-JS_SYSTEM = '1.0'
-override 'nodejs', version: '14.15.4'
+# JS_SYSTEM 2.0 represents a versioning scheme where `flight-nodejs` tracks
+# the upstream nodejs version.  I.e., `flight-nodejs-14.15.4` installs nodejs
+# 14.15.4.
+JS_SYSTEM = '2.0'
+
+override 'nodejs', version: NODEJS_VERSION
 override 'yarn', version: '1.22.4'
 
 license 'EPL-2.0'
