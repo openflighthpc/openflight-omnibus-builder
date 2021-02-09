@@ -31,7 +31,7 @@ friendly_name 'Flight Job Script API'
 
 install_dir '/opt/flight/opt/job-script-api'
 
-VERSION = '0.4.0'
+VERSION = '0.5.2'
 override 'flight-job-script-api', version: VERSION
 
 build_version VERSION
@@ -67,9 +67,6 @@ config_file File.join(install_dir, 'etc/flight-job-script-api.yaml')
 
 require 'find'
 Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-Find.find('/opt/flight/usr/share/job-script-api/') do |o|
   extra_package_file(o) if File.file?(o)
 end
 
