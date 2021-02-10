@@ -74,9 +74,11 @@ build do
     # need to jump through hoops to get them added to the package.
     Dir.glob(File.join(project_dir, 'api', 'usr', 'share', '*')).each do |dir|
       example_script_name = File.basename(dir)
+      $stdout.puts "Found example script #{example_script_name}"
       copy File.join('api', 'usr', 'share', example_script_name), usr_dir
       Find.find(dir) do |f|
         if File.file?(f)
+          $stdout.puts "  found example script file #{File.basename(f)}"
           install_path = File.join(usr_dir, example_script_name, File.basename(f))
           project.extra_package_file(install_path)
         end

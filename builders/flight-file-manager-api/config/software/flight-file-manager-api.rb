@@ -64,7 +64,7 @@ build do
     path = File.join(install_dir, 'etc/flight-file-manager.yaml')
     content = [
       File.read(path),
-      "cache_dir: /opt/flight/var/cache/file-manager-api",
+      "data_dir: /opt/flight/usr/share/file-manager-api",
       "log_dir: /opt/flight/var/log/file-manager-api",
       ''
     ].join("\n")
