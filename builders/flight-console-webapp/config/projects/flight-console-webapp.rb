@@ -35,7 +35,7 @@ VERSION = '1.2.0-rc3'
 override 'flight-console-webapp', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 3
 
 dependency 'preparation'
 dependency 'flight-console-webapp'
@@ -55,6 +55,7 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
+runtime_dependency 'flight-landing-page-branding-system-1.0'
 
 require 'find'
 Find.find('opt') do |o|

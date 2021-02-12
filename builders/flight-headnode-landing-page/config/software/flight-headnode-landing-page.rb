@@ -36,5 +36,5 @@ skip_transitive_dependency_licensing true
 build do
   type = 'headnode'
   # Moves the content for the landing page into place.
-  copy "landing-page/types/#{type}", "#{install_dir}/default"
+  copy "landing-page/types/#{type}/*", install_dir
 end
