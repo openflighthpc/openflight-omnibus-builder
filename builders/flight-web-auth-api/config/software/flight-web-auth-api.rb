@@ -57,7 +57,7 @@ build do
     path = File.join(install_dir, 'etc/flight-web-auth.yaml')
     content = [
       File.read(path),
-      "shared_secret_path: #{File.join(install_dir, 'etc/shared-secret.conf')}",
+      "shared_secret_path: /opt/flight/etc/shared-secret.conf",
     ].join("\n")
     File.write path, content
   end
