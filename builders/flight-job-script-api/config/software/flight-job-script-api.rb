@@ -60,6 +60,7 @@ build do
       File.read(path),
       "data_dir: #{usr_dir}",
       "command_path: /usr/sbin:/usr/bin:/sbin:/bin:/opt/flight/opt/slurm/bin",
+      "shared_secret_path: /opt/flight/etc/shared-secret.conf"
     ].join("\n")
     File.write path, content
 
