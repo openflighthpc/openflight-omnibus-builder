@@ -54,6 +54,7 @@ exclude '**/bundler/git'
 runtime_dependency 'pam'
 runtime_dependency 'audit-libs'
 runtime_dependency 'libcap-ng'
+runtime_dependency 'jq'
 
 # Flight Dependencies
 runtime_dependency 'flight-runway'
