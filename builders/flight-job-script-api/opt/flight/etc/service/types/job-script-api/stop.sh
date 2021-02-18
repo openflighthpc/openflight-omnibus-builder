@@ -26,6 +26,20 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
+pid_file="$1"
+if [ -z "$pid_file" ]; then
+  echo "The pid_file argument has not been provided!" >&2
+  exit 1
+fi
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
+if [ -z "$PUMA_LOG_FILE" ]; then
+  echo "PUMA_LOG_FILE has not been set!" >&2
+  exit 1
+fi
+
 # Stop puma
-PATH="${flight_ROOT}/bin/:${PATH}"
-"${flight_ROOT}"/opt/job-script-api/bin/pumactl stop  --pidfile $1
+"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/job-script-api/bin/pumactl \
+  stop  --pidfile "$pid_file" >>"$PUMA_LOG_FILE" 2>&1

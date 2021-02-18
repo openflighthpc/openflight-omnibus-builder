@@ -1,4 +1,4 @@
-#!/bin/bash
+# vim: set type=bash;
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
 #
@@ -26,25 +26,5 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-pid_file="$1"
-if [ -z "$pid_file" ]; then
-  echo "The pid_file argument has not been provided!" >&2
-  exit 1
-fi
-if [ -z "$flight_ROOT" ]; then
-  echo "flight_ROOT has not been set!" >&2
-  exit 1
-fi
-if [ -z "$PUMA_LOG_FILE" ]; then
-  echo "PUMA_LOG_FILE has not been set!" >&2
-  exit 1
-fi
-
-# Exec into the ruby/puma process so the PID does not change
-exec "${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/job-script-api/bin/puma \
-  --pidfile "$pid_file" \
-  --redirect-stdout "$PUMA_LOG_FILE" \
-  --redirect-stderr "$PUMA_LOG_FILE" \
-  --redirect-append \
-  --dir "${flight_ROOT}"/opt/job-script-api \
-  >>"${PUMA_LOG_FILE}" 2>&1
+RACK_ENV=production
+PUMA_LOG_FILE=/opt/flight/var/log/job-script-api/puma.log
