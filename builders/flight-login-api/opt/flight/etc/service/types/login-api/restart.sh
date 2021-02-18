@@ -25,49 +25,25 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-set -e
 
-# Required so web-auth-api can locate the `flight` entry point.
-PATH="${flight_ROOT}/bin:${PATH}"
-# Required to support initializers.
-export USER=$(whoami)
-# Required to correctly handle output parsing.
-if [ -f /etc/locale.conf ]; then
-  . /etc/locale.conf
-fi
-export LANG=${LANG:-en_US.UTF-8}
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+OLD_PID="$1"
 
-var_dir="${flight_ROOT}"/var/web-auth-api
-mkdir -p "${var_dir}"
+bash "$DIR"/stop.sh "$OLD_PID"
 
-log_file="${flight_ROOT}"/var/log/web-auth-api/puma.log
-mkdir -p $(dirname "${log_file}")
-
-addr=tcp://127.0.0.1:922
-tool_bg bash "${flight_ROOT}"/opt/web-auth-api/bin/start "$addr" "$log_file"
-
-# Wait up to 10ish seconds for puma to start
-pid=''
+# Wait up to 10ish seconds for puma to stop
+state=1
 for _ in `seq 1 20`; do
-  sleep 0.5
-  pid=$(ps -ax | grep $addr | grep "\spuma\s" | awk '{ print $1 }')
-  if [ -n "$pid" ]; then
+  kill -0 "$OLD_PID" 2>/dev/null
+  state=$?
+  if [ "$state" -ne 0 ]; then
     break
   fi
 done
 
-# Report back the pid or error
-if [ -n "$pid" ]; then
-  # Wait a second to ensure puma is still running
-  sleep 1
-  kill -0 "$pid" 2>/dev/null
-  if [ "$?" -ne 0 ]; then
-    echo Failed to start web-auth-api >&2
-    exit 2
-  fi
-
-  tool_set pid=$pid
-else
-  echo Failed to start web-auth-api >&2
+if [ "$state" -eq 0 ]; then
+  echo Failed to stop login-api
   exit 1
 fi
+
+bash "$DIR"/start.sh

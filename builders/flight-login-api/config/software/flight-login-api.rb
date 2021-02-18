@@ -1,4 +1,3 @@
-#!/bin/bash
 #==============================================================================
 # Copyright (C) 2021-present Alces Flight Ltd.
 #
@@ -25,18 +24,49 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name 'flight-login-api'
+default_version '0.0.0'
 
-# Restarts the puma worker processes
-log_file="${flight_ROOT}"/var/log/web-auth-api/puma.log
-"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/web-auth-api/bin/pumactl restart --pidfile "$1" >>"$log_file" 2>&1
+source git: 'https://github.com/openflighthpc/flight-login-api'
 
-# Sleeps two seconds and ensure puma is still running
-sleep 2
-kill -0 "$(cat "$1")" 2>/dev/null
-if [ "$?" -ne 0]; then
-  echo Failed to reload web-auth-api >&2
-  exit 2
-fi
+dependency 'enforce-flight-runway'
 
-# Ensures the PID remains set (it hasn't changed)
-tool_set pid=$(cat "$1")
+whitelist_file Regexp.new("vendor/ruby/.*.so")
+
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
+
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
+
+  block do
+    FileUtils.mkdir_p File.join(install_dir,  'etc')
+  end
+
+  # Moves the api project into place
+  [
+    'Gemfile', 'Gemfile.lock', 'README.md', 'LICENSE.txt', 'app.rb', 'config.ru',
+    'app', 'bin', 'config', 'etc/flight-login.yaml', 'lib'
+  ].each do |file|
+    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
+
+  # Update the config
+  block do
+    path = File.join(install_dir, 'etc/flight-login.yaml')
+    content = [
+      File.read(path),
+      "shared_secret_path: /opt/flight/etc/shared-secret.conf",
+    ].join("\n")
+    File.write path, content
+  end
+
+  # Installs the gems to the shared `vendor/share`
+  flags = [
+    '--with default',
+    "--without development test",
+    '--path vendor'
+  ].join(' ')
+  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+end

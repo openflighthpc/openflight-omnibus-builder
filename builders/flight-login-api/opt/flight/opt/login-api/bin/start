@@ -1,3 +1,4 @@
+#!/bin/bash
 #==============================================================================
 # Copyright (C) 2021-present Alces Flight Ltd.
 #
@@ -24,49 +25,16 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-web-auth-api'
-default_version '0.0.0'
 
-source git: 'https://github.com/openflighthpc/flight-web-auth-api'
+addr="$1"
+log_file="$2"
 
-dependency 'enforce-flight-runway'
-
-whitelist_file Regexp.new("vendor/ruby/.*.so")
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
-
-build do
-  env = with_standard_compiler_flags(with_embedded_path)
-
-  block do
-    FileUtils.mkdir_p File.join(install_dir,  'etc')
-  end
-
-  # Moves the api project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'README.md', 'LICENSE.txt', 'app.rb', 'config.ru',
-    'app', 'bin', 'config', 'etc/flight-web-auth.yaml', 'lib'
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
-  end
-
-  # Update the config
-  block do
-    path = File.join(install_dir, 'etc/flight-web-auth.yaml')
-    content = [
-      File.read(path),
-      "shared_secret_path: /opt/flight/etc/shared-secret.conf",
-    ].join("\n")
-    File.write path, content
-  end
-
-  # Installs the gems to the shared `vendor/share`
-  flags = [
-    '--with default',
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
-end
+# Exec into the ruby/puma process so the PID does not change
+exec "${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/login-api/bin/puma \
+  --bind "$addr" \
+  --environment production \
+  --redirect-stdout "$log_file" \
+  --redirect-stderr "$log_file" \
+  --redirect-append \
+  --dir "${flight_ROOT}"/opt/login-api \
+  >>"${log_file}" 2>&1

@@ -1,3 +1,4 @@
+#!/bin/bash
 #==============================================================================
 # Copyright (C) 2021-present Alces Flight Ltd.
 #
@@ -24,12 +25,49 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+set -e
 
-location ^~ /auth/api/ {
-  proxy_pass http://127.0.0.1:922/;
-  proxy_pass_request_headers on;
-  proxy_set_header HOST $host;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header X-Forwarded-Proto $scheme;
-  proxy_set_header X-Real-IP $remote_addr;
-}
+# Required so login-api can locate the `flight` entry point.
+PATH="${flight_ROOT}/bin:${PATH}"
+# Required to support initializers.
+export USER=$(whoami)
+# Required to correctly handle output parsing.
+if [ -f /etc/locale.conf ]; then
+  . /etc/locale.conf
+fi
+export LANG=${LANG:-en_US.UTF-8}
+
+var_dir="${flight_ROOT}"/var/login-api
+mkdir -p "${var_dir}"
+
+log_file="${flight_ROOT}"/var/log/login-api/puma.log
+mkdir -p $(dirname "${log_file}")
+
+addr=tcp://127.0.0.1:922
+tool_bg bash "${flight_ROOT}"/opt/login-api/bin/start "$addr" "$log_file"
+
+# Wait up to 10ish seconds for puma to start
+pid=''
+for _ in `seq 1 20`; do
+  sleep 0.5
+  pid=$(ps -ax | grep $addr | grep "\spuma\s" | awk '{ print $1 }')
+  if [ -n "$pid" ]; then
+    break
+  fi
+done
+
+# Report back the pid or error
+if [ -n "$pid" ]; then
+  # Wait a second to ensure puma is still running
+  sleep 1
+  kill -0 "$pid" 2>/dev/null
+  if [ "$?" -ne 0 ]; then
+    echo Failed to start login-api >&2
+    exit 2
+  fi
+
+  tool_set pid=$pid
+else
+  echo Failed to start login-api >&2
+  exit 1
+fi

@@ -26,24 +26,17 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-OLD_PID="$1"
+# Restarts the puma worker processes
+log_file="${flight_ROOT}"/var/log/login-api/puma.log
+"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/login-api/bin/pumactl restart --pidfile "$1" >>"$log_file" 2>&1
 
-bash "$DIR"/stop.sh "$OLD_PID"
-
-# Wait up to 10ish seconds for puma to stop
-state=1
-for _ in `seq 1 20`; do
-  kill -0 "$OLD_PID" 2>/dev/null
-  state=$?
-  if [ "$state" -ne 0 ]; then
-    break
-  fi
-done
-
-if [ "$state" -eq 0 ]; then
-  echo Failed to stop web-auth-api
-  exit 1
+# Sleeps two seconds and ensure puma is still running
+sleep 2
+kill -0 "$(cat "$1")" 2>/dev/null
+if [ "$?" -ne 0]; then
+  echo Failed to reload login-api >&2
+  exit 2
 fi
 
-bash "$DIR"/start.sh
+# Ensures the PID remains set (it hasn't changed)
+tool_set pid=$(cat "$1")

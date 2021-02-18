@@ -28,4 +28,4 @@
 
 # Stop puma
 PATH="${flight_ROOT}/bin/:${PATH}"
-"${flight_ROOT}"/opt/web-auth-api/bin/pumactl stop  --pidfile $1
+"${flight_ROOT}"/opt/login-api/bin/pumactl stop  --pidfile $1

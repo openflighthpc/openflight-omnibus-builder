@@ -24,21 +24,21 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-web-auth-api'
+name 'flight-login-api'
 maintainer 'Alces Flight Ltd'
-homepage "https://github.com/openflighthpc/flight-web-auth-api"
+homepage "https://github.com/openflighthpc/flight-login-api"
 friendly_name 'Flight Job Script API'
 
-install_dir '/opt/flight/opt/web-auth-api'
+install_dir '/opt/flight/opt/login-api'
 
-VERSION = '0.2.1'
-override 'flight-web-auth-api', version: VERSION
+VERSION = '0.2.2'
+override 'flight-login-api', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
-dependency 'flight-web-auth-api'
+dependency 'flight-login-api'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
@@ -63,7 +63,7 @@ runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
-config_file File.join(install_dir, 'etc/flight-web-auth.yaml')
+config_file File.join(install_dir, 'etc/flight-login.yaml')
 
 require 'find'
 Find.find('opt') do |o|
