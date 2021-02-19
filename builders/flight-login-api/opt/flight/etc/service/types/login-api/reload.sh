@@ -26,17 +26,34 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
+pid_file="$1"
+if [ -z "$pid_file" ]; then
+  echo "The pid_file argument has not been provided!" >&2
+  exit 1
+fi
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
+if [ -z "$PUMA_LOG_FILE" ]; then
+  echo "PUMA_LOG_FILE has not been set!" >&2
+  exit 1
+fi
+
+# Ensure the log directory exists
+mkdir -p $(dirname "$PUMA_LOG_FILE")
+
 # Restarts the puma worker processes
-log_file="${flight_ROOT}"/var/log/login-api/puma.log
-"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/login-api/bin/pumactl restart --pidfile "$1" >>"$log_file" 2>&1
+"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/job-script-api/bin/pumactl \
+  restart --pidfile "$pid_file" >>"$PUMA_LOG_FILE" 2>&1
 
 # Sleeps two seconds and ensure puma is still running
 sleep 2
-kill -0 "$(cat "$1")" 2>/dev/null
+kill -0 "$(cat "$pid_file")" 2>/dev/null
 if [ "$?" -ne 0]; then
   echo Failed to reload login-api >&2
   exit 2
 fi
 
 # Ensures the PID remains set (it hasn't changed)
-tool_set pid=$(cat "$1")
+tool_set pid=$(cat "$pid_file")

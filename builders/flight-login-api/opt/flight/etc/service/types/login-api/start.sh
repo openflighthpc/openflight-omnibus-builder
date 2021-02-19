@@ -27,34 +27,31 @@
 #===============================================================================
 set -e
 
-# Required so login-api can locate the `flight` entry point.
-PATH="${flight_ROOT}/bin:${PATH}"
-# Required to support initializers.
-export USER=$(whoami)
 # Required to correctly handle output parsing.
 if [ -f /etc/locale.conf ]; then
   . /etc/locale.conf
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
-var_dir="${flight_ROOT}"/var/login-api
-mkdir -p "${var_dir}"
+# Create the temporary PID file
+pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
+rm "${pidfile}"
 
-log_file="${flight_ROOT}"/var/log/login-api/puma.log
-mkdir -p $(dirname "${log_file}")
-
-addr=tcp://127.0.0.1:922
-tool_bg bash "${flight_ROOT}"/opt/login-api/bin/start "$addr" "$log_file"
+tool_bg bash "${flight_ROOT}"/opt/login-api/bin/start "$pidfile"
 
 # Wait up to 10ish seconds for puma to start
-pid=''
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$(ps -ax | grep $addr | grep "\spuma\s" | awk '{ print $1 }')
+  if [ -f "$pidfile" ]; then
+    pid=$(cat "$pidfile" | tr -d "\n")
+  fi
   if [ -n "$pid" ]; then
     break
   fi
 done
+
+# Ensure the pidfile is removed
+rm -f "$pidfile"
 
 # Report back the pid or error
 if [ -n "$pid" ]; then
