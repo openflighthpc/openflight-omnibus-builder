@@ -31,7 +31,7 @@ friendly_name 'Flight Job Script API'
 
 install_dir '/opt/flight/opt/login-api'
 
-VERSION = '0.2.2'
+VERSION = '0.2.3'
 override 'flight-login-api', version: VERSION
 
 build_version VERSION
