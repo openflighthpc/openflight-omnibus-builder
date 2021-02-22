@@ -27,7 +27,7 @@
 name 'flight-login-api'
 maintainer 'Alces Flight Ltd'
 homepage "https://github.com/openflighthpc/flight-login-api"
-friendly_name 'Flight Job Script API'
+friendly_name 'Flight Websuite Login API'
 
 install_dir '/opt/flight/opt/login-api'
 
