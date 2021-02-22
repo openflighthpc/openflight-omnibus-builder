@@ -10,12 +10,12 @@ URL:            https://openflighthpc.org
 
 BuildArch:     noarch
 Requires:      flight-runway => 1.1.0~, flight-runway < 1.2.0~
-Requires:      flight-starter => 2020.2.0~, flight-starter < 2020.4.0~
+Requires:      flight-starter => 2021.1.0~, flight-starter < 2021.2.0~
 %{?el8:Recommends:    flight-plugin-system-starter}
 Requires:      flight-env => 1.4.0~, flight-env < 1.5.0~
 Requires:      flight-desktop => 1.3.0~, flight-desktop < 1.4.0~
 Requires:      flight-job => 1.1.0~, flight-job < 1.2.0~
-Requires:      flight-howto => 1.0.2~, flight-howto < 1.1.0~
+Requires:      flight-howto => 1.0.2~, flight-howto < 1.2.0~
 
 %description
 The Flight User Suite collection of tools and packages for running a HPC environment.
@@ -36,6 +36,10 @@ The Flight User Suite collection of tools and packages for running a HPC environ
 # Nothing to do
 
 %changelog
+* Mon Feb 22 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.1-2
+- Fixed flight-starter bounds
+* Mon Feb 15 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.1-1
+- Bumped flight-howto upper bound
 * Mon Oct 19 2020 ben.armston@alces-flight.com - 2020.3-1
 - Added flight-job and flight-howto
 * Mon Jun 29 2020 Mark J. Titorenko <mark.titorenko@openflighthpc.org> - 2020.2-4
