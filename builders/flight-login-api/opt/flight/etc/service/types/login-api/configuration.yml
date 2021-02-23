@@ -8,5 +8,4 @@ text: |
 values:
   - key: cookieDomain
     label: Cookie Domain
-    value: 'example.com'
     length: 512
