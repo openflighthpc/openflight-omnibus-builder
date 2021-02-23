@@ -35,7 +35,7 @@ VERSION = '0.2.3'
 override 'flight-login-api', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-login-api'
@@ -70,6 +70,15 @@ require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
+
+# Moves the correct howto version into place
+howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
+howto_relative = "opt/flight/usr/share/howto/flight-login-api.md"
+howto_dst = File.expand_path("../../#{howto_relative}", __dir__)
+raise "Could not locate: #{howto_src}" unless File.exists? howto_src
+FileUtils.mkdir_p File.dirname(howto_dst)
+FileUtils.rm_f howto_dst
+FileUtils.cp howto_src, howto_dst
 
 package :rpm do
   vendor 'Alces Flight Ltd'
