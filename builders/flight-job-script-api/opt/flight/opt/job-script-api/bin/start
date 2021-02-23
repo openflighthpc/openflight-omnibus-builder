@@ -40,8 +40,12 @@ if [ -z "$PUMA_LOG_FILE" ]; then
   exit 1
 fi
 
+# Determine the path to puma's configuration
+PUMA_CONFIG="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null 2>&1 && pwd )/config/puma.rb"
+
 # Exec into the ruby/puma process so the PID does not change
 exec "${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/job-script-api/bin/puma \
+  --config "$PUMA_CONFIG" \
   --pidfile "$pid_file" \
   --redirect-stdout "$PUMA_LOG_FILE" \
   --redirect-stderr "$PUMA_LOG_FILE" \
