@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,48 +25,23 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-job-script-webapp'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-job-script'
-friendly_name 'Flight Job Script Webapp'
+echo "Configuring"
 
-install_dir '/opt/flight/opt/job-script-webapp'
+flight_ROOT="${flight_ROOT:-/opt/flight}"
+env_file="$flight_ROOT/etc/service/env/login-api"
 
-VERSION = '0.5.5'
-override 'flight-job-script-webapp', version: VERSION
-
-build_version VERSION
-build_iteration 1
-
-dependency 'preparation'
-dependency 'flight-job-script-webapp'
-dependency 'version-manifest'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Webapp for creating customised job scripts'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-exclude 'node_modules'
-
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-system-1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
+for a in "$@"; do
+  IFS="=" read k v <<< "${a}"
+  case $k in
+    cookieDomain)
+      if cat "$env_file" | grep 'FLIGHT_LOGIN_SSO_COOKIE_DOMAIN' ; then
+        sed -i "s/FLIGHT_LOGIN_SSO_COOKIE_DOMAIN=.*/FLIGHT_LOGIN_SSO_COOKIE_DOMAIN=$v/g" "$env_file"
+      else
+        echo "FLIGHT_LOGIN_SSO_COOKIE_DOMAIN=$v" >> "$env_file"
+      fi
+      ;;
+    *)
+      echo "Unrecognised key: $k"
+    ;;
+  esac
+done

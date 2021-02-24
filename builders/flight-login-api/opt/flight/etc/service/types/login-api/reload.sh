@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,48 +25,35 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-job-script-webapp'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-job-script'
-friendly_name 'Flight Job Script Webapp'
 
-install_dir '/opt/flight/opt/job-script-webapp'
+pid_file="$1"
+if [ -z "$pid_file" ]; then
+  echo "The pid_file argument has not been provided!" >&2
+  exit 1
+fi
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
+if [ -z "$PUMA_LOG_FILE" ]; then
+  echo "PUMA_LOG_FILE has not been set!" >&2
+  exit 1
+fi
 
-VERSION = '0.5.5'
-override 'flight-job-script-webapp', version: VERSION
+# Ensure the log directory exists
+mkdir -p $(dirname "$PUMA_LOG_FILE")
 
-build_version VERSION
-build_iteration 1
+# Restarts the puma worker processes
+"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/job-script-api/bin/pumactl \
+  restart --pidfile "$pid_file" >>"$PUMA_LOG_FILE" 2>&1
 
-dependency 'preparation'
-dependency 'flight-job-script-webapp'
-dependency 'version-manifest'
+# Sleeps two seconds and ensure puma is still running
+sleep 2
+kill -0 "$(cat "$pid_file")" 2>/dev/null
+if [ "$?" -ne 0]; then
+  echo Failed to reload login-api >&2
+  exit 2
+fi
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Webapp for creating customised job scripts'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-exclude 'node_modules'
-
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-system-1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
+# Ensures the PID remains set (it hasn't changed)
+tool_set pid=$(cat "$pid_file")

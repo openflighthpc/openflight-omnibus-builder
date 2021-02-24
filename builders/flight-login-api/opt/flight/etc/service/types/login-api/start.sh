@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,48 +25,46 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-job-script-webapp'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-job-script'
-friendly_name 'Flight Job Script Webapp'
+set -e
 
-install_dir '/opt/flight/opt/job-script-webapp'
+# Required to correctly handle output parsing.
+if [ -f /etc/locale.conf ]; then
+  . /etc/locale.conf
+fi
+export LANG=${LANG:-en_US.UTF-8}
 
-VERSION = '0.5.5'
-override 'flight-job-script-webapp', version: VERSION
+# Create the temporary PID file
+pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
+rm "${pidfile}"
 
-build_version VERSION
-build_iteration 1
+tool_bg bash "${flight_ROOT}"/opt/login-api/bin/start "$pidfile"
 
-dependency 'preparation'
-dependency 'flight-job-script-webapp'
-dependency 'version-manifest'
+# Wait up to 10ish seconds for puma to start
+for _ in `seq 1 20`; do
+  sleep 0.5
+  if [ -f "$pidfile" ]; then
+    pid=$(cat "$pidfile" | tr -d "\n")
+  fi
+  if [ -n "$pid" ]; then
+    break
+  fi
+done
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
+# Ensure the pidfile is removed
+rm -f "$pidfile"
 
-description 'Webapp for creating customised job scripts'
+# Report back the pid or error
+if [ -n "$pid" ]; then
+  # Wait a second to ensure puma is still running
+  sleep 1
+  kill -0 "$pid" 2>/dev/null
+  if [ "$?" -ne 0 ]; then
+    echo Failed to start login-api >&2
+    exit 2
+  fi
 
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-exclude 'node_modules'
-
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-system-1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
+  tool_set pid=$pid
+else
+  echo Failed to start login-api >&2
+  exit 1
+fi

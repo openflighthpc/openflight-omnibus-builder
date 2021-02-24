@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,43 +24,61 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-job-script-webapp'
+name 'flight-login-api'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-job-script'
-friendly_name 'Flight Job Script Webapp'
+homepage "https://github.com/openflighthpc/flight-login-api"
+friendly_name 'Flight Websuite Login API'
 
-install_dir '/opt/flight/opt/job-script-webapp'
+install_dir '/opt/flight/opt/login-api'
 
-VERSION = '0.5.5'
-override 'flight-job-script-webapp', version: VERSION
+VERSION = '0.2.4'
+override 'flight-login-api', version: VERSION
 
 build_version VERSION
 build_iteration 1
 
 dependency 'preparation'
-dependency 'flight-job-script-webapp'
+dependency 'flight-login-api'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Webapp for creating customised job scripts'
+description 'API server for authenticating cluster users'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
-exclude 'node_modules'
 
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
+# RPam dependencies
+runtime_dependency 'pam'
+runtime_dependency 'audit-libs'
+runtime_dependency 'libcap-ng'
+
+# Flight Dependencies
+runtime_dependency 'flight-runway'
+runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-system-1.0'
+runtime_dependency 'flight-service'
+runtime_dependency 'flight-service-system-1.0'
+
+config_file File.join(install_dir, 'etc/flight-login.yaml')
+config_file '/opt/flight/etc/service/env/login-api'
 
 require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
+
+# Moves the correct howto version into place
+howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
+howto_relative = "opt/flight/usr/share/howto/flight-login-api.md"
+howto_dst = File.expand_path("../../#{howto_relative}", __dir__)
+raise "Could not locate: #{howto_src}" unless File.exists? howto_src
+FileUtils.mkdir_p File.dirname(howto_dst)
+FileUtils.rm_f howto_dst
+FileUtils.cp howto_src, howto_dst
 
 package :rpm do
   vendor 'Alces Flight Ltd'

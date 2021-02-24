@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,48 +24,49 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-job-script-webapp'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-job-script'
-friendly_name 'Flight Job Script Webapp'
+name 'flight-login-api'
+default_version '0.0.0'
 
-install_dir '/opt/flight/opt/job-script-webapp'
+source git: 'https://github.com/openflighthpc/flight-login-api'
 
-VERSION = '0.5.5'
-override 'flight-job-script-webapp', version: VERSION
+dependency 'enforce-flight-runway'
 
-build_version VERSION
-build_iteration 1
-
-dependency 'preparation'
-dependency 'flight-job-script-webapp'
-dependency 'version-manifest'
+whitelist_file Regexp.new("vendor/ruby/.*.so")
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
 
-description 'Webapp for creating customised job scripts'
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
 
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-exclude 'node_modules'
+  block do
+    FileUtils.mkdir_p File.join(install_dir,  'etc')
+  end
 
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-system-1.0'
+  # Moves the api project into place
+  [
+    'Gemfile', 'Gemfile.lock', 'README.md', 'LICENSE.txt', 'app.rb', 'config.ru',
+    'app', 'bin', 'config', 'etc/flight-login.yaml', 'lib'
+  ].each do |file|
+    copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
 
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
+  # Update the config
+  block do
+    path = File.join(install_dir, 'etc/flight-login.yaml')
+    content = [
+      File.read(path),
+      "shared_secret_path: /opt/flight/etc/shared-secret.conf",
+    ].join("\n")
+    File.write path, content
+  end
 
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
+  # Installs the gems to the shared `vendor/share`
+  flags = [
+    '--with default',
+    "--without development test",
+    '--path vendor'
+  ].join(' ')
+  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
 end

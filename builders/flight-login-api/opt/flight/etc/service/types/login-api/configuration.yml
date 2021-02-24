@@ -1,0 +1,11 @@
+---
+title: "Flight Login API"
+text: |
+  Please provide values for the following configuration items.
+
+  Cookie Domain: The domain the SSO cookie will be issued to
+
+values:
+  - key: cookieDomain
+    label: Cookie Domain
+    length: 512
