@@ -41,6 +41,9 @@
 # -------------------------------------------------------------------
 base_dir '/home/vagrant/flight-file-manager-api/local'
 
+# Allow the use of the shared software directory
+local_software_dirs [File.expand_path('../../share', __dir__)]
+
 append_timestamp false
 #
 # Alternatively you can tune the individual values
