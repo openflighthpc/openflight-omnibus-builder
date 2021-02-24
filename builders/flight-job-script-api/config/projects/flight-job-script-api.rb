@@ -31,11 +31,11 @@ friendly_name 'Flight Job Script API'
 
 install_dir '/opt/flight/opt/job-script-api'
 
-VERSION = '0.5.3'
+VERSION = '0.8.1'
 override 'flight-job-script-api', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-job-script-api'
@@ -64,6 +64,7 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
 config_file File.join(install_dir, 'etc/flight-job-script-api.yaml')
+config_file '/opt/flight/etc/service/env/job-script-api'
 
 require 'find'
 Find.find('opt') do |o|
