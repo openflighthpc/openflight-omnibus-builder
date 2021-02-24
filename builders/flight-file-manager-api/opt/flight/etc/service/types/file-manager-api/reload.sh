@@ -45,7 +45,7 @@ fi
 mkdir -p $(dirname "$PUMA_LOG_FILE")
 
 # Restarts the puma worker processes
-"${flight_root}"/bin/flexec ruby /opt/flight/opt/file-manager-api/bin/pumactl restart \
+"${flight_ROOT}"/bin/flexec ruby /opt/flight/opt/file-manager-api/bin/pumactl restart \
   --pidfile $1 \
   --config-file /opt/flight/opt/file-manager-api/config/puma.rb \
   >>"$PUMA_LOG_FILE" 2>&1
