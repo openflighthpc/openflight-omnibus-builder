@@ -68,8 +68,8 @@ else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
 
-config_file File.join(install_dir, 'etc/flight-file-manager.yaml')
-config_file '/opt/flight/etc/service/env/flight-file-manager'
+config_file File.join(install_dir, 'etc/flight-file-manager-api.yaml')
+config_file '/opt/flight/etc/service/env/file-manager-api'
 
 require 'find'
 Find.find('opt') do |o|
