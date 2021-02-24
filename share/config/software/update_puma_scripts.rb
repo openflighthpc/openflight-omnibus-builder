@@ -180,7 +180,7 @@ build do
       mkdir -p $(dirname "$PUMA_LOG_FILE")
 
       # Stop puma
-      "${flight_root}"/bin/flexec ruby #{install_dir}/bin/pumactl stop \\
+      "${flight_ROOT}"/bin/flexec ruby #{install_dir}/bin/pumactl stop \\
         --pidfile $1 \\
         --config-file #{install_dir}/config/puma.rb \\
         >>"$PUMA_LOG_FILE" 2>&1
@@ -236,7 +236,7 @@ build do
       mkdir -p $(dirname "$PUMA_LOG_FILE")
 
       # Restarts the puma worker processes
-      "${flight_root}"/bin/flexec ruby #{install_dir}/bin/pumactl restart \\
+      "${flight_ROOT}"/bin/flexec ruby #{install_dir}/bin/pumactl restart \\
         --pidfile $1 \\
         --config-file #{install_dir}/config/puma.rb \\
         >>"$PUMA_LOG_FILE" 2>&1
