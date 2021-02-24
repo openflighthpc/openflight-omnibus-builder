@@ -69,6 +69,7 @@ else
 end
 
 config_file File.join(install_dir, 'etc/flight-file-manager.yaml')
+config_file '/opt/flight/etc/service/env/flight-file-manager'
 
 require 'find'
 Find.find('opt') do |o|

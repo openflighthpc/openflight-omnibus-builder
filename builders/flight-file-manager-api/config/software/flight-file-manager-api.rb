@@ -64,7 +64,6 @@ build do
     content = [
       File.read(path),
       "data_dir: /opt/flight/usr/share/file-manager-api",
-      "log_dir: /opt/flight/var/log/file-manager-api",
       "shared_secret_path: /opt/flight/etc/shared-secret.conf",
       ''
     ].join("\n")
