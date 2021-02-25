@@ -28,3 +28,4 @@
 
 RACK_ENV=production
 PUMA_LOG_FILE=/opt/flight/var/log/desktop-restapi/puma.log
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/flight/bin
