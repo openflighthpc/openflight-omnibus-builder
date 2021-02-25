@@ -42,11 +42,22 @@ build do
 
   # Moves the project into place
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app', 'lib', 'libexec',
+    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'etc', 'app', 'lib', 'libexec',
     'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'Rakefile',
     '.cli-version'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
+  end
+
+  # Update the config
+  block do
+    path = File.join(install_dir, 'etc/flight-desktop-restapi.yaml')
+    content = [
+      File.read(path),
+      "shared_secret_path: /opt/flight/etc/shared-secret.conf",
+      ''
+    ].join("\n")
+    File.write path, content
   end
 
   # Installs the gems to the shared `vendor/share`

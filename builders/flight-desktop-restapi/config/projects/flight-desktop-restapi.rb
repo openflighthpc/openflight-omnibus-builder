@@ -35,7 +35,7 @@ VERSION = '2.0.0-b1'
 override 'flight-desktop-restapi', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 3
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
