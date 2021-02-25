@@ -42,7 +42,7 @@ build do
 
   # Moves the project into place
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app', 'libexec',
+    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app', 'lib', 'libexec',
     'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'Rakefile',
     '.cli-version'
   ].each do |file|
