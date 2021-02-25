@@ -31,11 +31,11 @@ friendly_name 'Flight Desktop REST API'
 
 install_dir '/opt/flight/opt/desktop-restapi'
 
-VERSION = '2.0.0-b1'
+VERSION = '2.0.0-b2'
 override 'flight-desktop-restapi', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
