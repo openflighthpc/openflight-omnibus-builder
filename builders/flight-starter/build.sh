@@ -5,9 +5,9 @@ mkdir -p pkg
 
 NOW=2021.1
 NEXT=2021.2
-VERSION=${NOW}.0
+VERSION=${NOW}.1
 TAG=$(echo "$VERSION" | sed "s/~/-/g")
-REL=2
+REL=1
 
 if [ -f /etc/redhat-release ]; then
   echo "Building RPM package..."
