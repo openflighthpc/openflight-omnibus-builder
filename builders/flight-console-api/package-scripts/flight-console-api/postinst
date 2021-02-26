@@ -44,5 +44,19 @@ if data["session"]["secret"].to_s.empty?
 end
 RUBY
 
+# Generate a private key if required
+priv_key=/opt/flight/etc/console-api/id_rsa
+if [ ! -f "$priv_key" ]; then
+  mkdir -p $(dirname "$priv_key")
+  ssh-keygen -b 4096 -t rsa -f "$priv_key" -q -N ""
+fi
+
+# Generate the public key if required
+pub_key=/opt/flight/etc/ssh/authorized_keys.d/console-api
+if [ ! -f "$pub_key" ]; then
+  mkdir -p $(dirname "$pub_key")
+  ssh-keygen -y -f "$priv_key" > "$pub_key"
+fi
+
 /opt/flight/bin/flight service reload www 1>/dev/null 2>&1
 exit 0

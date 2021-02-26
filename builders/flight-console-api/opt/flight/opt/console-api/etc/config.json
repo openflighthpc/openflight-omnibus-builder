@@ -9,7 +9,7 @@
     "cookie_name": "flight_login"
   },
   "ssh": {
-    "private_key_path": "%{flight_ROOT}/etc/console/id_rsa",
+    "private_key_path": "%{flight_ROOT}/etc/console-api/id_rsa",
     "host": null,
     "port": 22,
     "localAddress": null,
