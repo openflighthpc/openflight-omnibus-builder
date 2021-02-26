@@ -4,12 +4,12 @@
     "port": 919
   },
   "pidfile": "%{flight_ROOT}/var/run/console-api.pid",
-  "user": {
-    "name": null,
-    "password": null,
-    "privatekey": null
+  "sso": {
+    "shared_secret_path": "%{flight_ROOT}/etc/shared-secret.conf",
+    "cookie_name": "flight_login"
   },
   "ssh": {
+    "private_key_path": "%{flight_ROOT}/etc/console/id_rsa",
     "host": null,
     "port": 22,
     "localAddress": null,
