@@ -31,7 +31,7 @@ friendly_name 'Flight Console api'
 
 install_dir '/opt/flight/opt/console-api'
 
-VERSION = '2.0.0-b1'
+VERSION = '2.0.0-b2'
 override 'flight-console-api', version: VERSION
 
 build_version VERSION
