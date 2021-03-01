@@ -49,23 +49,22 @@ build do
     FileUtils.mkdir_p File.join(install_dir,  'etc')
   end
 
-  # Moves the supervisor project into place
-  # XXX: Add a supervisor specific README.md to the upstream sources
-  # XXX: Decide on the future of the 'libexec' directory
+  # Moves the api project into place
+  # XXX: Add an api specific README.md to the upstream sources
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'etc/flight-file-manager.yaml', 'config',
+    'Gemfile', 'Gemfile.lock', 'bin', 'etc/flight-file-manager-api.yaml', 'config',
     'app', 'lib', 'libexec', 'README.md', 'app.rb', 'config.ru'
   ].each do |file|
-    copy File.join('supervisor', file), File.expand_path("#{install_dir}/#{file}/..")
+    copy File.join('api', file), File.expand_path("#{install_dir}/#{file}/..")
   end
 
   # Update the config
   block do
-    path = File.join(install_dir, 'etc/flight-file-manager.yaml')
+    path = File.join(install_dir, 'etc/flight-file-manager-api.yaml')
     content = [
       File.read(path),
       "data_dir: /opt/flight/usr/share/file-manager-api",
-      "log_dir: /opt/flight/var/log/file-manager-api",
+      "shared_secret_path: /opt/flight/etc/shared-secret.conf",
       ''
     ].join("\n")
     File.write path, content
