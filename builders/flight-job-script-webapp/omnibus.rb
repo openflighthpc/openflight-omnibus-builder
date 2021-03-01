@@ -39,7 +39,7 @@
 #
 # Uncomment this line to change the default base directory to "local"
 # -------------------------------------------------------------------
-base_dir '/home/vagrant/fligth-job-script-webapp/local'
+base_dir '/home/vagrant/flight-job-script-webapp/local'
 
 append_timestamp false
 #
