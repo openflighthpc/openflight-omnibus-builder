@@ -35,7 +35,7 @@ VERSION = '2.0.0-rc1'
 override 'flight-console-api', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-console-api'
