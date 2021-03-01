@@ -53,7 +53,7 @@ build do
   # XXX: Add an api specific README.md to the upstream sources
   [
     'Gemfile', 'Gemfile.lock', 'bin', 'etc/flight-file-manager-api.yaml', 'config',
-    'app', 'lib', 'README.md', 'app.rb', 'config.ru'
+    'app', 'lib', 'libexec', 'README.md', 'app.rb', 'config.ru'
   ].each do |file|
     copy File.join('api', file), File.expand_path("#{install_dir}/#{file}/..")
   end

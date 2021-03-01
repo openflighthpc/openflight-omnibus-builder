@@ -36,7 +36,7 @@ override 'flight-file-manager-api', version: VERSION
 override 'flight-file-manager-backend', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
