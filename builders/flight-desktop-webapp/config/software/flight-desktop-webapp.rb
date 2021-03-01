@@ -58,4 +58,16 @@ build do
   build_only.each do |file|
     delete File.expand_path("#{install_dir}/#{file}")
   end
+
+  block do
+    config = {
+      apiRootUrl: "/desktop/api/v2",
+      websocketPathIp: "127.0.0.1",
+      websocketPathPrefix: "/ws",
+    }
+    File.write(
+      File.join(install_dir, 'build', 'config.json'),
+      config.to_json
+    )
+  end
 end
