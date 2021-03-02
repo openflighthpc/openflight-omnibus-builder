@@ -48,7 +48,7 @@ RUBY
 priv_key=/opt/flight/etc/console-api/id_rsa
 if [ ! -f "$priv_key" ]; then
   mkdir -p $(dirname "$priv_key")
-  ssh-keygen -b 4096 -t rsa -f "$priv_key" -q -N ""
+  ssh-keygen -b 4096 -t rsa -f "$priv_key" -q -N "" -C "Flight Console API Key"
 fi
 
 # Generate the public key if required
