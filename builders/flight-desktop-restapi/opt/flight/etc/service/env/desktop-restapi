@@ -1,4 +1,4 @@
-#!/bin/bash
+# vim: set filetype=sh:
 #==============================================================================
 # Copyright (C) 2021-present Alces Flight Ltd.
 #
@@ -26,24 +26,6 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-
-OLD_PID="$1"
-
-/opt/flight/etc/service/types/desktop-restapi/stop.sh "$OLD_PID"
-
-# Wait up to 10ish seconds for puma to stop
-state=1
-for _ in `seq 1 20`; do
-  kill -0 "$OLD_PID" 2>/dev/null
-  state=$?
-  if [ "$state" -ne 0 ]; then
-    break
-  fi
-done
-
-if [ "$state" -eq 0 ]; then
-  echo Failed to stop desktop-restapi
-  exit 1
-fi
-
-/opt/flight/etc/service/types/desktop-restapi/start.sh
+RACK_ENV=production
+PUMA_LOG_FILE=/opt/flight/var/log/desktop-restapi/puma.log
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/flight/bin

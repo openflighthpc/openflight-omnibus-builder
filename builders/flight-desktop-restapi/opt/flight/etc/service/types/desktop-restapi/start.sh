@@ -1,6 +1,6 @@
 #!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,39 +25,34 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+
 set -e
 
-# Required so desktop-restapi can locate the `flight` entry point.
-PATH="${flight_ROOT}/bin:${PATH}"
-# Required to support initializers.
-export USER=$(whoami)
 # Required to correctly handle output parsing.
 if [ -f /etc/locale.conf ]; then
   . /etc/locale.conf
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
-var_dir="${flight_ROOT}"/var/desktop-restapi
-mkdir -p "${var_dir}"
-
-log_file="${flight_ROOT}"/var/log/desktop-restapi/puma.log
-mkdir -p $(dirname "${log_file}")
-
-pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
+# Create the temporary PID file
+pidfile=$(mktemp /tmp/flight-desktop-restapi-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
-addr=tcp://127.0.0.1:915
-tool_bg bash "${flight_ROOT}"/opt/desktop-restapi/bin/start "$addr" "$log_file" "$pidfile"
+tool_bg /opt/flight/opt/desktop-restapi/bin/start "$pidfile"
 
 # Wait up to 10ish seconds for puma to start
-pid=''
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$(ps -ax | grep $addr | grep "\spuma\s" | awk '{ print $1 }')
+  if [ -f "$pidfile" ]; then
+    pid=$(cat "$pidfile" | tr -d "\n")
+  fi
   if [ -n "$pid" ]; then
     break
   fi
 done
+
+# Ensure the pidfile is removed
+rm -f "$pidfile"
 
 # Report back the pid or error
 if [ -n "$pid" ]; then
