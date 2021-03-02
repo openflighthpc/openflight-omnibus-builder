@@ -3,13 +3,15 @@
     "ip": "127.0.0.1",
     "port": 919
   },
+  "ruby": "%{flight_ROOT}/bin/ruby",
   "pidfile": "%{flight_ROOT}/var/run/console-api.pid",
-  "user": {
-    "name": null,
-    "password": null,
-    "privatekey": null
+  "sso": {
+    "shared_secret_path": "%{flight_ROOT}/etc/shared-secret.conf",
+    "cookie_name": "flight_login"
   },
   "ssh": {
+    "public_key_path": "%{flight_ROOT}/etc/console-api/id_rsa.pub",
+    "private_key_path": "%{flight_ROOT}/etc/console-api/id_rsa",
     "host": null,
     "port": 22,
     "localAddress": null,

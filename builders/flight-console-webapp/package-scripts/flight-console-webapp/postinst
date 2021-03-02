@@ -28,11 +28,4 @@
 /opt/flight/bin/flight landing-page compile
 /opt/flight/bin/flight service reload www 1>/dev/null 2>&1
 
-cat <<EOF 1>&2
-console-webapp should now be configured by running 
-
-  /opt/flight/bin/flight service configure console-webapp
-
-EOF
-
 exit 0
