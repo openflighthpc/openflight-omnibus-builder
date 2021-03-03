@@ -31,7 +31,7 @@ friendly_name 'Headnode content for landing page'
 
 install_dir '/opt/flight/opt/www/landing-page/default'
 
-VERSION = '1.2.1-rc1'
+VERSION = '1.2.1-rc2'
 override 'flight-headnode-landing-page', version: VERSION
 
 build_version VERSION
