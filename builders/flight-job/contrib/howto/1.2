@@ -1,0 +1,138 @@
+# Flight Job(1) - Generate a job script from a predefined template
+
+## Overview
+
+~~~
+$ flight job --help
+  NAME:
+
+    bin/job
+
+  DESCRIPTION:
+
+    Generate a job script from a predefined template
+
+  COMMANDS:
+
+    console
+    copy-template  Generate a local copy of a template
+    create-script  Generate a new script from a template
+    help           Display global or [command] help documentation
+    list-scripts   List the existing scripts
+    list-templates List available templates
+    show-template  Display details about a template
+    submit-script  Start a job from a previously rendered script
+
+  ALIASES:
+
+    copy   copy-template
+    cp     copy-template
+    create create-script
+    info   show-template
+    ls     list-templates
+    submit submit-script
+
+  GLOBAL OPTIONS:
+
+    -h, --help
+        Display help documentation
+
+    --version
+        Display version information
+
+    --verbose
+        Display additional details
+
+    --ascii
+        Display a simplified version of the outpu
+~~~
+
+## List the Available Templates
+
+The available templates can displayed using the `list-templates` command:
+
+~~~
+$ flight job list
++-------+-----------------+
+| Index | Name            |
++-------+-----------------+
+...
+| 5     | howto-demo.sh   |
+...
++-------+-----------------+
+~~~
+
+## View the Content of Template
+
+Details about a template can be view with  the `show-template` command.
+
+The template can be found by name:
+
+~~~
+$ flight job show-template howto-demo.sh
+howto-demo.sh
+
+  DESCRIPTION
+
+  This is an example output of a template.
+  The installed templates and indices will be different.
+
+  LICENSE
+
+  This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
+
+  COPYRIGHT
+
+  Copyright (C) 2020 Alces Flight Ltd.
+~~~
+
+Or the template can be found by index:
+
+~~~
+$ flight job info 5
+... same as above ...
+~~~
+
+## Creating a new Script
+
+New `scripts` can be generated with the `create-script` command. This will step
+you through various question prompts and generate a `script`.
+
+~~~
+flight job create-script howto-demo.sh
+Working directory /home/%u
+Set an output file for STDOUT job-%j.output
+...
+~~~
+
+## Viewing Generated Scripts
+
+A list of previously generated scripts is available with the `list-scripts`
+command.
+
+~~~
+$ flight job list-scripts
++--------------------------------------+---------------+------------+
+| ID                                   | Name          | Template   |
++--------------------------------------+---------------+------------+
+...
+| d91df58e-a2bb-486b-8372-174e1eaae1bf | howto-demo.sh | Howto Demo |
+...
++--------------------------------------+---------------+------------+
+
+~~~
+
+## Submitting a New Job
+
+New `jobs` can be submitted using the `submit-script` command.
+
+~~~
+flight job submit-script d91df58e-a2bb-486b-8372-174e1eaae1bf
+Your job has been started!
+~~~
+
+## Copying a Template
+
+Copying a template with the `copy-template` command has been deprecated and
+will be removed in the next major release. Please use the `create-script`
+command instead.

@@ -31,11 +31,11 @@ friendly_name 'Flight Job'
 
 install_dir '/opt/flight/opt/job'
 
-VERSION = '1.1.0'
+VERSION = '1.2.0-rc2'
 override 'flight-job', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-job'
