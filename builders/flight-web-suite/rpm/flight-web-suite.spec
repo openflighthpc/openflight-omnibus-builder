@@ -68,10 +68,10 @@ The Flight Web Suite collection of web applications for accessing a HPC environm
 /opt/flight/bin/flight service enable file-manager-api
 /opt/flight/bin/flight service enable login-api
 /opt/flight/bin/flight service enable www
-/opt/flight/bin/flight service start console-api
-/opt/flight/bin/flight service start desktop-restapi
-/opt/flight/bin/flight service start file-manager-api
-/opt/flight/bin/flight service start www
+/opt/flight/bin/flight service restart console-api
+/opt/flight/bin/flight service restart desktop-restapi
+/opt/flight/bin/flight service restart file-manager-api
+/opt/flight/bin/flight service restart www
 cat <<EOF 1>&2
 ================================================
 HTTPs support needs to be enabled for flight-www

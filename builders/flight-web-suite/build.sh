@@ -32,7 +32,7 @@ mkdir -p pkg
 
 NAME=flight-web-suite
 VERSION=2021.1~rc1
-REL=1
+REL=3
 
 if [ -f /etc/redhat-release ]; then
   echo "Building RPM package..."
