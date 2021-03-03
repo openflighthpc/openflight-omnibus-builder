@@ -1,5 +1,6 @@
 ---
 title: Flight Job Script Service
+short_title: Job Scripts
 subtitle: Create customised job scripts from templates
 path: /job-scripts
 fa_icon: file-code-o

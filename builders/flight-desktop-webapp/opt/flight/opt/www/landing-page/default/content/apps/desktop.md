@@ -1,5 +1,6 @@
 ---
 title: Flight Desktop Access Service
+short_title: Desktop
 subtitle: Access interactive GUI desktop sessions
 path: /desktop
 fa_icon: desktop

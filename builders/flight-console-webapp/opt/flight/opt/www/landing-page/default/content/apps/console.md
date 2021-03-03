@@ -1,5 +1,6 @@
 ---
 title: Flight Console Service
+short_title: Console
 subtitle: Access interactive console sessions
 path: /console
 fa_icon: terminal
