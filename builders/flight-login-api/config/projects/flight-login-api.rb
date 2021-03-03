@@ -31,7 +31,7 @@ friendly_name 'Flight Websuite Login API'
 
 install_dir '/opt/flight/opt/login-api'
 
-VERSION = '1.0.0-rc1'
+VERSION = '1.0.0'
 override 'flight-login-api', version: VERSION
 
 build_version VERSION
