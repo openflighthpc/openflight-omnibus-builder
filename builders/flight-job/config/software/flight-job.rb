@@ -50,13 +50,10 @@ build do
 
   # Defines the context the reference template will be rendered in
   context = OpenStruct.new(
-    program: <<~CONF,
+    program: <<~CONF
       config :program_name,         default: ENV.fetch('FLIGHT_PROGRAM_NAME', 'flight job')
       config :program_application,  default: '#{project.friendly_name}'
       config :program_description,  default: '#{project.description}'
-    CONF
-    templates_dir: <<~CONF
-      config :templates_dir, default: '/opt/flight/usr/share/job/templates'
     CONF
   ).instance_exec { self.binding }
 
