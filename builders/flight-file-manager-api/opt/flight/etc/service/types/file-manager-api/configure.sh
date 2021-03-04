@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,48 +25,23 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-file-manager-webapp'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-file-manager'
-friendly_name 'Flight File Manager Webapp'
+echo "Configuring"
 
-install_dir '/opt/flight/opt/file-manager-webapp'
+flight_ROOT="${flight_ROOT:-/opt/flight}"
+env_file="$flight_ROOT/etc/service/env/file-manager-api"
 
-VERSION = '1.0.1-rc1'
-override 'flight-file-manager-webapp', version: VERSION
-
-build_version VERSION
-build_iteration 1
-
-dependency 'preparation'
-dependency 'flight-file-manager-webapp'
-dependency 'version-manifest'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Manage file manager sessions'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-exclude 'node_modules'
-
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-branding-system-1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
+for a in "$@"; do
+  IFS="=" read k v <<< "${a}"
+  case $k in
+    cookieDomain)
+      if cat "$env_file" | grep 'flight_FILE_MANAGER_API_cloudcmd_cookie_domain' ; then
+        sed -i "s/flight_FILE_MANAGER_API_SSO_COOKIE_DOMAIN=.*/flight_FILE_MANAGER_API_cloudcmd_cookie_domain=$v/g" "$env_file"
+      else
+        echo "flight_FILE_MANAGER_API_cloudcmd_cookie_domain=$v" >> "$env_file"
+      fi
+      ;;
+    *)
+      echo "Unrecognised key: $k"
+    ;;
+  esac
+done
