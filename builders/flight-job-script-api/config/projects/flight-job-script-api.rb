@@ -31,11 +31,11 @@ friendly_name 'Flight Job Script API'
 
 install_dir '/opt/flight/opt/job-script-api'
 
-VERSION = '0.9.1'
+VERSION = '0.9.2'
 override 'flight-job-script-api', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-job-script-api'
