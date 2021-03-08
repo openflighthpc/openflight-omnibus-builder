@@ -40,6 +40,8 @@ Vagrant.configure("2") do |config|
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
+    build.vm.network "forwarded_port", guest: 80, host: 7070
+    build.vm.network "forwarded_port", guest: 443, host: 7443
   end
 
   config.vm.define "centos8", autostart: false do |build|
@@ -55,6 +57,8 @@ Vagrant.configure("2") do |config|
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
+    build.vm.network "forwarded_port", guest: 80, host: 8070
+    build.vm.network "forwarded_port", guest: 443, host: 8443
   end
 
   config.vm.define "ubuntu1804", autostart: false do |build|
@@ -70,6 +74,8 @@ Vagrant.configure("2") do |config|
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
+    build.vm.network "forwarded_port", guest: 80, host: 9070
+    build.vm.network "forwarded_port", guest: 443, host: 9443
   end
 
   config.vm.define "ubuntu2004", autostart: false do |build|
@@ -89,5 +95,7 @@ Vagrant.configure("2") do |config|
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
+    build.vm.network "forwarded_port", guest: 80, host: 10070
+    build.vm.network "forwarded_port", guest: 443, host: 10443
   end
 end
