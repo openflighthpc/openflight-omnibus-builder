@@ -35,7 +35,7 @@ VERSION = '1.0.0'
 override 'flight-login-api', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-login-api'
@@ -51,9 +51,17 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 # RPam dependencies
-runtime_dependency 'pam'
-runtime_dependency 'audit-libs'
-runtime_dependency 'libcap-ng'
+if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'pam'
+  runtime_dependency 'audit-libs'
+  runtime_dependency 'libcap-ng'
+elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'libpam0g'
+  runtime_dependency 'libaudit1'
+  runtime_dependency 'libcap-ng0'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
+end
 
 # Flight Dependencies
 runtime_dependency 'flight-runway'
