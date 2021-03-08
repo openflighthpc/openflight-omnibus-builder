@@ -1,0 +1,11 @@
+---
+title: "Flight File Manager API"
+text: |
+  Please provide values for the following configuration items.
+
+  Cookie Domain: The domain the cloudcmd cookie will be issued to
+
+values:
+  - key: cookieDomain
+    label: Cookie Domain
+    length: 512

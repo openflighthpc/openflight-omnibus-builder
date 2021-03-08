@@ -27,11 +27,11 @@
 name 'flight-headnode-landing-page'
 maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/openflight-omnibus-builders/builders/flight-headnode-landing-page'
-friendly_name 'Flight web server service'
+friendly_name 'Headnode content for landing page'
 
-install_dir '/opt/flight/opt/www/landing-page'
+install_dir '/opt/flight/opt/www/landing-page/default'
 
-VERSION = '1.2.0-rc2'
+VERSION = '1.2.1'
 override 'flight-headnode-landing-page', version: VERSION
 
 build_version VERSION
@@ -58,11 +58,14 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
+runtime_dependency 'flight-landing-page-system-1.0'
+BRANDING_SYSTEM = '1.0'
+
 package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
-  priority ":flight-landing-page-content"
+  priority ":flight-landing-page-content :flight-landing-page-branding-system-#{BRANDING_SYSTEM}"
 end
 
 package :deb do
@@ -70,5 +73,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "::flight-landing-page-content"
+  section "::flight-landing-page-content :flight-landing-page-branding-system-#{BRANDING_SYSTEM}"
 end

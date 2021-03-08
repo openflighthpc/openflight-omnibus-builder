@@ -48,17 +48,18 @@ build do
   end
 
   # Remove the content that ships with the flight-landing-page git repo and
-  # add the required directory structure. The content will be provided by
-  # another package.
+  # add the required directory structure. The content and optional branding
+  # will be provided by another package.
   [
-    'default', 'types',
+    'branding', 'default', 'types',
   ].each do |dir|
     delete File.expand_path(File.join(install_dir, 'landing-page', dir))
   end
   [
-    'content', 'layouts',
+    'branding/content', 'branding/layouts',
+    'default/content',  'default/layouts',
   ].each do |file|
-    mkdir File.expand_path(File.join(install_dir, 'landing-page', 'default', file))
+    mkdir File.expand_path(File.join(install_dir, 'landing-page', file))
   end
 
   # Installs the gems to the shared `vendor/share`

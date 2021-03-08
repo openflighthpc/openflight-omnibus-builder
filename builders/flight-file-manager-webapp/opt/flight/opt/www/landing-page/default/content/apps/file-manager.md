@@ -1,5 +1,6 @@
 ---
 title: Flight File Manager Access Service
+short_title: File Manager
 subtitle: Access file manager sessions
 path: /files
 fa_icon: file-o

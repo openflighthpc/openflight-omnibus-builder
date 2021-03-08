@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,51 +25,23 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-desktop-restapi'
-maintainer 'Alces Flight Ltd'
-homepage "https://github.com/openflighthpc/flight-desktop-restapi"
-friendly_name 'Flight Desktop REST API'
+echo "Configuring"
 
-install_dir '/opt/flight/opt/desktop-restapi'
+flight_ROOT="${flight_ROOT:-/opt/flight}"
+env_file="$flight_ROOT/etc/service/env/file-manager-api"
 
-VERSION = '2.0.0'
-override 'flight-desktop-restapi', version: VERSION
-
-build_version VERSION
-build_iteration 1
-
-dependency 'preparation'
-dependency 'update_puma_scripts'
-dependency 'flight-desktop-restapi'
-dependency 'version-manifest'
-
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Manage interactive GUI desktop sessions'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-
-runtime_dependency 'flight-runway'
-runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-desktop'
-runtime_dependency 'flight-desktop-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
+for a in "$@"; do
+  IFS="=" read k v <<< "${a}"
+  case $k in
+    cookieDomain)
+      if cat "$env_file" | grep 'flight_FILE_MANAGER_API_cloudcmd_cookie_domain' ; then
+        sed -i "s/flight_FILE_MANAGER_API_SSO_COOKIE_DOMAIN=.*/flight_FILE_MANAGER_API_cloudcmd_cookie_domain=$v/g" "$env_file"
+      else
+        echo "flight_FILE_MANAGER_API_cloudcmd_cookie_domain=$v" >> "$env_file"
+      fi
+      ;;
+    *)
+      echo "Unrecognised key: $k"
+    ;;
+  esac
+done

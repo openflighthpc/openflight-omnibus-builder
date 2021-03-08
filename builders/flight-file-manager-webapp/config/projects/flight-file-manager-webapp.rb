@@ -31,11 +31,11 @@ friendly_name 'Flight File Manager Webapp'
 
 install_dir '/opt/flight/opt/file-manager-webapp'
 
-VERSION = '0.2.1'
+VERSION = '1.0.1'
 override 'flight-file-manager-webapp', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-file-manager-webapp'
@@ -55,6 +55,7 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
+runtime_dependency 'flight-landing-page-branding-system-1.0'
 
 require 'find'
 Find.find('opt') do |o|
