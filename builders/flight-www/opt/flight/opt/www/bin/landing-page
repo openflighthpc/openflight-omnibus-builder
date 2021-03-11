@@ -25,7 +25,12 @@ format() {
 compile() {
     export FLIGHT_CWD=$(pwd)
     cd /opt/flight/opt/www/landing-page
-    flexec bundle exec nanoc compile --verbose
+    local args
+    args=()
+    if [ -t 1 ] ; then
+        args+=" --verbose"
+    fi
+    flexec bundle exec nanoc compile ${args[@]}
 }
 
 usage() {
