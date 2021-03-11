@@ -31,7 +31,7 @@ friendly_name 'Flight File Manager Webapp'
 
 install_dir '/opt/flight/opt/file-manager-webapp'
 
-VERSION = '1.0.1'
+VERSION = '1.0.2-rc1'
 override 'flight-file-manager-webapp', version: VERSION
 
 build_version VERSION
