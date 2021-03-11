@@ -29,15 +29,16 @@ echo "Configuring"
 
 flight_ROOT="${flight_ROOT:-/opt/flight}"
 env_file="$flight_ROOT/etc/service/env/file-manager-api"
+var_name="flight_FILE_MANAGER_API_cloudcmd_cookie_domain"
 
 for a in "$@"; do
   IFS="=" read k v <<< "${a}"
   case $k in
     cookieDomain)
-      if cat "$env_file" | grep 'flight_FILE_MANAGER_API_cloudcmd_cookie_domain' ; then
-        sed -i "s/flight_FILE_MANAGER_API_SSO_COOKIE_DOMAIN=.*/flight_FILE_MANAGER_API_cloudcmd_cookie_domain=$v/g" "$env_file"
+      if cat "$env_file" | grep "${var_name}"; then
+        sed -i "s/${var_name}=.*/${var_name}=${v}/g" "$env_file"
       else
-        echo "flight_FILE_MANAGER_API_cloudcmd_cookie_domain=$v" >> "$env_file"
+        echo "${var_name}=${v}" >> "$env_file"
       fi
       ;;
     *)
