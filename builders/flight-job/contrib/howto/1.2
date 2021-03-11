@@ -1,6 +1,11 @@
-# Flight Job(1) - Generate a job script from a predefined template
+# Flight Job(1) - Create and submit jobs from predefined templates
 
 ## Overview
+
+The `Flight Job` utility is comprised of three main sections:
+* `templates` - Generic script and question definitions,
+* `scripts` - Rendered job files which are ready to be submitted, and
+* `jobs` - A record of scripts which have been submitted to the scheduler
 
 ~~~
 $ flight job --help
@@ -14,23 +19,34 @@ $ flight job --help
 
   COMMANDS:
 
-    console
-    copy-template  Generate a local copy of a template
-    create-script  Generate a new script from a template
-    help           Display global or [command] help documentation
-    list-scripts   List the existing scripts
+    Templates:
     list-templates List available templates
-    show-template  Display details about a template
-    submit-script  Start a job from a previously rendered script
+    info-template  Display details about a template
+    copy-template  Generate a local version of a template (Deprecated)
+
+    Scripts:
+    list-scripts   List the rendered scripts
+    create-script  Render a new script from a template
+    info-script    Display details about a rendered script
+
+    Jobs:
+    list-jobs      List the previously submitted jobs
+    submit-job     Schedule a new job to run from a script
+    info-job       Display details about a submitted job
+
+    Miscellaneous:
+    help           Display global or [command] help documentation
+    run-monitor    Update the internal state of the data cache
 
   ALIASES:
 
     copy   copy-template
     cp     copy-template
     create create-script
-    info   show-template
+    info   info-template
+    list   list-templates
     ls     list-templates
-    submit submit-script
+    submit submit-job
 
   GLOBAL OPTIONS:
 
@@ -41,36 +57,54 @@ $ flight job --help
         Display version information
 
     --verbose
-        Display additional details
+        Display additional details, when supported
+
+    --pretty
+        Display a human friendly output, when supported
 
     --ascii
-        Display a simplified version of the outpu
+        Display a simplified version of the output, when supported
+
+    --json
+        Display a JSON version of the output, when supported
 ~~~
 
-## List the Available Templates
+## TEMPLATE COMMANDS
+
+Flight Job maintains a library of `templates` which are used to generate
+\"job scripts\". These `templates` contain various markup tags which must
+be rendered to a `script` before submitting a `job`.
+
+Refer to `create-script` below on how to generate a `script` from a `template`.
+
+### list-templates: View the available templates
 
 The available templates can displayed using the `list-templates` command:
 
 ~~~
-$ flight job list
-+-------+-----------------+
-| Index | Name            |
-+-------+-----------------+
+$ flight job list-jobs
++-------+--------+
+| Index | Name   |
++-------+--------+
 ...
-| 5     | howto-demo.sh   |
+| 5     | simple |
 ...
-+-------+-----------------+
++-------+--------+
 ~~~
 
-## View the Content of Template
+*NOTE*: A templates `Index` is determined by the alphanumeric ordering of the
+current templates and is not guaranteed to be consistent. A template's index
+my change as templates are added.
 
-Details about a template can be view with  the `show-template` command.
+### info-template: View details about a specific template
+
+Details about a template can be view with  the `info-template` command.
 
 The template can be found by name:
 
 ~~~
-$ flight job show-template howto-demo.sh
-howto-demo.sh
+$ flight job simple
+simple
 
   DESCRIPTION
 
@@ -86,53 +120,215 @@ howto-demo.sh
   Copyright (C) 2020 Alces Flight Ltd.
 ~~~
 
-Or the template can be found by index:
+### copy-template: Make a local copy of a template [Deprecated]
 
-~~~
-$ flight job info 5
-... same as above ...
-~~~
+Copying a template with the `copy-template` command has been deprecated and
+will be removed in the next major release. Please use the `create-script`
+command instead.
 
-## Creating a new Script
+## SCRIPT COMMANDS
+
+Once a `template` is render it becomes `script` which are stored in your user
+specific library. Your `scripts` are ready to be submitted to the scheduler as
+a `job`.
+
+Refer to `submit-job` below on how to submit a `job` from a `script`.
+
+### create-script: Render a script from a template
 
 New `scripts` can be generated with the `create-script` command. This will step
-you through various question prompts and generate a `script`.
+you through various question prompts and render the `script`. The response after
+the question prompts is the same as the `info-script` command.
 
 ~~~
-flight job create-script howto-demo.sh
+$ flight job create-script simple
 Working directory /home/%u
 Set an output file for STDOUT job-%j.output
-...
+... See info-script for output ...
 ~~~
 
-## Viewing Generated Scripts
+It is possible to run the command in a non-interactive session using the
+`--stdin` flag. The standard input of the process must be the question answers
+in a JSON format.
+
+~~~
+$ echo { \"foo_question\": \"foo_answer\" } | flight job create-script --stdin
+... See info-script for output ...
+~~~
+
+### list-scripts: View your rendered scripts
 
 A list of previously generated scripts is available with the `list-scripts`
 command.
 
 ~~~
 $ flight job list-scripts
-+--------------------------------------+---------------+------------+
-| ID                                   | Name          | Template   |
-+--------------------------------------+---------------+------------+
++----------+-------------+-----------+-------------+
+| ID       | Template ID | Name      | Created At  |
++----------+-------------+-----------+-------------+
+| 2TCQdhJh | tophat      | tophat.sh | 11/03 12:15 |
+| xpVrobuO | simple      | simple.sh | 11/03 14:23 |
 ...
-| d91df58e-a2bb-486b-8372-174e1eaae1bf | howto-demo.sh | Howto Demo |
-...
-+--------------------------------------+---------------+------------+
-
++----------+-------------+-----------+-------------+
 ~~~
 
-## Submitting a New Job
+### info-scripts: View details about a specific script
 
-New `jobs` can be submitted using the `submit-script` command.
+Details about a specific script can be retrieved using the `info-script` command.
 
 ~~~
-flight job submit-script d91df58e-a2bb-486b-8372-174e1eaae1bf
-Your job has been started!
+$ flight job info-script xpVrobuO
+         ID: xpVrobuO
+Template ID: simple
+       Name: simple.sh
+       Path: /home/centos/.local/share/flight/job/scripts/xpVrobuO/simple.sh
+ Created At: 11/03 14:23
 ~~~
 
-## Copying a Template
+## JOB COMMANDS
 
-Copying a template with the `copy-template` command has been deprecated and
-will be removed in the next major release. Please use the `create-script`
-command instead.
+A record of `script` submissions is maintained as `jobs`. The `jobs` integrate
+with an external scheduler and will periodically be update with their progress.
+
+Your `crontab` will be modified to preform the periodic check at hourly
+intervals. You may freely change the period of these updates.
+
+### submit-job: Submit a job to the scheduler
+
+A previously rendered template can be submitted using the `create-job` command.
+The output of the command is the same as the `info-job` command.
+
+~~~
+$ flight job submit-job xpVrobuO
+... See info-job for output ...
+~~~
+
+### list-jobs: View a record of submitted jobs
+
+A list of previously submit jobs is available with the `list-jobs` command:
+
+~~~
+$ flight job list-jobs
++----------+-----------+-----------+-------------+-------------+-------------+
+| ID       | State     | Submitted | Created At  | Start Time  | End Time    |
++----------+-----------+-----------+-------------+-------------+-------------+
+| nKJ6_BUr | COMPLETED | yes       | 11/03 13:20 | 11/03 13:20 | 11/03 13:20 |
+| DmSBREgL | PENDING   | yes       | 11/03 16:14 | (none)      | (none)      |
++----------+-----------+-----------+-------------+-------------+-------------+
+~~~
+
+### info-job: View details about a specific job
+
+Details about a specific job can retrieved using the `info-job` command.
+
+~~~
+$ flight job info-job DmSBREgL
+         ID: DmSBREgL
+  Script ID: 2TCQdhJh
+    Alt. ID: 76
+      State: PENDING
+  Submitted: yes
+ Created At: 11/03 16:14
+ Start Time: (none)
+   End Time: (none)
+StdOut Path: /host/job/foo.out
+StdErr Path: /host/job/foo.error
+~~~
+
+The \"Submitted\" column flags if the scheduler successfully received the `job`.
+It will be \"no\" if an error occurred during the submission. The raw error from
+the scheduler can be retrieved using the `--verbose` flag. The exit status of the
+submit command will replace \"Submitted\" column.
+
+~~~
+$ flight job info-job YKOVUcyo --verbose
+           ID: YKOVUcyo
+    Script ID: u24B2xz6
+      Alt. ID: (none)
+        State: FAILED
+Submit Status: 1
+   Created At: 2021-03-11T16:19:40+00:00
+   Start Time: (none)
+     End Time: (none)
+  StdOut Path: (none)
+  StdErr Path: (none)
+
+Submit Standard Out:
+/usr/bin/jq
+
+Submit Standard Error:
+sbatch: error: Memory specification can not be satisfied
+sbatch: error: Batch job submission failed: Requested node configuration is not available
+~~~
+
+## OTHER COMMAND: run-monitor
+
+The `run-monitor` command is used by the `crontab` to update the internal
+monitor cache. Running the command manually is optional, but is useful for
+updating the state of fast running jobs. Otherwise it will be called the next
+time your cron job is ran.
+
+~~~
+$ flight job run-monitor
+~~~
+
+## COMMAND OUTPUT FORMAT
+
+The `flight job` utility supports various different output formats depending
+on the execution context and provided flags.
+
+The default behaviour uses two different outputs:
+* Human readable Unicode output
+* Tab separated value output
+
+There are also multiple flags which will augment how the output is displayed:
+`--json`, `--verbose`, `--ascii`, and `--pretty`
+
+### Human readable Unicode Output
+
+The human readable output will be returned when ran form an interactive
+terminal. It will contain `Unicode` and `ANSI` escape sequences (colors). It
+may also be a simplified version of the full output.
+
+### Tab Separated Values
+
+The output toggles to tab separated values when ran in a non-interactive shell.
+This allows it to be easily processed with standard command line tools
+such as `cut`. This output may contain additional fields/ verbosity when
+compared to the human readable output.
+
+The `Unicode` and `ANSI` escape sequences will be omitted from the output.
+Instead it will be limited to a standard set of `ASCII` characters. Special
+characters (e.g. newline and tab) will be backslash escaped inorder to to
+preserve the tab delimiting.
+
+### JSON Output
+
+The output can be toggled to emit JSON with the `--json` flag. The fields
+within the JSON response reflect the internally stored structures and are
+not directly comparable to the other outputs.
+
+This output is designed for applications which require a high degree of
+coupling and consistency.
+
+### Verbose Outputs
+
+
+The `--verbose` flag toggles the human readable output to display a similar
+level of detail when compared to the tab separated values output.
+
+This flag has no affect on the tab separated values output as it is already
+verbose. It also does not affect the JSON output.
+
+### Pretty and ASCII Outputs
+
+The `--pretty` flag can be used to force the human readable output to be
+emitted in a non-interactive terminal. This is useful when piping the output
+into a interactive command (e.g. `less`). This flag will prevent the tab
+separated values from being emitted. It has no effect when combined with
+`--json`. It maybe combined with the `--verbose` flag.
+
+The `--ascii` flag is similar to `--pretty` in that it emits a human readable
+output. However `--ascii` replaces the `Unicode` and ANSI escape sequences
+with vanilla ASCII. Otherwise the behaviour between `--ascii` and `--pretty`
+is the same.
