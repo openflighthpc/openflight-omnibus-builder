@@ -24,7 +24,7 @@
   },
   "session": {
     "name": "flight-console-api",
-    "secret": ""
+    "secret": "%{flight_CONSOLE_API_session_secret}"
   },
   "options": {
   },
