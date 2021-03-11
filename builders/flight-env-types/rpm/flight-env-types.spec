@@ -8,9 +8,9 @@ License:        CC-BY-SA
 
 URL:            https://openflighthpc.org
 %undefine _disable_source_fetch
-Source0:        https://github.com/openflighthpc/%{name}/archive/%{version}.tar.gz
+Source0:        https://github.com/openflighthpc/%{name}/archive/%{_flight_pkg_tag}.tar.gz
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+BuildRoot:      %{_tmppath}/%{name}-%{_flight_pkg_tag}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:     noarch
 Requires:      flight-env-system-1.0
@@ -19,7 +19,7 @@ Requires:      flight-env-system-1.0
 A collection of software package environment types for use with Flight Environment
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{_flight_pkg_tag}
 
 %build
 
@@ -53,5 +53,7 @@ rm -rf $RPM_BUILD_ROOT
 /opt/flight/usr/lib/env/types/spack/*
 
 %changelog
+* Thu Mar 11 2021 Ben Armston <ben.armston@alces-flight.com> - 1.0.2
+- Fixed issue with non-standard build directories under singularity.
 * Tue May 19 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 1.0.0
 - Initial Package

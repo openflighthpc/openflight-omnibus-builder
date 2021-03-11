@@ -4,7 +4,8 @@ d="$(pwd)"
 mkdir -p pkg
 
 NAME=flight-env-types
-VERSION=1.0.1
+VERSION=1.0.2
+TAG=$(echo "$VERSION" | sed "s/~/-/g")
 REL=1
 
 if [ -f /etc/redhat-release ]; then
@@ -13,6 +14,7 @@ if [ -f /etc/redhat-release ]; then
   rm -f $HOME/rpmbuild/SOURCES/${VERSION}.tar.gz
   rpmbuild -bb ${NAME}.spec \
            --define "_flight_pkg_version $VERSION" \
+           --define "_flight_pkg_tag $TAG" \
            --define "_flight_pkg_rel $REL"
   cd ..
   mv $HOME/rpmbuild/RPMS/noarch/${NAME}-*.noarch.rpm pkg
