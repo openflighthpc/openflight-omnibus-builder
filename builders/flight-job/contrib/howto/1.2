@@ -14,6 +14,8 @@ $ flight job --help
 
   COMMANDS:
 
+    console
+    copy-template  Generate a local copy of a template
     create-script  Generate a new script from a template
     help           Display global or [command] help documentation
     list-scripts   List the existing scripts
@@ -128,3 +130,9 @@ New `jobs` can be submitted using the `submit-script` command.
 flight job submit-script d91df58e-a2bb-486b-8372-174e1eaae1bf
 Your job has been started!
 ~~~
+
+## Copying a Template
+
+Copying a template with the `copy-template` command has been deprecated and
+will be removed in the next major release. Please use the `create-script`
+command instead.
