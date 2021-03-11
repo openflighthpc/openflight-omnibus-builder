@@ -61,6 +61,8 @@ build do
     content = [
       File.read(path),
       "templates_dir: #{templates_dir}",
+      "submit_script_path: #{File.join(slurm_dir, 'submit.sh')}",
+      "monitor_script_path: #{File.join(slurm_dir, 'monitor.sh')}",
       ''
     ].join("\n")
     File.write path, content
