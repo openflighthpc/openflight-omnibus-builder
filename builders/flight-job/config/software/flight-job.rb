@@ -82,6 +82,27 @@ build do
         project.extra_package_file(install_path)
       end
     end
+
+    # Cleanup the initial state of the templates directory
+    block do
+      FileUtils.rm_rf templates_dir
+      FileUtils.mkdir_p templates_dir
+    end
+
+    # Copy the example templates into place
+    Dir.glob(File.join(project_dir, 'usr/share/*')).each do |dir|
+      basename = File.basename(dir)
+      copy File.join('usr/share', basename), templates_dir
+    end
+
+    # Flag the entire templates dir as package files
+    block do
+      Find.find(templates_dir).each do |path|
+        next unless File.file?(path)
+        $stdout.puts "Found template file: #{path}"
+        project.extra_package_file path
+      end
+    end
   end
 
   # Installs the gems to the shared `vendor/share`
