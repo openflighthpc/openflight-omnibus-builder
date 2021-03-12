@@ -63,6 +63,7 @@ build do
       "templates_dir: #{templates_dir}",
       "submit_script_path: #{File.join(slurm_dir, 'submit.sh')}",
       "monitor_script_path: #{File.join(slurm_dir, 'monitor.sh')}",
+      "check_cron: /opt/flight/libexec/job/check-cron.sh",
       ''
     ].join("\n")
     File.write path, content
