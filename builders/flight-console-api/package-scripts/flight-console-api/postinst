@@ -27,22 +27,16 @@
 #===============================================================================
 
 # Update the session secret if unset
-cat <<RUBY | /opt/flight/bin/ruby
-require 'json'
-require 'securerandom'
-
-# Load the existing config
-path = File.join(ENV['flight_ROOT'], 'opt/console-api/etc/config.json')
-data = JSON.load File.read(path)
-
-# Update the secret if unset
-if data["session"]["secret"].to_s.empty?
-  data["session"]["secret"] = SecureRandom.base64(20)
-
-  # Save the config
-  File.write(path, JSON.pretty_generate(data))
-end
-RUBY
+env_file=/opt/flight/etc/service/env/console-api
+var_name="flight_CONSOLE_API_session_secret"
+if [ -f "${env_file}" ] && grep -q "^${var_name}=" "${env_file}" ; then
+    # The secret has previously been generated.  We continue to use it.
+    :
+else
+    secret=$( date +%s.%N | sha256sum | cut -c 1-40 )
+    echo "${var_name}=${secret}" >> "${env_file}"
+    chmod 0400 "${env_file}"
+fi
 
 # Generate a private key if required
 priv_key=/opt/flight/etc/console-api/id_rsa

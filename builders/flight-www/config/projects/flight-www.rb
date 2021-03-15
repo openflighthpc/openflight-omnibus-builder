@@ -39,7 +39,7 @@ override :nginx, version: '1.14.2'
 override 'flight-landing-page', version: '1.2.1'
 
 build_version VERSION
-build_iteration '1'
+build_iteration '2'
 
 dependency 'preparation'
 dependency 'flight-www'
