@@ -34,7 +34,7 @@ install_dir '/opt/flight/opt/scheduler-controller'
 VERSION = '0.7.0-rc1'
 override 'flight-scheduler-controller', version: VERSION
 build_version VERSION
-build_iteration 5
+build_iteration 6
 
 dependency 'preparation'
 dependency 'flight-scheduler-controller'
