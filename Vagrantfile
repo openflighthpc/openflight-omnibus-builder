@@ -40,8 +40,8 @@ Vagrant.configure("2") do |config|
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
-    build.vm.network "forwarded_port", guest: 80, host: 7070
-    build.vm.network "forwarded_port", guest: 443, host: 7443
+    build.vm.network "forwarded_port", guest: 80, host: 7080, host_ip: '127.0.0.1'
+    build.vm.network "forwarded_port", guest: 443, host: 7443, host_ip: '127.0.0.1'
   end
 
   config.vm.define "centos8", autostart: false do |build|
@@ -57,8 +57,8 @@ Vagrant.configure("2") do |config|
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
-    build.vm.network "forwarded_port", guest: 80, host: 8070
-    build.vm.network "forwarded_port", guest: 443, host: 8443
+    build.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: '127.0.0.1'
+    build.vm.network "forwarded_port", guest: 443, host: 8443, host_ip: '127.0.0.1'
   end
 
   config.vm.define "ubuntu1804", autostart: false do |build|
@@ -74,8 +74,8 @@ Vagrant.configure("2") do |config|
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
-    build.vm.network "forwarded_port", guest: 80, host: 9070
-    build.vm.network "forwarded_port", guest: 443, host: 9443
+    build.vm.network "forwarded_port", guest: 80, host: 9080, host_ip: '127.0.0.1'
+    build.vm.network "forwarded_port", guest: 443, host: 9443, host_ip: '127.0.0.1'
   end
 
   config.vm.define "ubuntu2004", autostart: false do |build|
@@ -95,7 +95,7 @@ Vagrant.configure("2") do |config|
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
-    build.vm.network "forwarded_port", guest: 80, host: 10070
-    build.vm.network "forwarded_port", guest: 443, host: 10443
+    build.vm.network "forwarded_port", guest: 80, host: 10080, host_ip: '127.0.0.1'
+    build.vm.network "forwarded_port", guest: 443, host: 10443, host_ip: '127.0.0.1'
   end
 end
