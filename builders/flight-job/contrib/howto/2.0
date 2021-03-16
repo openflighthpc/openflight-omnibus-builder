@@ -15,7 +15,7 @@ $ flight job --help
 
   DESCRIPTION:
 
-    Generate a job script from a predefined template
+    Generate and submit jobs from predefined templates
 
   COMMANDS:
 
@@ -25,14 +25,16 @@ $ flight job --help
     copy-template  Generate a local version of a template (Deprecated)
 
     Scripts:
-    list-scripts   List the rendered scripts
+    list-scripts   List your rendered scripts
     create-script  Render a new script from a template
     info-script    Display details about a rendered script
+    delete-script  Permanently remove a script
 
     Jobs:
-    list-jobs      List the previously submitted jobs
+    list-jobs      List your previously submitted jobs
     submit-job     Schedule a new job to run from a script
     info-job       Display details about a submitted job
+    delete-job     Permanently remove a job
 
     Miscellaneous:
     help           Display global or [command] help documentation
@@ -43,9 +45,6 @@ $ flight job --help
     copy   copy-template
     cp     copy-template
     create create-script
-    info   info-template
-    list   list-templates
-    ls     list-templates
     submit submit-job
 
   GLOBAL OPTIONS:
@@ -120,11 +119,29 @@ simple
   Copyright (C) 2020 Alces Flight Ltd.
 ~~~
 
-### copy-template: Make a local copy of a template [Deprecated]
+### copy-template: Make a local copy of a template
 
-Copying a template with the `copy-template` command has been deprecated and
-will be removed in the next major release. Please use the `create-script`
-command instead.
+Will make a copy of a template within the current working or specified
+directory. This is useful when you want to submit a job to the external
+scheduler without using the `script`/`job` infrastructure within this tool.
+
+This command will remove the markup contained within the template so it can
+be used as a \"job script\". However minor modifications maybe required on
+a case by case basis.
+
+~~~
+# Copying into the current working directory
+flight job copy-template simple
+Successfully copied the template to: /path/to/cwd/simple.sh
+
+# Copying into an existing directory
+flight job copy-template simple /tmp
+Successfully copied the template to: /tmp/simple.sh
+
+# Renaming the template:
+flight job copy-template simple /tmp/foo.sh
+Successfully copied the template to: /tmp/foo.sh
+~~~
 
 ## SCRIPT COMMANDS
 
@@ -163,13 +180,13 @@ command.
 
 ~~~
 $ flight job list-scripts
-+----------+-------------+-----------+-------------+
-| ID       | Template ID | Name      | Created At  |
-+----------+-------------+-----------+-------------+
-| 2TCQdhJh | tophat      | tophat.sh | 11/03 12:15 |
-| xpVrobuO | simple      | simple.sh | 11/03 14:23 |
++----------+-------------+-----------+----------------+
+| ID       | Template ID | Name      | Created At     |
++----------+-------------+-----------+----------------+
+| 2TCQdhJh | tophat      | tophat.sh | 11/03/21 12:15 |
+| xpVrobuO | simple      | simple.sh | 11/03/21 14:23 |
 ...
-+----------+-------------+-----------+-------------+
++----------+-------------+-----------+----------------+
 ~~~
 
 ### info-scripts: View details about a specific script
@@ -182,7 +199,7 @@ $ flight job info-script xpVrobuO
 Template ID: simple
        Name: simple.sh
        Path: /home/centos/.local/share/flight/job/scripts/xpVrobuO/simple.sh
- Created At: 11/03 14:23
+ Created At: 11/03/21 14:23
 ~~~
 
 ## JOB COMMANDS
@@ -200,7 +217,7 @@ The output of the command is the same as the `info-job` command.
 
 ~~~
 $ flight job submit-job xpVrobuO
-... See info-job for output ...
+... Similar to the info-job output ...
 ~~~
 
 ### list-jobs: View a record of submitted jobs
@@ -209,12 +226,12 @@ A list of previously submit jobs is available with the `list-jobs` command:
 
 ~~~
 $ flight job list-jobs
-+----------+-----------+-----------+-------------+-------------+-------------+
-| ID       | State     | Submitted | Created At  | Start Time  | End Time    |
-+----------+-----------+-----------+-------------+-------------+-------------+
-| nKJ6_BUr | COMPLETED | yes       | 11/03 13:20 | 11/03 13:20 | 11/03 13:20 |
-| DmSBREgL | PENDING   | yes       | 11/03 16:14 | (none)      | (none)      |
-+----------+-----------+-----------+-------------+-------------+-------------+
++----------+-----------+-----------+----------------+----------------+----------------+
+| ID       | State     | Submitted | Created At     | Start Time     | End Time       |
++----------+-----------+-----------+----------------+----------------+----------------+
+| nKJ6_BUr | COMPLETED | yes       | 11/03/21 13:20 | 11/03/21 13:20 | 11/03/21 13:20 |
+| DmSBREgL | PENDING   | yes       | 11/03/21 16:14 | (none)         | (none)         |
++----------+-----------+-----------+----------------+----------------+----------------+
 ~~~
 
 ### info-job: View details about a specific job
@@ -228,7 +245,7 @@ $ flight job info-job DmSBREgL
     Alt. ID: 76
       State: PENDING
   Submitted: yes
- Created At: 11/03 16:14
+ Created At: 11/03/21 16:14
  Start Time: (none)
    End Time: (none)
 StdOut Path: /host/job/foo.out
@@ -312,7 +329,6 @@ This output is designed for applications which require a high degree of
 coupling and consistency.
 
 ### Verbose Outputs
-
 
 The `--verbose` flag toggles the human readable output to display a similar
 level of detail when compared to the tab separated values output.

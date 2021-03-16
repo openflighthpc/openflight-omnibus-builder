@@ -1,3 +1,4 @@
+#!/bin/bash
 #==============================================================================
 # Copyright (C) 2021-present Alces Flight Ltd.
 #
@@ -34,8 +35,16 @@ fi
 
 set -e
 
+# NOTE: The cron-step notation (e.g. 0/5) is non-standard and may not work reliable
+# Instead the verbose technique of listing each minute is used
+offset=$(($RANDOM % 5))
+spec="$offset"
+for index in {1..11}; do
+  spec="$spec,$(($offset + $index * 5))"
+done
+
 crontab <<-CRON
-$(($RANDOM % 60)) * * * * $BIN
+$spec * * * * $BIN
 CRON
 
 exit 0
