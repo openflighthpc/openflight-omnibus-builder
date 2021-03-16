@@ -31,7 +31,7 @@ friendly_name 'Flight Job'
 
 install_dir '/opt/flight/opt/job'
 
-VERSION = '2.0.0-rc7'
+VERSION = '2.0.0-rc8'
 override 'flight-job', version: VERSION
 
 build_version VERSION
@@ -44,7 +44,7 @@ dependency 'version-manifest'
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Generate a job script from a predefined template'
+description 'Generate and submit jobs from predefined templates'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
