@@ -202,6 +202,16 @@ Template ID: simple
  Created At: 11/03/21 14:23
 ~~~
 
+### delete-script: Permanently remove a script
+
+Permanently removes the previously rendered `script`. Associated `jobs` remain
+unaffected.
+
+~~~
+$ flight job delete-script 2TCQdhJh
+Removed script: 2TCQdhJh
+~~~
+
 ## JOB COMMANDS
 
 A record of `script` submissions is maintained as `jobs`. The `jobs` integrate
@@ -276,6 +286,16 @@ Submit Standard Out:
 Submit Standard Error:
 sbatch: error: Memory specification can not be satisfied
 sbatch: error: Batch job submission failed: Requested node configuration is not available
+~~~
+
+### delete-job: Permanently remove a job
+
+Permanently remove the record of a previously submitted job. This will not affect the
+status of the job on the external scheduler.
+
+~~~
+$ flight job delete-job YKOVUcyo
+Removed job: YKOVUcyo
 ~~~
 
 ## OTHER COMMAND: run-monitor
