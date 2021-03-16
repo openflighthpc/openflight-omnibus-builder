@@ -52,6 +52,7 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-runway'
+runtime_dependency 'flight-jq'
 
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
