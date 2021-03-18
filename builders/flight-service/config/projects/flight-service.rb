@@ -31,7 +31,7 @@ friendly_name 'Manage HPC environment services'
 
 install_dir '/opt/flight/opt/service'
 
-VERSION = '1.1.2'
+VERSION = '1.3.0-rc1'
 override 'flight-service', version: VERSION
 
 build_version VERSION
@@ -59,6 +59,13 @@ require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
+
+# Updates the version in the libexec file
+path = File.expand_path('../../opt/flight/libexec/commands/service', __dir__)
+original = File.read(path)
+updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
+                  .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
+File.write(path, updated) unless original == updated
 
 package :rpm do
   vendor 'Alces Flight Ltd'
