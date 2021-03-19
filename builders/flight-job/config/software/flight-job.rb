@@ -58,15 +58,24 @@ build do
     path = File.join(install_dir, 'etc/flight-job.yaml')
     templates_dir = "/opt/flight/usr/share/job/templates"
     slurm_dir = "/opt/flight/libexec/job/slurm"
+    check_cron = '/opt/flight/libexec/job/check-cron.sh'
     content = [
       File.read(path),
       "templates_dir: #{templates_dir}",
       "submit_script_path: #{File.join(slurm_dir, 'submit.sh')}",
       "monitor_script_path: #{File.join(slurm_dir, 'monitor.sh')}",
-      "check_cron: /opt/flight/libexec/job/check-cron.sh",
+      "check_cron: #{check_cron}",
       ''
     ].join("\n")
     File.write path, content
+
+    # Cleanup and move check-cron.sh into place
+    block do
+      FileUtils.rm_rf File.dirname(check_cron)
+      FileUtils.mkdir_p File.dirname(check_cron)
+    end
+    copy 'libexec/check-cron.sh', check_cron
+    project.extra_package_file check_cron
 
     # Cleanup the initial state of the slurm dir
     block do
