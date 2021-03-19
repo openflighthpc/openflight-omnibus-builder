@@ -61,9 +61,9 @@ build do
     check_cron = '/opt/flight/libexec/job/check-cron.sh'
     content = [
       File.read(path),
+      "submit_script_path: /opt/flight/libexec/job/flight-slurm/submit.sh",
+      "monitor_script_path: /opt/flight/libexec/job/flight-slurm/monitor.sh",
       "templates_dir: #{templates_dir}",
-      "submit_script_path: #{File.join(slurm_dir, 'submit.sh')}",
-      "monitor_script_path: #{File.join(slurm_dir, 'monitor.sh')}",
       "check_cron: #{check_cron}",
       ''
     ].join("\n")
