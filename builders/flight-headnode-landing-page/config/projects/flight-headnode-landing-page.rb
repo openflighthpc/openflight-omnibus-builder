@@ -35,7 +35,7 @@ VERSION = '1.2.1'
 override 'flight-headnode-landing-page', version: VERSION
 
 build_version VERSION
-build_iteration '1'
+build_iteration '2'
 
 dependency 'preparation'
 dependency 'flight-headnode-landing-page'

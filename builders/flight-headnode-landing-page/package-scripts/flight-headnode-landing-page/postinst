@@ -25,6 +25,11 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-/opt/flight/bin/flight landing-page compile
+
+# `flight-www` may not be installed yet.  That is fine, as `flight-www` will
+# compile the landing page once it is installed.
+if [ -f /opt/flight/libexec/commands/landing-page ]; then
+    /opt/flight/bin/flight landing-page compile
+fi
 
 exit 0

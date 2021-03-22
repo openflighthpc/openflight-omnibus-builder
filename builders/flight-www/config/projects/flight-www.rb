@@ -36,10 +36,10 @@ CERT_VERSION = '0.2.1'
 override 'flight-www', version: VERSION
 override 'flight-cert', version: CERT_VERSION
 override :nginx, version: '1.14.2'
-override 'flight-landing-page', version: '1.2.1'
+override 'flight-landing-page', version: '1.2.2'
 
 build_version VERSION
-build_iteration '2'
+build_iteration '3'
 
 dependency 'preparation'
 dependency 'flight-www'
