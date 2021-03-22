@@ -31,7 +31,7 @@ friendly_name 'Flight Job'
 
 install_dir '/opt/flight/opt/job'
 
-VERSION = '2.0.0-rc10'
+VERSION = '2.0.0-rc11'
 override 'flight-job', version: VERSION
 
 build_version VERSION
@@ -56,7 +56,7 @@ runtime_dependency 'flight-jq'
 
 # Define the user-editable files
 config_file '/opt/flight/opt/job/etc/flight-job.yaml'
-config_file '/opt/flight/libexec/job/slurm/sbatch.sh'
+config_file '/opt/flight/libexec/job/slurm/sbatch-wrapper.sh'
 
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
