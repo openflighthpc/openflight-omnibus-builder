@@ -11,7 +11,7 @@ The `Flight Job` utility is comprised of three main sections:
 $ flight job --help
   NAME:
 
-    bin/job
+    flight job
 
   DESCRIPTION:
 
@@ -71,8 +71,8 @@ $ flight job --help
 ## TEMPLATE COMMANDS
 
 Flight Job maintains a library of `templates` which are used to generate
-\"job scripts\". These `templates` contain various markup tags which must
-be rendered to a `script` before submitting a `job`.
+customised \"job scripts\". These `templates` contain various markup tags which
+must be rendered to a `script` before submitting a `job`.
 
 Refer to `create-script` below on how to generate a `script` from a `template`.
 
@@ -91,18 +91,18 @@ $ flight job list-jobs
 +-------+--------+
 ~~~
 
-*NOTE*: A templates `Index` is determined by the alphanumeric ordering of the
+*NOTE*: A template's `Index` is determined by the alphanumeric ordering of the
 current templates and is not guaranteed to be consistent. A template's index
 my change as templates are added.
 
 ### info-template: View details about a specific template
 
-Details about a template can be view with  the `info-template` command.
+Details about a template can be viewed with  the `info-template` command.
 
 The template can be found by name:
 
 ~~~
-$ flight job simple
+$ flight job info-template simple
 simple
 
   DESCRIPTION
@@ -121,12 +121,12 @@ simple
 
 ### copy-template: Make a local copy of a template
 
-Will make a copy of a template within the current working or specified
+Make a copy of a template within the current working or specified
 directory. This is useful when you want to submit a job to the external
 scheduler without using the `script`/`job` infrastructure within this tool.
 
 This command will remove the markup contained within the template so it can
-be used as a \"job script\". However minor modifications maybe required on
+be used as a \"job script\". However minor modifications may be required on
 a case by case basis.
 
 ~~~
@@ -145,8 +145,8 @@ Successfully copied the template to: /tmp/foo.sh
 
 ## SCRIPT COMMANDS
 
-Once a `template` is render it becomes `script` which are stored in your user
-specific library. Your `scripts` are ready to be submitted to the scheduler as
+Once a `template` is rendered it becomes a `script` stored in your own
+script library. Your `scripts` are ready to be submitted to the scheduler as
 a `job`.
 
 Refer to `submit-job` below on how to submit a `job` from a `script`.
@@ -165,8 +165,8 @@ Set an output file for STDOUT job-%j.output
 ~~~
 
 It is possible to run the command in a non-interactive session using the
-`--stdin` flag. The standard input of the process must be the question answers
-in a JSON format.
+`--stdin` flag. The standard input of the process must be the answers to the
+questions in a JSON format.
 
 ~~~
 $ echo { \"foo_question\": \"foo_answer\" } | flight job create-script --stdin
@@ -215,10 +215,8 @@ Removed script: 2TCQdhJh
 ## JOB COMMANDS
 
 A record of `script` submissions is maintained as `jobs`. The `jobs` integrate
-with an external scheduler and will periodically be update with their progress.
-
-Your `crontab` will be modified to preform the periodic check at hourly
-intervals. You may freely change the period of these updates.
+with an external scheduler and will periodically be updated with their progress.
+Your `crontab` will be modified to perform the periodic check.
 
 ### submit-job: Submit a job to the scheduler
 
@@ -232,7 +230,7 @@ $ flight job submit-job xpVrobuO
 
 ### list-jobs: View a record of submitted jobs
 
-A list of previously submit jobs is available with the `list-jobs` command:
+A list of previously submitted jobs is available with the `list-jobs` command:
 
 ~~~
 $ flight job list-jobs
@@ -281,7 +279,6 @@ Submit Status: 1
   StdErr Path: (none)
 
 Submit Standard Out:
-/usr/bin/jq
 
 Submit Standard Error:
 sbatch: error: Memory specification can not be satisfied
