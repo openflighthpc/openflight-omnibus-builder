@@ -27,5 +27,5 @@
 
 # Ensure that flight-slurm binaries are first on the PATH and thus override
 # any other installs of slurm
-PATH=/opt/flight/opt/slurm/bin:$PATH
+PATH=$PATH:/opt/flight/opt/slurm/bin
 exec /opt/flight/libexec/job/slurm/submit.sh "$@"
