@@ -1,10 +1,6 @@
-: '
-: NAME: job
-: SYNOPSIS: Generate and submit jobs from predefined templates
-: VERSION: 2.0.0-rc12
-: '
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -31,11 +27,4 @@
 #===============================================================================
 
 flight_ROOT=${flight_ROOT:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." &> /dev/null && pwd )"}
-
-export RUBYOPT='-W0'
-export FLIGHT_CWD=$(pwd)
-export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
-export PATH="$PATH:$flight_ROOT/opt/jq/bin"
-
-cd $flight_ROOT/opt/job
-"$flight_ROOT"/bin/flexec bundle exec bin/job "$@"
+"$flight_ROOT"/bin/flight job run-monitor

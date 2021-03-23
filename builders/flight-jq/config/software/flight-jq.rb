@@ -1,10 +1,5 @@
-: '
-: NAME: job
-: SYNOPSIS: Generate and submit jobs from predefined templates
-: VERSION: 2.0.0-rc12
-: '
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -30,12 +25,20 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-flight_ROOT=${flight_ROOT:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." &> /dev/null && pwd )"}
+name "flight-jq"
 
-export RUBYOPT='-W0'
-export FLIGHT_CWD=$(pwd)
-export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
-export PATH="$PATH:$flight_ROOT/opt/jq/bin"
+license "MIT"
+skip_transitive_dependency_licensing true
 
-cd $flight_ROOT/opt/job
-"$flight_ROOT"/bin/flexec bundle exec bin/job "$@"
+default_version "1.6"
+
+version("1.6") { source sha256: "af986793a515d500ab2d35f8d2aecd656e764504b789b66d7e1a0b727a124c44" }
+
+source url: "https://github.com/stedolan/jq/releases/download/jq-#{version}/jq-linux64"
+
+relative_path "jq-#{version}"
+
+build do
+  copy 'jq-linux64', File.join(install_dir, 'bin/jq')
+  block { FileUtils.chmod '+x', File.join(install_dir, 'bin/jq') }
+end

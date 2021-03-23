@@ -1,10 +1,5 @@
-: '
-: NAME: job
-: SYNOPSIS: Generate and submit jobs from predefined templates
-: VERSION: 2.0.0-rc12
-: '
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -29,13 +24,34 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name 'flight-jq'
+maintainer 'Alces Flight Ltd'
+# homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/blob/master/builders/flight-jq/README.md'
+homepage 'https://github.com/openflighthpc/openflight-omnibus-builder'
+friendly_name 'Flight Runway'
 
-flight_ROOT=${flight_ROOT:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." &> /dev/null && pwd )"}
+install_dir '/opt/flight/opt/jq'
 
-export RUBYOPT='-W0'
-export FLIGHT_CWD=$(pwd)
-export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
-export PATH="$PATH:$flight_ROOT/opt/jq/bin"
+VERSION = '1.6'
+override 'flight-jq', version: VERSION
 
-cd $flight_ROOT/opt/job
-"$flight_ROOT"/bin/flexec bundle exec bin/job "$@"
+build_version VERSION
+build_iteration 1
+
+dependency 'preparation'
+dependency 'flight-jq'
+dependency 'version-manifest'
+
+license 'MIT'
+license_file 'LICENSE.txt'
+
+description 'Flight build of the jq JSON processor'
+
+strip_build true
+
+exclude '**/.git'
+exclude '**/.gitkeep'
+exclude '**/bundler/git'
+exclude '**/lib/*.a'
+exclude '**/lib/*.la'
+

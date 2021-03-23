@@ -31,11 +31,11 @@ friendly_name 'Flight Job'
 
 install_dir '/opt/flight/opt/job'
 
-VERSION = '1.1.0'
+VERSION = '2.0.0-rc12'
 override 'flight-job', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-job'
@@ -44,7 +44,7 @@ dependency 'version-manifest'
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Generate a job script from a predefined template'
+description 'Generate and submit jobs from predefined templates'
 
 exclude '**/.git'
 exclude '**/.gitkeep'
@@ -52,6 +52,11 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-runway'
+runtime_dependency 'flight-jq'
+
+# Define the user-editable files
+config_file '/opt/flight/opt/job/etc/flight-job.yaml'
+config_file '/opt/flight/libexec/job/slurm/sbatch-wrapper.sh'
 
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
