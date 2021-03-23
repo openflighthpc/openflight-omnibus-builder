@@ -157,20 +157,59 @@ New `scripts` can be generated with the `create-script` command. This will step
 you through various question prompts and render the `script`. The response after
 the question prompts is the same as the `info-script` command.
 
+The script can also be given an optional `name`:
+
 ~~~
+# Without a script name
 $ flight job create-script simple
+Working directory /home/%u
+Set an output file for STDOUT job-%j.output
+... See info-script for output ...
+
+# With a script name
+$ flight job create-script simple script-foo.sh
 Working directory /home/%u
 Set an output file for STDOUT job-%j.output
 ... See info-script for output ...
 ~~~
 
 It is possible to run the command in a non-interactive session using the
-`--stdin` flag. The standard input of the process must be the answers to the
-questions in a JSON format.
+`--answers` flag. The answers can be provided in the following ways:
+
+1. As a JSON string: `--answers '{ ... }'`,
+2. Within a file: `--answers file.json`, or
+3. Via the standard input: `--answers @-`
 
 ~~~
-$ echo { \"foo_question\": \"foo_answer\" } | flight job create-script --stdin
-... See info-script for output ...
+# Providing the answers as a string
+$ flight job create-script simple --answers '{ "foo_question": "foo_answer" }'
+
+# Providing the answers within a file
+$ flight job create-script simple --answers @/path/to/answers.json
+
+# Providing the answers via STDIN
+$ echo { \"foo_question\": \"foo_answer\" } | flight job create-script simple --answers @-
+~~~
+
+Additional notes about the script can be provided within the `--notes` flag.
+Similarly to the answers, the `notes` can be provided in the following ways:
+
+1. As a string: `--notes 'Details about the script'`,
+2. Within a file: `--notes /path/to/notes.txt`, or
+3. Via the standard input: `--notes @-`
+
+~~~
+# Providing the notes as a string
+$ flight job create-script simple --notes 'Details about the script'
+
+# Providing the notes within a file
+$ flight job create-script simple --notes @/path/to/notes.txt
+
+# Providing the notes via STDIN
+# WARN: The question/answer prompts will be disabled when providing the notes
+#       via the standard input. The defaults will be used unless the --answer
+#       flag has also been provided.
+$ echo Details about the script | flight job create-script simple --notes @-
 ~~~
 
 ### list-scripts: View your rendered scripts
@@ -202,6 +241,15 @@ Template ID: simple
  Created At: 11/03/21 14:23
 ~~~
 
+### view-script: View the content of a script
+
+The content of a script can be displayed with the `view-script` command.
+
+~~~
+$ flight job view-script xpVrobuO
+.. The content of the script ..
+~~~
+
 ### edit-script: Open the script in your editor
 
 A script can be opened in your editor using the `edit-script` command.
@@ -214,6 +262,14 @@ terminal editors.  The scheduler directives can be accessed by scrolling up.
 ~~~
 $ flight job edit-script xpVrobuO
 ... opens the script in the system editor ...
+~~~
+
+### rename-script: Change the name of a script
+
+The `name` of `script` can be changed using the `rename-script` command:
+
+~~~
+$ flight job rename-script xpVrobuO new-script.sh
 ~~~
 
 ### delete-script: Permanently remove a script
