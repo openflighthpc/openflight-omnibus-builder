@@ -55,37 +55,13 @@ build do
   # Update the config
   block do
     path = File.join(install_dir, 'etc/flight-job-script-api.yaml')
-    usr_dir = "/opt/flight/usr/share/job-script-api"
     content = [
       File.read(path),
-      "data_dir: #{usr_dir}",
       "command_path: /usr/sbin:/usr/bin:/sbin:/bin:/opt/flight/opt/slurm/bin",
       "shared_secret_path: /opt/flight/etc/shared-secret.conf",
       ''
     ].join("\n")
     File.write path, content
-
-    FileUtils.rm_rf usr_dir
-    FileUtils.mkdir_p usr_dir
-    FileUtils.touch File.join(usr_dir, '.empty')
-
-    # Copy the example scripts into place.
-    #
-    # As the example scripts are (1) not static, that is they are defined by
-    # the upstream project; and (2) not installed under `install_dir`,  we
-    # need to jump through hoops to get them added to the package.
-    Dir.glob(File.join(project_dir, 'api', 'usr', 'share', '*')).each do |dir|
-      example_script_name = File.basename(dir)
-      $stdout.puts "Found example script #{example_script_name}"
-      copy File.join('api', 'usr', 'share', example_script_name), usr_dir
-      Find.find(dir) do |f|
-        if File.file?(f)
-          $stdout.puts "  found example script file #{File.basename(f)}"
-          install_path = File.join(usr_dir, example_script_name, File.basename(f))
-          project.extra_package_file(install_path)
-        end
-      end
-    end
   end
 
   # Installs the gems to the shared `vendor/share`
