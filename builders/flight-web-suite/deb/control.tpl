@@ -11,4 +11,6 @@ Depends:      flight-console-api (>= 2.0.0), flight-console-api (<< 2.1.0),
   flight-desktop-webapp (>= 1.4.0), flight-desktop-webapp (<< 1.5.0),
   flight-file-manager-api (>= 1.0.0), flight-file-manager-api (<< 1.1.0),
   flight-file-manager-webapp (>= 1.0.0), flight-file-manager-webapp (<< 1.1.0),
-  flight-login-api (>= 1.0.0), flight-login-api (<< 1.1.0)
+  flight-login-api (>= 1.0.0), flight-login-api (<< 1.1.0),
+  flight-job-script-api (>= 1.0.0), flight-job-script-api (<< 1.1.0),
+  flight-job-script-webapp (>= 1.0.0), flight-job-script-webapp (<< 1.1.0)

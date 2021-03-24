@@ -43,6 +43,8 @@ Requires:       flight-desktop-webapp => 1.4.0, flight-desktop-webapp < 1.5.0~
 Requires:       flight-file-manager-api => 1.0.0, flight-file-manager-api < 1.1.0~
 Requires:       flight-file-manager-webapp => 1.0.0, flight-file-manager-webapp < 1.1.0~
 Requires:       flight-login-api => 1.0.0, flight-login-api < 1.1.0~
+Requires:       flight-job-script-api => 1.0.0~, flight-job-script-api < 1.1.0~
+Requires:       flight-job-script-webapp => 1.0.0~, flight-job-script-webapp < 1.1.0~
 
 %description
 The Flight Web Suite collection of web applications for accessing a HPC environment.
@@ -66,11 +68,13 @@ The Flight Web Suite collection of web applications for accessing a HPC environm
 /opt/flight/bin/flight service enable console-api
 /opt/flight/bin/flight service enable desktop-restapi
 /opt/flight/bin/flight service enable file-manager-api
+/opt/flight/bin/flight service enable job-script-api
 /opt/flight/bin/flight service enable login-api
 /opt/flight/bin/flight service enable www
 /opt/flight/bin/flight service restart console-api
 /opt/flight/bin/flight service restart desktop-restapi
 /opt/flight/bin/flight service restart file-manager-api
+/opt/flight/bin/flight service restart job-script-api
 /opt/flight/bin/flight service restart www
 cat <<EOF 1>&2
 ================================================
@@ -89,6 +93,8 @@ This can be done by running the following:
 EOF
 
 %changelog
+* Wed Mar 24 2021 Ben Armston <ben.armston@alces-flight.com> - -
+- Add flight-job-script-*
 * Wed Mar 03 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.1-1
 - Bump flight-console-* and flight-desktop-* versions
 - Add flight-file-manager-* and flight-login-api
@@ -101,5 +107,3 @@ EOF
 - Added post installation and uninstallation scripts.
 * Mon May 18 2020 Ben Armston <ben.armston@alces-flight.com> - 2020.2-0
 - Initial Package
-
-
