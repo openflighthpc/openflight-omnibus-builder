@@ -3,11 +3,11 @@ cd "$(dirname "$0")"
 d="$(pwd)"
 mkdir -p pkg
 
-NOW=2021.1
-NEXT=2021.2
-VERSION=${NOW}.0
+NOW=2021.2
+NEXT=2021.3
+VERSION=${NOW}.1
 TAG=$(echo "$VERSION" | sed "s/~/-/g")
-REL=2
+REL=1
 
 if [ -f /etc/redhat-release ]; then
   echo "Building RPM package..."

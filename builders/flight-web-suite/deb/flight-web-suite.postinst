@@ -6,10 +6,12 @@ set -e
 /opt/flight/bin/flight service enable desktop-restapi
 /opt/flight/bin/flight service enable file-manager-api
 /opt/flight/bin/flight service enable login-api
+/opt/flight/bin/flight service enable job-script-api
 /opt/flight/bin/flight service enable www
 /opt/flight/bin/flight service restart console-api
 /opt/flight/bin/flight service restart desktop-restapi
 /opt/flight/bin/flight service restart file-manager-api
+/opt/flight/bin/flight service restart job-script-api
 /opt/flight/bin/flight service restart www
 cat <<EOF 1>&2
 ================================================

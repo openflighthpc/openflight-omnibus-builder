@@ -31,7 +31,7 @@ friendly_name 'Flight Job Script API'
 
 install_dir '/opt/flight/opt/job-script-api'
 
-VERSION = '0.10.4'
+VERSION = '1.0.0'
 override 'flight-job-script-api', version: VERSION
 
 build_version VERSION
@@ -59,10 +59,10 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-job >= 2.0.0~'
+  runtime_dependency 'flight-job >= 2.0.0'
   runtime_dependency 'flight-job < 2.1.0~'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'flight-job (>= 2.0.0~)'
+  runtime_dependency 'flight-job (>= 2.0.0)'
   runtime_dependency 'flight-job (< 2.1.0~)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
