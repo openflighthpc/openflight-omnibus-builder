@@ -157,17 +157,8 @@ New `scripts` can be generated with the `create-script` command. This will step
 you through various question prompts and render the `script`. The response after
 the question prompts is the same as the `info-script` command.
 
-The script can also be given an optional `name`:
-
 ~~~
-# Without a script name
 $ flight job create-script simple
-Working directory /home/%u
-Set an output file for STDOUT job-%j.output
-... See info-script for output ...
-
-# With a script name
-$ flight job create-script simple script-foo.sh
 Working directory /home/%u
 Set an output file for STDOUT job-%j.output
 ... See info-script for output ...
@@ -207,9 +198,8 @@ $ flight job create-script simple --notes @/path/to/notes.txt
 
 # Providing the notes via STDIN
 # WARN: The question/answer prompts will be disabled when providing the notes
-#       via the standard input. The defaults will be used unless the --answer
-#       flag has also been provided.
-$ echo Details about the script | flight job create-script simple --notes @-
+#       via the standard input. The answers must be provided with the --answers flag
+$ echo Details about the script | flight job create-script simple --notes @- --answers '{ ... }'
 ~~~
 
 ### list-scripts: View your rendered scripts
@@ -262,14 +252,6 @@ terminal editors.  The scheduler directives can be accessed by scrolling up.
 ~~~
 $ flight job edit-script xpVrobuO
 ... opens the script in the system editor ...
-~~~
-
-### rename-script: Change the name of a script
-
-The `name` of `script` can be changed using the `rename-script` command:
-
-~~~
-$ flight job rename-script xpVrobuO new-script.sh
 ~~~
 
 ### delete-script: Permanently remove a script
