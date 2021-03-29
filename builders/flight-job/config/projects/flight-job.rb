@@ -31,7 +31,7 @@ friendly_name 'Flight Job'
 
 install_dir '/opt/flight/opt/job'
 
-VERSION = '2.0.2'
+VERSION = '2.1.0-b4'
 override 'flight-job', version: VERSION
 
 build_version VERSION

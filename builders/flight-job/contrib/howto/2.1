@@ -202,6 +202,20 @@ Template ID: simple
  Created At: 11/03/21 14:23
 ~~~
 
+### edit-script: Open the script in your editor
+
+A script can be opened in your editor using the `edit-script` command.
+The editor will be selected using the EDITOR or VISUAL environment variable.
+Otherwise `vi` will be used as the default editor.
+
+NOTE: The `script` should open at the start of your workload section in most
+terminal editors.  The scheduler directives can be accessed by scrolling up.
+
+~~~
+$ flight job edit-script xpVrobuO
+... opens the script in the system editor ...
+~~~
+
 ### delete-script: Permanently remove a script
 
 Permanently removes the previously rendered `script`. Associated `jobs` remain
