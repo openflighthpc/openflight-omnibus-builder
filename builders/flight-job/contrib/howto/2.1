@@ -167,7 +167,7 @@ Set an output file for STDOUT job-%j.output
 ... See info-script for output ...
 
 # With a script name
-$ flight job create-script simple script-foo.sh
+$ flight job create-script simple script-foo
 Working directory /home/%u
 Set an output file for STDOUT job-%j.output
 ... See info-script for output ...
@@ -273,14 +273,6 @@ command.
 ~~~
 $ flight job edit-script-notes xpVrobuO
 ... opens the script in the system editor ...
-~~~
-
-### rename-script: Change the name of a script
-
-The `name` of `script` can be changed using the `rename-script` command:
-
-~~~
-$ flight job rename-script xpVrobuO new-script.sh
 ~~~
 
 ### delete-script: Permanently remove a script
