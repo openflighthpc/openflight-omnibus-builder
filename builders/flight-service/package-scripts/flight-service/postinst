@@ -26,13 +26,4 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-# Install the reboot cron script to get around the flight-plugin-system-cron
-# rpm file conflict. This can be removed and packaged into the RPM once the
-# conflict is resolved.
-# Remember to update the postrm script as well
-cat << DOC > /opt/flight/etc/cron/reboot/start-enabled-services
-/opt/flight/bin/flight service stack start
-DOC
-chmod u+x /opt/flight/etc/cron/reboot/start-enabled-services
-
 exit 0
