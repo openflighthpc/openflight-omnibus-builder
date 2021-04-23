@@ -59,10 +59,12 @@ build do
     templates_dir = "/opt/flight/usr/share/job/templates"
     slurm_dir = "/opt/flight/libexec/job/slurm"
     check_cron = '/opt/flight/libexec/job/check-cron.sh'
+    mapping_path = '/opt/flight/etc/job/state-maps/flight-slurm-system.yaml'
     content = [
       File.read(path),
-      "submit_script_path: /opt/flight/libexec/job/flight-slurm/submit.sh",
-      "monitor_script_path: /opt/flight/libexec/job/flight-slurm/monitor.sh",
+      "state_map_path: #{mapping_path}",
+      "submit_script_path: /opt/flight/libexec/job/flight-slurm-system/submit.sh",
+      "monitor_script_path: /opt/flight/libexec/job/flight-slurm-system/monitor.sh",
       "templates_dir: #{templates_dir}",
       "check_cron: #{check_cron}",
       ''
@@ -76,6 +78,14 @@ build do
     end
     copy 'libexec/check-cron.sh', check_cron
     project.extra_package_file check_cron
+
+    # Cleanup and move the mapping file into place
+    block do
+      FileUtils.rm_rf File.dirname(mapping_path)
+      FileUtils.mkdir_p File.dirname(mapping_path)
+    end
+    copy 'etc/state-maps/slurm.yaml', mapping_path
+    project.extra_package_file mapping_path
 
     # Cleanup the initial state of the slurm dir
     block do
