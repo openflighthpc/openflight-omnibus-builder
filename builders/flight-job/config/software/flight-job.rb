@@ -48,7 +48,7 @@ build do
   end
   [
     'Gemfile', 'Gemfile.lock', 'bin/job', 'lib', 'LICENSE.txt', 'README.md',
-    'etc/flight-job.yaml'
+    'etc/flight-job.yaml', 'etc/state-maps/'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
