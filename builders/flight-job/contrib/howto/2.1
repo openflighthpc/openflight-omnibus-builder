@@ -20,25 +20,28 @@ $ flight job --help
   COMMANDS:
 
     Templates:
-    list-templates List available templates
-    info-template  Display details about a template
-    copy-template  Generate a local version of a template (Deprecated)
+    list-templates    List available templates
+    info-template     Display details about a template
+    copy-template     Generate a local version of a template
 
     Scripts:
-    list-scripts   List your rendered scripts
-    create-script  Render a new script from a template
-    info-script    Display details about a rendered script
-    delete-script  Permanently remove a script
+    list-scripts      List your rendered scripts
+    create-script     Render a new script from a template
+    info-script       Display details about a rendered script
+    view-script       View the content of a script
+    edit-script       Open the script in your editor
+    edit-script-notes Open the notes in your system editor
+    delete-script     Permanently remove a script
 
     Jobs:
-    list-jobs      List your previously submitted jobs
-    submit-job     Schedule a new job to run from a script
-    info-job       Display details about a submitted job
-    delete-job     Permanently remove a job
+    list-jobs         List your previously submitted jobs
+    submit-job        Schedule a new job to run from a script
+    info-job          Display details about a submitted job
+    delete-job        Permanently remove a job
 
     Miscellaneous:
-    help           Display global or [command] help documentation
-    run-monitor    Update the internal state of the data cache
+    help              Display global or [command] help documentation
+    run-monitor       Update the internal state of the data cache
 
   ALIASES:
 
@@ -66,6 +69,8 @@ $ flight job --help
 
     --json
         Display a JSON version of the output, when supported
+
+
 ~~~
 
 ## TEMPLATE COMMANDS
@@ -81,7 +86,7 @@ Refer to `create-script` below on how to generate a `script` from a `template`.
 The available templates can displayed using the `list-templates` command:
 
 ~~~
-$ flight job list-jobs
+$ flight job list-templates
 +-------+--------+
 | Index | Name   |
 +-------+--------+
@@ -220,7 +225,7 @@ command.
 ~~~
 $ flight job list-scripts
 +----------+-------------+-----------+----------------+
-| ID       | Template ID | Name      | Created At     |
+| ID       | Template ID | File Name | Created at     |
 +----------+-------------+-----------+----------------+
 | 2TCQdhJh | tophat      | tophat.sh | 11/03/21 12:15 |
 | xpVrobuO | simple      | simple.sh | 11/03/21 14:23 |
@@ -236,9 +241,9 @@ Details about a specific script can be retrieved using the `info-script` command
 $ flight job info-script xpVrobuO
          ID: xpVrobuO
 Template ID: simple
-       Name: simple.sh
+  File Name: simple.sh
        Path: /home/centos/.local/share/flight/job/scripts/xpVrobuO/simple.sh
- Created At: 11/03/21 14:23
+ Created at: 11/03/21 14:23
 ~~~
 
 ### view-script: View the content of a script
@@ -308,7 +313,7 @@ A list of previously submitted jobs is available with the `list-jobs` command:
 ~~~
 $ flight job list-jobs
 +----------+-----------+-----------+----------------+----------------+----------------+
-| ID       | State     | Submitted | Created At     | Start Time     | End Time       |
+| ID       | State     | Submitted | Created at     | Start at       | End at         |
 +----------+-----------+-----------+----------------+----------------+----------------+
 | nKJ6_BUr | COMPLETED | yes       | 11/03/21 13:20 | 11/03/21 13:20 | 11/03/21 13:20 |
 | DmSBREgL | PENDING   | yes       | 11/03/21 16:14 | (none)         | (none)         |
@@ -321,19 +326,22 @@ Details about a specific job can retrieved using the `info-job` command.
 
 ~~~
 $ flight job info-job DmSBREgL
-         ID: DmSBREgL
-  Script ID: 2TCQdhJh
-    Alt. ID: 76
-      State: PENDING
-  Submitted: yes
- Created At: 11/03/21 16:14
- Start Time: (none)
-   End Time: (none)
-StdOut Path: /host/job/foo.out
-StdErr Path: /host/job/foo.error
+          ID: DmSBREgL
+   Script ID: 2TCQdhJh
+Scheduler ID: 76
+       State: PENDING
+   Submitted: yes
+  Created at: 11/03/21 16:14
+    Start at: (none)
+      End at: (none)
+ Output Path: /host/job/foo.output
 ~~~
 
-The \"Submitted\" column flags if the scheduler successfully received the `job`.
+The \"Output Path\" attribute specify where the standard output/error has been saved.
+It will be replaced with separate \"Stdout Path\" and \"Stderr Path\" attributes if
+they have been redirected to different files.
+
+The \"Submitted\" attribute flags if the scheduler successfully received the `job`.
 It will be \"no\" if an error occurred during the submission. The raw error from
 the scheduler can be retrieved using the `--verbose` flag. The exit status of the
 submit command will replace \"Submitted\" column.
@@ -342,14 +350,14 @@ submit command will replace \"Submitted\" column.
 $ flight job info-job YKOVUcyo --verbose
            ID: YKOVUcyo
     Script ID: u24B2xz6
-      Alt. ID: (none)
+ Scheduler ID: (none)
         State: FAILED
-Submit Status: 1
-   Created At: 2021-03-11T16:19:40+00:00
-   Start Time: (none)
-     End Time: (none)
-  StdOut Path: (none)
-  StdErr Path: (none)
+Submit Status: yes
+   Created at: 2021-03-11T16:19:40+00:00
+     Start at: (none)
+       End at: (none)
+  Stdout Path: (none)
+  Stderr Path: (none)
 
 Submit Standard Out:
 
