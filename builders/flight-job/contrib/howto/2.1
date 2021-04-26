@@ -90,9 +90,7 @@ $ flight job list-templates
 +-------+--------+
 | Index | Name   |
 +-------+--------+
-...
-| 5     | simple |
-...
+| 1     | simple |
 +-------+--------+
 ~~~
 
@@ -213,7 +211,6 @@ $ flight job create-script simple --notes @/path/to/notes.txt
 # Providing the notes via STDIN
 # WARN: The question/answer prompts will be disabled when providing the notes
 #       via the standard input. The answers must be provided with the --answers flag
-~~~
 $ echo Details about the script | flight job create-script simple --notes @- --answers '{ ... }'
 ~~~
 
@@ -229,7 +226,6 @@ $ flight job list-scripts
 +----------+-------------+-----------+----------------+
 | 2TCQdhJh | tophat      | tophat.sh | 11/03/21 12:15 |
 | xpVrobuO | simple      | simple.sh | 11/03/21 14:23 |
-...
 +----------+-------------+-----------+----------------+
 ~~~
 
