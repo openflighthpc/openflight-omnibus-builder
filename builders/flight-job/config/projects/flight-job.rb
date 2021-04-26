@@ -35,7 +35,7 @@ VERSION = '2.1.0-j1'
 override 'flight-job', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-job'
