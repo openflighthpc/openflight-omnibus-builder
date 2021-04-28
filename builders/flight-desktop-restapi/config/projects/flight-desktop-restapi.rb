@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop REST API'
 
 install_dir '/opt/flight/opt/desktop-restapi'
 
-VERSION = '2.1.0-c1'
+VERSION = '2.1.0-rc1'
 override 'flight-desktop-restapi', version: VERSION
 
 build_version VERSION
@@ -53,13 +53,19 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-desktop'
 runtime_dependency 'flight-desktop-system-1.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
+if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'flight-desktop >= 1.4.0~'
+elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'flight-action-api (>= 1.4.0)'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
+end
 require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
