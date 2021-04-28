@@ -86,5 +86,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "::flight-gl-system-#{DESKTOP_SYSTEM}"
+  section "::flight-gl-system-#{GL_SYSTEM}"
 end
