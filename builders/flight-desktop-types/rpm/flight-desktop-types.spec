@@ -14,7 +14,7 @@ Source1:        https://raw.githubusercontent.com/openflighthpc/openflight-omnib
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:     noarch
-Requires:      flight-desktop-system-1.0
+Requires:      flight-desktop-system-1.1
 
 %description
 A collection of desktop session types for use with Flight Desktop.
