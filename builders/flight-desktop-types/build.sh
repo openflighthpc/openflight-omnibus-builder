@@ -5,7 +5,7 @@ mkdir -p pkg
 
 NAME=flight-desktop-types
 VERSION=1.0.4
-REL=2
+REL=1
 
 if [ -f /etc/redhat-release ]; then
   echo "Building RPM package..."
