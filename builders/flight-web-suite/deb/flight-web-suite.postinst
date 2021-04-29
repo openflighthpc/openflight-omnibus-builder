@@ -5,12 +5,11 @@ set -e
 /opt/flight/bin/flight service enable console-api
 /opt/flight/bin/flight service enable desktop-restapi
 /opt/flight/bin/flight service enable file-manager-api
-/opt/flight/bin/flight service enable login-api
 /opt/flight/bin/flight service enable job-script-api
+/opt/flight/bin/flight service enable login-api
 /opt/flight/bin/flight service enable www
 /opt/flight/bin/flight service restart console-api
 /opt/flight/bin/flight service restart desktop-restapi
-/opt/flight/bin/flight service restart file-manager-api
 /opt/flight/bin/flight service restart job-script-api
 /opt/flight/bin/flight service restart www
 cat <<EOF 1>&2
@@ -26,6 +25,14 @@ The login-api needs configuring and starting.
 This can be done by running the following:
   /opt/flight/bin/flight service configure login-api
   /opt/flight/bin/flight service start login-api
+
+================================================
+Configure and start File Manager API
+================================================
+The file-manager-api needs configuring and starting.
+This can be done by running the following:
+  /opt/flight/bin/flight service configure file-manager-api
+  /opt/flight/bin/flight service start file-manager-api
 
 EOF
 
