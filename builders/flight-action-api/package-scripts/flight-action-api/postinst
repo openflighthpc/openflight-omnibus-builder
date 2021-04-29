@@ -27,25 +27,20 @@
 #===============================================================================
 mkdir -p "${flight_ROOT:-/opt/flight}"/opt/action-api/libexec/
 
-# The application needs an authentication secret which can be used to "sign"
-# the JWT tokens it creates.  This needs to be globally uniq, but otherwise
-# has no particular format.
-#
-# Unfortunately, `flight service configure SERVICE` does not have a
-# non-interactive mode.  We do our best to emulate such a thing here. 
-#
-config_file="${flight_ROOT:-/opt/flight}"/var/lib/service/action-api.yml
-if [ ! -f "${config_file}" ]; then
-    mkdir -p "$(dirname "${config_file}")"
-    secret=$( echo $(hostname --fqdn).$(date  +%s) | md5sum | cut -f1 -d' ')
-    cat <<EOF > "${config_file}"
----
-jwt_secret: ${secret}
-EOF
-    flight_ROOT="${flight_ROOT:-/opt/flight}" /bin/bash \
-        "${flight_ROOT:-/opt/flight}"/etc/service/types/action-api/configure.sh \
-        jwt_secret="${secret}"
-fi
+flight service info action-api | while read line; do
+  # Find the jwt_secret line
+  if [ "$(echo "$line" | cut -f2)" == "jwt_secret" ]; then
+    if [ -z "$(echo "$line" | cut -f4)" ]; then
+      # Configure it with a random string if unset
+      secret=$( echo $(hostname --fqdn).$(date  +%s.%N) | sha256sum | cut -c 1-40 )
+      payload="{ \"jwt_secret\": \"$secret\" }"
+    else
+      # Ensure the application is reconfigured even if nothing has changed
+      payload="{}"
+    fi
+    echo "$payload" | flight service configure action-api --force --config @- >/dev/null
+  fi
+done
 
 /opt/flight/bin/flight service reload www 1>/dev/null 2>&1
 exit 0
