@@ -36,13 +36,13 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 
 BuildArch:      noarch
-Requires:       flight-console-api => 2.1.0, flight-console-api < 2.2.0~
-Requires:       flight-console-webapp => 1.3.0, flight-console-webapp < 1.4.0~
-Requires:       flight-desktop-restapi => 2.1.0, flight-desktop-restapi < 2.2.0~
-Requires:       flight-desktop-webapp => 1.4.0, flight-desktop-webapp < 1.5.0~
-Requires:       flight-file-manager-api => 1.0.0, flight-file-manager-api < 1.1.0~
-Requires:       flight-file-manager-webapp => 1.0.0, flight-file-manager-webapp < 1.1.0~
-Requires:       flight-login-api => 1.0.0, flight-login-api < 1.1.0~
+Requires:       flight-console-api => 2.1.0~, flight-console-api < 2.2.0~
+Requires:       flight-console-webapp => 1.3.0~, flight-console-webapp < 1.4.0~
+Requires:       flight-desktop-restapi => 2.1.0~, flight-desktop-restapi < 2.2.0~
+Requires:       flight-desktop-webapp => 1.4.0~, flight-desktop-webapp < 1.5.0~
+Requires:       flight-file-manager-api => 1.0.0~, flight-file-manager-api < 1.1.0~
+Requires:       flight-file-manager-webapp => 1.0.0~, flight-file-manager-webapp < 1.1.0~
+Requires:       flight-login-api => 1.0.0~, flight-login-api < 1.1.0~
 Requires:       flight-job-script-api => 1.1.0~, flight-job-script-api < 1.2.0~
 Requires:       flight-job-script-webapp => 1.1.0~, flight-job-script-webapp < 1.2.0~
 
