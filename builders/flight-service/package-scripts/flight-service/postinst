@@ -26,7 +26,4 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-# This directory needs to exist for `flight service configure` to work.
-mkdir -p /opt/flight/opt/service/var/lib
-
 exit 0
