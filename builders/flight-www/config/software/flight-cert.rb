@@ -46,14 +46,11 @@ build do
     # Creates the sub install directory
     FileUtils.mkdir_p sub_install_dir
     [
-      'Gemfile', 'Gemfile.lock', 'bin', 'etc', 'lib',
+      'Gemfile', 'Gemfile.lock', 'bin', 'lib',
       'LICENSE.txt', 'README.md'
     ].each do |file|
       FileUtils.cp_r File.expand_path(file, project_dir), sub_install_dir
     end
-
-    # Links the internal config to the system version
-    FileUtils.ln_sf '/opt/flight/etc/share/cert.yaml', File.expand_path('etc/config.yaml', sub_install_dir)
   end
 
   # Installs the gems to the shared `vendor/share`
