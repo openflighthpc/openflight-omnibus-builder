@@ -322,16 +322,21 @@ Details about a specific job can retrieved using the `info-job` command.
 
 ~~~
 $ flight job info-job DmSBREgL
-          ID: DmSBREgL
-   Script ID: 2TCQdhJh
-Scheduler ID: 76
-       State: PENDING
-   Submitted: yes
-  Created at: 11/03/21 16:14
-    Start at: (none)
-      End at: (none)
- Output Path: /host/job/foo.output
+              ID: DmSBREgL
+       Script ID: 2TCQdhJh
+    Scheduler ID: 76
+           State: PENDING
+       Submitted: yes
+      Created at: 11/03/21 16:14
+ Estimated Start: (none)
+Estimated Finish: (none)
+     Output Path: /host/job/foo.output
 ~~~
+
+The `Estimated Start` and `Start at` fields are combined into a single attribute by
+default. The estimated time is when the job is predicted to start, where `Start at`
+is the actual time. Similarly, the `Estimated Finish` and `End at` times are also
+combined. The fields will be represented independently with the `--verbose` flag.
 
 The \"Output Path\" attribute specify where the standard output/error has been saved.
 It will be replaced with separate \"Stdout Path\" and \"Stderr Path\" attributes if
@@ -344,16 +349,18 @@ submit command will replace \"Submitted\" column.
 
 ~~~
 $ flight job info-job YKOVUcyo --verbose
-           ID: YKOVUcyo
-    Script ID: u24B2xz6
- Scheduler ID: (none)
-        State: FAILED
-Submit Status: yes
-   Created at: 2021-03-11T16:19:40+00:00
-     Start at: (none)
-       End at: (none)
-  Stdout Path: (none)
-  Stderr Path: (none)
+              ID: YKOVUcyo
+       Script ID: u24B2xz6
+    Scheduler ID: (none)
+           State: FAILED
+   Submit Status: yes
+      Created at: 2021-03-11T16:19:40+00:00
+        Start at: (none)
+          End at: (none)
+     Stdout Path: (none)
+     Stderr Path: (none)
+ Estimated Start: (none)
+Estimated Finish: (none)
 
 Submit Standard Out:
 
