@@ -35,8 +35,10 @@ $ flight job --help
 
     Jobs:
     list-jobs         List your previously submitted jobs
+    ls-job-dir        Run the ls command within the job's output directory
     submit-job        Schedule a new job to run from a script
     info-job          Display details about a submitted job
+    view-job-file     View a file within the job's output directory
     delete-job        Permanently remove a job
 
     Miscellaneous:
@@ -45,10 +47,12 @@ $ flight job --help
 
   ALIASES:
 
-    copy   copy-template
-    cp     copy-template
-    create create-script
-    submit submit-job
+    copy             copy-template
+    cp               copy-template
+    create           create-script
+    ls-output-dir    ls-job-dir
+    submit           submit-job
+    view-output-file view-job-file
 
   GLOBAL OPTIONS:
 
@@ -330,7 +334,8 @@ Scheduler ID: 76
   Created at: 11/03/21 16:14
     Start at: (none)
       End at: (none)
- Output Path: /host/job/foo.output
+ Output Path: /home/centos/job/foo.output
+  Output Dir: /home/centos/simple.sh-outputs/76
 ~~~
 
 The \"Output Path\" attribute specify where the standard output/error has been saved.
@@ -370,6 +375,33 @@ status of the job on the external scheduler.
 ~~~
 $ flight job delete-job YKOVUcyo
 Removed job: YKOVUcyo
+~~~
+
+### ls-job-dir: ls the content of the job output directory
+
+The `ls-job-dir` command wraps the `ls` utility and will be ran within the job's
+output directory. Additional flags can be provided to `ls` by specifying them
+after the `--` delimiter.
+
+~~~
+$ flight job ls-job-dir b-4BjcQ-
+dir  test.output
+
+$ flight job ls-job-dir b-4BjcQ- -- -la
+drwxr-xr-x. 3 centos centos 4096 May  5 12:31 .
+drwxr-xr-x. 3 centos centos 4096 May  5 11:32 ..
+drwxr-xr-x. 2 centos centos 4096 May  5 12:32 dir
+-rw-r--r--. 1 centos centos   66 May  5 11:32 test.output
+~~~
+
+## view-job-file: View a job's output file
+
+Display a file within the job's output directory.
+
+~~~
+$ flight job view-job-file b-4BjcQ- test.output
+Hello, World!
+This is an example job. It ran on node01 (as centos).
 ~~~
 
 ## OTHER COMMAND: run-monitor
