@@ -328,17 +328,23 @@ Details about a specific job can retrieved using the `info-job` command.
 
 ~~~
 $ flight job info-job DmSBREgL
-          ID: DmSBREgL
-   Script ID: 2TCQdhJh
-Scheduler ID: 76
-       State: PENDING
-   Submitted: yes
-  Created at: 11/03/21 16:14
-    Start at: (none)
-      End at: (none)
- Output Path: /home/centos/job/foo.output
- Results Dir: /home/centos/simple.sh-outputs/76
+              ID: DmSBREgL
+       Script ID: 2TCQdhJh
+    Scheduler ID: 76
+           State: PENDING
+       Submitted: yes
+    Submitted at: 11/03/21 16:14
+ Estimated Start: (none)
+Estimated Finish: (none)
+     Output Path: /home/centos/job/foo.output
+     Results Dir: /home/centos/simple.sh-outputs/76
 ~~~
+
+The output will include either the job's `Estimated Start` or its `Started at`
+attribute, depending on whether the job's start is pending.  Similarly, the
+output will include either the job's `Estimated Finish` or its `Ended at`
+attribute depending on whether the job has finished.  Including the
+`--verbose` flag will display both sets of times.
 
 The \"Output Path\" attribute specify where the standard output/error has been saved.
 It will be replaced with separate \"Stdout Path\" and \"Stderr Path\" attributes if
@@ -351,16 +357,18 @@ submit command will replace \"Submitted\" column.
 
 ~~~
 $ flight job info-job YKOVUcyo --verbose
-           ID: YKOVUcyo
-    Script ID: u24B2xz6
- Scheduler ID: (none)
-        State: FAILED
-Submit Status: yes
-   Created at: 2021-03-11T16:19:40+00:00
-     Start at: (none)
-       End at: (none)
-  Stdout Path: (none)
-  Stderr Path: (none)
+              ID: YKOVUcyo
+       Script ID: u24B2xz6
+    Scheduler ID: (none)
+           State: FAILED
+   Submit Status: yes
+      Created at: 2021-03-11T16:19:40+00:00
+        Start at: (none)
+          End at: (none)
+     Stdout Path: (none)
+     Stderr Path: (none)
+ Estimated Start: (none)
+Estimated Finish: (none)
 
 Submit Standard Out:
 
