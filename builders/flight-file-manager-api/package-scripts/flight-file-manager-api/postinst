@@ -27,4 +27,13 @@
 #===============================================================================
 /opt/flight/bin/flight service reload www 1>/dev/null 2>&1
 
+# Migrate the old files from usr/share to var/lib
+old=/opt/flight/usr/share/file-manager-api
+new=/opt/flight/var/lib/file-manager-api
+if ls "$old" >/dev/null 2>&1; then
+  mkdir -p "$new" >/dev/null
+  ls "$old" | xargs -I {} mv "$old/{}" "$new"
+  rmdir "$old"
+fi
+
 exit 0

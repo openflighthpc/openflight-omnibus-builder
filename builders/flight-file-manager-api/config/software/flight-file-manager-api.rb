@@ -63,7 +63,7 @@ build do
     path = File.join(install_dir, 'etc/flight-file-manager-api.yaml')
     content = [
       File.read(path),
-      "data_dir: /opt/flight/usr/share/file-manager-api",
+      "data_dir: /opt/flight/var/lib/file-manager-api",
       "shared_secret_path: /opt/flight/etc/shared-secret.conf",
       ''
     ].join("\n")
