@@ -35,24 +35,27 @@ $ flight job --help
 
     Jobs:
     list-jobs         List your previously submitted jobs
-    ls-job-dir        Run the ls command within the job's output directory
     submit-job        Schedule a new job to run from a script
     info-job          Display details about a submitted job
-    view-job-file     View a file within the job's output directory
     delete-job        Permanently remove a job
+
+    Job Files:
+    list-job-results  Run the ls command within the job's results directory
+    view-job-results  View a file within the job's results directory
+    view-job-stdout   View the job's standard output
+    view-job-stderr   View the job's standard error
 
     Miscellaneous:
     help              Display global or [command] help documentation
     run-monitor       Update the internal state of the data cache
 
   ALIASES:
-
-    copy             copy-template
-    cp               copy-template
-    create           create-script
-    ls-output-dir    ls-job-dir
-    submit           submit-job
-    view-output-file view-job-file
+  
+    copy           copy-template   
+    cp             copy-template   
+    create         create-script   
+    ls-job-results list-job-results   
+    submit         submit-job   
 
   GLOBAL OPTIONS:
 
@@ -73,7 +76,6 @@ $ flight job --help
 
     --json
         Display a JSON version of the output, when supported
-
 
 ~~~
 
@@ -335,7 +337,7 @@ Scheduler ID: 76
     Start at: (none)
       End at: (none)
  Output Path: /home/centos/job/foo.output
-  Output Dir: /home/centos/simple.sh-outputs/76
+ Results Dir: /home/centos/simple.sh-outputs/76
 ~~~
 
 The \"Output Path\" attribute specify where the standard output/error has been saved.
@@ -377,31 +379,53 @@ $ flight job delete-job YKOVUcyo
 Removed job: YKOVUcyo
 ~~~
 
-### ls-job-dir: ls the content of the job output directory
+### list-job-results: list the content of the job's results directory
 
-The `ls-job-dir` command wraps the `ls` utility and will be ran within the job's
-output directory. Additional flags can be provided to `ls` by specifying them
+The `list-job-results` command wraps the `ls` utility and will be ran within the job's
+results directory. Additional flags can be provided to `ls` by specifying them
 after the `--` delimiter.
 
 ~~~
-$ flight job ls-job-dir b-4BjcQ-
+$ flight job list-job-results b-4BjcQ-
 dir  test.output
 
-$ flight job ls-job-dir b-4BjcQ- -- -la
+$ flight job list-job-results b-4BjcQ- -- -la
 drwxr-xr-x. 3 centos centos 4096 May  5 12:31 .
 drwxr-xr-x. 3 centos centos 4096 May  5 11:32 ..
 drwxr-xr-x. 2 centos centos 4096 May  5 12:32 dir
 -rw-r--r--. 1 centos centos   66 May  5 11:32 test.output
 ~~~
 
-## view-job-file: View a job's output file
+## view-job-results: View a single job's result file
 
-Display a file within the job's output directory.
+Display a file within the job's results directory.
 
 ~~~
-$ flight job view-job-file b-4BjcQ- test.output
+$ flight job view-job-results b-4BjcQ- test.output
 Hello, World!
 This is an example job. It ran on node01 (as centos).
+~~~
+
+## view-job-stdout: View the job's standard output
+
+Display the job's standard output.
+
+~~~
+$ flight job view-job-stdout b-4BjcQ-
+Your results will be stored in: /home/flight/simple.sh-outputs/19
+Executing job commands, current working directory is /home/flight
+Output file has been generated, please check /home/flight/simple.sh-outputs/19/test.output
+~~~
+
+## view-job-stderr: View the job's standard error
+
+Display the job's standard error unless it has been merged with the standard
+output.  If merged, it can be displayed with the command `view-job-stdout`.
+
+~~~
+$ flight job view-job-stderr b-4BjcQ-
+flight job: Cannot display the job's standard error as it has been merged with standard output.
+Run 'flight job view-job-stdout b-4BjcQ-` to view the job's output.
 ~~~
 
 ## OTHER COMMAND: run-monitor
