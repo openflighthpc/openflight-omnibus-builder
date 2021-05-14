@@ -31,7 +31,7 @@ friendly_name 'Flight Job Script API'
 
 install_dir '/opt/flight/opt/job-script-api'
 
-VERSION = '1.1.0-rc7'
+VERSION = '1.1.0'
 override 'flight-job-script-api', version: VERSION
 
 build_version VERSION
@@ -59,8 +59,7 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
 if ohai['platform_family'] == 'rhel'
-  # TODO: Remove rc minimum dependency on release
-  runtime_dependency 'flight-job >= 2.1.0~f'
+  runtime_dependency 'flight-job >= 2.1.0'
   runtime_dependency 'flight-job < 2.2.0~'
 elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'flight-job (>= 2.1.0)'
