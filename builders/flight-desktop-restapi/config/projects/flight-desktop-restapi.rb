@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop REST API'
 
 install_dir '/opt/flight/opt/desktop-restapi'
 
-VERSION = '2.2.0-b3'
+VERSION = '2.1.0'
 override 'flight-desktop-restapi', version: VERSION
 
 build_version VERSION
@@ -60,7 +60,7 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-desktop >= 1.4.0~'
+  runtime_dependency 'flight-desktop >= 1.4.0'
 elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'flight-action-api (>= 1.4.0)'
 else

@@ -70,6 +70,8 @@ if [ -e "$old" ]; then
 fi
 
 %changelog
+* Thu Apr 29 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.3.0
+- Updated to 2021.3.0
 * Wed Jun 24 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.2.x
 - Reworked to use plugin approach
 * Tue Apr 28 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2020.2.2

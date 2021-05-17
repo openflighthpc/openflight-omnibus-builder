@@ -28,6 +28,7 @@
 
 # Update the session secret if unset
 env_file=/opt/flight/etc/service/env/console-api
+mkdir -p $(dirname "${env_file}")
 var_name="flight_CONSOLE_API_session_secret"
 if [ -f "${env_file}" ] && grep -q "^${var_name}=" "${env_file}" ; then
     # The secret has previously been generated.  We continue to use it.
