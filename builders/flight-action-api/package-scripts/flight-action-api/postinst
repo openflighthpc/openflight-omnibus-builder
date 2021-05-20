@@ -26,7 +26,6 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-set -e
 export flight_ROOT="${flight_ROOT:-/opt/flight}"
 mkdir -p "$flight_ROOT"/opt/action-api/libexec/
 
