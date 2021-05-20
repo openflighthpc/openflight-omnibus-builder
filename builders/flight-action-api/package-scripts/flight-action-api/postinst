@@ -25,27 +25,60 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-mkdir -p "${flight_ROOT:-/opt/flight}"/opt/action-api/libexec/
 
-# The application needs an authentication secret which can be used to "sign"
-# the JWT tokens it creates.  This needs to be globally uniq, but otherwise
-# has no particular format.
+export flight_ROOT="${flight_ROOT:-/opt/flight}"
+mkdir -p "$flight_ROOT"/opt/action-api/libexec/
+
+# Determine which version of flight-service is installed
+flight="$flight_ROOT/bin/flight"
+service_version=$("$flight" service --version | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
+
+# Determine if at least flight service v1.4.0 has been installed
+ruby="$flight_ROOT/bin/ruby"
+is_140=$("$ruby" -e "require 'rubygems'; puts Gem::Version.new('$service_version') >= Gem::Version.new('1.4.0')")
+
+# (Re)configure flight-action
+if [[ "$is_140" == "true" ]]; then
+  "$flight" service info action-api | while read line; do
+    # Find the jwt_secret line
+    if [ "$(echo "$line" | cut -f2)" == "jwt_secret" ]; then
+      if [ -z "$(echo "$line" | cut -f4)" ]; then
+        # Configure it with a random string if unset
+        secret=$( echo $(hostname --fqdn).$(date  +%s.%N) | sha256sum | cut -c 1-40 )
+        payload="{ \"jwt_secret\": \"$secret\" }"
+      else
+        # Ensure the application is reconfigured even if nothing has changed
+        payload="{}"
+      fi
+      echo "$payload" | "$flight" service configure action-api --force --config @- >/dev/null
+    fi
+  done
+
+# Manually configure the application's config if installed with an older version
+# of flight service.
 #
-# Unfortunately, `flight service configure SERVICE` does not have a
-# non-interactive mode.  We do our best to emulate such a thing here. 
-#
-config_file="${flight_ROOT:-/opt/flight}"/var/lib/service/action-api.yml
-if [ ! -f "${config_file}" ]; then
+# NOTE: This fallback can be removed if a hard version dependency is added on
+#       flight-service 1.4.0
+else
+  config_file="$flight_ROOT"/var/lib/service/action-api.yml
+
+  # Read the existing shared secret
+  if [ -f "${config_file}" ]; then
+    secret=$("$ruby" -e "require 'yaml'; puts YAML.load(File.read('$config_file'), symbolize_names: true)[:jwt_secret]")
+
+  # Generate a new shared-secret file
+  else
     mkdir -p "$(dirname "${config_file}")"
     secret=$( echo $(hostname --fqdn).$(date  +%s) | md5sum | cut -f1 -d' ')
     cat <<EOF > "${config_file}"
 ---
 jwt_secret: ${secret}
 EOF
-    flight_ROOT="${flight_ROOT:-/opt/flight}" /bin/bash \
-        "${flight_ROOT:-/opt/flight}"/etc/service/types/action-api/configure.sh \
-        jwt_secret="${secret}"
+  fi
+
+  # Force the application to be reconfigured
+  /bin/bash "$flight_ROOT"/etc/service/types/action-api/configure.sh jwt_secret="${secret}" 1>/dev/null 2>&1
 fi
 
-/opt/flight/bin/flight service reload www 1>/dev/null 2>&1
+"$flight" service reload www 1>/dev/null 2>&1
 exit 0
