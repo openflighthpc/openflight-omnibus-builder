@@ -14,11 +14,19 @@ for a in "$@"; do
     https_port)
       if [ -f "${flight_ROOT}"/etc/www/http.d/https.conf.disabled ] ; then
           sed -i "${flight_ROOT}"/etc/www/http.d/https.conf.disabled \
-              -e "s/^\s*listen\s.*;/listen ${v} ssl default;/g"
+              -e "s/^\s*listen\s.*;/listen ${v:-443} ssl default;/g"
       fi
       if [ -f "${flight_ROOT}"/etc/www/http.d/https.conf ] ; then
           sed -i "${flight_ROOT}"/etc/www/http.d/https.conf \
-              -e "s/^\s*listen\s.*;/listen ${v} ssl default;/g"
+              -e "s/^\s*listen\s.*;/listen ${v:-443} ssl default;/g"
+      fi
+      if [ -f "${flight_ROOT}"/etc/www/server-http.d/redirect-http-to-https.conf.disabled ] ; then
+          sed -i "${flight_ROOT}"/etc/www/server-http.d/redirect-http-to-https.conf.disabled \
+              -e "s,^\s*return 307 https://\$host.*\$request_uri.*;,return 307 https://\$host:${v}\$request_uri;,g"
+      fi
+      if [ -f "${flight_ROOT}"/etc/www/server-http.d/redirect-http-to-https.conf ] ; then
+          sed -i "${flight_ROOT}"/etc/www/server-http.d/redirect-http-to-https.conf \
+              -e "s,^\s*return 307 https://\$host.*\$request_uri.*;,return 307 https://\$host:${v}\$request_uri;,g"
       fi
     ;;
     *)
