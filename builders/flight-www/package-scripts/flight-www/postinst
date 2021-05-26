@@ -71,4 +71,11 @@ EOF
     /opt/flight/bin/flight www cert-gen --config-only ${saved_config}
 fi
 
+# Generate a self-signed certificate implicitly
+if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
+  domain=$(hostname --fqdn)
+  /opt/flight/bin/flight www cert-gen --domain "$domain" --cert-type self-signed
+  /opt/flight/bin/flight www enable-https
+fi
+
 exit 0
