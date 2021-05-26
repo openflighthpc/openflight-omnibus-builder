@@ -74,8 +74,18 @@ fi
 # Generate a self-signed certificate implicitly
 if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
   domain=$(hostname --fqdn)
-  /opt/flight/bin/flight www cert-gen --domain "$domain" --cert-type self-signed
-  /opt/flight/bin/flight www enable-https
+  /opt/flight/bin/flight www cert-gen --domain "$domain" --cert-type self-signed >/dev/null 2>&1
+  /opt/flight/bin/flight www enable-https >/dev/null 2>&1
+
+  cat <<-EOF
+
+  HTTPs support for flight-www has been enabled with using a self-signed
+  certificate for domain: '$domain'
+
+  A LetsEncrypt certificate can be generate with:
+  flight www cert-gen --cert-type lets-encrypt --domain DOMAIN --email EMAIL
+
+EOF
 fi
 
 exit 0
