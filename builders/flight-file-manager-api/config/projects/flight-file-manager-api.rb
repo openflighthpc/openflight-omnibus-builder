@@ -31,12 +31,12 @@ friendly_name 'Flight File Manager API'
 
 install_dir '/opt/flight/opt/file-manager-api'
 
-VERSION = '1.0.1'
+VERSION = '1.1.0-rc1'
 override 'flight-file-manager-api', version: VERSION
 override 'flight-file-manager-backend', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
