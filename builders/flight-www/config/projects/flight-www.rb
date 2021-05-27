@@ -36,7 +36,7 @@ CERT_VERSION = '0.4.5'
 override 'flight-www', version: VERSION
 override 'flight-cert', version: CERT_VERSION
 override :nginx, version: '1.14.2'
-override 'flight-landing-page', version: '1.3.0-b1'
+override 'flight-landing-page', version: '1.3.0-b2'
 
 build_version VERSION
 build_iteration '2'
