@@ -36,17 +36,39 @@ fi
 
 /opt/flight/bin/flight landing-page compile
 
-if [ -f /opt/flight/etc/cron/daily/flight-www-auto-cert-renewal ]; then
+
+# Rename the cron file used for automatic cert renewal.
+find /opt/flight/etc/cron -name flight-www-auto-cert-renewal -print0 \
+    | xargs -0 -I %file% sh -c 'mv %file% $(dirname %file%)/cert-renewal'
+
+if [ -f /opt/flight/etc/cron/daily/cert-renewal ]; then
   cat <<EOF
 SSL certificates are currently configured to be checked for renewal daily.
 This may be too frequent and there is a small chance that this could cause
-issues.  You should consider changing this to a weekly check.  To do so run
-the following:
+issues.  You should consider changing this to a weekly check.  To do so:
 
-/opt/flight/bin/flight www cron-renewal --disable
-sed -i -e '/cron_path/s/daily/weekly/' /opt/flight/etc/share/cert.yaml
-/opt/flight/bin/flight www cron-renewal
+1. Delete the file /opt/flight/etc/cron/daily/cert-renewal
+2. Edit the flight cert configuration file /opt/flight/etc/cert.yaml
+   and ensure the `cron_path` is set to use the weekly directory.
+3. Run /opt/flight/bin/flight www cron-renewal
 EOF
+fi
+
+# If upgrading from an older version, the certificate generation configuration
+# will be in the wrong location.
+if [ -f /opt/flight/etc/share/cert.yaml ]; then 
+    echo "Found existing flight-cert configuration"
+    script=$(cat <<EOF
+          puts YAML.load_file('/opt/flight/etc/share/cert.yaml').
+              slice('email', 'domain', 'cert_type').
+              reduce('') { |accum, k|
+                  accum << " --#{k[0].gsub(/_/, '-')} #{k[1].nil? ? '' : k[1]}"
+              }
+EOF
+)
+    saved_config=$(/opt/flight/bin/flexec ruby -ryaml -e "${script}")
+    echo "Updating flight-cert configuration: ${saved_config}"
+    /opt/flight/bin/flight www cert-gen --config-only ${saved_config}
 fi
 
 exit 0
