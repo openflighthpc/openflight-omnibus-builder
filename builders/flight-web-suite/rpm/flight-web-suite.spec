@@ -45,6 +45,8 @@ Requires:       flight-file-manager-webapp => 1.1.0~, flight-file-manager-webapp
 Requires:       flight-login-api => 1.0.0~, flight-login-api < 1.1.0~
 Requires:       flight-job-script-api => 1.2.0~, flight-job-script-api < 1.3.0~
 Requires:       flight-job-script-webapp => 1.2.0~, flight-job-script-webapp < 1.3.0~
+Requires:       flight-www => 1.5.0~, flight-www < 1.6.0~
+Requires:       flight-headnode-landing-page < 1.3.0~
 
 %description
 The Flight Web Suite collection of web applications for accessing a HPC environment.
