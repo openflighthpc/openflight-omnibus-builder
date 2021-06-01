@@ -29,7 +29,11 @@
 # For more information on Flight Desktop, please visit:
 # https://github.com/alces-flight/flight-desktop
 # ==============================================================================
+
+flight_ROOT=${flight_ROOT:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." &> /dev/null && pwd )"}
+
 export FLIGHT_CWD=$(pwd)
-cd /opt/flight/opt/desktop
 export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
-flexec bundle exec bin/desktop "$@"
+
+cd /opt/flight/opt/desktop
+"$flight_ROOT"/bin/flexec bundle exec bin/desktop "$@"
