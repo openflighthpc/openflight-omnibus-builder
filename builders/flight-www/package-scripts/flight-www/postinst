@@ -73,19 +73,48 @@ fi
 
 # Generate a self-signed certificate implicitly
 if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
-  domain=$(hostname --fqdn)
-  /opt/flight/bin/flight www cert-gen --domain "$domain" --cert-type self-signed >/dev/null 2>&1
-  /opt/flight/bin/flight www enable-https >/dev/null 2>&1
+  # Attempt to resolve a domain name
+  # NOTE: This shares error messages with flight-cert
+  domain=$(hostname -d)
+  generated_cert="$?"
 
-  cat <<-EOF
+  # Attempt to generate a certificate
+  if [ "$generated_cert" -eq "0" ]; then
+    /opt/flight/bin/flight www cert-gen --domain "$domain" --cert-type self-signed >/dev/null 2>&1
+    generated_cert="$?"
+  fi
 
-  HTTPs support for flight-www has been enabled with using a self-signed
-  certificate for domain: '$domain'
+  # Attempt to restart-https
+  if [ "$generated_cert" -eq "0" ]; then
+    /opt/flight/bin/flight www enable-https >/dev/null 2>&1
+    enabled_https="$?"
+  else
+    enabled_https="1"
+  fi
 
-  A LetsEncrypt certificate can be generate with:
-  flight www cert-gen --cert-type lets-encrypt --domain DOMAIN --email EMAIL
+  # Emit an appropriate message
+  if [ "$generated_cert" -eq "0" ] && [ "$enabled_https" -eq "0" ]; then
+    cat <<-EOF
+
+    HTTPs support for flight-www has been enabled with using a self-signed
+    certificate for domain: '$domain'
+
+    A LetsEncrypt certificate can be generate with:
+    flight www cert-gen --cert-type lets-encrypt --domain DOMAIN --email EMAIL
 
 EOF
+  elif [ "$generated_cert" -eq "0" ]; then
+    cat <<-EOF >&2
+
+    An error occurred when trying to enable HTTPs! Please check the following logs:
+    /opt/flight/var/log/www/error.log
+    /opt/flight/var/log/cert.log
+EOF
+  else
+    cat <<-EOF >&2
+    Failed to generate a SSL certificate! HTTPs will be disabled.
+EOF
+  fi
 fi
 
 exit 0
