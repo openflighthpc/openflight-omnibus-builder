@@ -39,6 +39,7 @@ dependency "openssl"
 dependency 'ncurses'
 dependency 'libffi'
 dependency 'sqlite'
+dependency 'readline'
 
 relative_path "Python-#{version}"
 
@@ -63,9 +64,4 @@ build do
   configure env: env
   make "-j #{workers}", env: env
   make "-j #{workers} install", env: env
-
-  # Python3 does not provide a mechanism to exclude readline from the dynamic link libraries
-  # The majority of python applications are unlikely to require it, so it has been removed
-  # Consider compiling 'readline' if required
-  delete File.join(install_dir, "embedded/lib/python#{version.sub(/\.\d+\Z/, '')}/lib-dynload/readline.*")
 end

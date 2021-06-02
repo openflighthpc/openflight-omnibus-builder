@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2021-present Alces Flight Ltd.
+# Copyright (C) 2019-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,28 +24,39 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'sqlite'
-default_version '3.35.5'
+name "readline"
+default_version "8.0"
 
-major, minor, bug = version.split('.')
-expanded_version = "#{major}#{minor.ljust(3, '0')}#{bug.ljust(3, '0')}"
+# http://buildroot-busybox.2317881.n4.nabble.com/PATCH-readline-link-directly-against-ncurses-td24410.html
+# https://bugzilla.redhat.com/show_bug.cgi?id=499837
+# http://lists.osgeo.org/pipermail/grass-user/2003-September/010290.html
+# http://trac.sagemath.org/attachment/ticket/14405/readline-tinfo.diff
+dependency "ncurses"
 
-# I know, this looks weird, but SQLite has a "public domain" license.
-# According to SPDX the license type is "blessing".
-# https://spdx.org/licenses/blessing.html
-license 'blessing'
-license_file 'tea/license.terms'
+license 'GPL-3.0'
+license_file 'COPYING'
 
-version("3.35.5") { source sha256: "f52b72a5c319c3e516ed7a92e123139a6e87af08a2dc43d7757724f6132e6db0" }
+source :url => "ftp://ftp.gnu.org/gnu/readline/readline-#{version}.tar.gz"
 
-# NOTE: TBC if this link will continue working post 2021, it will be fine for now
-source url: "https://sqlite.org/2021/sqlite-autoconf-#{expanded_version}.tar.gz"
+version('6.0') { source :md5 => "b7f65a48add447693be6e86f04a63019" }
+version('8.0') { source :md5 => "7e6c1f16aee3244a69aba6e438295ca3" }
 
-relative_path "sqlite-autoconf-#{expanded_version}"
+relative_path "#{name}-#{version}"
 
 build do
-  env = with_standard_compiler_flags(with_embedded_path())
-  configure env: env
-  make "-j #{workers}", env: env
-  make "-j #{workers} install", env: env
+  env = {
+      "CFLAGS" => "-I#{install_dir}/embedded/include",
+      "LDFLAGS" => "-Wl,-rpath,#{install_dir}/embedded/lib -L#{install_dir}/embedded/lib"
+  }
+
+  configure_command = [
+      "./configure",
+      "--with-curses",
+      "--prefix=#{install_dir}/embedded"
+  ].join(" ")
+
+  #patch :source => "readline-6.2-curses-link.patch" , :plevel => 1
+  command configure_command, :env => env
+  command "make", :env => env
+  command "make install", :env => env
 end
