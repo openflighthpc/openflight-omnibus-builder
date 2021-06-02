@@ -32,16 +32,21 @@ friendly_name 'Flight Certbot'
 install_dir '/opt/flight/opt/certbot'
 
 VERSION = '1.0.0'
+PYTHON_SYSTEM = '3.8'
 override 'flight-certbot', version: VERSION
+override 'enforce-flight-python', version: PYTHON_SYSTEM
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 override 'sqlite3', version: '3.32.3.0'
 
 dependency 'preparation'
+dependency 'enforce-flight-python'
 dependency 'flight-certbot'
 dependency 'version-manifest'
+
+runtime_dependency "flight-python-system-#{PYTHON_SYSTEM}"
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
