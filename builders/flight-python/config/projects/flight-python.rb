@@ -31,7 +31,7 @@ friendly_name 'Flight NodeJS'
 
 install_dir '/opt/flight/opt/python'
 
-VERSION = '3.9.5'
+VERSION = '3.8.10'
 override 'flight-python', version: VERSION
 
 build_version VERSION

@@ -31,6 +31,7 @@ license 'Python-2.0'
 license_file 'LICENSE'
 
 version("3.9.5") { source sha256: "e0fbd5b6e1ee242524430dee3c91baf4cbbaba4a72dd1674b90fda87b713c7ab" }
+version("3.8.10") { source sha256: "b37ac74d2cbad2590e7cd0dd2b3826c29afe89a734090a87bf8c03c45066cb65" }
 
 source url: "https://www.python.org/ftp/python/#{version}/Python-#{version}.tgz"
 
