@@ -24,24 +24,24 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-python3'
+name 'flight-python'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/blob/master/builders/flight-python3/README.md'
+homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/blob/master/builders/flight-python/README.md'
 friendly_name 'Flight NodeJS'
 
-install_dir '/opt/flight/opt/python3'
+install_dir '/opt/flight/opt/python'
 
 VERSION = '3.9.5'
-override 'flight-python3', version: VERSION
+override 'flight-python', version: VERSION
 
 build_version VERSION
 build_iteration 1
 
 dependency 'preparation'
-dependency 'python3'
+dependency 'python'
 dependency 'version-manifest'
 
-override 'python3', version: VERSION
+override 'python', version: VERSION
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
@@ -56,7 +56,7 @@ end
 exclude '**/.git'
 exclude '**/.gitkeep'
 
-# NOTE: The "flight-python3-system-*" track the MAJOR.MINOR release of python
+# NOTE: The "flight-python-system-*" track the MAJOR.MINOR release of python
 #       This allows packages to hard specify the require minor versions without
 #       using upper/lower bounds.
 PYTHON_SYSTEM = VERSION.sub(/\.\d+\Z/, '')
@@ -65,7 +65,7 @@ package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
-  priority ":flight-python-system-#{PYTHON_SYSTEM} flight-python3-system-#{PYTHON_SYSTEM}"
+  priority ":flight-python-system-#{PYTHON_SYSTEM}"
 end
 
 package :deb do
@@ -73,5 +73,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "::flight-python-system-#{PYTHON_SYSTEM} flight-python3-system-#{PYTHON_SYSTEM}"
+  section "::flight-python-system-#{PYTHON_SYSTEM}"
 end

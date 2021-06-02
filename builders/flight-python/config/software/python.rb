@@ -24,7 +24,7 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'python3'
+name 'python'
 default_version '0.0.0'
 
 license 'Python-2.0'
@@ -46,7 +46,7 @@ relative_path "Python-#{version}"
 build do
   env = with_standard_compiler_flags(with_embedded_path())
 
-  # Exactly how python3 is compiled depends on the which *-devel
+  # Exactly how python is compiled depends on the which *-devel
   # packages are installed on the build system. The openflight-omnibus-builder
   # installs various packages as part of the provisioning script (including zlib-devel).
   # At the time of writing, the build *appears* to have the required dependencies.

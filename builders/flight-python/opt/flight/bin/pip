@@ -47,4 +47,4 @@ flight_ROOT=${flight_ROOT:-$(cd $(dirname ${BASH_SOURCE[0]})/.. && pwd)}
 _setup
 unset _setup
 
-exec ${flight_ROOT}/opt/python3/embedded/bin/pip3 "$@"
+exec ${flight_ROOT}/opt/python/embedded/bin/pip3 "$@"

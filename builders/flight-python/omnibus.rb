@@ -39,7 +39,7 @@
 #
 # Uncomment this line to change the default base directory to "local"
 # -------------------------------------------------------------------
-base_dir '/home/vagrant/flight-python3/local'
+base_dir '/home/vagrant/flight-python/local'
 
 append_timestamp false
 #
