@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name "readline"
-default_version "8.0"
+default_version "6.0"
 
 # http://buildroot-busybox.2317881.n4.nabble.com/PATCH-readline-link-directly-against-ncurses-td24410.html
 # https://bugzilla.redhat.com/show_bug.cgi?id=499837
