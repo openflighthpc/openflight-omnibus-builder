@@ -38,6 +38,7 @@ dependency "zlib"
 dependency "openssl"
 dependency 'ncurses'
 dependency 'libffi'
+dependency 'sqlite'
 
 relative_path "Python-#{version}"
 
