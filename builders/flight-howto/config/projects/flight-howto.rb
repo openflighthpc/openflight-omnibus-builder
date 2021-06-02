@@ -31,7 +31,7 @@ friendly_name 'Flight Inventory'
 
 install_dir '/opt/flight/opt/howto'
 
-VERSION = '1.1.2'
+VERSION = '1.1.3-rc1'
 override 'flight-howto', version: VERSION
 
 build_version VERSION

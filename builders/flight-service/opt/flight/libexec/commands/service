@@ -1,7 +1,7 @@
 : '
 : NAME: service
 : SYNOPSIS: Manage HPC environment services
-: VERSION: 1.3.0-rc6
+: VERSION: 1.3.0-rc7
 : ROOT: true
 : '
 #==============================================================================
