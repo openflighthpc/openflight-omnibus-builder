@@ -55,3 +55,23 @@ end
 
 exclude '**/.git'
 exclude '**/.gitkeep'
+
+# NOTE: The "flight-python3-system-*" track the MAJOR.MINOR release of python
+#       This allows packages to hard specify the require minor versions without
+#       using upper/lower bounds.
+PYTHON_SYSTEM = VERSION.sub(/\.\d+\Z/, '')
+
+package :rpm do
+  vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends/provides
+  # provides are prefixed with `:`
+  priority ":flight-python-system-#{PYTHON_SYSTEM} flight-python3-system-#{PYTHON_SYSTEM}"
+end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section "::flight-python-system-#{PYTHON_SYSTEM} flight-python3-system-#{PYTHON_SYSTEM}"
+end
