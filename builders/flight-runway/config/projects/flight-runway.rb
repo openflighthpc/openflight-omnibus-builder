@@ -31,11 +31,11 @@ friendly_name 'Flight Runway'
 
 install_dir '/opt/flight/opt/runway'
 
-VERSION = '1.1.4'
+VERSION = '1.1.5'
 override 'flight-runway', version: VERSION
 
 build_version VERSION
-build_iteration 4
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-runway'
