@@ -45,6 +45,13 @@ dependency 'readline'
 relative_path "Python-#{version}"
 
 build do
+  # Check that flight-python has not been installed
+  # NOTE: this is done when the software file is loaded
+  raise <<~ERROR if File.exists? "/opt/flight/bin/python3"
+    flight-python can not be built when existing version has been installed!
+    Please remove the system version before continuing
+  ERROR
+
   env = with_standard_compiler_flags(with_embedded_path())
 
   # Exactly how python is compiled depends on the which *-devel
@@ -65,4 +72,11 @@ build do
   configure env: env
   make "-j #{workers}", env: env
   make "-j #{workers} install", env: env
+
+  # There is a bug where sometimes pip3 isn't built, it seems to occur on rebuilds
+  # of the package after `flight-python` has been installed. The exact re-production
+  # case is unknown. Instead a check is preformed to ensure pip3 exists
+  block do
+    raise "Failed to build pip3!" unless File.exists? File.join(install_dir, 'embedded/bin/pip3')
+  end
 end
