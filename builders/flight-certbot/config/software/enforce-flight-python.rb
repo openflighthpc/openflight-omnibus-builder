@@ -35,11 +35,9 @@ license :project_license
 skip_transitive_dependency_licensing true
 
 build do
-  block do
-    raise "Flight Python is not installed!" if ! File.exists?('/opt/flight/bin/python')
-    python_system = `/opt/flight/bin/python --version`.chomp.split(' ').last.gsub(/\.\d+\Z/, '')
-    unless python_system == version
-      raise "Flight Python has the incorrect system version: #{python_system} (expected #{version})"
-    end
+  raise "Flight Python is not installed!" if ! File.exists?('/opt/flight/bin/python3')
+  python_system = `/opt/flight/bin/python3 --version`.chomp.split(' ').last.gsub(/\.\d+\Z/, '')
+  unless python_system == version
+    raise "Flight Python has the incorrect system version: #{python_system} (expected #{version})"
   end
 end
