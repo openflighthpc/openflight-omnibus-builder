@@ -30,7 +30,7 @@ types {
     text/markdown                                    md;
 
     text/html                                        html htm shtml;
-    text/css                                         cs;
+    text/css                                         css;
     text/xml                                         xml;
     image/gif                                        gif;
     image/jpeg                                       jpeg jpg;
