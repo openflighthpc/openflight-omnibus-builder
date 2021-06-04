@@ -24,6 +24,10 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+
+require 'zlib'
+require 'minitar'
+
 name 'flight-headnode-landing-page'
 default_version '0.0.0'
 
@@ -37,4 +41,27 @@ build do
   type = 'headnode'
   # Moves the content for the landing page into place.
   copy "landing-page/types/#{type}/*", install_dir
+
+  # Extract the text from the demo config-pack and generate the download files
+  readme = "/opt/flight/usr/share/www/downloads/config-packs/example/README.md"
+  tarball = "/opt/flight/usr/share/www/downloads/config-packs/example/example.tar.gz"
+  block do
+    metapath = File.join(install_dir, 'content/config-packs/example.md.disabled')
+    text = File.read(metapath).split("---\n").last
+
+    # Clean the existing downloads directory
+    FileUtils.mkdir_p(File.dirname(readme))
+    FileUtils.rm_f readme
+    FileUtils.rm_f tarball
+
+    # Create the readme and tarball
+    File.write(readme, text)
+    Dir.chdir(File.dirname(readme)) do
+      Minitar.pack('README.md', Zlib::GzipWriter.new(File.open(tarball, 'wb')))
+    end
+  end
+
+  # Add the files to the rpm
+  project.extra_package_file readme
+  project.extra_package_file tarball
 end
