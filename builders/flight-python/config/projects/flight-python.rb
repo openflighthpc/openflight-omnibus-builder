@@ -27,7 +27,7 @@
 name 'flight-python'
 maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/blob/master/builders/flight-python/README.md'
-friendly_name 'Flight NodeJS'
+friendly_name 'Flight Python'
 
 install_dir '/opt/flight/opt/python'
 
@@ -35,10 +35,10 @@ VERSION = '3.8.10'
 override 'flight-python', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
-dependency 'python'
+dependency 'flight-python'
 dependency 'version-manifest'
 
 override 'python', version: VERSION
@@ -48,9 +48,14 @@ license_file 'LICENSE.txt'
 
 description 'Python3 platform for Flight tools.'
 
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
+# These files are installed as part of the flight-python software build.  They
+# are symlinks to `/opt/flight/opt/python/bin/`.
+#
+# Unfortunately, it appears that they can't be included in the package from
+# that software.  So they get included as extra_package_files which
+# unfortunately adds them to the package as regular files not symlinks.
+%w(python3 python pip3 pip).each do |f|
+  extra_package_file "/opt/flight/bin/#{f}"
 end
 
 exclude '**/.git'

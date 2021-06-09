@@ -45,13 +45,6 @@ dependency 'readline'
 relative_path "Python-#{version}"
 
 build do
-  # Check that flight-python has not been installed
-  # NOTE: this is done when the software file is loaded
-  raise <<~ERROR if File.exists? "/opt/flight/bin/python3"
-    flight-python can not be built when existing version has been installed!
-    Please remove the system version before continuing
-  ERROR
-
   env = with_standard_compiler_flags(with_embedded_path())
 
   # Exactly how python is compiled depends on the which *-devel
