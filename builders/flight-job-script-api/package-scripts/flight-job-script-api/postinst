@@ -29,8 +29,13 @@
 # NOTE: This file is managed by 'update_web_suite_package_scripts' software
 #       definition. Any changes will be lost on the next build.
 
-# Hard reconfigure the service
-/opt/flight/bin/flight service configure --force job-script-api >/dev/null 2>&1
+if [ -x /opt/flight/opt/job-script-api/libexec/postinst-configure.sh ]; then
+  # Run the custom postinst configure script
+  /opt/flight/opt/job-script-api/libexec/postinst-configure.sh >/dev/null 2>&1
+else
+  # Hard reconfigure the service
+  /opt/flight/bin/flight service configure --force job-script-api >/dev/null 2>&1
+fi
 
 # Check if the service is already running and restart it
 if /opt/flight/bin/flight service status job-script-api | grep active >/dev/null 2>&1 ; then

@@ -78,10 +78,16 @@ build do
     }
 
     # Render the postinst script
+    configure_script = File.join(install_dir, 'libexec/postinst-configure.sh')
     rendered[:postinst] = <<~POSTINST
       #{HEADER}
-      # Hard reconfigure the service
-      /opt/flight/bin/flight service configure --force #{service} >/dev/null 2>&1
+      if [ -x #{configure_script} ]; then
+        # Run the custom postinst configure script
+        #{configure_script} >/dev/null 2>&1
+      else
+        # Hard reconfigure the service
+        /opt/flight/bin/flight service configure --force #{service} >/dev/null 2>&1
+      fi
 
       # Check if the service is already running and restart it
       if /opt/flight/bin/flight service status #{service} | grep active >/dev/null 2>&1 ; then
