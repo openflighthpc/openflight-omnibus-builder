@@ -29,7 +29,6 @@
 # NOTE: This file is managed by 'update_web_suite_package_scripts' software
 #       definition. Any changes will be lost on the next build.
 
-
 # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
 if [ "$1" == "0" ] || [ "$1" == "remove" ]; then
   # Stop the service

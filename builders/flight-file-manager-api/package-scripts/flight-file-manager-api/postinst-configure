@@ -1,0 +1,11 @@
+# Migrate the old files from usr/share to var/lib
+old=/opt/flight/usr/share/file-manager-api
+new=/opt/flight/var/lib/file-manager-api
+if ls "$old" >/dev/null 2>&1; then
+  mkdir -p "$new" >/dev/null
+  ls "$old" | xargs -I {} mv "$old/{}" "$new"
+  rmdir "$old"
+fi
+
+# Added for best practive
+/opt/flight/bin/flight service configure --force file-manager-api >/dev/null 2>&1

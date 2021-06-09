@@ -63,6 +63,7 @@ default_version '1.0.0'
 license :project_license
 skip_transitive_dependency_licensing true
 
+
 build do
   block do
     # Extract information about the project
@@ -78,16 +79,17 @@ build do
     }
 
     # Render the postinst script
-    configure_script = File.join(install_dir, 'libexec/postinst-configure.sh')
+    configure_script = File.join(project.package_scripts_path, 'postinst-configure')
+    configure = if File.exists? configure_script
+                  File.read(configure_script).chomp
+                else
+                  "/opt/flight/bin/flight service configure --force #{service} >/dev/null 2>&1"
+                end
+
     rendered[:postinst] = <<~POSTINST
       #{HEADER}
-      if [ -x #{configure_script} ]; then
-        # Run the custom postinst configure script
-        #{configure_script} >/dev/null 2>&1
-      else
-        # Hard reconfigure the service
-        /opt/flight/bin/flight service configure --force #{service} >/dev/null 2>&1
-      fi
+      # Run the configuration
+      #{configure}
 
       # Check if the service is already running and restart it
       if /opt/flight/bin/flight service status #{service} | grep active >/dev/null 2>&1 ; then
@@ -103,7 +105,6 @@ build do
     # Render the prerm script
     rendered[:prerm] = <<~PRERM
       #{HEADER}
-
       # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
       if [ "$1" == "0" ] || [ "$1" == "remove" ]; then
         # Stop the service
@@ -116,7 +117,6 @@ build do
     # Render postrm
     rendered[:postrm] = <<~POSTRM
       #{HEADER}
-
       # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
       if [ "$1" == "0" ] || [ "$1" == "remove" ]; then
         # Reload flight-www to remove the proxy configuration

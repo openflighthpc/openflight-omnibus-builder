@@ -29,13 +29,15 @@
 # NOTE: This file is managed by 'update_web_suite_package_scripts' software
 #       definition. Any changes will be lost on the next build.
 
-if [ -x /opt/flight/opt/login-api/libexec/postinst-configure.sh ]; then
-  # Run the custom postinst configure script
-  /opt/flight/opt/login-api/libexec/postinst-configure.sh >/dev/null 2>&1
-else
-  # Hard reconfigure the service
-  /opt/flight/bin/flight service configure --force login-api >/dev/null 2>&1
+# Run the configuration
+secret_file=/opt/flight/etc/shared-secret.conf
+if [ ! -f "${secret_file}" ] ; then
+    date +%s.%N | sha256sum | cut -c 1-40 > "${secret_file}"
+    chmod 0400 "${secret_file}"
 fi
+
+# Added for best practice
+/opt/flight/bin/flight service configure --force login-api
 
 # Check if the service is already running and restart it
 if /opt/flight/bin/flight service status login-api | grep active >/dev/null 2>&1 ; then
