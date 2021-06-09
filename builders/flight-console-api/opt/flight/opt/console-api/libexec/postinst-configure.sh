@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,49 +24,37 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-console-api'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-console-api'
-friendly_name 'Flight Console api'
 
-install_dir '/opt/flight/opt/console-api'
+# Update the session secret if unset
+env_file=/opt/flight/etc/service/env/console-api
+mkdir -p $(dirname "${env_file}")
+var_name="flight_CONSOLE_API_session_secret"
+if [ -f "${env_file}" ] && grep -q "^${var_name}=" "${env_file}" ; then
+    # The secret has previously been generated.  We continue to use it.
+    :
+else
+    secret=$( date +%s.%N | sha256sum | cut -c 1-40 )
+    echo "${var_name}=${secret}" >> "${env_file}"
+    chmod 0400 "${env_file}"
+fi
 
-VERSION = '2.1.0'
-override 'flight-console-api', version: VERSION
+# Generate a private key if required
+priv_key=/opt/flight/etc/console-api/id_rsa
+pub_key="$priv_key".pub
+if [ ! -f "$priv_key" ]; then
+  mkdir -p $(dirname "$priv_key")
+  ssh-keygen -b 4096 -t rsa -f "$priv_key" -q -N "" -C "Flight Console API Key"
 
-build_version VERSION
-build_iteration 2
+  # Ensure any existing public key is removed
+  rm -f "$pub_key"
+fi
 
-dependency 'preparation'
-dependency 'update_web_suite_package_scripts'
-dependency 'flight-console-api'
-dependency 'version-manifest'
+# Generate the public key if required
+if [ ! -f "$pub_key" ]; then
+  mkdir -p $(dirname "$pub_key")
+  ssh-keygen -y -f "$priv_key" > "$pub_key"
+fi
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'API to provide browser access to an interactive terminal console'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-nodejs'
-runtime_dependency 'flight-js-system-2.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-config_file "#{install_dir}/etc/config.json"
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
+# The following has been added for "best practice" but is not technically
+# required at the time of writing
+/opt/flight/bin/flight service configure --force >/dev/null 2>&1
