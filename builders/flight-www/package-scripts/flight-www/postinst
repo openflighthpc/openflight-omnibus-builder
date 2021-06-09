@@ -132,4 +132,7 @@ EOF
   fi
 fi
 
+# Attempt to reload the nginx configuration
+/opt/flight/bin/flight service reload www >/dev/null 2>&1
+
 exit 0

@@ -103,6 +103,8 @@ build do
     POSTINST
 
     # Render the prerm script
+    # NOTE: At the time of writing, `flight-www` has a similar script to this.
+    # Any changes made here will likely need to be duplicated
     rendered[:prerm] = <<~PRERM
       #{HEADER}
       # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
