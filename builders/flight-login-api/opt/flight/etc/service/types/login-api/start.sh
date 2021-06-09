@@ -25,6 +25,7 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+
 set -e
 
 # Required to correctly handle output parsing.
@@ -34,10 +35,10 @@ fi
 export LANG=${LANG:-en_US.UTF-8}
 
 # Create the temporary PID file
-pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
+pidfile=$(mktemp /tmp/flight-login-api-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
-tool_bg bash "${flight_ROOT}"/opt/login-api/bin/start "$pidfile"
+tool_bg /opt/flight/opt/login-api/bin/start "$pidfile"
 
 # Wait up to 10ish seconds for puma to start
 for _ in `seq 1 20`; do

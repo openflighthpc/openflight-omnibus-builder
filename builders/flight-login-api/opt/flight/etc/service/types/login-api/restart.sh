@@ -26,10 +26,10 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 OLD_PID="$1"
 
-bash "$DIR"/stop.sh "$OLD_PID"
+/opt/flight/etc/service/types/login-api/stop.sh "$OLD_PID"
 
 # Wait up to 10ish seconds for puma to stop
 state=1
@@ -46,4 +46,4 @@ if [ "$state" -eq 0 ]; then
   exit 1
 fi
 
-bash "$DIR"/start.sh
+/opt/flight/etc/service/types/login-api/start.sh

@@ -26,6 +26,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
+
 pid_file="$1"
 if [ -z "$pid_file" ]; then
   echo "The pid_file argument has not been provided!" >&2
@@ -44,8 +45,10 @@ fi
 mkdir -p $(dirname "$PUMA_LOG_FILE")
 
 # Restarts the puma worker processes
-"${flight_ROOT}"/bin/flexec ruby "${flight_ROOT}"/opt/job-script-api/bin/pumactl \
-  restart --pidfile "$pid_file" >>"$PUMA_LOG_FILE" 2>&1
+"${flight_ROOT}"/bin/flexec ruby /opt/flight/opt/login-api/bin/pumactl restart \
+  --pidfile $1 \
+  --config-file /opt/flight/opt/login-api/config/puma.rb \
+  >>"$PUMA_LOG_FILE" 2>&1
 
 # Sleeps two seconds and ensure puma is still running
 sleep 2

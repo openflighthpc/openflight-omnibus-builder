@@ -26,6 +26,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
+
 pid_file="$1"
 if [ -z "$pid_file" ]; then
   echo "The pid_file argument has not been provided!" >&2
@@ -44,5 +45,7 @@ fi
 mkdir -p $(dirname "$PUMA_LOG_FILE")
 
 # Stop puma
-PATH="${flight_ROOT}/bin/:${PATH}"
-"${flight_ROOT}"/opt/login-api/bin/pumactl stop  --pidfile $1 >> "$PUMA_LOG_FILE"
+"${flight_ROOT}"/bin/flexec ruby /opt/flight/opt/login-api/bin/pumactl stop \
+  --pidfile $1 \
+  --config-file /opt/flight/opt/login-api/config/puma.rb \
+  >>"$PUMA_LOG_FILE" 2>&1

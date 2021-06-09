@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #==============================================================================
 # Copyright (C) 2021-present Alces Flight Ltd.
 #
@@ -26,30 +26,8 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-
-pid_file="$1"
-if [ -z "$pid_file" ]; then
-  echo "The pid_file argument has not been provided!" >&2
-  exit 1
+secret_file=/opt/flight/etc/shared-secret.conf
+if [ ! -f "${secret_file}" ] ; then
+    date +%s.%N | sha256sum | cut -c 1-40 > "${secret_file}"
+    chmod 0400 "${secret_file}"
 fi
-if [ -z "$flight_ROOT" ]; then
-  echo "flight_ROOT has not been set!" >&2
-  exit 1
-fi
-if [ -z "$PUMA_LOG_FILE" ]; then
-  echo "PUMA_LOG_FILE has not been set!" >&2
-  exit 1
-fi
-
-# Ensure the log directory exists
-mkdir -p $(dirname "$PUMA_LOG_FILE")
-
-# Exec into the ruby/puma process so the PID does not change
-exec "${flight_ROOT}"/bin/flexec ruby /opt/flight/opt/login-api/bin/puma \
-  --config /opt/flight/opt/login-api/config/puma.rb \
-  --pidfile "$pid_file" \
-  --redirect-stdout "$PUMA_LOG_FILE" \
-  --redirect-stderr "$PUMA_LOG_FILE" \
-  --redirect-append \
-  --dir /opt/flight/opt/login-api \
-  >>"${PUMA_LOG_FILE}" 2>&1

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #==============================================================================
 # Copyright (C) 2021-present Alces Flight Ltd.
 #
@@ -26,30 +26,14 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
+# NOTE: This file is managed by 'update_web_suite_package_scripts' software
+#       definition. Any changes will be lost on the next build.
 
-pid_file="$1"
-if [ -z "$pid_file" ]; then
-  echo "The pid_file argument has not been provided!" >&2
-  exit 1
-fi
-if [ -z "$flight_ROOT" ]; then
-  echo "flight_ROOT has not been set!" >&2
-  exit 1
-fi
-if [ -z "$PUMA_LOG_FILE" ]; then
-  echo "PUMA_LOG_FILE has not been set!" >&2
-  exit 1
+
+# On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
+if [ "$1" == "0" ] || [ "$1" == "remove" ]; then
+  # Stop the service
+  /opt/flight/bin/flight service stop login-api >/dev/null 2>&1
 fi
 
-# Ensure the log directory exists
-mkdir -p $(dirname "$PUMA_LOG_FILE")
-
-# Exec into the ruby/puma process so the PID does not change
-exec "${flight_ROOT}"/bin/flexec ruby /opt/flight/opt/login-api/bin/puma \
-  --config /opt/flight/opt/login-api/config/puma.rb \
-  --pidfile "$pid_file" \
-  --redirect-stdout "$PUMA_LOG_FILE" \
-  --redirect-stderr "$PUMA_LOG_FILE" \
-  --redirect-append \
-  --dir /opt/flight/opt/login-api \
-  >>"${PUMA_LOG_FILE}" 2>&1
+exit 0
