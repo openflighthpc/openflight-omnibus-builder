@@ -1,6 +1,6 @@
 #!/bin/sh
 #==============================================================================
-# Copyright (C) 2021-present Alces Flight Ltd.
+# Copyright (C) 2019-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -26,23 +26,14 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-# NOTE: This file is managed by 'update_web_suite_package_scripts' software
-#       definition. Any changes will be lost on the next build.
-
-if [ -x /opt/flight/opt/file-manager-api/libexec/postinst-configure.sh ]; then
-  # Run the custom postinst configure script
-  /opt/flight/opt/file-manager-api/libexec/postinst-configure.sh >/dev/null 2>&1
-else
-  # Hard reconfigure the service
-  /opt/flight/bin/flight service configure --force file-manager-api >/dev/null 2>&1
+# Migrate the old files from usr/share to var/lib
+old=/opt/flight/usr/share/file-manager-api
+new=/opt/flight/var/lib/file-manager-api
+if ls "$old" >/dev/null 2>&1; then
+  mkdir -p "$new" >/dev/null
+  ls "$old" | xargs -I {} mv "$old/{}" "$new"
+  rmdir "$old"
 fi
 
-# Check if the service is already running and restart it
-if /opt/flight/bin/flight service status file-manager-api | grep active >/dev/null 2>&1 ; then
-  /opt/flight/bin/flight service restart file-manager-api >/dev/null 2>&1
-fi
-
-# Reload flight-www to pick up the new config
-/opt/flight/bin/flight service reload www 1>/dev/null 2>&1
-
-exit 0
+# The following has been added for best-practice
+/opt/flight/bin/flight service configure --force file-manager-api >/dev/null 2>&1
