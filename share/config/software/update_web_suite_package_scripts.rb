@@ -119,11 +119,8 @@ build do
     # Render postrm
     rendered[:postrm] = <<~POSTRM
       #{HEADER}
-      # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
-      if [ "$1" == "0" ] || [ "$1" == "remove" ]; then
-        # Reload flight-www to remove the proxy configuration
-        /opt/flight/bin/flight service reload www 1>/dev/null 2>&1
-      fi
+      # Reload flight-www to remove the proxy configuration
+      /opt/flight/bin/flight service reload www 1>/dev/null 2>&1
 
       exit 0
     POSTRM
