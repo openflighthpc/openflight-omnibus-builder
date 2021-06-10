@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 HEADER = <<~HEADER
-#!/bin/sh
+#!/bin/bash
 #==============================================================================
 # Copyright (C) 2021-present Alces Flight Ltd.
 #
@@ -108,7 +108,7 @@ build do
     rendered[:prerm] = <<~PRERM
       #{HEADER}
       # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
-      if [ "$1" == "0" ] || [ "$1" == "remove" ]; then
+      if [ "$1" == "0" -o "$1" == "remove" ]; then
         # Stop the service
         /opt/flight/bin/flight service stop #{service} >/dev/null 2>&1
       fi
