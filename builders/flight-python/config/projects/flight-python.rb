@@ -48,14 +48,9 @@ license_file 'LICENSE.txt'
 
 description 'Python3 platform for Flight tools.'
 
-# These files are installed as part of the flight-python software build.  They
-# are symlinks to `/opt/flight/opt/python/bin/`.
-#
-# Unfortunately, it appears that they can't be included in the package from
-# that software.  So they get included as extra_package_files which
-# unfortunately adds them to the package as regular files not symlinks.
-%w(python3 python pip3 pip).each do |f|
-  extra_package_file "/opt/flight/bin/#{f}"
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
 end
 
 exclude '**/.git'

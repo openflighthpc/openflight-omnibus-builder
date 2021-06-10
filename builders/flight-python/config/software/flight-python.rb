@@ -16,18 +16,16 @@ build do
     ERROR
   end
 
-  dist_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'dist'))
-  copy File.join(dist_dir, 'bin', '*'), File.join(install_dir, 'bin')
-
-  links = [
-    ["bin/python3", ["bin/python", "../../bin/python3"]],
-    ["bin/python",  [              "../../bin/python"]],
-    ["bin/pip3",    ["bin/pip",    "../../bin/pip3"]],
-    ["bin/pip",     [              "../../bin/pip"]],
-  ]
-  links.each do |src, dsts|
-    dsts.each do |dst|
-      link File.join(install_dir, src), File.expand_path(File.join(install_dir, dst))
-    end
-  end
+  # We have a couple of executables, `python3` and `pip3` that we'd like to
+  # have at different locations.  Ideally, we'd have them installed in one
+  # location and symlinked to the others.  Unfortunately, omnibus makes that
+  # difficult as one of the locations `/opt/flight/bin` is outside of
+  # `install_dir`.
+  #
+  # I have abandoned attempts to get symlinks working correctly.  Instead I've
+  # settled for having a single source pair of files and copy them to the
+  # correct locations as part of the build.
+  builder_root = Pathname.new(File.dirname(__FILE__)).join('../..').expand_path
+  ofb = builder_root.join('opt/flight/bin')
+  copy ofb.join('*').to_s, File.join(install_dir, 'bin')
 end
