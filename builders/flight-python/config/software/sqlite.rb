@@ -45,7 +45,7 @@ relative_path "sqlite-autoconf-#{expanded_version}"
 
 build do
   env = with_standard_compiler_flags(with_embedded_path())
-  configure env: env
+  configure '--disable-readline', env: env
   make "-j #{workers}", env: env
   make "-j #{workers} install", env: env
 end
