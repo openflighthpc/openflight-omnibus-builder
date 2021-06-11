@@ -36,11 +36,13 @@ version("3.8.10") { source sha256: "b37ac74d2cbad2590e7cd0dd2b3826c29afe89a73409
 source url: "https://www.python.org/ftp/python/#{version}/Python-#{version}.tgz"
 
 dependency "zlib"
+dependency "bzip2"
 dependency "openssl"
 dependency 'ncurses'
 dependency 'libffi'
 dependency 'sqlite'
 dependency 'readline'
+dependency "gdbm"
 
 relative_path "Python-#{version}"
 
