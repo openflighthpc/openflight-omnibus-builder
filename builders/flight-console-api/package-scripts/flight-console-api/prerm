@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #==============================================================================
 # Copyright (C) 2021-present Alces Flight Ltd.
 #
@@ -30,7 +30,7 @@
 #       definition. Any changes will be lost on the next build.
 
 # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
-if [ "$1" == "0" ] || [ "$1" == "remove" ]; then
+if [ "$1" == "0" -o "$1" == "remove" ]; then
   # Stop the service
   /opt/flight/bin/flight service stop console-api >/dev/null 2>&1
 fi
