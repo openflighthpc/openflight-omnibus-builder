@@ -102,7 +102,7 @@ This can be done by running the following:
 EOF
 
 %changelog
-* Thu May 27 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.4-1
+* Fri Jun 11 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.4-1
 - Bump flight-desktop-restapi, flight-file-manager-* and flight-job-script-*
 * Thu Apr 29 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.3-1
 - Bump flight-console-*, flight-desktop-restapi, and flight-job-script-*

@@ -36,7 +36,7 @@ The Flight User Suite collection of tools and packages for running a HPC environ
 # Nothing to do
 
 %changelog
-* Thu May 27 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.4-1
+* Fri Jun 11 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.4-1
 - Bumped flight-job and flight-desktop
 * Thu Apr 29 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.3-1
 - Bumped flight-job and flight-desktop

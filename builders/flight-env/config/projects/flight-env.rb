@@ -31,7 +31,7 @@ friendly_name 'Flight Environment'
 
 install_dir '/opt/flight/opt/env'
 
-VERSION = '1.4.1-rc1'
+VERSION = '1.4.1'
 override 'flight-env', version: VERSION
 
 build_version VERSION
