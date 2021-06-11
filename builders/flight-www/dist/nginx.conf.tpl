@@ -8,6 +8,7 @@ events {
 }
 
 http {
+    include /opt/flight/opt/www/embedded/conf/mime.types;
     include /opt/flight/etc/www/mime.types;
     default_type application/octet-stream;
     log_format main '$remote_addr - $remote_user [$time_local] "$request" '
