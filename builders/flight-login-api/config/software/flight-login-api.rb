@@ -52,15 +52,15 @@ build do
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
-  # Update the config
+  # Move the config into the core location
+  src = File.join project_dir, 'etc/login-api.yaml'
+  dst = '/opt/flight/etc/login-api.yaml'
   block do
-    path = File.join(install_dir, 'etc/flight-login.yaml')
-    content = [
-      File.read(path),
-      "shared_secret_path: /opt/flight/etc/shared-secret.conf",
-    ].join("\n")
-    File.write path, content
+    FileUtils.mkdir_p File.dirname(dst)
+    FileUtils.rm_f dst
+    FileUtils.cp src, dst
   end
+  project.extra_package_file dst
 
   # Installs the gems to the shared `vendor/share`
   flags = [

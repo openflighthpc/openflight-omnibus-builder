@@ -71,7 +71,7 @@ runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
-config_file File.join(install_dir, 'etc/flight-login.yaml')
+config_file '/opt/flight/etc/login-api.yaml'
 config_file '/opt/flight/etc/service/env/login-api'
 
 require 'find'
