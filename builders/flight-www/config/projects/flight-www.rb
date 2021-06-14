@@ -33,13 +33,18 @@ install_dir '/opt/flight/opt/www'
 
 VERSION = '1.6.0-b2'
 CERT_VERSION = '0.4.5'
+
 override 'flight-www', version: VERSION
-override 'flight-cert', version: CERT_VERSION
+override 'flight-cert', version: ENV.fetch('ALPHA_cert', CERT_VERSION)
 override :nginx, version: '1.14.2'
 override 'flight-landing-page', version: '1.3.0-b4'
 
-build_version VERSION
-build_iteration '2'
+if ENV.key?('ALPHA_cert')
+  build_version VERSION.sub(/(-\w+)?\Z/, '-alpha')
+else
+  build_version VERSION
+end
+build_iteration '3'
 
 dependency 'preparation'
 dependency 'flight-www'
