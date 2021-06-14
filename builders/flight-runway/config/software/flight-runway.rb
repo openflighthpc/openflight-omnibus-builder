@@ -75,5 +75,15 @@ build do
         preserve: true,
       )
     end
+
+    if ohai['platform_family'] == 'rhel'
+      rhel_rel = ohai['platform_version'].split('.').first.to_i
+      if rhel_rel == 8
+        path = '/opt/flight/bin/ruby'
+        content = File.read(path)
+        content.sub!(/^.*SSL.*$/, "##{$&}")
+        File.write(path, content)
+      end
+    end
   end
 end

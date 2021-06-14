@@ -46,6 +46,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "centos8", autostart: false do |build|
     build.vm.box = 'bento/centos-8'
+    build.vm.box_version = '202010.22.0'  # GOOD    BAD
     build.vm.provision "shell", path: "vagrant/provision.sh"
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
