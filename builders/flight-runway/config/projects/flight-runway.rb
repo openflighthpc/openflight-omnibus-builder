@@ -63,8 +63,11 @@ override :bundler, version: BUNDLER_VERSION
 override :rubygems, version: '3.1.2'
 
 # Use the system version of OpenSSL on RHEL8
-if ohai['platform_family'] == 'rhel' && ohai['platform_version'].split('.').first.to_i == 8
-  runtime_dependency 'openssl-libs'
+if ohai['platform_family'] == 'rhel'
+  rhel_rel = ohai['platform_version'].split('.').first.to_i
+  if rhel_rel == 8
+    runtime_dependency 'openssl-libs'
+  end
 elsif ohai['platform_family'] == 'debian'
   override :openssl, version: '1.1.1d'
 end
