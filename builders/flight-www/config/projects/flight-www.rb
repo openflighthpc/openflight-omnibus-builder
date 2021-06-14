@@ -44,7 +44,7 @@ if ENV.key?('ALPHA_cert')
 else
   build_version VERSION
 end
-build_iteration '3'
+build_iteration '1'
 
 dependency 'preparation'
 dependency 'flight-www'
