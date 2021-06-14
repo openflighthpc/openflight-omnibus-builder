@@ -46,7 +46,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "centos8", autostart: false do |build|
     build.vm.box = 'bento/centos-8'
-    build.vm.box_version = '202010.22.0'  # GOOD    BAD
+    # Versions greater than this suffer from a "Ruby file operations on NFS
+    # mounts" issue.  See https://bugzilla.redhat.com/show_bug.cgi?id=1840284.
+    build.vm.box_version = '202010.22.0'
     build.vm.provision "shell", path: "vagrant/provision.sh"
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
