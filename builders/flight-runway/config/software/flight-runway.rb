@@ -39,6 +39,14 @@ license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
 build do
+  if ohai['platform_family'] == 'rhel'
+    rhel_rel = ohai['platform_version'].split('.').first.to_i
+    if rhel_rel == 8
+      env = with_standard_compiler_flags(with_embedded_path)
+      patch source: "centos-8-ssl-cert-path.patch", plevel: 1, env: env
+    end
+  end
+
   block do
     [
       'pkg/bin',
