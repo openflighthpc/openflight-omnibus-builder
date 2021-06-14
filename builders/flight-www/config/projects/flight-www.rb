@@ -31,7 +31,7 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.5.0-rc1'
+VERSION = '1.5.0'
 CERT_VERSION = '0.4.5'
 override 'flight-www', version: VERSION
 override 'flight-cert', version: CERT_VERSION
