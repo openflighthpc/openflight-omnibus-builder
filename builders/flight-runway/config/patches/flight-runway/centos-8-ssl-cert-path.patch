@@ -1,0 +1,15 @@
+--- a/bin/ruby	2021-06-14 09:13:46.460501913 +0000
++++ b/bin/ruby	2021-06-14 09:26:11.904533384 +0000
+@@ -78,9 +78,9 @@
+   RUBYLIB=$RUBYLIB:${_lib}/${_rv}/x86_64-linux
+   export RUBYLIB
+ 
+-  flight_RUBY_orig_SSL_CERT_FILE="${SSL_CERT_FILE-NULL}"
+-  SSL_CERT_FILE=${_root}/ssl/certs/cacert.pem
+-  export SSL_CERT_FILE
++  #flight_RUBY_orig_SSL_CERT_FILE="${SSL_CERT_FILE-NULL}"
++  #SSL_CERT_FILE=${_root}/ssl/certs/cacert.pem
++  #export SSL_CERT_FILE
+ 
+   export flight_ROOT
+ }
