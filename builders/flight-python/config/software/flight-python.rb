@@ -1,3 +1,59 @@
+#==============================================================================
+# Copyright (C) 2021-present Alces Flight Ltd.
+#
+# This file is part of Flight NodeJS
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which is available at
+# <https://www.eclipse.org/legal/epl-2.0>, or alternative license
+# terms made available by Alces Flight Ltd - please direct inquiries
+# about licensing to licensing@alces-flight.com.
+#
+# This project is distributed in the hope that it will be useful, but
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
+# OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
+# PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more
+# details.
+#
+# You should have received a copy of the Eclipse Public License 2.0
+# along with this project. If not, see:
+#
+#  https://opensource.org/licenses/EPL-2.0
+#
+# For more information on Flight NodeJS, please visit:
+# https://github.com/openflighthpc/openflight-omnibus-builder/builders/flight-nodejs
+#===============================================================================
+
+HEADER = <<~HEADER
+#==============================================================================
+# Copyright (C) 2021-present Alces Flight Ltd.
+#
+# This file is part of Flight NodeJS
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which is available at
+# <https://www.eclipse.org/legal/epl-2.0>, or alternative license
+# terms made available by Alces Flight Ltd - please direct inquiries
+# about licensing to licensing@alces-flight.com.
+#
+# This project is distributed in the hope that it will be useful, but
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
+# OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
+# PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more
+# details.
+#
+# You should have received a copy of the Eclipse Public License 2.0
+# along with this project. If not, see:
+#
+#  https://opensource.org/licenses/EPL-2.0
+#
+# For more information on Flight NodeJS, please visit:
+# https://github.com/openflighthpc/openflight-omnibus-builder/builders/flight-nodejs
+#===============================================================================
+HEADER
+
 name 'flight-python'
 default_version '0.0.0'
 
@@ -5,27 +61,32 @@ dependency 'python'
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
+PYTHON_BINS = %w(python3 python pip3 pip)
+
 build do
   # Check that flight-python has not been installed or previously built.
   # NOTE: this is done when the software file is loaded
 
-  if %w(python3 python pip3 pip).any? {|f| File.exists?(File.join("/opt/flight/bin", f))}
+  if PYTHON_BINS.any? {|f| File.exists?(File.join("/opt/flight/bin", f))}
     raise <<~ERROR
       flight-python can not be built when existing version has been installed!
       Please remove the system version before continuing
     ERROR
   end
 
-  # We have a couple of executables, `python3` and `pip3` that we'd like to
-  # have at different locations.  Ideally, we'd have them installed in one
-  # location and symlinked to the others.  Unfortunately, omnibus makes that
-  # difficult as one of the locations `/opt/flight/bin` is outside of
-  # `install_dir`.
-  #
-  # I have abandoned attempts to get symlinks working correctly.  Instead I've
-  # settled for having a single source pair of files and copy them to the
-  # correct locations as part of the build.
-  builder_root = Pathname.new(File.dirname(__FILE__)).join('../..').expand_path
-  ofb = builder_root.join('opt/flight/bin')
-  copy ofb.join('*').to_s, File.join(install_dir, 'bin')
+  # Create the shims within /opt/flight/opt/python/bin
+  block do
+    FileUtils.mkdir_p File.join(install_dir, 'bin')
+    PYTHON_BINS.each do |file|
+      src = File.join('/opt/flight/bin', file)
+      shim = File.join(install_dir, 'bin', file)
+
+      File.write(shim, <<~BIN)
+        #!/bin/bash
+        #{HEADER}
+        exec #{src} "$@"
+      BIN
+      FileUtils.chmod 0755, shim
+    end
+  end
 end

@@ -37,7 +37,7 @@ build do
   env = with_embedded_path("PIPENV_VENV_IN_PROJECT" => 'true')
 
   # Place the openflight version of python onto the path
-  env['PATH'] = "/opt/flight/bin:#{env['PATH']}"
+  env['PATH'] = "/opt/flight/opt/python/bin:#{env['PATH']}"
 
   # Copies the pip files to the install dir
   ['Pipfile', 'Pipfile.lock'].each do |file|
