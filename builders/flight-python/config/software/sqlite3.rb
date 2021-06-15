@@ -24,7 +24,7 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'sqlite'
+name 'sqlite3'
 default_version '3.35.5'
 
 major, minor, bug = version.split('.')

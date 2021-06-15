@@ -40,7 +40,7 @@ dependency "bzip2"
 dependency "openssl"
 dependency 'ncurses'
 dependency 'libffi'
-dependency 'sqlite'
+dependency 'sqlite3'
 dependency 'readline'
 dependency "gdbm"
 
