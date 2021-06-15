@@ -53,7 +53,7 @@ build do
   # XXX: Add an api specific README.md to the upstream sources
   [
     'Gemfile', 'Gemfile.lock', 'bin', 'config',
-    'app', 'lib', 'libexec', 'README.md', 'app.rb', 'config.ru'
+    'app', 'lib', 'README.md', 'app.rb', 'config.ru'
   ].each do |file|
     copy File.join('api', file), File.expand_path("#{install_dir}/#{file}/..")
   end
@@ -77,6 +77,19 @@ build do
 
     # Write the updated config
     File.write(dst, config)
+  end
+  project.extra_package_file dst
+
+  # Move the libexec script into place
+  src = File.join project_dir, 'api/libexec/cloudcmd.sh'
+  dst = '/opt/flight/libexec/file-manager-api/cloudcmd.sh'
+  block do
+    # Remove the existing file
+    FileUtils.mkdir_p File.dirname(dst)
+    FileUtils.rm_f dst
+
+    # Copy the file into place
+    FileUtils.cp src, dst
   end
   project.extra_package_file dst
 
