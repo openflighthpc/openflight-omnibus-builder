@@ -1,0 +1,4 @@
+web-suite:
+  domain:
+    var: 'flight_WEB_SUITE_domain'
+    file: 'web-suite'
