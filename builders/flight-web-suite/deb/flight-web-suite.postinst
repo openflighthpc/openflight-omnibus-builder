@@ -12,12 +12,18 @@ set -e
 /opt/flight/bin/flight service restart desktop-restapi
 /opt/flight/bin/flight service restart job-script-api
 /opt/flight/bin/flight service restart www
+if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
 cat <<EOF 1>&2
 ================================================
-HTTPs support needs to be enabled for flight-www
+HTTPS support needs to be enabled for flight-www
 ================================================
-To enable HTTPs support run '/opt/flight/bin/flight www enable-https'.
+To enable HTTPS support run:
+  /opt/flight/bin/flight www enable-https
+  /opt/flight/bin/flight service restart www
 
+EOF
+fi
+cat <<EOF 1>&2
 ================================================
 Configure and start Login API
 ================================================

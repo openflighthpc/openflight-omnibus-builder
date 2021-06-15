@@ -80,9 +80,9 @@ The Flight Web Suite collection of web applications for accessing a HPC environm
 if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
 cat <<EOF 1>&2
 ================================================
-HTTPs support needs to be enabled for flight-www
+HTTPS support needs to be enabled for flight-www
 ================================================
-To enable HTTPs support run:
+To enable HTTPS support run:
   /opt/flight/bin/flight www enable-https
   /opt/flight/bin/flight service restart www
 
