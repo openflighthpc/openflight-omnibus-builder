@@ -1,6 +1,5 @@
-#!/bin/sh
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -26,21 +25,6 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-# Checks if the example config pack has been previously installed
-# and symlinks it into place if required
-dir=/opt/flight/opt/www/landing-page/default/content/config-packs/
-flag="$dir/.example-installed"
-if [ ! -f "$flag" ]; then
-  touch "$flag"
-  pushd "$dir" >/dev/null
-  ln -s example.md.disabled example.md
-  popd >/dev/null
-fi
-
-# `flight-www` may not be installed yet.  That is fine, as `flight-www` will
-# compile the landing page once it is installed.
-if [ -f /opt/flight/libexec/commands/landing-page ]; then
-    /opt/flight/bin/flight landing-page compile
-fi
-
-exit 0
+types {
+  text/markdown md;
+}
