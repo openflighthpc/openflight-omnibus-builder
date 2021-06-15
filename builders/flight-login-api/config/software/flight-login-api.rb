@@ -52,6 +52,9 @@ build do
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
+  # Copy the un-modified reference config in place
+  copy 'etc/login-api.yaml', File.join(install_dir, 'etc/login-api.yaml.reference')
+
   # Move the config into the core location
   src = File.join project_dir, 'etc/login-api.yaml'
   dst = '/opt/flight/etc/login-api.yaml'
@@ -61,9 +64,9 @@ build do
     FileUtils.rm_f dst
 
     # Update the relative path expansion note
-    config = File.read(src).gsub(/#>>path<<.*(?=#--)/m, <<~MSG)
-      The path maybe absolute or relative. All relative paths are expanded from:
-      /opt/flight
+    config = File.read(src).gsub(/#>>path<<.*(\n#.*)*(?=\n#--)/, <<~MSG.chomp)
+      # The path maybe absolute or relative. All relative paths are expanded from:
+      # /opt/flight
     MSG
 
     # Write the updated config
