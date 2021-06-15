@@ -61,13 +61,11 @@ dependency 'python'
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-PYTHON_BINS = %w(python3 python pip3 pip)
-
 build do
   # Check that flight-python has not been installed or previously built.
   # NOTE: this is done when the software file is loaded
 
-  if PYTHON_BINS.any? {|f| File.exists?(File.join("/opt/flight/bin", f))}
+  if %w(python3 python pip3 pip).any? {|f| File.exists?(File.join("/opt/flight/bin", f))}
     raise <<~ERROR
       flight-python can not be built when existing version has been installed!
       Please remove the system version before continuing
@@ -77,16 +75,11 @@ build do
   # Create the shims within /opt/flight/opt/python/bin
   block do
     FileUtils.mkdir_p File.join(install_dir, 'bin')
-    PYTHON_BINS.each do |file|
-      src = File.join('/opt/flight/bin', file)
-      shim = File.join(install_dir, 'bin', file)
-
-      File.write(shim, <<~BIN)
-        #!/bin/bash
-        #{HEADER}
-        exec #{src} "$@"
-      BIN
-      FileUtils.chmod 0755, shim
+    ['pip', 'python'].each do |file|
+      src = File.join(install_dir, "embedded/bin/#{file}3")
+      [file, "#{file}3"].each do |bin|
+        FileUtils.ln_sf src, File.join(install_dir, 'bin', bin)
+      end
     end
   end
 end
