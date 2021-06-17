@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,39 +24,20 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-certbot'
-default_version '0.0.0'
-
-source path: File.expand_path('../../lib', __dir__)
-
-license 'Apache-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
-
-build do
-  env = with_embedded_path("PIPENV_VENV_IN_PROJECT" => 'true')
-
-  # Place the openflight version of python onto the path
-  env['PATH'] = "/opt/flight/opt/python/bin:#{env['PATH']}"
-
-  # Copies the pip files to the install dir
-  ['Pipfile', 'Pipfile.lock'].each do |file|
-    copy file, File.join(install_dir, file)
-  end
-
-  # Builds the virtual env
-  command(<<-CMD, env: env)
-    cd #{install_dir}
-    pipenv install
-  CMD
-
-  # Generates the bin symlinks
-  block do
-    Dir.chdir install_dir do
-      FileUtils.mkdir_p 'bin'
-      Dir.glob('.venv/bin/*').each do |path|
-        FileUtils.ln_s File.join('..', path), File.join('bin', File.basename(path))
-      end
-    end
-  end
-end
+# Usually changing the main project file causes all dependencies to be
+# rebuilt.
+#
+# Instead, this file can be used as the project build file and allows
+# building of dependencies once while iterations are made on the main
+# project file. e.g.:
+#
+#   bin/omnibus build proxy
+#
+# To force dependencies to be recompiled, increment the following
+# number (which casues the checksum of this project file to change,
+# resulting in the cache being dirtied and all dependencies being
+# rebuilt).
+#
+# PROXY-BUILD-01
+#
+eval(File.read(File.expand_path('flight-python.rb', __dir__)), binding, __FILE__)

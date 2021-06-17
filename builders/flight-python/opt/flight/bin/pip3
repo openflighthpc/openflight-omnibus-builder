@@ -1,0 +1,50 @@
+#!/bin/bash
+#==============================================================================
+# Copyright (C) 2020-present Alces Flight Ltd.
+#
+# This file is part of Flight NodeJS
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which is available at
+# <https://www.eclipse.org/legal/epl-2.0>, or alternative license
+# terms made available by Alces Flight Ltd - please direct inquiries
+# about licensing to licensing@alces-flight.com.
+#
+# This project is distributed in the hope that it will be useful, but
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
+# OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
+# PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more
+# details.
+#
+# You should have received a copy of the Eclipse Public License 2.0
+# along with this project. If not, see:
+#
+#  https://opensource.org/licenses/EPL-2.0
+#
+# For more information on Flight NodeJS, please visit:
+# https://github.com/openflighthpc/openflight-omnibus-builder/builders/flight-nodejs
+#===============================================================================
+_setup() {
+  local a xdg_config
+  IFS=: read -a xdg_config <<< "${XDG_CONFIG_HOME:-$HOME/.config}:${XDG_CONFIG_DIRS:-/etc/xdg}"
+  for a in "${xdg_config[@]}"; do
+    if [ -e "${a}"/flight.rc ]; then
+      source "${a}"/flight.rc
+      break
+    fi
+  done
+  if [ -d "${flight_ROOT}"/libexec/hooks ]; then
+    shopt -s nullglob
+    for a in "${flight_ROOT}"/libexec/hooks/*.sh; do
+      source "${a}"
+    done
+    shopt -u nullglob
+  fi
+}
+
+flight_ROOT=${flight_ROOT:-$(cd $(dirname ${BASH_SOURCE[0]})/.. && pwd)}
+_setup
+unset _setup
+
+exec ${flight_ROOT}/opt/python/embedded/bin/pip3 "$@"

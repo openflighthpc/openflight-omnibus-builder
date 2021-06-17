@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,39 +24,28 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-certbot'
-default_version '0.0.0'
+name 'sqlite3'
+default_version '3.35.5'
 
-source path: File.expand_path('../../lib', __dir__)
+major, minor, bug = version.split('.')
+expanded_version = "#{major}#{minor.ljust(3, '0')}#{bug.ljust(3, '0')}"
 
-license 'Apache-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
+# I know, this looks weird, but SQLite has a "public domain" license.
+# According to SPDX the license type is "blessing".
+# https://spdx.org/licenses/blessing.html
+license 'blessing'
+license_file 'tea/license.terms'
+
+version("3.35.5") { source sha256: "f52b72a5c319c3e516ed7a92e123139a6e87af08a2dc43d7757724f6132e6db0" }
+
+# NOTE: TBC if this link will continue working post 2021, it will be fine for now
+source url: "https://sqlite.org/2021/sqlite-autoconf-#{expanded_version}.tar.gz"
+
+relative_path "sqlite-autoconf-#{expanded_version}"
 
 build do
-  env = with_embedded_path("PIPENV_VENV_IN_PROJECT" => 'true')
-
-  # Place the openflight version of python onto the path
-  env['PATH'] = "/opt/flight/opt/python/bin:#{env['PATH']}"
-
-  # Copies the pip files to the install dir
-  ['Pipfile', 'Pipfile.lock'].each do |file|
-    copy file, File.join(install_dir, file)
-  end
-
-  # Builds the virtual env
-  command(<<-CMD, env: env)
-    cd #{install_dir}
-    pipenv install
-  CMD
-
-  # Generates the bin symlinks
-  block do
-    Dir.chdir install_dir do
-      FileUtils.mkdir_p 'bin'
-      Dir.glob('.venv/bin/*').each do |path|
-        FileUtils.ln_s File.join('..', path), File.join('bin', File.basename(path))
-      end
-    end
-  end
+  env = with_standard_compiler_flags(with_embedded_path())
+  configure '--disable-readline', env: env
+  make "-j #{workers}", env: env
+  make "-j #{workers} install", env: env
 end

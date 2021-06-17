@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,59 +24,54 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-certbot'
+name 'flight-python'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/builders/flight-certbot'
-friendly_name 'Flight Certbot'
+homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/blob/master/builders/flight-python/README.md'
+friendly_name 'Flight Python'
 
-install_dir '/opt/flight/opt/certbot'
+install_dir '/opt/flight/opt/python'
 
-VERSION = '1.0.0'
-PYTHON_SYSTEM = '3.8'
-override 'flight-certbot', version: VERSION
-override 'enforce-flight-python', version: PYTHON_SYSTEM
+VERSION = '3.8.10'
+override 'flight-python', version: VERSION
 
 build_version VERSION
 build_iteration 2
 
-override 'sqlite3', version: '3.32.3.0'
-
 dependency 'preparation'
-dependency 'enforce-flight-python'
-dependency 'flight-certbot'
+dependency 'flight-python'
 dependency 'version-manifest'
 
-runtime_dependency "flight-python-system-#{PYTHON_SYSTEM}"
+override 'python', version: VERSION
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Alternative openFlightHPC build of certbot'
+description 'Python3 platform for Flight tools.'
 
-strip_build true
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
+end
 
 exclude '**/.git'
 exclude '**/.gitkeep'
-exclude '**/bundler/git'
-exclude '**/__pycache__'
-exclude '**/lib/python3.8/test'
-exclude '**/lib/python3.8/config-3.8-x86_64-linux-gnu'
-exclude '**/lib/*.a'
-exclude '**/lib/*.la'
 
-if ohai['platform_family'] == 'rhel'
-  rhel_rel = ohai['platform_version'].split('.').first.to_i
-  if rhel_rel == 8
-    package :rpm do
-      vendor 'Alces Flight Ltd'
-    end
-  else
-    package :rpm do
-      vendor 'Alces Flight Ltd'
-    end
-  end
-elsif ohai['platform_family'] == 'debian'
-  package :deb do
-    vendor 'Alces Flight Ltd'
-  end
+# NOTE: The "flight-python-system-*" track the MAJOR.MINOR release of python
+#       This allows packages to hard specify the require minor versions without
+#       using upper/lower bounds.
+PYTHON_SYSTEM = VERSION.sub(/\.\d+\Z/, '')
+
+package :rpm do
+  vendor 'Alces Flight Ltd'
+  # repurposed 'priority' field to set RPM recommends/provides
+  # provides are prefixed with `:`
+  priority ":flight-python-system-#{PYTHON_SYSTEM}"
+end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+  # repurposed 'section' field to set DEB recommends/provides
+  # entire section is prefixed with `:` to trigger handling
+  # provides are further prefixed with `:`
+  section "::flight-python-system-#{PYTHON_SYSTEM}"
 end
