@@ -60,9 +60,9 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-desktop >= 1.4.0'
+  runtime_dependency 'flight-desktop >= 1.5.0'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'flight-action-api (>= 1.4.0)'
+  runtime_dependency 'flight-desktop (>= 1.5.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
