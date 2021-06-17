@@ -62,36 +62,36 @@ build do
   copy 'api/etc/file-manager-api.yaml', File.join(install_dir, 'etc/file-manager-api.yaml.reference')
 
   # Move the config into the core location
-  src = File.join project_dir, 'api/etc/file-manager-api.yaml'
-  dst = '/opt/flight/etc/file-manager-api.yaml'
+  src_config = File.join project_dir, 'api/etc/file-manager-api.yaml'
+  dst_config = '/opt/flight/etc/file-manager-api.yaml'
   block do
     # Remove the original config
-    FileUtils.mkdir_p File.dirname(dst)
-    FileUtils.rm_f dst
+    FileUtils.mkdir_p File.dirname(dst_config)
+    FileUtils.rm_f dst_config
 
     # Update the relative path expansion note
-    config = File.read(src).gsub(/#>>path<<.*(\n#.*)*(?=\n#--)/, <<~MSG.chomp)
+    config = File.read(src_config).gsub(/#>>path<<.*(\n#.*)*(?=\n#--)/, <<~MSG.chomp)
       # The path maybe absolute or relative. All relative paths are expanded from:
       # /opt/flight
     MSG
 
     # Write the updated config
-    File.write(dst, config)
+    File.write(dst_config, config)
   end
-  project.extra_package_file dst
+  project.extra_package_file dst_config
 
   # Move the libexec script into place
-  src = File.join project_dir, 'api/libexec/cloudcmd.sh'
-  dst = '/opt/flight/libexec/file-manager-api/cloudcmd.sh'
+  src_libexec = File.join project_dir, 'api/libexec/cloudcmd.sh'
+  dst_libexec = '/opt/flight/libexec/file-manager-api/cloudcmd.sh'
   block do
     # Remove the existing file
-    FileUtils.mkdir_p File.dirname(dst)
-    FileUtils.rm_f dst
+    FileUtils.mkdir_p File.dirname(dst_libexec)
+    FileUtils.rm_f dst_libexec
 
     # Copy the file into place
-    FileUtils.cp src, dst
+    FileUtils.cp src_libexec, dst_libexec
   end
-  project.extra_package_file dst
+  project.extra_package_file dst_libexec
 
   # Installs the gems to the shared `vendor/share`
   flags = [
