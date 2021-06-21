@@ -7,7 +7,7 @@ NOW=2021.4
 NEXT=2021.5
 VERSION=${NOW}.0
 TAG=$(echo "$VERSION" | sed "s/~/-/g")
-REL=1
+REL=2
 
 if [ -f /etc/redhat-release ]; then
   echo "Building RPM package..."
