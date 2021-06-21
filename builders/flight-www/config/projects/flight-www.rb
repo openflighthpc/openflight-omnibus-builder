@@ -47,6 +47,7 @@ end
 build_iteration '1'
 
 dependency 'preparation'
+dependency 'enforce-flight-runway'
 dependency 'flight-www'
 dependency 'flight-landing-page'
 dependency 'flight-cert'
