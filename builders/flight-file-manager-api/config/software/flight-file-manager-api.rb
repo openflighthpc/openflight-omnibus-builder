@@ -58,9 +58,6 @@ build do
     copy File.join('api', file), File.expand_path("#{install_dir}/#{file}/..")
   end
 
-  # Copy the un-modified reference config in place
-  copy 'api/etc/file-manager-api.yaml', File.join(install_dir, 'etc/file-manager-api.yaml.reference')
-
   # Move the config into the core location
   src_config = File.join project_dir, 'api/etc/file-manager-api.yaml'
   dst_config = '/opt/flight/etc/file-manager-api.yaml'
@@ -69,14 +66,8 @@ build do
     FileUtils.mkdir_p File.dirname(dst_config)
     FileUtils.rm_f dst_config
 
-    # Update the relative path expansion note
-    config = File.read(src_config).gsub(/#>>path<<.*(\n#.*)*(?=\n#--)/, <<~MSG.chomp)
-      # The path maybe absolute or relative. All relative paths are expanded from:
-      # /opt/flight
-    MSG
-
     # Write the updated config
-    File.write(dst_config, config)
+    File.write(dst_config, File.read(src_config))
   end
   project.extra_package_file dst_config
 
