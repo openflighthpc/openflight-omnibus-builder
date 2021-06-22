@@ -49,13 +49,14 @@ build do
 
   # Moves the project into place
   [
-    'package.json', 'yarn.lock', 'src',
+    'package.json', 'yarn.lock', 'src', 'lib',
     'LICENSE.txt',
     #'README.md',
   ].each do |file|
     copy File.join('backend', file), File.expand_path("#{install_dir}/backend/#{file}/..")
   end
 
+  command "cd #{install_dir}/backend/lib/cloudcmd && /opt/flight/bin/yarn install && /opt/flight/bin/yarn run build", env: env
   command "cd #{install_dir}/backend && /opt/flight/bin/yarn install", env: env
 
   block do
