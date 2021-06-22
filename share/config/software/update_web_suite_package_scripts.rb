@@ -83,21 +83,24 @@ build do
     configure = if File.exists? configure_script
                   File.read(configure_script).chomp
                 else
-                  "/opt/flight/bin/flight service configure --force #{service} >/dev/null 2>&1"
+                  "${flight_ROOT}/bin/flight service configure --force #{service} >/dev/null 2>&1"
                 end
 
     rendered[:postinst] = <<~POSTINST
       #{HEADER}
+      # Ensure flight_ROOT is set correctly
+      flight_ROOT=/opt/flight
+
       # Run the configuration
       #{configure}
 
       # Check if the service is already running and restart it
-      if /opt/flight/bin/flight service status #{service} | grep active >/dev/null 2>&1 ; then
-        /opt/flight/bin/flight service restart #{service} >/dev/null 2>&1
+      if ${flight_ROOT}/bin/flight service status #{service} | grep active >/dev/null 2>&1 ; then
+        ${flight_ROOT}/bin/flight service restart #{service} >/dev/null 2>&1
       fi
 
       # Reload flight-www to pick up the new config
-      /opt/flight/bin/flight service reload www 1>/dev/null 2>&1
+      ${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
 
       exit 0
     POSTINST
@@ -107,10 +110,13 @@ build do
     # Any changes made here will likely need to be duplicated
     rendered[:prerm] = <<~PRERM
       #{HEADER}
+      # Ensure flight_ROOT is set correctly
+      flight_ROOT=/opt/flight
+
       # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
       if [ "$1" == "0" -o "$1" == "remove" ]; then
         # Stop the service
-        /opt/flight/bin/flight service stop #{service} >/dev/null 2>&1
+        ${flight_ROOT}/bin/flight service stop #{service} >/dev/null 2>&1
       fi
 
       exit 0
@@ -119,8 +125,11 @@ build do
     # Render postrm
     rendered[:postrm] = <<~POSTRM
       #{HEADER}
+      # Ensure flight_ROOT is set correctly
+      flight_ROOT=/opt/flight
+
       # Reload flight-www to remove the proxy configuration
-      /opt/flight/bin/flight service reload www 1>/dev/null 2>&1
+      ${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
 
       exit 0
     POSTRM

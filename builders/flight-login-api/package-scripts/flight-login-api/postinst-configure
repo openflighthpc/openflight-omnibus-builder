@@ -1,8 +1,8 @@
-secret_file=/opt/flight/etc/shared-secret.conf
+secret_file=${flight_ROOT}/etc/shared-secret.conf
 if [ ! -f "${secret_file}" ] ; then
     date +%s.%N | sha256sum | cut -c 1-40 > "${secret_file}"
     chmod 0400 "${secret_file}"
 fi
 
 # Added for best practice
-/opt/flight/bin/flight service configure --force login-api
+${flight_ROOT}/bin/flight service configure --force login-api
