@@ -31,8 +31,12 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.5.0'
-override 'flight-desktop', version: VERSION
+VERSION = '1.5.1'
+
+# A new git version has not been created,
+# But due to the change in the system version, a bug release has been made
+GIT_VERSION = '1.5.0'
+override 'flight-desktop', version: GIT_VERSION
 
 build_version VERSION
 build_iteration 1
@@ -50,7 +54,15 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-DESKTOP_SYSTEM = '1.0'
+# The original build of flight-desktop hard coded /usr/bin/websockify
+# which made it incompatible with flight-websockify
+# These versions have been released as flight-desktop-system-1.0
+#
+# The current build patches the path to be /opt/flight/opt/websockify/bin/websockify
+# and is only compatible with flight-websockify
+# These versions have been released as flight-desktop-system-1.1
+
+DESKTOP_SYSTEM = '1.1'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-desktop-types'

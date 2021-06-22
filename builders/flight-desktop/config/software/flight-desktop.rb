@@ -24,6 +24,9 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+
+require 'find'
+
 name 'flight-desktop'
 default_version '0.0.0'
 
@@ -68,5 +71,11 @@ build do
       File.expand_path("#{install_dir}/etc/config.yml"),
       config.to_yaml
     )
+
+    # Patch /usr/bin/websockify to /opt/flight/opt/websockify/bin/websockify
+    Find.find(File.join(install_dir, 'lib')).each do |file|
+      next unless File.file? file
+      File.write file, File.read(file).gsub('/usr/bin/websockify', '/opt/flight/opt/websockify/bin/websockify')
+    end
   end
 end
