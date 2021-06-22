@@ -31,15 +31,11 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.5.1'
-
-# A new git version has not been created,
-# But due to the change in the system version, a bug release has been made
-GIT_VERSION = '1.5.0'
-override 'flight-desktop', version: GIT_VERSION
+VERSION = '1.5.0'
+override 'flight-desktop', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-desktop'
@@ -60,9 +56,9 @@ exclude '**/bundler/git'
 #
 # The current build patches the path to be /opt/flight/opt/websockify/bin/websockify
 # and is only compatible with flight-websockify
-# These versions have been released as flight-desktop-system-1.1
+# These versions have also been released as flight-desktop-system-1.1
 
-DESKTOP_SYSTEM = '1.1'
+DESKTOP_SYSTEM = ['1.0', '1.1'].map { |v| ":flight-desktop-system-#{v}" }.join(' ')
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-desktop-types'
@@ -111,7 +107,7 @@ if ohai['platform_family'] == 'rhel'
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
       # provides are prefixed with `:`
-      priority "flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+      priority "flight-howto-system-1.0 #{DESKTOP_SYSTEM}"
     end
   end
 end
@@ -121,5 +117,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section ":netpbm x11-apps apg websockify flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+  section ":netpbm x11-apps apg websockify flight-howto-system-1.0 #{DESKTOP_SYSTEM}"
 end
