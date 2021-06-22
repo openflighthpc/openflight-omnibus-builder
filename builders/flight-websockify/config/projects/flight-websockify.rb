@@ -53,7 +53,13 @@ license_file 'LICENSE.txt'
 
 description 'Alternative openFlightHPC build of websockify'
 
-strip_build true
+# The 'strip_build false' option introduced in the OpenFlightHPC version
+# does not appear to function correctly. The Stripper is breaking numpy's
+# fortran library
+#
+# For the time being, the upstream version of omnibus is being used
+#
+# strip_build false
 
 exclude '**/.git'
 exclude '**/.gitkeep'

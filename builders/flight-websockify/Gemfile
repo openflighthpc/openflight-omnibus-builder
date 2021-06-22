@@ -26,6 +26,11 @@
 #===============================================================================
 source 'https://rubygems.org'
 
-gem 'omnibus', git: 'https://github.com/openflighthpc/omnibus'
+# The strip_build feature introduced in the OpenFlightHPC version of omnibus
+# is breaking flight-websockify build of numpy. It appears the 'strip_build'
+# flag is not being properly respected
+#gem 'omnibus', git: 'https://github.com/openflighthpc/omnibus'
+
+gem 'omnibus'
 gem 'omnibus-software', github: 'chef/omnibus-software'
 
