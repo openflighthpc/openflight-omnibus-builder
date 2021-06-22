@@ -29,10 +29,13 @@
 # NOTE: This file is managed by 'update_web_suite_package_scripts' software
 #       definition. Any changes will be lost on the next build.
 
+# Ensure flight_ROOT is set correctly
+flight_ROOT=/opt/flight
+
 # Run the configuration
 # Migrate the old files from usr/share to var/lib
-old=/opt/flight/usr/share/file-manager-api
-new=/opt/flight/var/lib/file-manager-api
+old=${flight_ROOT}/usr/share/file-manager-api
+new=${flight_ROOT}/var/lib/file-manager-api
 if ls "$old" >/dev/null 2>&1; then
   mkdir -p "$new" >/dev/null
   ls "$old" | xargs -I {} mv "$old/{}" "$new"
@@ -40,14 +43,14 @@ if ls "$old" >/dev/null 2>&1; then
 fi
 
 # Added for best practive
-/opt/flight/bin/flight service configure --force file-manager-api >/dev/null 2>&1
+${flight_ROOT}/bin/flight service configure --force file-manager-api >/dev/null 2>&1
 
 # Check if the service is already running and restart it
-if /opt/flight/bin/flight service status file-manager-api | grep active >/dev/null 2>&1 ; then
-  /opt/flight/bin/flight service restart file-manager-api >/dev/null 2>&1
+if ${flight_ROOT}/bin/flight service status file-manager-api | grep active >/dev/null 2>&1 ; then
+  ${flight_ROOT}/bin/flight service restart file-manager-api >/dev/null 2>&1
 fi
 
 # Reload flight-www to pick up the new config
-/opt/flight/bin/flight service reload www 1>/dev/null 2>&1
+${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
 
 exit 0

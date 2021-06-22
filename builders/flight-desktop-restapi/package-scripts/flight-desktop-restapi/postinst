@@ -29,15 +29,18 @@
 # NOTE: This file is managed by 'update_web_suite_package_scripts' software
 #       definition. Any changes will be lost on the next build.
 
+# Ensure flight_ROOT is set correctly
+flight_ROOT=/opt/flight
+
 # Run the configuration
-/opt/flight/bin/flight service configure --force desktop-restapi >/dev/null 2>&1
+${flight_ROOT}/bin/flight service configure --force desktop-restapi >/dev/null 2>&1
 
 # Check if the service is already running and restart it
-if /opt/flight/bin/flight service status desktop-restapi | grep active >/dev/null 2>&1 ; then
-  /opt/flight/bin/flight service restart desktop-restapi >/dev/null 2>&1
+if ${flight_ROOT}/bin/flight service status desktop-restapi | grep active >/dev/null 2>&1 ; then
+  ${flight_ROOT}/bin/flight service restart desktop-restapi >/dev/null 2>&1
 fi
 
 # Reload flight-www to pick up the new config
-/opt/flight/bin/flight service reload www 1>/dev/null 2>&1
+${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
 
 exit 0

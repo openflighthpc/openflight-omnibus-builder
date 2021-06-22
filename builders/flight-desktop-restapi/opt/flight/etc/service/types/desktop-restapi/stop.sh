@@ -45,7 +45,7 @@ fi
 mkdir -p $(dirname "$PUMA_LOG_FILE")
 
 # Stop puma
-"${flight_ROOT}"/bin/flexec ruby /opt/flight/opt/desktop-restapi/bin/pumactl stop \
+"${flight_ROOT}"/bin/flexec ruby ${flight_ROOT}/opt/desktop-restapi/bin/pumactl stop \
   --pidfile $1 \
-  --config-file /opt/flight/opt/desktop-restapi/config/puma.rb \
+  --config-file ${flight_ROOT}/opt/desktop-restapi/config/puma.rb \
   >>"$PUMA_LOG_FILE" 2>&1
