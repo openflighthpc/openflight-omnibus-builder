@@ -1,0 +1,25 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+# NOTE: The hard set versions have been maintained from the original
+#       build method. It *may* be possible to update them
+appdirs = ">1.4.0"
+autorepr = "==0.3.0"
+packaging = "==16.8"
+prompt-toolkit = "==1.0.9"
+pyparsing = "==2.1.10"
+requests = "==2.12.5"
+requests-file = "==1.4.1"
+six = "==1.10.0"
+terminaltables = "==3.1.0"
+wcwidth = "==0.2.5"
+click = "==6.7"
+click_repl = { git = "https://github.com/alces-software/click-repl.git", editable = true, ref = "6a809b2af43054035027618f9fd37af4c31a8abc" }
+
+[dev-packages]
+
+[requires]
+python_version = "3.6"
