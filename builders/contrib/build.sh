@@ -7,8 +7,6 @@ if which yum &>/dev/null; then
 
     rpmbuild --rebuild apg-2.3.0b-24.el7.src.rpm
     mv $HOME/rpmbuild/RPMS/*/apg-2.3.0b-*.rpm pkg
-    rpmbuild --rebuild python-websockify-0.8.0-13.el7.src.rpm
-    mv $HOME/rpmbuild/RPMS/noarch/python3-websockify-0.8.0-*.rpm pkg
   else
     echo "$0: not required/supported on CentOS 7"
   fi
