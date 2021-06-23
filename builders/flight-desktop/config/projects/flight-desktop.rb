@@ -121,5 +121,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section ":netpbm x11-apps apg websockify flight-howto-system-1.0 #{DESKTOP_SYSTEM}"
+  section ":flight-howto-system-1.0 #{DESKTOP_SYSTEM}"
 end
