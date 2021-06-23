@@ -7,6 +7,36 @@ if which yum &>/dev/null; then
 
     rpmbuild --rebuild apg-2.3.0b-24.el7.src.rpm
     mv $HOME/rpmbuild/RPMS/*/apg-2.3.0b-*.rpm pkg
+
+    # Grab xorg-x11-apps
+    rm -f xorg-x11-apps-7.7-21.el8.x86_64.rpm
+    wget http://mirror.centos.org/centos/8/PowerTools/x86_64/os/Packages/xorg-x11-apps-7.7-21.el8.x86_64.rpm
+    x_expected=8f799cd2453e0737e4cf1027d237c5673df4f2b7bb75b2246bcbedf966f77f99
+    x_actual=$(sha256sum xorg-x11-apps-7.7-21.el8.x86_64.rpm | cut -f1 -d ' ')
+    if [ "$x_expected" == "$x_actual" ]; then
+      mv -f xorg-x11-apps-7.7-21.el8.x86_64.rpm pkg/
+    else
+      cat <<-EOF
+  The shasums of xog-x11-apps did not match!
+  Expected: $x_expected
+  Actual: $x_actual
+EOF
+    fi
+
+    # Grab netpbm
+    rm -f netpbm-progs-10.82.00-6.el8.x86_64.rpm
+    wget http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/netpbm-progs-10.82.00-6.el8.x86_64.rpm
+    net_expected=1d7c2205add9cf4963bf1fb5dd229a7a5aada451358858a0dccc9afdb7ca4e19
+    net_actual=$(sha256sum netpbm-progs-10.82.00-6.el8.x86_64.rpm | cut -f1 -d ' ')
+    if [ "$net_expected" == "$net_actual" ]; then
+      mv -f netpbm-progs-10.82.00-6.el8.x86_64.rpm pkg/
+    else
+      cat <<-EOF
+  The shasums of netpbm-progs did not match!
+  Expected: $net_expected
+  Actual: $net_actual
+EOF
+    fi
   else
     echo "$0: not required/supported on CentOS 7"
   fi
