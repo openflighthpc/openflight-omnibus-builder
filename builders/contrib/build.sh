@@ -22,21 +22,6 @@ if which yum &>/dev/null; then
   Actual: $x_actual
 EOF
     fi
-
-    # Grab netpbm
-    rm -f netpbm-progs-10.82.00-6.el8.x86_64.rpm
-    wget http://mirror.centos.org/centos/8/AppStream/x86_64/os/Packages/netpbm-progs-10.82.00-6.el8.x86_64.rpm
-    net_expected=1d7c2205add9cf4963bf1fb5dd229a7a5aada451358858a0dccc9afdb7ca4e19
-    net_actual=$(sha256sum netpbm-progs-10.82.00-6.el8.x86_64.rpm | cut -f1 -d ' ')
-    if [ "$net_expected" == "$net_actual" ]; then
-      mv -f netpbm-progs-10.82.00-6.el8.x86_64.rpm pkg/
-    else
-      cat <<-EOF
-  The shasums of netpbm-progs did not match!
-  Expected: $net_expected
-  Actual: $net_actual
-EOF
-    fi
   else
     echo "$0: not required/supported on CentOS 7"
   fi
