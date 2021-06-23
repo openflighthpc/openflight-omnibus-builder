@@ -56,7 +56,14 @@ build do
     copy File.join('backend', file), File.expand_path("#{install_dir}/backend/#{file}/..")
   end
 
-  command "cd #{install_dir}/backend/lib/cloudcmd && /opt/flight/bin/yarn install && /opt/flight/bin/yarn run build", env: env
+  # Build cloudcmd and then remove the unwanted files.
+  command "cd #{install_dir}/backend/lib/cloudcmd " \
+          "&& /opt/flight/bin/yarn install " \
+          "&& /opt/flight/bin/yarn run build", env: env
+  %w(bin client css dist-dev docker html test).each do |path|
+    delete File.expand_path("#{install_dir}/backend/lib/cloudcmd/#{path}")
+  end
+
   command "cd #{install_dir}/backend && /opt/flight/bin/yarn install", env: env
 
   block do
