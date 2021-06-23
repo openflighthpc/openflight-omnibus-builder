@@ -42,6 +42,16 @@ build do
     copy file, File.join(install_dir, file)
   end
 
+  # Add flight-directory lib to the PYTHON_PATH, using venv .pth magic
+  # https://stackoverflow.com/a/10739838
+  sys = overrides[:python_system] || raise("The python_system has not been overriden")
+  lib = File.join(install_dir, 'lib')
+  pth = File.join(install_dir, ".venv/lib/python#{sys}/site-packages/directory.pth")
+  block do
+    FileUtils.mkdir_p File.dirname(pth)
+    File.write(pth, lib)
+  end
+
   # Builds the virtual env
   command(<<-CMD, env: env)
     cd #{install_dir}

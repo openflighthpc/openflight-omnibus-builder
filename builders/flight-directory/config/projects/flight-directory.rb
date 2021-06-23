@@ -40,6 +40,7 @@ build_iteration 1
 PYTHON_SYSTEM = '3.8'
 override 'sqlite3', version: '3.32.3.0'
 override 'enforce-flight-python', version: PYTHON_SYSTEM
+override 'flight-directory-requirements', python_system: PYTHON_SYSTEM
 
 dependency 'preparation'
 dependency 'enforce-flight-python'

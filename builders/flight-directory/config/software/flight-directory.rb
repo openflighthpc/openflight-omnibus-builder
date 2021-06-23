@@ -56,11 +56,6 @@ build do
   dir_config_py = "#{install_dir}/lib/directory/config.py"
   seds = [
     {
-      file: "#{install_dir}/lib/directory/directory",
-      find: "#!/usr/bin/env python3",
-      replace: "#!#{File.join(install_dir, 'bin/venv-python')}"
-    },
-    {
       file: appliance_config_py,
       find: "appliance_dir = .*",
       replace: "appliance_dir = '#{install_dir}'"
