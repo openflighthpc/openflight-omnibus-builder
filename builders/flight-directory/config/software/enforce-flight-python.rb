@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,37 +24,20 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-directory-requirements'
-default_version '0.0.0'
 
+name "enforce-flight-python"
+description "enforce existence of flight-python"
+
+# NOTE: This needs to match the MAJOR.MINOR version of flight-python
+default_version "0.0"
+
+license :project_license
 skip_transitive_dependency_licensing true
 
-source path: File.expand_path('../../lib', __dir__)
-
 build do
-  env = with_embedded_path("PIPENV_VENV_IN_PROJECT" => 'true')
-
-  # Place the openflight version of python onto the path
-  env['PATH'] = "/opt/flight/opt/python/bin:#{env['PATH']}"
-
-  # Copies the pip files to the install dir
-  ['Pipfile', 'Pipfile.lock'].each do |file|
-    copy file, File.join(install_dir, file)
-  end
-
-  # Builds the virtual env
-  command(<<-CMD, env: env)
-    cd #{install_dir}
-    pipenv install --python /opt/flight/opt/python/bin/python --deploy
-  CMD
-
-  # Generates the bin symlinks
-  block do
-    Dir.chdir install_dir do
-      FileUtils.mkdir_p 'bin'
-      Dir.glob('.venv/bin/*').each do |path|
-        FileUtils.ln_s File.join('..', path), File.join('bin', File.basename(path))
-      end
-    end
+  raise "Flight Python is not installed!" if ! File.exists?('/opt/flight/bin/python3')
+  python_system = `/opt/flight/bin/python3 --version`.chomp.split(' ').last.gsub(/\.\d+\Z/, '')
+  unless python_system == version
+    raise "Flight Python has the incorrect system version: #{python_system} (expected #{version})"
   end
 end

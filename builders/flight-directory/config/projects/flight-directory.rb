@@ -37,11 +37,16 @@ override 'flight-directory', version: VERSION
 build_version VERSION
 build_iteration 1
 
+PYTHON_SYSTEM = '3.8'
 override 'sqlite3', version: '3.32.3.0'
+override 'enforce-flight-python', version: PYTHON_SYSTEM
 
 dependency 'preparation'
+dependency 'enforce-flight-python'
 dependency 'flight-directory'
 dependency 'version-manifest'
+
+runtime_dependency "flight-python-system-#{PYTHON_SYSTEM}"
 
 # This override is required to provide improved parity with the
 # version of `openssl` available in RHEL8 (1.1.1c at the time of

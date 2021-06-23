@@ -22,4 +22,4 @@ click_repl = { git = "https://github.com/alces-software/click-repl.git", editabl
 [dev-packages]
 
 [requires]
-python_version = "3.6"
+python_version = "3.8"
