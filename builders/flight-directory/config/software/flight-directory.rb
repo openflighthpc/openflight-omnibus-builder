@@ -58,7 +58,7 @@ build do
     {
       file: "#{install_dir}/lib/directory/directory",
       find: "#!/usr/bin/env python3",
-      replace: "#!#{File.join(install_dir, 'bin/python3')}"
+      replace: "#!#{File.join(install_dir, 'bin/venv-python')}"
     },
     {
       file: appliance_config_py,
