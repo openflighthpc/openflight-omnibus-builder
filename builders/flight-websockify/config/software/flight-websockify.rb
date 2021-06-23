@@ -29,7 +29,7 @@ default_version '0.0.0'
 
 source path: File.expand_path('../../lib', __dir__)
 
-license 'Apache-2.0'
+license 'LGPLv3'
 license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
