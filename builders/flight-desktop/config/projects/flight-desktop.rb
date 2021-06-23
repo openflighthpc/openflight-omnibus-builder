@@ -63,6 +63,13 @@ runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-desktop-types'
 
+# NOTE: Ideally flight-desktop would function with either flight-websockify or
+# python-websockify. However this is not possible due to a hard coded path.
+#
+# Until this path issue is resolved, flight-websockify is included as a dependency.
+# This ensures flight-desktop continues to function; regardless of the API version.
+runtime_dependency 'flight-websockify'
+
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
 howto_relative = "opt/flight/usr/share/howto/flight-desktop.md"
@@ -97,10 +104,7 @@ if ohai['platform_family'] == 'rhel'
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
       # provides are prefixed with `:`
-      # neither 'apg' or 'python-websockify' are available on RHEL8,
-      # but we provide them in the openflight repos.
-      # note: xorg-x11-apps is only available in PowerTools
-      priority "xorg-x11-apps netpbm-progs apg python3-websockify flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+      priority "flight-howto-system-1.0 #{DESKTOP_SYSTEM}"
     end
   else
     package :rpm do
