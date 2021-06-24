@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "99d4e6fd7ffcaf668e329f83e425e8e3d95185cf8371cf48f7897bfaa43b9762"
+            "sha256": "2ebdb76a9ba0dd3c44491736133d54c7f7f529ff7f3b8f1e7401a92431e86a92"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,14 +16,6 @@
         ]
     },
     "default": {
-        "appdirs": {
-            "hashes": [
-                "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41",
-                "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"
-            ],
-            "index": "pypi",
-            "version": "==1.4.4"
-        },
         "autorepr": {
             "hashes": [
                 "sha256:1d9010d14fb325d3961e3aa73692685563f97d6ba4a2f0f735329fb37422599c",
@@ -46,14 +38,6 @@
             "git": "https://github.com/alces-software/click-repl.git",
             "ref": "6a809b2af43054035027618f9fd37af4c31a8abc"
         },
-        "packaging": {
-            "hashes": [
-                "sha256:5d50835fdf0a7edf0b55e311b7c887786504efea1177abd7e69329a8e5ea619e",
-                "sha256:99276dc6e3a7851f32027a68f1095cd3f77c148091b092ea867a351811cfe388"
-            ],
-            "index": "pypi",
-            "version": "==16.8"
-        },
         "prompt-toolkit": {
             "hashes": [
                 "sha256:2a90e971bd5cb958a80ce35507c97e063521b22dfd85ce05b5705c347d1193ed",
@@ -62,20 +46,6 @@
             ],
             "index": "pypi",
             "version": "==1.0.9"
-        },
-        "pyparsing": {
-            "hashes": [
-                "sha256:0aa6e8d8c3f9c447a95a33bb04b103ead630121c3f4233e2980348cecf8b69c8",
-                "sha256:0fef8411ad305909b1a679471d66f25ef4477f24666598deceb4bb640c2eb6c2",
-                "sha256:4fa446b1c36509e75d883a1a552b51dda9b82bfd914a24ded17ceb5d90b53cc5",
-                "sha256:67101d7acee692962f33dd30b5dce079ff532dd9aa99ff48d52a3dad51d2fe84",
-                "sha256:811c3e7b0031021137fc83e051795025fcb98674d07eb8fe922ba4de53d39188",
-                "sha256:a00f6e57bf4e2b3d999223d36c14d839f12145d5b1f12126124424e8c43d856e",
-                "sha256:a163f9079b84da728e4967e3f36476ed168d86b2fc2f49c6e609125600f9d60b",
-                "sha256:a27bf672302765ab04ed5c976dd44c55c0702f7a25a5e5e78bc91207d5b07da4"
-            ],
-            "index": "pypi",
-            "version": "==2.1.10"
         },
         "requests": {
             "hashes": [
@@ -95,11 +65,11 @@
         },
         "six": {
             "hashes": [
-                "sha256:0ff78c403d9bccf5a425a6d31a12aa6b47f1c21ca4dc2573a7e2f32a97335eb1",
-                "sha256:105f8d68616f8248e24bf0e9372ef04d3cc10104f1980f54d57b2ce73a5ad56a"
+                "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
+                "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
             ],
-            "index": "pypi",
-            "version": "==1.10.0"
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "version": "==1.16.0"
         },
         "terminaltables": {
             "hashes": [
@@ -113,7 +83,6 @@
                 "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784",
                 "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"
             ],
-            "index": "pypi",
             "version": "==0.2.5"
         }
     },
