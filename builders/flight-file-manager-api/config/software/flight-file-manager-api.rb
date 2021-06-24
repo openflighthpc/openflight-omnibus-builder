@@ -52,23 +52,37 @@ build do
   # Moves the api project into place
   # XXX: Add an api specific README.md to the upstream sources
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'etc/flight-file-manager-api.yaml', 'config',
-    'app', 'lib', 'libexec', 'README.md', 'app.rb', 'config.ru'
+    'Gemfile', 'Gemfile.lock', 'bin', 'config',
+    'app', 'lib', 'README.md', 'app.rb', 'config.ru'
   ].each do |file|
     copy File.join('api', file), File.expand_path("#{install_dir}/#{file}/..")
   end
 
-  # Update the config
+  # Move the config into the core location
+  src_config = File.join project_dir, 'api/etc/file-manager-api.yaml'
+  dst_config = '/opt/flight/etc/file-manager-api.yaml'
   block do
-    path = File.join(install_dir, 'etc/flight-file-manager-api.yaml')
-    content = [
-      File.read(path),
-      "data_dir: /opt/flight/var/lib/file-manager-api",
-      "shared_secret_path: /opt/flight/etc/shared-secret.conf",
-      ''
-    ].join("\n")
-    File.write path, content
+    # Remove the original config
+    FileUtils.mkdir_p File.dirname(dst_config)
+    FileUtils.rm_f dst_config
+
+    # Write the updated config
+    File.write(dst_config, File.read(src_config))
   end
+  project.extra_package_file dst_config
+
+  # Move the libexec script into place
+  src_libexec = File.join project_dir, 'api/libexec/cloudcmd.sh'
+  dst_libexec = '/opt/flight/libexec/file-manager-api/cloudcmd.sh'
+  block do
+    # Remove the existing file
+    FileUtils.mkdir_p File.dirname(dst_libexec)
+    FileUtils.rm_f dst_libexec
+
+    # Copy the file into place
+    FileUtils.cp src_libexec, dst_libexec
+  end
+  project.extra_package_file dst_libexec
 
   # Installs the gems to the shared `vendor/share`
   flags = [

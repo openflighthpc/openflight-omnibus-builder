@@ -1,6 +1,5 @@
-# vim: set filetype=sh:
 #==============================================================================
-# Copyright (C) 2021-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,6 +24,7 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+source 'https://rubygems.org'
 
-RACK_ENV=production
-PUMA_LOG_FILE=/opt/flight/var/log/file-manager-api/puma.log
+gem 'omnibus', '~> 6.0'
+gem 'omnibus-software', github: 'chef/omnibus-software'

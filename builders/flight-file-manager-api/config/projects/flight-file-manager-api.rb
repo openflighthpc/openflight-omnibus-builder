@@ -32,10 +32,10 @@ friendly_name 'Flight File Manager API'
 install_dir '/opt/flight/opt/file-manager-api'
 
 VERSION = '1.2.0-a1'
-override 'flight-file-manager-api', version: VERSION
-override 'flight-file-manager-backend', version: VERSION
+override 'flight-file-manager-api', version: ENV.fetch('ALPHA', VERSION)
+override 'flight-file-manager-backend', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'
@@ -68,7 +68,7 @@ else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
 
-config_file File.join(install_dir, 'etc/flight-file-manager-api.yaml')
+config_file '/opt/flight/etc/file-manager-api.yaml'
 config_file '/opt/flight/etc/service/env/file-manager-api'
 
 require 'find'

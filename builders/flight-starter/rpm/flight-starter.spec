@@ -14,6 +14,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch:      noarch
 Requires:       flight-runway, flight-starter-banner => %{_flight_pkg_now}.0~, flight-starter-banner < %{_flight_pkg_next}.0~, flight-starter-system-1.0
+Requires:       flight-web-suite-utils => 1.0.0~ flight-web-suite-utils < 1.1.0~
 %{?el8:Recommends:    flight-plugin-system-starter}
 
 # Required in the post install script

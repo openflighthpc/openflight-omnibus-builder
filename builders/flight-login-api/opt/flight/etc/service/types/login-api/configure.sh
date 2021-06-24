@@ -34,10 +34,10 @@ for a in "$@"; do
   IFS="=" read k v <<< "${a}"
   case $k in
     cookieDomain)
-      if cat "$env_file" | grep 'FLIGHT_LOGIN_SSO_COOKIE_DOMAIN' ; then
-        sed -i "s/FLIGHT_LOGIN_SSO_COOKIE_DOMAIN=.*/FLIGHT_LOGIN_SSO_COOKIE_DOMAIN=$v/g" "$env_file"
+      if cat "$env_file" | grep 'flight_LOGIN_API_sso_cookie_domain' ; then
+        sed -i "s/flight_LOGIN_API_sso_cookie_domain=.*/flight_LOGIN_API_sso_cookie_domain=$v/g" "$env_file"
       else
-        echo "FLIGHT_LOGIN_SSO_COOKIE_DOMAIN=$v" >> "$env_file"
+        echo "flight_LOGIN_API_sso_cookie_domain=$v" >> "$env_file"
       fi
       ;;
     *)

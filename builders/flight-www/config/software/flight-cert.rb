@@ -29,8 +29,6 @@ default_version '0.0.0'
 
 source git: 'https://github.com/openflighthpc/flight-cert'
 
-dependency 'enforce-flight-runway'
-
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
