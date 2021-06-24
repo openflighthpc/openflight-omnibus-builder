@@ -27,7 +27,7 @@
 name 'flight-web-suite-utils'
 maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/flight-web-suite-utils'
-friendly_name 'Flight Websuite Utils'
+friendly_name 'Flight Web Suite Utils'
 
 install_dir '/opt/flight/opt/web-suite-utils'
 
@@ -43,7 +43,7 @@ dependency 'version-manifest'
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Miscellaneous packages for flight-web-suite'
+description 'Miscellaneous utilities for flight-web-suite'
 
 runtime_dependency 'flight-starter-system-1.0'
 
