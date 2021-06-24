@@ -27,7 +27,7 @@
 name 'flight-websockify'
 maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/builders/flight-websockify'
-friendly_name 'Flight Certbot'
+friendly_name 'Flight Websockify'
 
 install_dir '/opt/flight/opt/websockify'
 
@@ -38,8 +38,6 @@ override 'enforce-flight-python', version: PYTHON_SYSTEM
 
 build_version VERSION
 build_iteration 2
-
-override 'sqlite3', version: '3.32.3.0'
 
 dependency 'preparation'
 dependency 'enforce-flight-python'
