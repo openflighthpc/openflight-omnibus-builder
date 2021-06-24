@@ -50,25 +50,10 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-# The original build of flight-desktop hard coded /usr/bin/websockify
-# which made it incompatible with flight-websockify
-# These versions have been released as flight-desktop-system-1.0
-#
-# The current build patches the path to be /opt/flight/opt/websockify/bin/websockify
-# and is only compatible with flight-websockify
-# These versions have also been released as flight-desktop-system-1.1
-
-DESKTOP_SYSTEM = ['1.0', '1.1'].map { |v| ":flight-desktop-system-#{v}" }.join(' ')
+DESKTOP_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-desktop-types'
-
-# NOTE: Ideally flight-desktop would function with either flight-websockify or
-# python-websockify. However this is not possible due to a hard coded path.
-#
-# Until this path issue is resolved, flight-websockify is included as a dependency.
-# This ensures flight-desktop continues to function; regardless of the API version.
-runtime_dependency 'flight-websockify'
 
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
@@ -104,14 +89,14 @@ if ohai['platform_family'] == 'rhel'
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
       # provides are prefixed with `:`
-      priority "flight-howto-system-1.0 #{DESKTOP_SYSTEM}"
+      priority "apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   else
     package :rpm do
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
       # provides are prefixed with `:`
-      priority "flight-howto-system-1.0 #{DESKTOP_SYSTEM}"
+      priority "flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   end
 end
@@ -121,5 +106,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section ":flight-howto-system-1.0 #{DESKTOP_SYSTEM}"
+  section "apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
 end
