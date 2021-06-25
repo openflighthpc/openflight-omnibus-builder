@@ -273,27 +273,15 @@ build do
     RELOAD
 
     # Ensure all the scripts are up to date
-    updated = []
     [:start, :start_bin, :stop, :restart, :reload].each do |type|
       path = File.join(root_dir, paths[type])
       new = rendered[type]
       old = (File.exists?(path) ? File.read(path) : '')
       unless old == new
-        updated << path
         FileUtils.mkdir_p File.dirname(path)
         File.write path, new
         FileUtils.chmod 0775, path
       end
-    end
-
-    # Crash the build and prompt for the new files to be checked in!
-    # This helps ensure the updated version is in the repo and picked up
-    unless updated.empty?
-      raise <<~ERROR
-        The following puma scripts have been modified! Please check them in and restart the build.
-
-        #{updated.join("\n")}
-      ERROR
     end
   end
 end
