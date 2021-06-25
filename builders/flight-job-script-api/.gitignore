@@ -6,6 +6,14 @@ pkg/*
 bin/*
 files/**/cache/
 vendor
-vendor
 local
 opt/flight/libexec/job-script-api
+
+# Various generated files
+opt/flight/etc/service/types/*/reload.sh
+opt/flight/etc/service/types/*/restart.sh
+opt/flight/etc/service/types/*/start.sh
+opt/flight/etc/service/types/*/stop.sh
+package-scripts/*/postinst
+package-scripts/*/postrm
+package-scripts/*/prerm

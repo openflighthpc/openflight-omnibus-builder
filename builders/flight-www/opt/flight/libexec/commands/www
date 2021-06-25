@@ -1,7 +1,7 @@
 : '
 : NAME: www
 : SYNOPSIS: Manage the HTTPs server and SSL certificates
-: VERSION: 0.4.5
+: VERSION: 0.5.0-rc1
 : ROOT: true
 : '
 #==============================================================================
