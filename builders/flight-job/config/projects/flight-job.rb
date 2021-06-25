@@ -55,7 +55,7 @@ runtime_dependency 'flight-runway'
 runtime_dependency 'flight-jq'
 
 # Define the user-editable files
-config_file '/opt/flight/opt/job/etc/flight-job.yaml'
+config_file '/opt/flight/etc/job.yaml'
 config_file '/opt/flight/libexec/job/slurm/sbatch-wrapper.sh'
 
 # Moves the correct howto version into place

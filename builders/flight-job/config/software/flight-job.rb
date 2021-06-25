@@ -42,34 +42,15 @@ skip_transitive_dependency_licensing true
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
-  # Moves the project into place
-  block do
-    FileUtils.mkdir_p File.join(install_dir, 'etc')
-  end
   [
     'Gemfile', 'Gemfile.lock', 'bin/job', 'lib', 'LICENSE.txt', 'README.md',
-    'etc/flight-job.yaml', 'etc/state-maps/'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
   # Update the config
   block do
-    path = File.join(install_dir, 'etc/flight-job.yaml')
-    templates_dir = "/opt/flight/usr/share/job/templates"
-    slurm_dir = "/opt/flight/libexec/job/slurm"
     check_cron = '/opt/flight/libexec/job/check-cron.sh'
-    content = [
-      File.read(path),
-      "submit_script_path: /opt/flight/libexec/job/flight-slurm/submit.sh",
-      "monitor_script_path: /opt/flight/libexec/job/flight-slurm/monitor.sh",
-      "templates_dir: #{templates_dir}",
-      "check_cron: #{check_cron}",
-      ''
-    ].join("\n")
-    File.write path, content
-
-    # Cleanup and move check-cron.sh into place
     block do
       FileUtils.rm_rf File.dirname(check_cron)
       FileUtils.mkdir_p File.dirname(check_cron)
@@ -77,13 +58,11 @@ build do
     copy 'libexec/check-cron.sh', check_cron
     project.extra_package_file check_cron
 
-    # Cleanup the initial state of the slurm dir
+    slurm_dir = "/opt/flight/libexec/job/slurm"
     block do
       FileUtils.rm_rf slurm_dir
       FileUtils.mkdir_p slurm_dir
     end
-
-    # Copy the slurm scripts into place
     copy 'libexec/slurm', File.expand_path('..', slurm_dir)
     Find.find(File.join(project_dir, 'libexec/slurm')) do |f|
       if File.file?(f)
@@ -93,19 +72,31 @@ build do
       end
     end
 
-    # Cleanup the initial state of the templates directory
+    state_maps_dir = '/opt/flight/etc/job/state-maps'
+    block do
+      FileUtils.rm_rf state_maps_dir
+      FileUtils.mkdir_p state_maps_dir
+    end
+    Dir.glob(File.join(project_dir, 'etc/state-maps/*')).each do |file|
+      copy file, state_maps_dir
+    end
+    block do
+      Find.find(state_maps_dir).each do |file|
+        next unless File.file?(file)
+        $stdout.puts "Found state map file: #{file}"
+        project.extra_package_file file
+      end
+    end
+
+    templates_dir = "/opt/flight/usr/share/job/templates"
     block do
       FileUtils.rm_rf templates_dir
       FileUtils.mkdir_p templates_dir
     end
-
-    # Copy the example templates into place
     Dir.glob(File.join(project_dir, 'usr/share/*')).each do |dir|
       basename = File.basename(dir)
       copy File.join('usr/share', basename), templates_dir
     end
-
-    # Flag the entire templates dir as package files
     block do
       Find.find(templates_dir).each do |path|
         next unless File.file?(path)
