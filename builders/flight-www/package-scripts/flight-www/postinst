@@ -132,4 +132,10 @@ EOF
   fi
 fi
 
+# Ensure any custom configurations are applied
+/opt/flight/bin/flight service configure --force www >/dev/null 2>&1
+
+# Attempt to reload the nginx configuration
+/opt/flight/bin/flight service reload www >/dev/null 2>&1
+
 exit 0

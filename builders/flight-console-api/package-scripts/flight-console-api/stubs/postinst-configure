@@ -1,0 +1,32 @@
+# Update the session secret if unset
+env_file=${flight_ROOT}/etc/service/env/console-api
+mkdir -p $(dirname "${env_file}")
+var_name="flight_CONSOLE_API_session_secret"
+if [ -f "${env_file}" ] && grep -q "^${var_name}=" "${env_file}" ; then
+    # The secret has previously been generated.  We continue to use it.
+    :
+else
+    secret=$( date +%s.%N | sha256sum | cut -c 1-40 )
+    echo "${var_name}=${secret}" >> "${env_file}"
+    chmod 0400 "${env_file}"
+fi
+
+# Generate a private key if required
+priv_key=${flight_ROOT}/etc/console-api/id_rsa
+pub_key="$priv_key".pub
+if [ ! -f "$priv_key" ]; then
+  mkdir -p $(dirname "$priv_key")
+  ssh-keygen -b 4096 -t rsa -f "$priv_key" -q -N "" -C "Flight Console API Key"
+
+  # Ensure any existing public key is removed
+  rm -f "$pub_key"
+fi
+
+# Generate the public key if required
+if [ ! -f "$pub_key" ]; then
+  mkdir -p $(dirname "$pub_key")
+  ssh-keygen -y -f "$priv_key" > "$pub_key"
+fi
+
+# Added for best practice
+${flight_ROOT}/bin/flight service configure console-api --force --config '{}' >/dev/null 2>&1

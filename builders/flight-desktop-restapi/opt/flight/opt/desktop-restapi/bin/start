@@ -44,12 +44,15 @@ fi
 # Ensure the log directory exists
 mkdir -p $(dirname "$PUMA_LOG_FILE")
 
+# Determine the install dir
+install_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
+
 # Exec into the ruby/puma process so the PID does not change
-exec "${flight_ROOT}"/bin/flexec ruby /opt/flight/opt/desktop-restapi/bin/puma \
-  --config /opt/flight/opt/desktop-restapi/config/puma.rb \
+exec "${flight_ROOT}"/bin/flexec ruby $install_dir/bin/puma \
+  --config $install_dir/config/puma.rb \
   --pidfile "$pid_file" \
   --redirect-stdout "$PUMA_LOG_FILE" \
   --redirect-stderr "$PUMA_LOG_FILE" \
   --redirect-append \
-  --dir /opt/flight/opt/desktop-restapi \
+  --dir $install_dir \
   >>"${PUMA_LOG_FILE}" 2>&1

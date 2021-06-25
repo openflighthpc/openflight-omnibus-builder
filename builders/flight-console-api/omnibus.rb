@@ -40,6 +40,9 @@
 # Uncomment this line to change the default base directory to "local"
 # -------------------------------------------------------------------
 base_dir '/home/vagrant/flight-console-api/local'
+#
+# Allow the use of the shared software directory
+local_software_dirs [File.expand_path('../../share', __dir__)]
 
 append_timestamp false
 #

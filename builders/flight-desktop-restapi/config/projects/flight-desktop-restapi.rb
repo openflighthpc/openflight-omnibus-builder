@@ -39,6 +39,7 @@ build_iteration 2
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
+dependency 'update_web_suite_package_scripts'
 dependency 'flight-desktop-restapi'
 dependency 'version-manifest'
 
@@ -63,10 +64,17 @@ runtime_dependency 'flight-service-system-1.0'
 if ohai['platform_family'] == 'rhel'
   runtime_dependency 'flight-desktop >= 1.6.0~'
 
+  # TODO: Either remove the lower ~rc* bound on release OR make a flight-service-system-1.1
+  #       The postinst script requires `flight service configure --force`
+  runtime_dependency 'flight-service >= 1.3.0~'
+
   runtime_dependency 'xorg-x11-apps'
   runtime_dependency 'netpbm-progs'
 elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'flight-desktop (>= 1.6.0~)'
+
+  # TODO: Ditto
+  runtime_dependency 'flight-service (>= 1.3.0~)'
 
   runtime_dependency 'x11-apps'
   runtime_dependency 'netpbm'

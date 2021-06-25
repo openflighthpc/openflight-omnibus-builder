@@ -93,6 +93,17 @@ File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
   File.write path, content
 end
 
+if ohai['platform_family'] == 'rhel'
+  # TODO: Either remove the lower ~rc* bound on release OR make a flight-service-system-1.1
+  #       The postinst script requires `flight service configure --force`
+  runtime_dependency 'flight-service >= 1.3.0~'
+elsif ohai['platform_family'] == 'debian'
+  # TODO: Ditto
+  runtime_dependency 'flight-service (>= 1.3.0~)'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
+end
+
 package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides

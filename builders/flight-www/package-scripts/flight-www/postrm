@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 #==============================================================================
-# Copyright (C) 2021-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -26,24 +26,12 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-
-OLD_PID="$1"
-
-/opt/flight/etc/service/types/desktop-restapi/stop.sh "$OLD_PID"
-
-# Wait up to 10ish seconds for puma to stop
-state=1
-for _ in `seq 1 20`; do
-  kill -0 "$OLD_PID" 2>/dev/null
-  state=$?
-  if [ "$state" -ne 0 ]; then
-    break
-  fi
-done
-
-if [ "$state" -eq 0 ]; then
-  echo Failed to stop desktop-restapi
-  exit 1
+# Reload the service if being removed due to upgrade
+# NOTE: Technically any reason but a full removal
+if [ "$1" != "0" ] || [ "$1" ~!= "remove" ]; then
+  # Stop the service
+  /opt/flight/bin/flight service reload www >/dev/null 2>&1
 fi
 
-/opt/flight/etc/service/types/desktop-restapi/start.sh
+exit 0
+

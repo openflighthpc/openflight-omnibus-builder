@@ -68,18 +68,28 @@ build do
     # Define the script paths
     rendered = {}
     paths = {
+      install_dir: install_dir,
       start: File.join('/opt/flight/etc/service/types', service, 'start.sh'),
       start_bin: File.join(install_dir, 'bin/start'),
       stop: File.join('/opt/flight/etc/service/types', service, 'stop.sh'),
       restart: File.join('/opt/flight/etc/service/types', service, 'restart.sh'),
       reload: File.join('/opt/flight/etc/service/types', service, 'reload.sh')
     }
+    flight_paths = paths.map do |k, p|
+      [k, p.sub(/\A\/opt\/flight/, '${flight_ROOT}')]
+    end.to_h
 
     # Render the start script
     rendered[:start] = <<~START
       #!/bin/bash
       #{PUMA_COPY_RIGHT_HEADER}
       set -e
+
+      # Ensure flight_ROOT is set
+      if [ -z "$flight_ROOT" ]; then
+        echo "flight_ROOT has not been set!" >&2
+        exit 1
+      fi
 
       # Required to correctly handle output parsing.
       if [ -f /etc/locale.conf ]; then
@@ -91,7 +101,7 @@ build do
       pidfile=$(mktemp /tmp/flight-#{service}-deletable.XXXXXXXX.pid)
       rm "${pidfile}"
 
-      tool_bg #{paths[:start_bin]} "$pidfile"
+      tool_bg #{flight_paths[:start_bin]} "$pidfile"
 
       # Wait up to 10ish seconds for puma to start
       for _ in `seq 1 20`; do
@@ -146,14 +156,17 @@ build do
       # Ensure the log directory exists
       mkdir -p $(dirname "$PUMA_LOG_FILE")
 
+      # Determine the install dir
+      install_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
+
       # Exec into the ruby/puma process so the PID does not change
-      exec "${flight_ROOT}"/bin/flexec ruby #{install_dir}/bin/puma \\
-        --config #{install_dir}/config/puma.rb \\
+      exec "${flight_ROOT}"/bin/flexec ruby $install_dir/bin/puma \\
+        --config $install_dir/config/puma.rb \\
         --pidfile "$pid_file" \\
         --redirect-stdout "$PUMA_LOG_FILE" \\
         --redirect-stderr "$PUMA_LOG_FILE" \\
         --redirect-append \\
-        --dir #{install_dir} \\
+        --dir $install_dir \\
         >>"${PUMA_LOG_FILE}" 2>&1
     START_BIN
 
@@ -180,9 +193,9 @@ build do
       mkdir -p $(dirname "$PUMA_LOG_FILE")
 
       # Stop puma
-      "${flight_ROOT}"/bin/flexec ruby #{install_dir}/bin/pumactl stop \\
+      "${flight_ROOT}"/bin/flexec ruby #{flight_paths[:install_dir]}/bin/pumactl stop \\
         --pidfile $1 \\
-        --config-file #{install_dir}/config/puma.rb \\
+        --config-file #{flight_paths[:install_dir]}/config/puma.rb \\
         >>"$PUMA_LOG_FILE" 2>&1
     STOP
 
@@ -191,9 +204,15 @@ build do
       #!/bin/bash
       #{PUMA_COPY_RIGHT_HEADER}
 
+      # Ensure flight_ROOT is set
+      if [ -z "$flight_ROOT" ]; then
+        echo "flight_ROOT has not been set!" >&2
+        exit 1
+      fi
+
       OLD_PID="$1"
 
-      #{paths[:stop]} "$OLD_PID"
+      #{flight_paths[:stop]} "$OLD_PID"
 
       # Wait up to 10ish seconds for puma to stop
       state=1
@@ -210,7 +229,7 @@ build do
         exit 1
       fi
 
-      #{paths[:start]}
+      #{flight_paths[:start]}
     RESTART
 
     # Render the reload script
@@ -236,9 +255,9 @@ build do
       mkdir -p $(dirname "$PUMA_LOG_FILE")
 
       # Restarts the puma worker processes
-      "${flight_ROOT}"/bin/flexec ruby #{install_dir}/bin/pumactl restart \\
+      "${flight_ROOT}"/bin/flexec ruby #{flight_paths[:install_dir]}/bin/pumactl restart \\
         --pidfile $1 \\
-        --config-file #{install_dir}/config/puma.rb \\
+        --config-file #{flight_paths[:install_dir]}/config/puma.rb \\
         >>"$PUMA_LOG_FILE" 2>&1
 
       # Sleeps two seconds and ensure puma is still running
@@ -254,27 +273,16 @@ build do
     RELOAD
 
     # Ensure all the scripts are up to date
-    updated = []
     [:start, :start_bin, :stop, :restart, :reload].each do |type|
       path = File.join(root_dir, paths[type])
       new = rendered[type]
       old = (File.exists?(path) ? File.read(path) : '')
       unless old == new
-        updated << path
         FileUtils.mkdir_p File.dirname(path)
         File.write path, new
         FileUtils.chmod 0775, path
       end
-    end
-
-    # Crash the build and prompt for the new files to be checked in!
-    # This helps ensure the updated version is in the repo and picked up
-    unless updated.empty?
-      raise <<~ERROR
-        The following puma scripts have been modified! Please check them in and restart the build.
-
-        #{updated.join("\n")}
-      ERROR
+      project.extra_package_file path
     end
   end
 end
