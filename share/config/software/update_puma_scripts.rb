@@ -282,6 +282,7 @@ build do
         File.write path, new
         FileUtils.chmod 0775, path
       end
+      project.extra_package_file path
     end
   end
 end
