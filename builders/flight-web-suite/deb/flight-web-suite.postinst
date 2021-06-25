@@ -12,17 +12,12 @@ set -e
 /opt/flight/bin/flight service restart desktop-restapi
 /opt/flight/bin/flight service restart job-script-api
 /opt/flight/bin/flight service restart www
-if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
-cat <<EOF 1>&2
-================================================
-HTTPS support needs to be enabled for flight-www
-================================================
-To enable HTTPS support run:
-  /opt/flight/bin/flight www enable-https
-  /opt/flight/bin/flight service restart www
 
-EOF
-fi
+/opt/flight/bin/flight config get web-suite.domain 1>/dev/null 2>&1
+if [ "$?" -eq "0" ] ; then
+/opt/flight/bin/flight service restart login-api
+/opt/flight/bin/flight service restart file-manager-api
+else
 cat <<EOF 1>&2
 ================================================
 Configure and start Login API
@@ -41,5 +36,17 @@ This can be done by running the following:
   /opt/flight/bin/flight service start file-manager-api
 
 EOF
+fi
+if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
+cat <<EOF 1>&2
+================================================
+HTTPS support needs to be enabled for flight-www
+================================================
+To enable HTTPS support run:
+  /opt/flight/bin/flight www enable-https
+  /opt/flight/bin/flight service restart www
+
+EOF
+fi
 
 exit 0
