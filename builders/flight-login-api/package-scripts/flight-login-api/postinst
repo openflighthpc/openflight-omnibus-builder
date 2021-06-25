@@ -40,7 +40,7 @@ if [ ! -f "${secret_file}" ] ; then
 fi
 
 # Added for best practice
-${flight_ROOT}/bin/flight service configure login-api --force --config '{}'
+${flight_ROOT}/bin/flight service configure login-api --force --config '{}' >/dev/null 2>&1
 
 # Check if the service is already running and restart it
 if ${flight_ROOT}/bin/flight service status login-api | grep active >/dev/null 2>&1 ; then
