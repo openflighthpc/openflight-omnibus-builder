@@ -33,7 +33,7 @@
 flight_ROOT=/opt/flight
 
 # Run the configuration
-${flight_ROOT}/bin/flight service configure --force job-script-api >/dev/null 2>&1
+${flight_ROOT}/bin/flight service configure job-script-api --force --config '{}' >/dev/null 2>&1
 
 # Check if the service is already running and restart it
 if ${flight_ROOT}/bin/flight service status job-script-api | grep active >/dev/null 2>&1 ; then

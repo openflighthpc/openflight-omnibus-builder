@@ -5,4 +5,4 @@ if [ ! -f "${secret_file}" ] ; then
 fi
 
 # Added for best practice
-${flight_ROOT}/bin/flight service configure --force login-api
+${flight_ROOT}/bin/flight service configure login-api --force --config '{}'
