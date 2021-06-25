@@ -19,5 +19,6 @@ http {
     #tcp_nopush on;
     keepalive_timeout 65;
     gzip on;
+    error_page 404 /not-found;
     include /opt/flight/etc/www/http.d/*.conf;
 }
