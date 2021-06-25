@@ -14,6 +14,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{_flight_pkg_tag}-%{release}-root-%(%{__id_
 
 BuildArch:     noarch
 Requires:      flight-env-system-1.0
+Requires:      flight-python
 
 %description
 A collection of software package environment types for use with Flight Environment
@@ -53,6 +54,8 @@ rm -rf $RPM_BUILD_ROOT
 /opt/flight/usr/lib/env/types/spack/*
 
 %changelog
+* Wed Jun 09 2021 Ben Armston <ben.armston@alces-flight.com> - 1.0.3
+- Fixed issue with easybuild environment creation.
 * Thu Mar 11 2021 Ben Armston <ben.armston@alces-flight.com> - 1.0.2
 - Fixed issue with non-standard build directories under singularity.
 * Tue May 19 2020 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 1.0.0
