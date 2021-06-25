@@ -79,7 +79,7 @@ build do
     }
 
     # Render the postinst script
-    configure_script = File.join(project.package_scripts_path, 'postinst-configure')
+    configure_script = File.join(project.package_scripts_path, 'stubs/postinst-configure')
     configure = if File.exists? configure_script
                   File.read(configure_script).chomp
                 else
