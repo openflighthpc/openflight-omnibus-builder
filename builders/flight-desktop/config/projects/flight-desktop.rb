@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.5.0'
+VERSION = '1.6.0-rc1'
 override 'flight-desktop', version: VERSION
 
 build_version VERSION
@@ -89,10 +89,7 @@ if ohai['platform_family'] == 'rhel'
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
       # provides are prefixed with `:`
-      # neither 'apg' or 'python-websockify' are available on RHEL8,
-      # but we provide them in the openflight repos.
-      # note: xorg-x11-apps is only available in PowerTools
-      priority "xorg-x11-apps netpbm-progs apg python3-websockify flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+      priority "apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   else
     package :rpm do
@@ -109,5 +106,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section ":netpbm x11-apps apg websockify flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+  section "apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
 end

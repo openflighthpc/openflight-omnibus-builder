@@ -1,6 +1,5 @@
-#!/bin/sh
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,29 +24,20 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-if [ -f /etc/redhat-release ]; then
-  if grep -q 'release 8' /etc/redhat-release; then
-    cat <<EOF 1>&2
-========================================
-Optional Dependencies for Flight Desktop
-========================================
-For better desktop session passwords, please install 'apg' (requires OpenFlightHPC).
-EOF
-  else
-    cat <<EOF 1>&2
-========================================
-Optional Dependencies for Flight Desktop
-========================================
-For better desktop session passwords, please install 'apg' (requires EPEL).
-EOF
-  fi
-else
-  cat <<EOF 1>&2
-========================================
-Optional Dependencies for Flight Desktop
-========================================
-For better desktop session passwords, please install 'apg'.
-EOF
-fi
-
-exit 0
+# Usually changing the main project file causes all dependencies to be
+# rebuilt.
+#
+# Instead, this file can be used as the project build file and allows
+# building of dependencies once while iterations are made on the main
+# project file. e.g.:
+#
+#   bin/omnibus build proxy
+#
+# To force dependencies to be recompiled, increment the following
+# number (which casues the checksum of this project file to change,
+# resulting in the cache being dirtied and all dependencies being
+# rebuilt).
+#
+# PROXY-BUILD-01
+#
+eval(File.read(File.expand_path('flight-websockify.rb', __dir__)), binding, __FILE__)

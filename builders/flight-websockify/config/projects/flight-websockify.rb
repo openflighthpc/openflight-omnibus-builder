@@ -24,65 +24,63 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-desktop-restapi'
+name 'flight-websockify'
 maintainer 'Alces Flight Ltd'
-homepage "https://github.com/openflighthpc/flight-desktop-restapi"
-friendly_name 'Flight Desktop REST API'
+homepage 'https://github.com/openflighthpc/openflight-omnibus-builder/builders/flight-websockify'
+friendly_name 'Flight Websockify'
 
-install_dir '/opt/flight/opt/desktop-restapi'
+install_dir '/opt/flight/opt/websockify'
 
-VERSION = '2.2.0'
-override 'flight-desktop-restapi', version: VERSION
+VERSION = '1.0.0'
+PYTHON_SYSTEM = '3.8'
+override 'flight-websockify', version: VERSION
+override 'enforce-flight-python', version: PYTHON_SYSTEM
 
 build_version VERSION
 build_iteration 2
 
 dependency 'preparation'
-dependency 'update_puma_scripts'
-dependency 'flight-desktop-restapi'
+dependency 'enforce-flight-python'
+dependency 'flight-websockify'
 dependency 'version-manifest'
+
+runtime_dependency "flight-python-system-#{PYTHON_SYSTEM}"
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
-description 'Manage interactive GUI desktop sessions'
+description 'Alternative openFlightHPC build of websockify'
+
+# The 'strip_build false' option introduced in the OpenFlightHPC version
+# does not appear to function correctly. The Stripper is breaking numpy's
+# fortran library
+#
+# For the time being, the upstream version of omnibus is being used
+#
+# strip_build false
 
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
-
-runtime_dependency 'flight-runway'
-runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-desktop-system-1.0'
-runtime_dependency 'flight-websockify'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
+exclude '**/__pycache__'
+exclude '**/lib/python3.8/test'
+exclude '**/lib/python3.8/config-3.8-x86_64-linux-gnu'
+exclude '**/lib/*.a'
+exclude '**/lib/*.la'
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-desktop >= 1.6.0~'
-
-  runtime_dependency 'xorg-x11-apps'
-  runtime_dependency 'netpbm-progs'
+  rhel_rel = ohai['platform_version'].split('.').first.to_i
+  if rhel_rel == 8
+    package :rpm do
+      vendor 'Alces Flight Ltd'
+    end
+  else
+    package :rpm do
+      vendor 'Alces Flight Ltd'
+    end
+  end
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'flight-desktop (>= 1.6.0~)'
-
-  runtime_dependency 'x11-apps'
-  runtime_dependency 'netpbm'
-else
-  raise "Unrecognised platform: #{ohai['platform_family']}"
-end
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
+  package :deb do
+    vendor 'Alces Flight Ltd'
+  end
 end

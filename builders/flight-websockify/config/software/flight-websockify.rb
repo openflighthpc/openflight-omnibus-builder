@@ -24,54 +24,43 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-
-name 'flight-desktop'
+name 'flight-websockify'
 default_version '0.0.0'
 
-source git: 'https://github.com/openflighthpc/flight-desktop'
+source path: File.expand_path('../../lib', __dir__)
 
-dependency 'enforce-flight-runway'
-whitelist_file Regexp.new("vendor/ruby/.*\.so$")
-
-license 'EPL-2.0'
+license 'LGPLv3'
 license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
-build do
-  env = with_standard_compiler_flags(with_embedded_path)
+# Numpy has a bunch of files which depend on each other, this can be ignored
+whitelist_file Regexp.new('\.venv/lib/python\d\.\d/site-packages/numpy\.libs/libgfortran-.+')
+whitelist_file Regexp.new('\.venv/lib/python\d\.\d/site-packages/numpy\.libs/libopenblasp-.+')
 
-  # Moves the project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'bin', 'etc', 'lib', 'libexec',
-    'LICENSE.txt', 'README.md'
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
+build do
+  env = with_embedded_path("PIPENV_VENV_IN_PROJECT" => 'true')
+
+  # Place the openflight version of python onto the path
+  env['PATH'] = "/opt/flight/opt/python/bin:#{env['PATH']}"
+
+  # Copies the pip files to the install dir
+  ['Pipfile', 'Pipfile.lock'].each do |file|
+    copy file, File.join(install_dir, file)
   end
 
-  # Installs the gems to the shared `vendor/share`
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+  # Builds the virtual env
+  command(<<-CMD, env: env)
+    cd #{install_dir}
+    pipenv install
+  CMD
 
+  # Generates the bin symlinks
   block do
-    require 'yaml'
-    config = {
-      'type_paths' => [
-        '/opt/flight/usr/lib/desktop/types',
-        '/opt/flight/etc/desktop/types'
-      ],
-      'global_state_path' => '/opt/flight/var/lib/desktop',
-      'global_log_path' => '/opt/flight/var/log/desktop',
-      'websockify_paths' => [
-        '/opt/flight/opt/websockify/bin/websockify',
-        '/usr/bin/websockify',
-      ],
-    }
-    File.write(
-      File.expand_path("#{install_dir}/etc/config.yml"),
-      config.to_yaml
-    )
+    Dir.chdir install_dir do
+      FileUtils.mkdir_p 'bin'
+      Dir.glob('.venv/bin/*').each do |path|
+        FileUtils.ln_s File.join('..', path), File.join('bin', File.basename(path))
+      end
+    end
   end
 end
