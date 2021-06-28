@@ -71,7 +71,7 @@ EOF
     /opt/flight/bin/flight www cert-gen --config-only ${saved_config}
 fi
 
-# Generate a self-signed certificate implicitly
+# Generate a self-signed certificate.
 if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
   # Check if flight_WEB_SUITE_domain has been set
   domain=$(/opt/flight/bin/flight config get web-suite.domain 2>/dev/null)
@@ -133,7 +133,7 @@ EOF
 fi
 
 # Ensure any custom configurations are applied
-/opt/flight/bin/flight service configure --force www >/dev/null 2>&1
+/opt/flight/bin/flight service configure --force --config '{}' www >/dev/null 2>&1
 
 # Attempt to reload the nginx configuration
 /opt/flight/bin/flight service reload www >/dev/null 2>&1
