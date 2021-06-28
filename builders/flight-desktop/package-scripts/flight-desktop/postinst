@@ -32,6 +32,7 @@ if [ -f /etc/redhat-release ]; then
 Optional Dependencies for Flight Desktop
 ========================================
 For better desktop session passwords, please install 'apg' (requires OpenFlightHPC).
+
 EOF
   else
     cat <<EOF 1>&2
@@ -39,6 +40,7 @@ EOF
 Optional Dependencies for Flight Desktop
 ========================================
 For better desktop session passwords, please install 'apg' (requires EPEL).
+
 EOF
   fi
 else
@@ -47,6 +49,7 @@ else
 Optional Dependencies for Flight Desktop
 ========================================
 For better desktop session passwords, please install 'apg'.
+
 EOF
 fi
 
