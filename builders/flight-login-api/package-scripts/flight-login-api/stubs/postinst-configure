@@ -4,5 +4,4 @@ if [ ! -f "${secret_file}" ] ; then
     chmod 0400 "${secret_file}"
 fi
 
-# Added for best practice
 ${flight_ROOT}/bin/flight service configure login-api --force --config '{}' >/dev/null 2>&1

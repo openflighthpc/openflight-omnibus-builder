@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,49 +25,31 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-console-api'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-console-api'
-friendly_name 'Flight Console api'
 
-install_dir '/opt/flight/opt/console-api'
 
-VERSION = '2.1.0'
-override 'flight-console-api', version: VERSION
+# Ensure flight_ROOT is set
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
 
-build_version VERSION
-build_iteration 3
+OLD_PID="$1"
 
-dependency 'preparation'
-dependency 'update_web_suite_package_scripts'
-dependency 'flight-console-api'
-dependency 'version-manifest'
+${flight_ROOT}/etc/service/types/desktop-restapi/stop.sh "$OLD_PID"
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
+# Wait up to 10ish seconds for puma to stop
+state=1
+for _ in `seq 1 20`; do
+  kill -0 "$OLD_PID" 2>/dev/null
+  state=$?
+  if [ "$state" -ne 0 ]; then
+    break
+  fi
+done
 
-description 'API to provide browser access to an interactive terminal console'
+if [ "$state" -eq 0 ]; then
+  echo Failed to stop desktop-restapi
+  exit 1
+fi
 
-exclude '**/.git'
-exclude '**/.gitkeep'
-
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-nodejs'
-runtime_dependency 'flight-js-system-2.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-config_file "#{install_dir}/etc/config.json"
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
+${flight_ROOT}/etc/service/types/desktop-restapi/start.sh

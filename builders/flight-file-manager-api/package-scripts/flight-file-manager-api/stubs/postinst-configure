@@ -7,5 +7,4 @@ if ls "$old" >/dev/null 2>&1; then
   rmdir "$old"
 fi
 
-# Added for best practice
 ${flight_ROOT}/bin/flight service configure file-manager-api --force --config '{}' >/dev/null 2>&1

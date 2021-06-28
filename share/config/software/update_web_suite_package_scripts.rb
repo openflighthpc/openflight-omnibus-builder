@@ -67,15 +67,14 @@ skip_transitive_dependency_licensing true
 build do
   block do
     # Extract information about the project
-    root_dir = File.expand_path('../../..', project.filepath)
     service = project.name.sub(/\Aflight-/, '')
 
     # Define the script paths
     rendered = {}
     paths = {
-      postinst: File.join(root_dir, 'package-scripts', project.name, 'postinst'),
-      prerm:    File.join(root_dir, 'package-scripts', project.name, 'prerm'),
-      postrm:   File.join(root_dir, 'package-scripts', project.name, 'postrm')
+      postinst: File.join(project.package_scripts_path, 'postinst'),
+      prerm:    File.join(project.package_scripts_path, 'prerm'),
+      postrm:   File.join(project.package_scripts_path, 'postrm')
     }
 
     # Render the postinst script
@@ -135,14 +134,26 @@ build do
     POSTRM
 
     # Ensure all the scripts are up to date
+    updated = []
     paths.each do |type, path|
       new = rendered[type]
       old = (File.exists?(path) ? File.read(path) : '')
       unless old == new
+        updated << path
         FileUtils.mkdir_p File.dirname(path)
         File.write path, new
         FileUtils.chmod 0644, path
       end
+    end
+
+    # Crash the build and prompt for the new files to be checked in!
+    # This helps ensure the updated version is in the repo and picked up
+    unless updated.empty?
+      raise <<~ERROR
+        The following puma scripts have been modified! Please check them in and restart the build.
+
+        #{updated.join("\n")}
+      ERROR
     end
   end
 end
