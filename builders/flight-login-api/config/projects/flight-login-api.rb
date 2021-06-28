@@ -35,7 +35,7 @@ VERSION = '1.1.0-rc1'
 override 'flight-login-api', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 2
+build_iteration 3
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
