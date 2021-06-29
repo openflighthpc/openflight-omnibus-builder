@@ -42,6 +42,37 @@ if ls "$old" >/dev/null 2>&1; then
   rmdir "$old"
 fi
 
+# Warn about obsolete configuration.
+env_file=${flight_ROOT}/etc/service/env/file-manager-api
+var_name="flight_FILE_MANAGER_API_cloudcmd_cookie_domain"
+if [ -f "${env_file}" ] && grep -q "^${var_name}=" "${env_file}" ; then
+    # There is existing obsolete configuration for the domain name.
+    domain=$(grep "^${var_name}=" "${env_file}" | cut -d= -f2)
+    cat <<EOF 1>&2
+
+===========================================================
+WARNING: Configuration required for flight-file-manager-api
+===========================================================
+
+The existing configuration of 'cloudcmd_cookie_domain' for
+flight-file-manager-api is no longer supported.  To maintain the configuration
+follow one of the options below and then restart flight-file-manager-api.
+
+Run the command:
+
+    flight config set web-suite.domain "${domain}"
+
+Or edit the configurtion file '${flight_ROOT}/etc/file-manager-api.yaml' and
+set 'cloudcmd_cookie_domain' to '${domain}'.
+
+EOF
+    # Delete the unused configuration.
+    sed -i \
+        -e "/^${var_name}=/i # Setting ${var_name} in this file is no longer supported.  The following line can be safely removed." \
+        -e "/^${var_name}=/s/^/# /" \
+        "${env_file}"
+fi
+
 ${flight_ROOT}/bin/flight service configure file-manager-api --force --config '{}' >/dev/null 2>&1
 
 # Check if the service is already running and restart it

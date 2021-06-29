@@ -31,12 +31,12 @@ friendly_name 'Flight File Manager API'
 
 install_dir '/opt/flight/opt/file-manager-api'
 
-VERSION = '1.2.0-rc1'
+VERSION = '1.2.0-rc2'
 override 'flight-file-manager-api', version: ENV.fetch('ALPHA', VERSION)
 override 'flight-file-manager-backend', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 5
+build_iteration 1
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
