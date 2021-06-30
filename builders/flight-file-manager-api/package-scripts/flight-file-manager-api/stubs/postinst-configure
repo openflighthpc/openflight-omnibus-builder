@@ -38,4 +38,17 @@ EOF
         "${env_file}"
 fi
 
+
+# Kill any running cloudcmd processes.  They will be restarted with the
+# new version on demand.
+echo "Killing existing file manager backend sessions.  New sessions will restart on demand."
+for i in "${flight_ROOT}"/var/lib/file-manager-api/*/cloudcmd.pid ; do
+    pid=$(cat "$i")
+    if [ -d /proc/"${pid}" ] ; then
+        if grep -qF file-manager-api/cloudcmd.sh /proc/"${pid}"/cmdline ; then
+            kill "${pid}"
+        fi
+    fi
+done
+
 ${flight_ROOT}/bin/flight service configure file-manager-api --force --config '{}' >/dev/null 2>&1
