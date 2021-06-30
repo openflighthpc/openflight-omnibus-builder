@@ -10,7 +10,9 @@ var_name="FLIGHT_LOGIN_SSO_COOKIE_DOMAIN"
 if [ -f "${env_file}" ] && grep -q "^${var_name}=" "${env_file}" ; then
     # There is existing obsolete configuration for the domain name.
     domain=$(grep "^${var_name}=" "${env_file}" | cut -d= -f2)
-    cat <<EOF 1>&2
+    "${flight_ROOT}"/bin/flight config get web-suite.domain 1>/dev/null 2>&1
+    if [ "$?" -ne "0" ] ; then
+        cat <<EOF 1>&2
 
 ===========================================================
 WARNING: Configuration required for flight-login-api
@@ -28,6 +30,7 @@ Or edit the configurtion file '${flight_ROOT}/etc/login-api.yaml' and set
 'sso_cookie_domain' to '${domain}'.
 
 EOF
+    fi
     # Delete the unused configuration.
     sed -i \
         -e "/^${var_name}=/i # Setting ${var_name} in this file is no longer supported.  The following line can be safely removed." \
