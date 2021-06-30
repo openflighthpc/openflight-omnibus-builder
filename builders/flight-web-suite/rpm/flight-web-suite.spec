@@ -90,7 +90,7 @@ Configure and start Login API
 ================================================
 The login-api needs configuring and starting.
 This can be done by running the following:
-  /opt/flight/bin/flight service configure login-api
+  /opt/flight/bin/flight config set web-suite.domain <DOMAIN>
   /opt/flight/bin/flight service start login-api
 
 ================================================
@@ -98,7 +98,7 @@ Configure and start File Manager API
 ================================================
 The file-manager-api needs configuring and starting.
 This can be done by running the following:
-  /opt/flight/bin/flight service configure file-manager-api
+  /opt/flight/bin/flight config set web-suite.domain <DOMAIN>
   /opt/flight/bin/flight service start file-manager-api
 
 EOF
