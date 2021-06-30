@@ -48,7 +48,9 @@ var_name="flight_FILE_MANAGER_API_cloudcmd_cookie_domain"
 if [ -f "${env_file}" ] && grep -q "^${var_name}=" "${env_file}" ; then
     # There is existing obsolete configuration for the domain name.
     domain=$(grep "^${var_name}=" "${env_file}" | cut -d= -f2)
-    cat <<EOF 1>&2
+    "${flight_ROOT}"/bin/flight config get web-suite.domain 1>/dev/null 2>&1
+    if [ "$?" -ne "0" ] ; then
+        cat <<EOF 1>&2
 
 ===========================================================
 WARNING: Configuration required for flight-file-manager-api
@@ -66,6 +68,7 @@ Or edit the configurtion file '${flight_ROOT}/etc/file-manager-api.yaml' and
 set 'cloudcmd_cookie_domain' to '${domain}'.
 
 EOF
+    fi
     # Delete the unused configuration.
     sed -i \
         -e "/^${var_name}=/i # Setting ${var_name} in this file is no longer supported.  The following line can be safely removed." \
@@ -76,15 +79,20 @@ fi
 
 # Kill any running cloudcmd processes.  They will be restarted with the
 # new version on demand.
-echo "Killing existing file manager backend sessions.  New sessions will restart on demand."
-for i in "${flight_ROOT}"/var/lib/file-manager-api/*/cloudcmd.pid ; do
-    pid=$(cat "$i")
-    if [ -d /proc/"${pid}" ] ; then
-        if grep -qF file-manager-api/cloudcmd.sh /proc/"${pid}"/cmdline ; then
-            kill "${pid}"
+(
+    shopt -s nullglob
+    echo "Killing existing file manager backend sessions.  New sessions will restart on demand."
+    for i in "${flight_ROOT}"/var/lib/file-manager-api/*/cloudcmd.pid ; do
+        pid=$(cat "$i")
+        if [ -d /proc/"${pid}" ] ; then
+            if grep -q 'file-manager-api.*cloudcmd' /proc/"${pid}"/cmdline ; then
+                user=$(echo "$i" | cut -d / -f 1- --output-delimiter $'\n' | tail -n -2 | head -n 1)
+                echo "--> Killing session ${pid} for ${user}"
+                kill -s TERM -"${pid}"
+            fi
         fi
-    fi
-done
+    done
+)
 
 ${flight_ROOT}/bin/flight service configure file-manager-api --force --config '{}' >/dev/null 2>&1
 
