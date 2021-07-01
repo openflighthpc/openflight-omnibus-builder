@@ -7,9 +7,3 @@ bin/*
 files/**/cache/
 vendor
 local
-
-# Various generated files
-opt/flight/etc/service/types/*/reload.sh
-opt/flight/etc/service/types/*/restart.sh
-opt/flight/etc/service/types/*/start.sh
-opt/flight/etc/service/types/*/stop.sh
