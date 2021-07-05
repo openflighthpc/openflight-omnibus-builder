@@ -62,7 +62,7 @@ elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'libpam0g'
   runtime_dependency 'libaudit1'
   runtime_dependency 'libcap-ng0'
-  runtime_dependency 'flight-service >= 1.3.0'
+  runtime_dependency 'flight-service (>= 1.3.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
