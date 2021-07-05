@@ -31,7 +31,7 @@ friendly_name 'Flight File Manager API'
 
 install_dir '/opt/flight/opt/file-manager-api'
 
-VERSION = '1.2.0-rc5'
+VERSION = '1.2.0'
 override 'flight-file-manager-api', version: ENV.fetch('ALPHA', VERSION)
 override 'flight-file-manager-backend', version: ENV.fetch('ALPHA', VERSION)
 
@@ -63,15 +63,10 @@ runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-js-system-2.0'
 if ohai['platform_family'] == 'rhel'
   runtime_dependency 'flight-nodejs >= 14.15.4'
-
-  # TODO: Either remove the lower ~rc* bound on release OR make a flight-service-system-1.1
-  #       The postinst script requires `flight service configure --force`
-  runtime_dependency 'flight-service >= 1.3.0~'
+  runtime_dependency 'flight-service >= 1.3.0'
 elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'flight-nodejs (>= 14.15.4)'
-
-  # TODO: Ditto
-  runtime_dependency 'flight-service (>= 1.3.0~)'
+  runtime_dependency 'flight-service (>= 1.3.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end

@@ -9,13 +9,13 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 
 BuildArch:     noarch
-Requires:      flight-runway => 1.1.0~, flight-runway < 1.2.0~
-Requires:      flight-starter => 2021.5.0~, flight-starter < 2021.6.0~
+Requires:      flight-runway => 1.1.0, flight-runway < 1.2.0~
+Requires:      flight-starter => 2021.5.0, flight-starter < 2021.6.0~
 %{?el8:Recommends:    flight-plugin-system-starter}
-Requires:      flight-env => 1.4.0~, flight-env < 1.5.0~
-Requires:      flight-desktop => 1.6.0~, flight-desktop < 1.7.0~
-Requires:      flight-job => 2.3.0~, flight-job < 2.4.0~
-Requires:      flight-howto => 1.0.2~, flight-howto < 1.2.0~
+Requires:      flight-env => 1.4.0, flight-env < 1.5.0~
+Requires:      flight-desktop => 1.6.0, flight-desktop < 1.7.0~
+Requires:      flight-job => 2.3.0, flight-job < 2.4.0~
+Requires:      flight-howto => 1.0.2, flight-howto < 1.2.0~
 
 %description
 The Flight User Suite collection of tools and packages for running a HPC environment.

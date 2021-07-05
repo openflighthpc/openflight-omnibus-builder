@@ -31,11 +31,11 @@ friendly_name 'Flight Job Script API'
 
 install_dir '/opt/flight/opt/job-script-api'
 
-VERSION = '1.3.0-rc1'
+VERSION = '1.3.0'
 override 'flight-job-script-api', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
@@ -61,19 +61,13 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
 if ohai['platform_family'] == 'rhel'
-  # TODO: Remove rc minimum dependency on release
-  runtime_dependency 'flight-job >= 2.3.0~'
+  runtime_dependency 'flight-job >= 2.3.0'
   runtime_dependency 'flight-job < 2.4.0'
-
-  # TODO: Either remove the lower ~rc* bound on release OR make a flight-service-system-1.1
-  #       The postinst script requires `flight service configure --force`
-  runtime_dependency 'flight-service >= 1.3.0~'
+  runtime_dependency 'flight-service >= 1.3.0'
 elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'flight-job (>= 2.3.0)'
   runtime_dependency 'flight-job (< 2.4.0)'
-
-  # TODO: Ditto
-  runtime_dependency 'flight-service (>= 1.3.0~)'
+  runtime_dependency 'flight-service (>= 1.3.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end

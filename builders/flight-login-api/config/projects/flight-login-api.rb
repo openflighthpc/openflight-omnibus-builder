@@ -31,7 +31,7 @@ friendly_name 'Flight Websuite Login API'
 
 install_dir '/opt/flight/opt/login-api'
 
-VERSION = '1.1.0-rc2'
+VERSION = '1.1.0'
 override 'flight-login-api', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
@@ -57,14 +57,12 @@ if ohai['platform_family'] == 'rhel'
   runtime_dependency 'pam'
   runtime_dependency 'audit-libs'
   runtime_dependency 'libcap-ng'
-
-  # TODO: Either remove the lower ~rc* bound on release OR make a flight-service-system-1.1
-  #       The postinst script requires `flight service configure --force`
-  runtime_dependency 'flight-service >= 1.3.0~'
+  runtime_dependency 'flight-service >= 1.3.0'
 elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'libpam0g'
   runtime_dependency 'libaudit1'
   runtime_dependency 'libcap-ng0'
+  runtime_dependency 'flight-service >= 1.3.0'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end

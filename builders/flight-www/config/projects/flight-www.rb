@@ -31,20 +31,20 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.6.0-rc1'
-CERT_VERSION = '0.5.0-rc1'
+VERSION = '1.6.0'
+CERT_VERSION = '0.5.0'
 
 override 'flight-www', version: VERSION
 override 'flight-cert', version: ENV.fetch('ALPHA_cert', CERT_VERSION)
 override :nginx, version: '1.14.2'
-override 'flight-landing-page', version: '1.3.0-rc1'
+override 'flight-landing-page', version: '1.3.0'
 
 if ENV.key?('ALPHA_cert')
   build_version VERSION.sub(/(-\w+)?\Z/, '-alpha')
 else
   build_version VERSION
 end
-build_iteration '2'
+build_iteration '1'
 
 dependency 'preparation'
 dependency 'enforce-flight-runway'
@@ -94,12 +94,9 @@ File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
 end
 
 if ohai['platform_family'] == 'rhel'
-  # TODO: Either remove the lower ~rc* bound on release OR make a flight-service-system-1.1
-  #       The postinst script requires `flight service configure --force`
-  runtime_dependency 'flight-service >= 1.3.0~'
+  runtime_dependency 'flight-service >= 1.3.0'
 elsif ohai['platform_family'] == 'debian'
-  # TODO: Ditto
-  runtime_dependency 'flight-service (>= 1.3.0~)'
+  runtime_dependency 'flight-service (>= 1.3.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
