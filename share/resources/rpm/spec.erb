@@ -31,10 +31,36 @@ Requires: <%= name %>
 <% end -%>
 <%
 if priority != 'extra'
-  priority.split(' ').each do |name| -%>
+  provides = []
+  recommends = []
+  priority.split(' ').each do |name|
+    if name[0] == ':'
+      # this is a 'provides'
+      provides << name[1..-1]
+    else
+      # this is a 'recommends'
+      recommends << name
+    end
+  end
+
+  unless dist_tag.include? '7'
+    recommends.each do |name|
+-%>
 Recommends: <%= name %>
-<% end -%>
-<% end -%>
+<%
+    end
+  end
+-%>
+<%
+  provides.each do |name|
+-%>
+Provides: <%= name %>
+<%
+  end
+-%>
+<%
+end
+-%>
 <% conflicts.each do |name| -%>
 Conflicts: <%= name %>
 <% end -%>
@@ -58,28 +84,9 @@ Obsoletes: <%= name %>
 # noop
 
 <% scripts.each do |name, contents| -%>
-%<%= name %> -p /bin/bash
+%<%= name %>
 <%= contents %>
 <% end -%>
-
-%pretrans -p <lua>
--- Define the path to directory being replaced below.
--- DO NOT add a trailing slash at the end.
-path = "/opt/flight/opt/file-manager-api/backend/node_modules/cloudcmd"
-st = posix.stat(path)
-if st and st.type == "directory" then
-  status = os.rename(path, path .. ".rpmmoved")
-  if not status then
-    suffix = 0
-    while not status do
-      suffix = suffix + 1
-      status = os.rename(path .. ".rpmmoved", path .. ".rpmmoved." .. suffix)
-    end
-    os.rename(path, path .. ".rpmmoved")
-  end
-end
-
-
 
 %files
 %defattr(-,<%= user %>,<%= group %>,-)
@@ -91,5 +98,3 @@ end
 <% files.each do |file| -%>
 <%= file %>
 <% end -%>
-
-%ghost /opt/flight/opt/file-manager-api/backend/node_modules/cloudcmd.rpmmoved
