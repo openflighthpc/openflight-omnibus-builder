@@ -83,8 +83,12 @@ Obsoletes: <%= name %>
 %clean
 # noop
 
-<% scripts.each do |name, contents| -%>
-%<%= name %>
+<% scripts.each do |name, contents|
+  # Extract the shell from the shebang
+  match = /\A#!\s*(?<shell>.*)\Z/.match(contents.to_s.each_line.first)
+  shell = (match ? match.named_captures['shell'] : nil)
+-%>
+%<%= name -%> <%= "-p #{shell}" if shell %>
 <%= contents %>
 <% end -%>
 
