@@ -31,11 +31,11 @@ friendly_name 'Headnode content for landing page'
 
 install_dir '/opt/flight/opt/www/landing-page/default'
 
-VERSION = '1.2.1'
+VERSION = '1.3.0'
 override 'flight-headnode-landing-page', version: VERSION
 
 build_version VERSION
-build_iteration '2'
+build_iteration '1'
 
 dependency 'preparation'
 dependency 'flight-headnode-landing-page'
@@ -44,7 +44,7 @@ dependency 'version-manifest'
 if ohai['platform_family'] == 'rhel'
   conflict 'flight-www < 1.3.0'
 elsif ohai['platform_family'] == 'debian'
-  conflict 'flight-www (< 1.3.0)'
+  conflict 'flight-www (<< 1.3.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
@@ -58,7 +58,7 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-landing-page-system-1.0'
+runtime_dependency 'flight-landing-page-system-1.1'
 BRANDING_SYSTEM = '1.0'
 
 package :rpm do

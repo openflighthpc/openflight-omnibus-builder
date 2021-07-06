@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -26,8 +26,15 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
+# NOTE: This file is managed by 'update_web_suite_package_scripts' software
+#       definition. Any changes will be lost on the next build.
+
+# Ensure flight_ROOT is set correctly
+flight_ROOT=/opt/flight
+
+# Run the configuration
 # Update the session secret if unset
-env_file=/opt/flight/etc/service/env/console-api
+env_file=${flight_ROOT}/etc/service/env/console-api
 mkdir -p $(dirname "${env_file}")
 var_name="flight_CONSOLE_API_session_secret"
 if [ -f "${env_file}" ] && grep -q "^${var_name}=" "${env_file}" ; then
@@ -40,7 +47,7 @@ else
 fi
 
 # Generate a private key if required
-priv_key=/opt/flight/etc/console-api/id_rsa
+priv_key=${flight_ROOT}/etc/console-api/id_rsa
 pub_key="$priv_key".pub
 if [ ! -f "$priv_key" ]; then
   mkdir -p $(dirname "$priv_key")
@@ -56,5 +63,14 @@ if [ ! -f "$pub_key" ]; then
   ssh-keygen -y -f "$priv_key" > "$pub_key"
 fi
 
-/opt/flight/bin/flight service reload www 1>/dev/null 2>&1
+${flight_ROOT}/bin/flight service configure console-api --force --config '{}' >/dev/null 2>&1
+
+# Check if the service is already running and restart it
+if ${flight_ROOT}/bin/flight service status console-api | grep active >/dev/null 2>&1 ; then
+  ${flight_ROOT}/bin/flight service restart console-api >/dev/null 2>&1
+fi
+
+# Reload flight-www to pick up the new config
+${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
+
 exit 0

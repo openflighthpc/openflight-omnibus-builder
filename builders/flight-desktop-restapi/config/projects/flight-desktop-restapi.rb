@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop REST API'
 
 install_dir '/opt/flight/opt/desktop-restapi'
 
-VERSION = '2.2.0'
+VERSION = '2.3.0'
 override 'flight-desktop-restapi', version: VERSION
 
 build_version VERSION
@@ -39,6 +39,7 @@ build_iteration 1
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
+dependency 'update_web_suite_package_scripts'
 dependency 'flight-desktop-restapi'
 dependency 'version-manifest'
 
@@ -54,18 +55,28 @@ exclude '**/bundler/git'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-desktop-system-1.0'
+runtime_dependency 'flight-websockify'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-desktop >= 1.4.0'
+  runtime_dependency 'flight-desktop >= 1.6.0'
+  runtime_dependency 'flight-service >= 1.3.0'
+
+  runtime_dependency 'xorg-x11-apps'
+  runtime_dependency 'netpbm-progs'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'flight-action-api (>= 1.4.0)'
+  runtime_dependency 'flight-desktop (>= 1.6.0)'
+  runtime_dependency 'flight-service (>= 1.3.0)'
+
+  runtime_dependency 'x11-apps'
+  runtime_dependency 'netpbm'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
+
 require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)

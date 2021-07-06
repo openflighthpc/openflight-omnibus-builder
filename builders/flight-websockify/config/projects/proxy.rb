@@ -1,6 +1,5 @@
-#!/bin/bash
 #==============================================================================
-# Copyright (C) 2021-present Alces Flight Ltd.
+# Copyright (C) 2020-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,23 +24,20 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-echo "Configuring"
-
-flight_ROOT="${flight_ROOT:-/opt/flight}"
-env_file="$flight_ROOT/etc/service/env/login-api"
-
-for a in "$@"; do
-  IFS="=" read k v <<< "${a}"
-  case $k in
-    cookieDomain)
-      if cat "$env_file" | grep 'FLIGHT_LOGIN_SSO_COOKIE_DOMAIN' ; then
-        sed -i "s/FLIGHT_LOGIN_SSO_COOKIE_DOMAIN=.*/FLIGHT_LOGIN_SSO_COOKIE_DOMAIN=$v/g" "$env_file"
-      else
-        echo "FLIGHT_LOGIN_SSO_COOKIE_DOMAIN=$v" >> "$env_file"
-      fi
-      ;;
-    *)
-      echo "Unrecognised key: $k"
-    ;;
-  esac
-done
+# Usually changing the main project file causes all dependencies to be
+# rebuilt.
+#
+# Instead, this file can be used as the project build file and allows
+# building of dependencies once while iterations are made on the main
+# project file. e.g.:
+#
+#   bin/omnibus build proxy
+#
+# To force dependencies to be recompiled, increment the following
+# number (which casues the checksum of this project file to change,
+# resulting in the cache being dirtied and all dependencies being
+# rebuilt).
+#
+# PROXY-BUILD-01
+#
+eval(File.read(File.expand_path('flight-websockify.rb', __dir__)), binding, __FILE__)

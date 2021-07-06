@@ -36,17 +36,18 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 
 BuildArch:      noarch
-Requires:       flight-console-api => 2.1.0~, flight-console-api < 2.2.0~
-Requires:       flight-console-webapp => 1.3.0~, flight-console-webapp < 1.4.0~
-Requires:       flight-desktop-restapi => 2.2.0~, flight-desktop-restapi < 2.3.0~
-Requires:       flight-desktop-webapp => 1.4.0~, flight-desktop-webapp < 1.5.0~
-Requires:       flight-file-manager-api => 1.1.0~, flight-file-manager-api < 1.2.0~
-Requires:       flight-file-manager-webapp => 1.1.0~, flight-file-manager-webapp < 1.2.0~
-Requires:       flight-login-api => 1.0.0~, flight-login-api < 1.1.0~
-Requires:       flight-job-script-api => 1.2.0~, flight-job-script-api < 1.3.0~
-Requires:       flight-job-script-webapp => 1.2.0~, flight-job-script-webapp < 1.3.0~
-Requires:       flight-www => 1.5.0~, flight-www < 1.6.0~
-Requires:       flight-headnode-landing-page < 1.3.0~
+Requires:       flight-console-api => 2.1.0, flight-console-api < 2.2.0~
+Requires:       flight-console-webapp => 1.3.0, flight-console-webapp < 1.4.0~
+Requires:       flight-desktop-restapi => 2.3.0, flight-desktop-restapi < 2.4.0~
+Requires:       flight-desktop-webapp => 1.4.0, flight-desktop-webapp < 1.5.0~
+Requires:       flight-file-manager-api => 1.2.0, flight-file-manager-api < 1.3.0~
+Requires:       flight-file-manager-webapp => 1.2.0, flight-file-manager-webapp < 1.3.0~
+Requires:       flight-login-api => 1.1.0, flight-login-api < 1.2.0~
+Requires:       flight-job-script-api => 1.3.0, flight-job-script-api < 1.4.0~
+Requires:       flight-job-script-webapp => 1.3.0, flight-job-script-webapp < 1.4.0~
+Requires:       flight-www => 1.6.0, flight-www < 1.7.0~
+Requires:       flight-headnode-landing-page < 1.4.0~
+Requires:       flight-web-suite-utils => 1.0.0 flight-web-suite-utils < 1.1.0~
 
 %description
 The Flight Web Suite collection of web applications for accessing a HPC environment.
@@ -77,18 +78,19 @@ The Flight Web Suite collection of web applications for accessing a HPC environm
 /opt/flight/bin/flight service restart desktop-restapi
 /opt/flight/bin/flight service restart job-script-api
 /opt/flight/bin/flight service restart www
-cat <<EOF 1>&2
-================================================
-HTTPs support needs to be enabled for flight-www
-================================================
-To enable HTTPs support run '/opt/flight/bin/flight www enable-https'.
 
+/opt/flight/bin/flight config get web-suite.domain 1>/dev/null 2>&1
+if [ "$?" -eq "0" ] ; then
+/opt/flight/bin/flight service restart login-api
+/opt/flight/bin/flight service restart file-manager-api
+else
+cat <<EOF 1>&2
 ================================================
 Configure and start Login API
 ================================================
 The login-api needs configuring and starting.
 This can be done by running the following:
-  /opt/flight/bin/flight service configure login-api
+  /opt/flight/bin/flight config set web-suite.domain <DOMAIN>
   /opt/flight/bin/flight service start login-api
 
 ================================================
@@ -96,12 +98,28 @@ Configure and start File Manager API
 ================================================
 The file-manager-api needs configuring and starting.
 This can be done by running the following:
-  /opt/flight/bin/flight service configure file-manager-api
+  /opt/flight/bin/flight config set web-suite.domain <DOMAIN>
   /opt/flight/bin/flight service start file-manager-api
 
 EOF
+fi
+if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
+cat <<EOF 1>&2
+================================================
+HTTPS support needs to be enabled for flight-www
+================================================
+To enable HTTPS support run:
+  /opt/flight/bin/flight www enable-https
+  /opt/flight/bin/flight service restart www
+
+EOF
+fi
 
 %changelog
+* Fri Jun 25 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.5-1
+- Bump flight-file-manager-*, flight-login-api, flight-www and
+  flight-job-script-*
+- Update post installation script.
 * Fri Jun 11 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.4-1
 - Bump flight-desktop-restapi, flight-file-manager-* and flight-job-script-*
 * Thu Apr 29 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.3-1

@@ -24,6 +24,7 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+
 name 'flight-desktop'
 default_version '0.0.0'
 
@@ -62,7 +63,11 @@ build do
         '/opt/flight/etc/desktop/types'
       ],
       'global_state_path' => '/opt/flight/var/lib/desktop',
-      'global_log_path' => '/opt/flight/var/log/desktop'
+      'global_log_path' => '/opt/flight/var/log/desktop',
+      'websockify_paths' => [
+        '/opt/flight/opt/websockify/bin/websockify',
+        '/usr/bin/websockify',
+      ],
     }
     File.write(
       File.expand_path("#{install_dir}/etc/config.yml"),

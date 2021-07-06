@@ -31,17 +31,23 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.5.0'
-CERT_VERSION = '0.4.5'
-override 'flight-www', version: VERSION
-override 'flight-cert', version: CERT_VERSION
-override :nginx, version: '1.14.2'
-override 'flight-landing-page', version: '1.2.2'
+VERSION = '1.6.0'
+CERT_VERSION = '0.5.0'
 
-build_version VERSION
+override 'flight-www', version: VERSION
+override 'flight-cert', version: ENV.fetch('ALPHA_cert', CERT_VERSION)
+override :nginx, version: '1.14.2'
+override 'flight-landing-page', version: '1.3.0'
+
+if ENV.key?('ALPHA_cert')
+  build_version VERSION.sub(/(-\w+)?\Z/, '-alpha')
+else
+  build_version VERSION
+end
 build_iteration '1'
 
 dependency 'preparation'
+dependency 'enforce-flight-runway'
 dependency 'flight-www'
 dependency 'flight-landing-page'
 dependency 'flight-cert'
@@ -58,8 +64,12 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-WWW_SYSTEM = '1.0'
-LANDING_PAGE_SYSTEM = '1.0'
+# NOTE: The 1.1 system adds the /downloads location
+WWW_SYSTEMS = (0..1).map { |i| ":flight-www-system-1.#{i}" }.join(' ')
+
+# NOTE: The 1.1 system adds config-packs
+LANDING_PAGE_SYSTEMS = (0..1).map { |i| ":flight-landing-page-system-1.#{i}" }.join(' ')
+
 runtime_dependency 'flight-plugin-cron'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
@@ -83,11 +93,19 @@ File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
   File.write path, content
 end
 
+if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'flight-service >= 1.3.0'
+elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'flight-service (>= 1.3.0)'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
+end
+
 package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
-  priority ":flight-www-system-#{WWW_SYSTEM} :flight-landing-page-system-#{LANDING_PAGE_SYSTEM}"
+  priority "#{WWW_SYSTEMS} #{LANDING_PAGE_SYSTEMS}"
 end
 
 package :deb do
@@ -95,5 +113,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "::flight-www-system-#{WWW_SYSTEM} :flight-landing-page-system-#{LANDING_PAGE_SYSTEM}"
+  section ":#{WWW_SYSTEMS} #{LANDING_PAGE_SYSTEMS}"
 end

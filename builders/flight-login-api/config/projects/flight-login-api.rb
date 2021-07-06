@@ -31,13 +31,15 @@ friendly_name 'Flight Websuite Login API'
 
 install_dir '/opt/flight/opt/login-api'
 
-VERSION = '1.0.1'
-override 'flight-login-api', version: VERSION
+VERSION = '1.1.0'
+override 'flight-login-api', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
-build_iteration 1
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
+build_iteration 2
 
 dependency 'preparation'
+dependency 'update_puma_scripts'
+dependency 'update_web_suite_package_scripts'
 dependency 'flight-login-api'
 dependency 'version-manifest'
 
@@ -55,10 +57,12 @@ if ohai['platform_family'] == 'rhel'
   runtime_dependency 'pam'
   runtime_dependency 'audit-libs'
   runtime_dependency 'libcap-ng'
+  runtime_dependency 'flight-service >= 1.3.0'
 elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'libpam0g'
   runtime_dependency 'libaudit1'
   runtime_dependency 'libcap-ng0'
+  runtime_dependency 'flight-service (>= 1.3.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
@@ -71,7 +75,7 @@ runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
-config_file File.join(install_dir, 'etc/flight-login.yaml')
+config_file '/opt/flight/etc/login-api.yaml'
 config_file '/opt/flight/etc/service/env/login-api'
 
 require 'find'

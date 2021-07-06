@@ -6,5 +6,4 @@ pkg/*
 bin/*
 files/**/cache/
 vendor
-vendor
 local

@@ -1,6 +1,6 @@
 #!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -26,10 +26,16 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# Ensure flight_ROOT is set
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
+
 OLD_PID="$1"
 
-bash "$DIR"/stop.sh "$OLD_PID"
+${flight_ROOT}/etc/service/types/job-script-api/stop.sh "$OLD_PID"
 
 # Wait up to 10ish seconds for puma to stop
 state=1
@@ -46,4 +52,4 @@ if [ "$state" -eq 0 ]; then
   exit 1
 fi
 
-bash "$DIR"/start.sh
+${flight_ROOT}/etc/service/types/job-script-api/start.sh

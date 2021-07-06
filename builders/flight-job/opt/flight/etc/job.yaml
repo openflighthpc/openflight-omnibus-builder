@@ -1,0 +1,167 @@
+#==============================================================================
+# Copyright (C) 2021-present Alces Flight Ltd.
+#
+# This file is part of Flight Job.
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which is available at
+# <https://www.eclipse.org/legal/epl-2.0>, or alternative license
+# terms made available by Alces Flight Ltd - please direct inquiries
+# about licensing to licensing@alces-flight.com.
+#
+# Flight Job is distributed in the hope that it will be useful, but
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
+# OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
+# PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more
+# details.
+#
+# You should have received a copy of the Eclipse Public License 2.0
+# along with Flight Job. If not, see:
+#
+#  https://opensource.org/licenses/EPL-2.0
+#
+# For more information on Flight Job, please visit:
+# https://github.com/openflighthpc/flight-job
+#==============================================================================
+
+# ==============================================================================
+# Templates Directory
+# Specify where the templates will be stored.
+# The environment variable flight_JOB_templates_dir takes precedence.
+#
+# Relative paths are expanded from flight_ROOT (or the install directory, if
+# flight_ROOT is unset).
+# ==============================================================================
+templates_dir: usr/share/job/templates
+
+# ==============================================================================
+# Scripts Directory
+# Specify where the scripts will be stored.
+#
+# Relative paths are expanded from flight_ROOT (or the install directory, if
+# flight_ROOT is unset).
+#
+# The environment variable flight_JOB_scripts_dir takes precedence.
+# ==============================================================================
+# scripts_dir: ~/.local/share/flight/job/scripts
+
+# ==============================================================================
+# Jobs Directory
+# Specify where the scripts will be stored.
+#
+# Relative paths are expanded from flight_ROOT (or the install directory, if
+# flight_ROOT is unset).
+#
+# The environment variable flight_JOB_jobs_dir takes precedence.
+# ==============================================================================
+# jobs_dir: ~/.local/share/flight/job/jobs
+
+# ==============================================================================
+# Submit Script Path
+# Specify the path to the script which submits jobs.
+#
+# Relative paths are expanded from flight_ROOT (or the install directory, if
+# flight_ROOT is unset).
+#
+# The environment variable flight_JOB_submit_script_path takes precedence.
+# ==============================================================================
+submit_script_path: libexec/job/flight-slurm/submit.sh
+
+# ==============================================================================
+# Monitor Script Path
+# Specify the path to the script which monitors jobs.
+#
+# Relative paths are expanded from flight_ROOT (or the install directory, if
+# flight_ROOT is unset).
+#
+# The environment variable flight_JOB_monitor_script_path takes precedence.
+# ==============================================================================
+monitor_script_path: libexec/job/flight-slurm/monitor.sh
+
+# ==============================================================================
+# State Map Path
+# Specify the path to the state map file. This file should contain a list of
+# "scheduler states" and the corresponding "flight job state".
+#
+# Relative paths are expanded from flight_ROOT (or the install directory, if
+# flight_ROOT is unset).
+#
+# WARNING: Unrecognized flight-job states may prevent the job from being updated.
+# Ensure all flight-job states are valid (see: lib/flight_job/models/script.rb)
+#
+# The environment variable flight_JOB_state_map_path takes precedence.
+# ==============================================================================
+state_map_path: etc/job/state-maps/slurm.yaml
+
+# ==============================================================================
+# Check Cron Path
+# Specify the path to the script which checks if cron is setup to run the
+# monitor.
+#
+# If cron has not been setup, it is responsible for setting the crontab to run
+# the "flight job run-monitor" command periodically.
+#
+# Relative paths are expanded from flight_ROOT (or the install directory, if
+# flight_ROOT is unset).
+#
+# The environment variable flight_JOB_check_cron takes precedence.
+# ==============================================================================
+check_cron: libexec/job/check-cron.sh
+
+# ==============================================================================
+# Minimum Terminal Width
+# The minimum terminal width when wrapping output text. This prevents various
+# edge cases in small terminals. The terminal is responsible for wrapping the
+# text if its width is smaller than the minimum.
+#
+# The environment variable flight_JOB_minimum_terminal_width takes precedence.
+# ==============================================================================
+# minimum_terminal_width: 80
+
+# ==============================================================================
+# Maximum ID Length
+# The maximum allowed length for script IDs
+#
+# The environment variable flight_JOB_max_id_length takes precedence.
+# ==============================================================================
+# max_id_length: 16
+
+# ==============================================================================
+# Maximum Standard Input Size
+# The maximum file size that will be provided to STDIN. The size must be given
+# in Bytes.
+#
+# The environment variable flight_JOB_stdin_size takes precedence.
+# ==============================================================================
+# max_stdin_size: 1048576 # (1 MB)
+
+# ==============================================================================
+# Submission Period
+# The minimum amount of time to wait before a job that is "pending submission"
+# is considered failed.
+#
+# The environment variable flight_JOB_submission_period takes precedence.
+# ==============================================================================
+# submission_period: 3600
+
+# ==============================================================================
+# Log Path
+# The file the logger will write to. It will write to standard error if
+# omitted.
+#
+# Relative paths are expanded from flight_ROOT (or the install directory, if
+# flight_ROOT is unset).
+#
+# The environment variable flight_JOB_log_path takes precedence.
+# ==============================================================================
+# log_path: ~/.cache/flight/log/share/job.log
+
+# ==============================================================================
+# Log level
+# Set at which severity the application will log
+# Valid levels: 'fatal', 'error', 'warn', 'info', 'debug'
+#
+# The environment variable flight_JOB_log_level takes precedence.
+# ==============================================================================
+# log_level: warn

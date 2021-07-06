@@ -28,6 +28,12 @@
 
 set -e
 
+# Ensure flight_ROOT is set
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
+
 # Required to correctly handle output parsing.
 if [ -f /etc/locale.conf ]; then
   . /etc/locale.conf
@@ -38,7 +44,7 @@ export LANG=${LANG:-en_US.UTF-8}
 pidfile=$(mktemp /tmp/flight-desktop-restapi-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
-tool_bg /opt/flight/opt/desktop-restapi/bin/start "$pidfile"
+tool_bg ${flight_ROOT}/opt/desktop-restapi/bin/start "$pidfile"
 
 # Wait up to 10ish seconds for puma to start
 for _ in `seq 1 20`; do

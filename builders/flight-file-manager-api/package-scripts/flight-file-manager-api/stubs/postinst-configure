@@ -1,0 +1,62 @@
+# Migrate the old files from usr/share to var/lib
+old=${flight_ROOT}/usr/share/file-manager-api
+new=${flight_ROOT}/var/lib/file-manager-api
+if ls "$old" >/dev/null 2>&1; then
+  mkdir -p "$new" >/dev/null
+  ls "$old" | xargs -I {} mv "$old/{}" "$new"
+  rmdir "$old"
+fi
+
+# Warn about obsolete configuration.
+env_file=${flight_ROOT}/etc/service/env/file-manager-api
+var_name="flight_FILE_MANAGER_API_cloudcmd_cookie_domain"
+if [ -f "${env_file}" ] && grep -q "^${var_name}=" "${env_file}" ; then
+    # There is existing obsolete configuration for the domain name.
+    domain=$(grep "^${var_name}=" "${env_file}" | cut -d= -f2)
+    "${flight_ROOT}"/bin/flight config get web-suite.domain 1>/dev/null 2>&1
+    if [ "$?" -ne "0" ] ; then
+        cat <<EOF 1>&2
+
+===========================================================
+WARNING: Configuration required for flight-file-manager-api
+===========================================================
+
+The existing configuration of 'cloudcmd_cookie_domain' for
+flight-file-manager-api is no longer supported.  To maintain the configuration
+follow one of the options below and then restart flight-file-manager-api.
+
+Run the command:
+
+    flight config set web-suite.domain "${domain}"
+
+Or edit the configurtion file '${flight_ROOT}/etc/file-manager-api.yaml' and
+set 'cloudcmd_cookie_domain' to '${domain}'.
+
+EOF
+    fi
+    # Delete the unused configuration.
+    sed -i \
+        -e "/^${var_name}=/i # Setting ${var_name} in this file is no longer supported.  The following line can be safely removed." \
+        -e "/^${var_name}=/s/^/# /" \
+        "${env_file}"
+fi
+
+
+# Kill any running cloudcmd processes.  They will be restarted with the
+# new version on demand.
+(
+    shopt -s nullglob
+    echo "Killing existing file manager backend sessions.  New sessions will restart on demand."
+    for i in "${flight_ROOT}"/var/lib/file-manager-api/*/cloudcmd.pid ; do
+        pid=$(cat "$i")
+        if [ -d /proc/"${pid}" ] ; then
+            if grep -q 'file-manager-api.*cloudcmd' /proc/"${pid}"/cmdline ; then
+                user=$(echo "$i" | cut -d / -f 1- --output-delimiter $'\n' | tail -n -2 | head -n 1)
+                echo "--> Killing session ${pid} for ${user}"
+                kill -s TERM -"${pid}"
+            fi
+        fi
+    done
+)
+
+${flight_ROOT}/bin/flight service configure file-manager-api --force --config '{}' >/dev/null 2>&1

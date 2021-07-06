@@ -25,24 +25,17 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-echo "Configuring"
 
-flight_ROOT="${flight_ROOT:-/opt/flight}"
-env_file="$flight_ROOT/etc/service/env/file-manager-api"
-var_name="flight_FILE_MANAGER_API_cloudcmd_cookie_domain"
+# NOTE: This file is managed by 'update_web_suite_package_scripts' software
+#       definition. Any changes will be lost on the next build.
 
-for a in "$@"; do
-  IFS="=" read k v <<< "${a}"
-  case $k in
-    cookieDomain)
-      if cat "$env_file" | grep "${var_name}"; then
-        sed -i "s/${var_name}=.*/${var_name}=${v}/g" "$env_file"
-      else
-        echo "${var_name}=${v}" >> "$env_file"
-      fi
-      ;;
-    *)
-      echo "Unrecognised key: $k"
-    ;;
-  esac
-done
+# Ensure flight_ROOT is set correctly
+flight_ROOT=/opt/flight
+
+# On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
+if [ "$1" == "0" -o "$1" == "remove" ]; then
+  # Stop the service
+  ${flight_ROOT}/bin/flight service stop console-api >/dev/null 2>&1
+fi
+
+exit 0

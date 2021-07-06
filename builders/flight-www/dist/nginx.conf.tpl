@@ -9,6 +9,7 @@ events {
 
 http {
     include /opt/flight/opt/www/embedded/conf/mime.types;
+    include /opt/flight/etc/www/mime.types;
     default_type application/octet-stream;
     log_format main '$remote_addr - $remote_user [$time_local] "$request" '
                     '$status $body_bytes_sent "$http_referer" '
@@ -18,5 +19,6 @@ http {
     #tcp_nopush on;
     keepalive_timeout 65;
     gzip on;
+    error_page 404 /not-found;
     include /opt/flight/etc/www/http.d/*.conf;
 }

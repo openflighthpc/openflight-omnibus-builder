@@ -1,6 +1,6 @@
 #!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,7 +25,14 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+
 set -e
+
+# Ensure flight_ROOT is set
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
 
 # Required to correctly handle output parsing.
 if [ -f /etc/locale.conf ]; then
@@ -33,16 +40,13 @@ if [ -f /etc/locale.conf ]; then
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
-log_file="${flight_ROOT}"/var/log/job-script-api/puma.log
-mkdir -p $(dirname "${log_file}")
-
-pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
+# Create the temporary PID file
+pidfile=$(mktemp /tmp/flight-job-script-api-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
-tool_bg bash "${flight_ROOT}"/opt/job-script-api/bin/start "$pidfile"
+tool_bg ${flight_ROOT}/opt/job-script-api/bin/start "$pidfile"
 
 # Wait up to 10ish seconds for puma to start
-pid=''
 for _ in `seq 1 20`; do
   sleep 0.5
   if [ -f "$pidfile" ]; then
