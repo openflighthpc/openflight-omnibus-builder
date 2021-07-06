@@ -44,7 +44,7 @@ dependency 'version-manifest'
 if ohai['platform_family'] == 'rhel'
   conflict 'flight-www < 1.3.0'
 elsif ohai['platform_family'] == 'debian'
-  conflict 'flight-www (< 1.3.0)'
+  conflict 'flight-www (<< 1.3.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
