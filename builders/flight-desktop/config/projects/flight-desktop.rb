@@ -52,6 +52,7 @@ exclude '**/bundler/git'
 
 DESKTOP_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
+runtime_dependency 'flight-websockify'
 runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-desktop-types'
 
