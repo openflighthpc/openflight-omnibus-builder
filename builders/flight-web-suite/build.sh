@@ -32,7 +32,7 @@ mkdir -p pkg
 
 NAME=flight-web-suite
 VERSION=2021.5
-REL=2
+REL=3
 
 if [ -f /etc/redhat-release ]; then
   echo "Building RPM package..."
@@ -54,6 +54,9 @@ elif [ -f /etc/lsb-release ]; then
       -e "s/%REL%/$REL/g" \
       $d/deb/control.tpl > \
       $HOME/${NAME}/${NAME}_${VERSION}-${REL}/DEBIAN/control
+  cp $d/deb/$NAME.postinst \
+     $HOME/${NAME}/${NAME}_${VERSION}-$REL/DEBIAN/postinst
+  chmod 755 $HOME/${NAME}/${NAME}_${VERSION}-$REL/DEBIAN/postinst
 
   pushd ${NAME}_${VERSION}-$REL
   wget https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/LICENSE.txt
