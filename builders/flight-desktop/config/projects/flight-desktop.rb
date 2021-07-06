@@ -35,7 +35,7 @@ VERSION = '1.6.1'
 override 'flight-desktop', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-desktop'
@@ -106,5 +106,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+  section ":apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
 end
