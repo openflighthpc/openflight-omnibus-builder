@@ -1,0 +1,90 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "2ebdb76a9ba0dd3c44491736133d54c7f7f529ff7f3b8f1e7401a92431e86a92"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.8"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "autorepr": {
+            "hashes": [
+                "sha256:1d9010d14fb325d3961e3aa73692685563f97d6ba4a2f0f735329fb37422599c",
+                "sha256:c34567e4073630feb52d9c788fc198085e9e9de4817e3b93b7c4c534fc689f11",
+                "sha256:ef770b84793d5433e6bb893054973b8c7ce6b487274f9c3f734f678cae11e85e"
+            ],
+            "index": "pypi",
+            "version": "==0.3.0"
+        },
+        "click": {
+            "hashes": [
+                "sha256:29f99fc6125fbc931b758dc053b3114e55c77a6e4c6c3a2674a2dc986016381d",
+                "sha256:f15516df478d5a56180fbf80e68f206010e6d160fc39fa508b65e035fd75130b"
+            ],
+            "index": "pypi",
+            "version": "==6.7"
+        },
+        "click-repl": {
+            "editable": true,
+            "git": "https://github.com/alces-software/click-repl.git",
+            "ref": "6a809b2af43054035027618f9fd37af4c31a8abc"
+        },
+        "prompt-toolkit": {
+            "hashes": [
+                "sha256:2a90e971bd5cb958a80ce35507c97e063521b22dfd85ce05b5705c347d1193ed",
+                "sha256:b7bbbc221159be8daab91269d48575f6c740000c03d537fc076ee176476c8b4c",
+                "sha256:cd6523b36adc174cc10d54b1193eb626b4268609ff6ea92c15bcf1996609599c"
+            ],
+            "index": "pypi",
+            "version": "==1.0.9"
+        },
+        "requests": {
+            "hashes": [
+                "sha256:d57dae49f4267e8cb378aff9e426c9304a78794d03e945e39bfc607355715658",
+                "sha256:d902a54f08d086a7cc6e58c20e2bb225b1ae82c19c35e5925269ee94fb9fce00"
+            ],
+            "index": "pypi",
+            "version": "==2.12.5"
+        },
+        "requests-file": {
+            "hashes": [
+                "sha256:8b3927545f8ccd424fce30ca5987a0561db1598f811f7bdff124c24b33a057cf",
+                "sha256:d75823cccd271caa7303304f9f7d44e12db9f77d844491c5ec9bd44af0844ebc"
+            ],
+            "index": "pypi",
+            "version": "==1.4.1"
+        },
+        "six": {
+            "hashes": [
+                "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
+                "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
+            ],
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "version": "==1.16.0"
+        },
+        "terminaltables": {
+            "hashes": [
+                "sha256:f3eb0eb92e3833972ac36796293ca0906e998dc3be91fbe1f8615b331b853b81"
+            ],
+            "index": "pypi",
+            "version": "==3.1.0"
+        },
+        "wcwidth": {
+            "hashes": [
+                "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784",
+                "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"
+            ],
+            "version": "==0.2.5"
+        }
+    },
+    "develop": {}
+}

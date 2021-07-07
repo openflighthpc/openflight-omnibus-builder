@@ -27,26 +27,44 @@
 name 'flight-directory-requirements'
 default_version '0.0.0'
 
-dependency 'python3'
-
 skip_transitive_dependency_licensing true
 
-build do
-  env = with_standard_compiler_flags(with_embedded_path)
+source path: File.expand_path('../../lib', __dir__)
 
-  %w(
-    appdirs>=1.4.0
-    autorepr==0.3.0
-    packaging==16.8
-    prompt-toolkit==1.0.9
-    pyparsing==2.1.10
-    requests==2.12.5
-    requests-file==1.4.1
-    six==1.10.0
-    terminaltables==3.1.0
-    wcwidth==0.1.7
-  ).each do |req|
-    command "#{install_dir}/embedded/bin/pip3 install --build #{project_dir} --install-option=\"--install-scripts=#{install_dir}/bin\" #{req}", :env => env
+build do
+  env = with_embedded_path("PIPENV_VENV_IN_PROJECT" => 'true')
+
+  # Place the openflight version of python onto the path
+  env['PATH'] = "/opt/flight/opt/python/bin:#{env['PATH']}"
+
+  # Copies the pip files to the install dir
+  ['Pipfile', 'Pipfile.lock'].each do |file|
+    copy file, File.join(install_dir, file)
   end
-  command "#{install_dir}/embedded/bin/pip3 install prompt-toolkit==1.0.9 six==1.10.0 wcwidth==0.2.5 click==6.7 --src #{install_dir}/lib -e git+https://github.com/alces-software/click-repl.git@6a809b2af43054035027618f9fd37af4c31a8abc#egg=click_repl", :env => env
+
+  # Add flight-directory lib to the PYTHON_PATH, using venv .pth magic
+  # https://stackoverflow.com/a/10739838
+  sys = overrides[:python_system] || raise("The python_system has not been overriden")
+  lib = File.join(install_dir, 'lib')
+  pth = File.join(install_dir, ".venv/lib/python#{sys}/site-packages/directory.pth")
+  block do
+    FileUtils.mkdir_p File.dirname(pth)
+    File.write(pth, lib)
+  end
+
+  # Builds the virtual env
+  command(<<-CMD, env: env)
+    cd #{install_dir}
+    pipenv install --python /opt/flight/opt/python/bin/python --deploy
+  CMD
+
+  # Generates the bin symlinks
+  block do
+    Dir.chdir install_dir do
+      FileUtils.mkdir_p 'bin'
+      Dir.glob('.venv/bin/*').each do |path|
+        FileUtils.ln_s File.join('..', path), File.join('bin', File.basename(path))
+      end
+    end
+  end
 end
