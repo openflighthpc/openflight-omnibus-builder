@@ -40,11 +40,15 @@ skip_transitive_dependency_licensing true
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
+  block do
+    FileUtils.mkdir_p File.join(install_dir,  'etc')
+  end
+
   # Moves the project into place
   [
     'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app', 'lib', 'libexec',
     'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'falcon.rb',
-    'etc/flight-sheduler-controller.yaml', 
+    'etc/flight-scheduler-controller.yaml', 
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
