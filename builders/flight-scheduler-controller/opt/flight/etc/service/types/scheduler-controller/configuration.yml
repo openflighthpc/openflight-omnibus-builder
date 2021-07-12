@@ -7,17 +7,7 @@ values:
     value: "http://0.0.0.0:918"
     length: 64
 
-  - key: FLIGHT_SCHEDULER_AUTH_TYPE
-    label: Specify the authentication strategy
-    value: munge
-    length: 64
-
   - key: FLIGHT_SCHEDULER_ENV_VAR_PREFIX
     label: Prefix for environment variables set in a job's context.
     value: ''
-    length: 64
-
-  - key: RACK_ENV
-    label: The deployment environment to be used, change with caution
-    value: 'production'
     length: 64

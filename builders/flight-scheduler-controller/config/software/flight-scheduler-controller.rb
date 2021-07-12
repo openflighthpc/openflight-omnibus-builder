@@ -42,8 +42,9 @@ build do
 
   # Moves the project into place
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'etc', 'app', 'lib', 'libexec',
-    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'falcon.rb'
+    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app', 'lib', 'libexec',
+    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'falcon.rb',
+    'etc/flight-sheduler-controller.yaml', 
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
