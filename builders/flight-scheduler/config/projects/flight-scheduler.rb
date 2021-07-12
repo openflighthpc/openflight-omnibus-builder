@@ -31,7 +31,7 @@ friendly_name 'Flight Scheduler CLI tools'
 
 install_dir '/opt/flight/opt/scheduler'
 
-VERSION = '0.6.0'
+VERSION = '0.7.0'
 override 'flight-scheduler', version: VERSION
 build_version VERSION
 build_iteration 1
@@ -51,6 +51,13 @@ exclude '**/bundler/git'
 
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
+
+# Update the version numbering in files
+File.expand_path('../../opt/flight/libexec/commands/scheduler', __dir__).tap do |path|
+  content = File.read path
+  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
+  File.write path, content
+end
 
 require 'find'
 Find.find('opt') do |o|

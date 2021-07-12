@@ -42,14 +42,12 @@ build do
 
   # Moves the project into place
   [
-    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'etc', 'app', 'lib',
-    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'falcon.rb'
+    'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app', 'lib', 'libexec',
+    'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'falcon.rb',
+    'etc/flight-sheduler-controller.yaml', 
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
-
-  # Set the bind address in the config
-  command "echo bind_address: 'http://0.0.0.0:918' >> #{install_dir}/etc/flight-scheduler-controller.yaml"
 
   # Installs the gems to the shared `vendor/share`
   flags = [

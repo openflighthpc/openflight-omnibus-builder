@@ -31,7 +31,7 @@ friendly_name 'Flight Scheduler Controller'
 
 install_dir '/opt/flight/opt/scheduler-controller'
 
-VERSION = '0.6.0'
+VERSION = '0.7.0'
 override 'flight-scheduler-controller', version: VERSION
 build_version VERSION
 build_iteration 1
@@ -53,8 +53,8 @@ runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
+
+config_file '/opt/flight/opt/scheduler-controller/etc/flight-scheduler-controller.yaml'
 
 # TODO: Add an upper bound or convert into a -system-1.0 dependency
 #       before production release

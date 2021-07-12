@@ -33,6 +33,11 @@ if [ -f /etc/locale.conf ]; then
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
+# Default to production environment
+if [ -z "$(echo "$RACK_ENV")" ]; then
+  export RACK_ENV=production
+fi
+
 # Start the server
 tool_bg "$flight_ROOT"/opt/scheduler-controller/bin/start
 
@@ -41,7 +46,7 @@ pid=''
 app_root="$flight_ROOT/opt/scheduler-controller"
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$("$flight_ROOT"/bin/ruby "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc)
+  pid=$("$flight_ROOT"/bin/ruby "$app_root"/bin/get-falcon-pid.rb "$app_root"/supervisor.ipc || true)
   if [ -n "$pid" ]; then
     break
   fi
