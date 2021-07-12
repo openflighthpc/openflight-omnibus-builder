@@ -31,10 +31,10 @@ friendly_name 'Flight Scheduler Controller'
 
 install_dir '/opt/flight/opt/scheduler-controller'
 
-VERSION = '0.7.0-rc1'
+VERSION = '0.7.0'
 override 'flight-scheduler-controller', version: VERSION
 build_version VERSION
-build_iteration 7
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-scheduler-controller'
