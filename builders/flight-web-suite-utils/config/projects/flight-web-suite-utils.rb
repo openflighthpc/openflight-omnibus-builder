@@ -41,6 +41,8 @@ dependency 'preparation'
 dependency 'flight-web-suite-utils'
 dependency 'version-manifest'
 
+runtime_dependency 'flight-www'
+
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
 
