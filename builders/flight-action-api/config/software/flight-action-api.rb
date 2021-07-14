@@ -49,6 +49,12 @@ build do
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
+  # Patch the development port to the production address
+  block do
+    path = File.join(install_dir, 'config/puma.rb')
+    File.write(path, File.read(path).sub(/^port.*$/, 'bind "tcp://127.0.0.1:917"'))
+  end
+
   # Create the blank nodes file
   touch File.join(install_dir, 'config/nodes.yaml')
 

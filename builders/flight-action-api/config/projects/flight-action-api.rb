@@ -39,6 +39,7 @@ build_version VERSION
 build_iteration 3
 
 dependency 'preparation'
+dependency 'update_puma_scripts'
 dependency 'flight-action-api'
 dependency 'version-manifest'
 
