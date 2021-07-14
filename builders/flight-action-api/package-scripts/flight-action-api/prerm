@@ -32,7 +32,10 @@
 # Ensure flight_ROOT is set correctly
 flight_ROOT=/opt/flight
 
-# Reload flight-www to remove the proxy configuration
-${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
+# On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
+if [ "$1" == "0" -o "$1" == "remove" ]; then
+  # Stop the service
+  ${flight_ROOT}/bin/flight service stop action-api >/dev/null 2>&1
+fi
 
 exit 0
