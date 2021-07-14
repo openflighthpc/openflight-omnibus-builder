@@ -1,6 +1,6 @@
 #!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,51 +25,40 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+
 set -e
 
-# Required so action-api can locate the `flight` entry point.
-# PATH="${flight_ROOT}/bin:${PATH}"
-# Required to support initializers.
-export USER=$(whoami)
+# Ensure flight_ROOT is set
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
+
 # Required to correctly handle output parsing.
 if [ -f /etc/locale.conf ]; then
   . /etc/locale.conf
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
-# Set the address, log path, var dir, and pid file path
-addr=tcp://127.0.0.1:917
-log_file="${flight_ROOT}"/var/log/action-api/puma.log
-mkdir -p $(dirname "${log_file}")
-var_dir="${flight_ROOT}"/var/action-api
-mkdir -p "${var_dir}"
-pidfile=$(mktemp /tmp/flight-deletable.XXXXXXXX.pid)
+# Create the temporary PID file
+pidfile=$(mktemp /tmp/flight-action-api-deletable.XXXXXXXX.pid)
 rm "${pidfile}"
 
-# NOTE: The underlining puma command needs to be contained with a wrapper script
-#       This allows puma's STDOUT and STDERR to be redirected to a log file.
-#
-#       Previously --redirect-std* flags where passed directly to puma. These
-#       work fine if the web process starts correctly. However any config errors
-#       will cause puma to crash before applying the redirects. This in effect
-#       suppresses all configuration errors.
-#
-# PS:   The bin/start script is packager specific and therefore contained within
-#       the builder repo; not the upstream source.
-#
-# PPS:  Standard redirects do not work with tool_bg as it gets passed to the
-#       underlining setsid command; not puma.
-tool_bg bash "${flight_ROOT}"/opt/action-api/bin/start "$addr" "$log_file" "$pidfile"
+tool_bg ${flight_ROOT}/opt/action-api/bin/start "$pidfile"
 
 # Wait up to 10ish seconds for puma to start
-pid=''
 for _ in `seq 1 20`; do
   sleep 0.5
-  pid=$(ps -ax | grep $addr | grep "\spuma\s" | awk '{ print $1 }')
+  if [ -f "$pidfile" ]; then
+    pid=$(cat "$pidfile" | tr -d "\n")
+  fi
   if [ -n "$pid" ]; then
     break
   fi
 done
+
+# Ensure the pidfile is removed
+rm -f "$pidfile"
 
 # Report back the pid or error
 if [ -n "$pid" ]; then

@@ -1,0 +1,18 @@
+"${flight_ROOT}/bin/ruby" <<EOF
+require 'yaml'
+require 'securerandom'
+
+path = '${flight_ROOT}/opt/action-api/config/application.yaml'
+data =  File.read(path)
+exit 0 if YAML.load(data)['jwt_secret']
+
+File.write path, <<~CONFIG
+#{data}
+
+jwt_secret: #{SecureRandom.alphanumeric(40)}
+CONFIG
+EOF
+
+mkdir -p ${flight_ROOT}/opt/action-api/libexec
+
+${flight_ROOT}/bin/flight service configure action-api --force --config '{}' >/dev/null 2>&1
