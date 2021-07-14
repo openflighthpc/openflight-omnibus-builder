@@ -26,7 +26,21 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 install_guest_additions_if_necessary() {
-  if ! lsmod | grep -q 'vboxsf '; then
+  if dmidecode | grep QEMU; then
+      cat <<EOF 1>&2
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   GUEST ADDITIONS NOT INSTALLED
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+Guest additions is not supported bu QEMU.
+
+Shared folders may not be correctly mounted.
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+EOF
+  elif ! lsmod | grep -q 'vboxsf '; then
     if which apt &>/dev/null; then
       apt update
       apt -y install virtualbox-guest-dkms
