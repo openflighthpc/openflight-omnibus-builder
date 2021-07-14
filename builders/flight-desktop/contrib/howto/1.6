@@ -140,6 +140,27 @@ If prompted, you should supply the following password: XXXXXXX
 
 The session is now ready to be accessed with your favourite vnc client.
 
+### Starting Scripts and Applications
+
+It is possible to start multiple `scripts` and `applications` within
+your `session`. This needs to be done when your session is created
+using the `--script` and `--app` flags. Graphical applications should
+be started using `--app` where `--script` will be ran within a terminal.
+
+*NOTE:* Support for these flags will vary depending on the desktop type.
+
+~~~
+# Launch multiple scripts within your session
+flight desktop start terminal \
+  --script date \
+  --script "/path/to/your/script arg1 arg2 ..."
+
+# Launch multiple applications within your session
+flight desktop start gnome \
+  --app firefox \
+  --app "/path/to/launch/script arg1 arg2"
+~~~
+
 ## List Running Sessions
 
 The running sessions are returned by the `list` command:
