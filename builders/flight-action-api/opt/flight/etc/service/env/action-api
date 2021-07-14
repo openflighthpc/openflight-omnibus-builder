@@ -25,4 +25,6 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
+RACK_ENV=production
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PUMA_LOG_FILE=/opt/flight/var/log/action-api/puma.log
