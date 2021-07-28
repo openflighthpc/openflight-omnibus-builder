@@ -64,7 +64,7 @@ build do
   # ...
   # Fatal: You must get working getaddrinfo() function.
   #        or you can specify "--disable-ipv6".
-  configure env: env
+  configure '--enable-shared', env: env
   make "-j #{workers}", env: env
   make "-j #{workers} install", env: env
 
@@ -89,6 +89,22 @@ build do
     ].map { |d| Dir.glob(d) }
      .flatten
      .each { |d| FileUtils.rm_rf(d) }
+  end
+
+  # Python will automatically build a statically compiled library as libpython<version>.a
+  # The --enable-shared only partially disables this build. A secondary copy of the
+  # static library is contained within config-<version>-x86_64-linux-gnu.
+  #
+  # As discussed on the python-dev forums, this second copy is only useful for static
+  # builds. It is completely redundant within flight-python and can be removed.
+  # A new --without-static-libpython flag should be available at some point.
+  # https://bugs.python.org/issue43103
+  #
+  # Fedora does a similar thing, but it patches the 'configure' script instead:
+  # https://src.fedoraproject.org/rpms/python3.8/blob/rawhide/f/00111-no-static-lib.patch
+  block do
+    Dir.glob(File.join(install_dir, "embedded/lib/python*/config-*-x86_64-linux-gnu"))
+       .each { |d| FileUtils.rm_rf(d) }
   end
 
   # There is a bug where sometimes pip3 isn't built, it seems to occur on rebuilds
