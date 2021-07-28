@@ -66,6 +66,21 @@ build do
 
   command "cd #{install_dir}/backend && /opt/flight/bin/yarn install --production", env: env
 
+  # Remove various development files from 'node_modules'
+  # NOTE: An explicit list is maintained to prevent directories being deleted by mistake
+  #       This list may need updating if new dependencies are added
+  block do
+    [
+      "#{install_dir}/backend/node_modules/@cloudcmd/fileop/dist-dev",
+      "#{install_dir}/backend/node_modules/console-io/dist-dev",
+      "#{install_dir}/backend/node_modules/deepword/dist-dev",
+      "#{install_dir}/backend/node_modules/dword/dist-dev",
+      "#{install_dir}/backend/node_modules/edward/dist-dev",
+      "#{install_dir}/backend/node_modules/monaco-editor/dev",
+      "#{install_dir}/backend/node_modules/restafary/dist-dev",
+    ].each { |dir| FileUtils.rm_rf dir }
+  end
+
   block do
     # Remove some git submodule files in some dependencies.  If these are left
     # in, the build caching mechanism used by omnibus breaks which in turn
