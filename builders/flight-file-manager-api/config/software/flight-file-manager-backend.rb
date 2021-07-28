@@ -64,7 +64,7 @@ build do
     delete File.expand_path("#{install_dir}/backend/lib/cloudcmd/#{path}")
   end
 
-  command "cd #{install_dir}/backend && /opt/flight/bin/yarn install", env: env
+  command "cd #{install_dir}/backend && /opt/flight/bin/yarn install --production", env: env
 
   block do
     # Remove some git submodule files in some dependencies.  If these are left
