@@ -78,6 +78,10 @@ build do
       "#{install_dir}/backend/node_modules/edward/dist-dev",
       "#{install_dir}/backend/node_modules/monaco-editor/dev",
       "#{install_dir}/backend/node_modules/restafary/dist-dev",
+
+      # This is the only source file with any considerable size
+      # Edward still functions without it
+      "#{install_dir}/backend/node_modules/edward/modules/ace-builds/src"
     ].each { |dir| FileUtils.rm_rf dir }
   end
 
