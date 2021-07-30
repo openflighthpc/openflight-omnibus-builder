@@ -8,3 +8,6 @@ files/**/cache/
 vendor
 local
 opt/flight/libexec/job-script-api
+package-scripts/*/postinst
+package-scripts/*/postrm
+package-scripts/*/prerm

@@ -7,3 +7,10 @@ bin/*
 files/**/cache/
 vendor
 local
+
+package-scripts/*/postinst
+package-scripts/*/postrm
+package-scripts/*/prerm
+package-scripts/*/postinst
+package-scripts/*/postrm
+package-scripts/*/prerm
