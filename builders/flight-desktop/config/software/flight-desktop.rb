@@ -68,6 +68,7 @@ build do
         '/opt/flight/opt/websockify/bin/websockify',
         '/usr/bin/websockify',
       ],
+      'hooks_dir' => '/opt/flight/libexec/desktop'
     }
     File.write(
       File.expand_path("#{install_dir}/etc/config.yml"),
