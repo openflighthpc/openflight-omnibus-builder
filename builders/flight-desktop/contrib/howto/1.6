@@ -140,6 +140,42 @@ If prompted, you should supply the following password: XXXXXXX
 
 The session is now ready to be accessed with your favourite vnc client.
 
+### Starting Applications
+
+When you start a session you can provide a "post initializtion" script to run
+once your session has started.  You could use this script to start some default
+applications inside of your session.
+
+The script is specified with the `--script` flag and will be ran inside of a
+suitable terminal emulator for your session type.  E.g., if you are running a
+Gnome session, your script will be ran inside of a Gnome Terminal.
+
+For example, in order to launch `R` running inside of a terminal emulator, you
+could create the file `/tmp/my-script.sh` containing the following:
+
+~~~
+#!/bin/bash
+module load apps/R/3.4.2
+R
+~~~
+
+It could then be used to launch `R` inside of your desktop session, by running.
+
+~~~
+flight desktop start gnome --script /tmp/my-script.sh
+~~~
+
+Some desktop types also support an `--app` flag which can be given multiple
+times to launch graphical applications.  This may be more convenient than
+writing the equivalent script.
+
+~~~
+# Launch multiple applications within your session
+flight desktop start gnome \
+  --app firefox \
+  --app "/path/to/launch/script arg1 arg2"
+~~~
+
 ## List Running Sessions
 
 The running sessions are returned by the `list` command:
