@@ -1,6 +1,6 @@
-# vim: set type=bash;
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -26,4 +26,30 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-RACK_ENV=production
+
+# Ensure flight_ROOT is set
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
+
+OLD_PID="$1"
+
+${flight_ROOT}/etc/service/types/job-script-api/stop.sh "$OLD_PID"
+
+# Wait up to 10ish seconds for puma to stop
+state=1
+for _ in `seq 1 20`; do
+  kill -0 "$OLD_PID" 2>/dev/null
+  state=$?
+  if [ "$state" -ne 0 ]; then
+    break
+  fi
+done
+
+if [ "$state" -eq 0 ]; then
+  echo Failed to stop job-script-api
+  exit 1
+fi
+
+${flight_ROOT}/etc/service/types/job-script-api/start.sh

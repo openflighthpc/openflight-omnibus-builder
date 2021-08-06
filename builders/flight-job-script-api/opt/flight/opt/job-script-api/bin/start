@@ -1,6 +1,6 @@
-# vim: set type=bash;
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -26,4 +26,37 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-RACK_ENV=production
+
+pid_file="$1"
+if [ -z "$pid_file" ]; then
+  echo "The pid_file argument has not been provided!" >&2
+  exit 1
+fi
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
+
+# Intentionally maintained to abstract the differences between puma/unicorn
+if [ -n "$PUMA_LOG_FILE" ]; then
+  cat <<EOF >$PUMA_LOG_FILE
+This application uses "unicorn" instead of "puma" as its web server.
+The \$PUMA_LOG_FILE environment variable can be removed.
+
+Using the original path:
+$PUMA_LOG_FILE
+EOF
+  export flight_JOB_SCRIPT_API_log_path=$PUMA_LOG_FILE
+fi
+
+# Set the pidfile
+export flight_JOB_SCRIPT_API_pid_path="$pid_file"
+
+# Determine the install dir
+install_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
+
+# Start the unicorn daemon
+"${flight_ROOT}"/bin/flexec ruby \
+  $install_dir/bin/unicorn \
+  --config-file $install_dir/config/unicorn.rb \
+  --daemonize
