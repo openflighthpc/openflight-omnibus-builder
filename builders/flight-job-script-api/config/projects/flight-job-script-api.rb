@@ -32,13 +32,14 @@ friendly_name 'Flight Job Script API'
 install_dir '/opt/flight/opt/job-script-api'
 
 VERSION = '1.3.0'
-override 'flight-job-script-api', version: VERSION
+override 'flight-job-script-api', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'
-dependency 'update_puma_scripts'
+# NOTE: Eventually a unicorn version of "update_puma_scripts" may be required
+# dependency 'update_puma_scripts'
 dependency 'update_web_suite_package_scripts'
 dependency 'flight-job-script-api'
 dependency 'version-manifest'

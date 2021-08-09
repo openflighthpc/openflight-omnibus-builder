@@ -59,6 +59,8 @@ build do
       File.read(path),
       "command_path: /usr/sbin:/usr/bin:/sbin:/bin:/opt/flight/opt/slurm/bin",
       "shared_secret_path: /opt/flight/etc/shared-secret.conf",
+      "pid_path: /opt/flight/var/run/job-script-api.pid",
+      "log_path: /opt/flight/var/log/job-script-api/unicorn.log",
       ''
     ].join("\n")
     File.write path, content

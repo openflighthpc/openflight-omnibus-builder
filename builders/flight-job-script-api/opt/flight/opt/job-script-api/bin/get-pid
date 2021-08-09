@@ -33,18 +33,20 @@ if [ -z "$flight_ROOT" ]; then
 fi
 
 # Get the current directory
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}/.." )" &> /dev/null && pwd )"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
 
 # Fetch the pid file
-cat <<RUBY | "$flight_ROOT"/bin/ruby | read pid
+pid=$(
+cat <<RUBY | "$flight_ROOT"/bin/ruby
   require File.join("$DIR", 'config/boot.rb')
-  File.read(FlightJobScriptAPI.config.pid_file) if File.exists?(FlightJobScriptAPI.config.pid_file)
+  print File.read(FlightJobScriptAPI.config.pid_path) if File.exists?(FlightJobScriptAPI.config.pid_path)
 RUBY
+)
 
 # Confirm the pid was returned
 if [ -z "$pid" ]; then
   exit 1
 else
-  print "$pid"
+  printf "$pid"
   exit 0
 fi
