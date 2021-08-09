@@ -26,12 +26,6 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-
-pid_file="$1"
-if [ -z "$pid_file" ]; then
-  echo "The pid_file argument has not been provided!" >&2
-  exit 1
-fi
 if [ -z "$flight_ROOT" ]; then
   echo "flight_ROOT has not been set!" >&2
   exit 1
@@ -48,9 +42,6 @@ $PUMA_LOG_FILE
 EOF
   export flight_JOB_SCRIPT_API_log_path=$PUMA_LOG_FILE
 fi
-
-# Set the pidfile
-export flight_JOB_SCRIPT_API_pid_path="$pid_file"
 
 # Determine the install dir
 install_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
