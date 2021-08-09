@@ -40,25 +40,15 @@ if [ -f /etc/locale.conf ]; then
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
-# Create the temporary PID file
-pidfile=$(mktemp /tmp/flight-job-script-api-deletable.XXXXXXXX.pid)
-rm "${pidfile}"
-
 tool_bg ${flight_ROOT}/opt/job-script-api/bin/start "$pidfile"
 
 # Wait up to 10ish seconds for puma to start
 for _ in `seq 1 20`; do
-  sleep 0.5
-  if [ -f "$pidfile" ]; then
-    pid=$(cat "$pidfile" | tr -d "\n")
-  fi
+  pid=$("$flight_ROOT"/opt/job-script-api/bin/get-pid | tr -d "\n")
   if [ -n "$pid" ]; then
     break
   fi
 done
-
-# Ensure the pidfile is removed
-rm -f "$pidfile"
 
 # Report back the pid or error
 if [ -n "$pid" ]; then

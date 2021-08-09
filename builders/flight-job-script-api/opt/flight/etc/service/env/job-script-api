@@ -27,4 +27,3 @@
 #===============================================================================
 
 RACK_ENV=production
-PUMA_LOG_FILE=/opt/flight/var/log/job-script-api/puma.log

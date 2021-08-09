@@ -26,33 +26,28 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-
-pid_file="$1"
-if [ -z "$pid_file" ]; then
-  echo "The pid_file argument has not been provided!" >&2
-  exit 1
-fi
 if [ -z "$flight_ROOT" ]; then
   echo "flight_ROOT has not been set!" >&2
   exit 1
 fi
-if [ -z "$PUMA_LOG_FILE" ]; then
-  echo "PUMA_LOG_FILE has not been set!" >&2
-  exit 1
-fi
 
-# Ensure the log directory exists
-mkdir -p $(dirname "$PUMA_LOG_FILE")
+# Intentionally maintained to abstract the differences between puma/unicorn
+if [ -n "$PUMA_LOG_FILE" ]; then
+  cat <<EOF >$PUMA_LOG_FILE
+This application uses "unicorn" instead of "puma" as its web server.
+The \$PUMA_LOG_FILE environment variable can be removed.
+
+Using the original path:
+$PUMA_LOG_FILE
+EOF
+  export flight_JOB_SCRIPT_API_log_path=$PUMA_LOG_FILE
+fi
 
 # Determine the install dir
 install_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
 
-# Exec into the ruby/puma process so the PID does not change
-exec "${flight_ROOT}"/bin/flexec ruby $install_dir/bin/puma \
-  --config $install_dir/config/puma.rb \
-  --pidfile "$pid_file" \
-  --redirect-stdout "$PUMA_LOG_FILE" \
-  --redirect-stderr "$PUMA_LOG_FILE" \
-  --redirect-append \
-  --dir $install_dir \
-  >>"${PUMA_LOG_FILE}" 2>&1
+# Start the unicorn daemon
+"${flight_ROOT}"/bin/flexec ruby \
+  $install_dir/bin/unicorn \
+  --config-file $install_dir/config/unicorn.rb \
+  --daemonize

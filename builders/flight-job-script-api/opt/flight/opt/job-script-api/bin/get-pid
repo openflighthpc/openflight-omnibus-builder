@@ -26,37 +26,27 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-
-pid_file="$1"
-if [ -z "$pid_file" ]; then
-  echo "The pid_file argument has not been provided!" >&2
-  exit 1
-fi
+# Check flight_ROOT has been set
 if [ -z "$flight_ROOT" ]; then
   echo "flight_ROOT has not been set!" >&2
   exit 1
 fi
-if [ -z "$PUMA_LOG_FILE" ]; then
-  echo "PUMA_LOG_FILE has not been set!" >&2
+
+# Get the current directory
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." &> /dev/null && pwd )"
+
+# Fetch the pid file
+pid=$(
+cat <<RUBY | "$flight_ROOT"/bin/ruby
+  require File.join("$DIR", 'config/boot.rb')
+  print File.read(FlightJobScriptAPI.config.pid_path) if File.exists?(FlightJobScriptAPI.config.pid_path)
+RUBY
+)
+
+# Confirm the pid was returned
+if [ -z "$pid" ]; then
   exit 1
+else
+  printf "$pid"
+  exit 0
 fi
-
-# Ensure the log directory exists
-mkdir -p $(dirname "$PUMA_LOG_FILE")
-
-# Restarts the puma worker processes
-"${flight_ROOT}"/bin/flexec ruby ${flight_ROOT}/opt/job-script-api/bin/pumactl restart \
-  --pidfile $1 \
-  --config-file ${flight_ROOT}/opt/job-script-api/config/puma.rb \
-  >>"$PUMA_LOG_FILE" 2>&1
-
-# Sleeps two seconds and ensure puma is still running
-sleep 2
-kill -0 "$(cat "$pid_file")" 2>/dev/null
-if [ "$?" -ne 0]; then
-  echo Failed to reload job-script-api >&2
-  exit 2
-fi
-
-# Ensures the PID remains set (it hasn't changed)
-tool_set pid=$(cat "$pid_file")

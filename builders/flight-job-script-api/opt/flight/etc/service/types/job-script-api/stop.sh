@@ -32,20 +32,5 @@ if [ -z "$pid_file" ]; then
   echo "The pid_file argument has not been provided!" >&2
   exit 1
 fi
-if [ -z "$flight_ROOT" ]; then
-  echo "flight_ROOT has not been set!" >&2
-  exit 1
-fi
-if [ -z "$PUMA_LOG_FILE" ]; then
-  echo "PUMA_LOG_FILE has not been set!" >&2
-  exit 1
-fi
-
-# Ensure the log directory exists
-mkdir -p $(dirname "$PUMA_LOG_FILE")
-
-# Stop puma
-"${flight_ROOT}"/bin/flexec ruby ${flight_ROOT}/opt/job-script-api/bin/pumactl stop \
-  --pidfile $1 \
-  --config-file ${flight_ROOT}/opt/job-script-api/config/puma.rb \
-  >>"$PUMA_LOG_FILE" 2>&1
+pid=$(cat "$pid_file")
+kill -s SIGQUIT "$pid"
