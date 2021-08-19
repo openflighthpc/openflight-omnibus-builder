@@ -31,7 +31,7 @@ friendly_name 'Flight Web Suite Utils'
 
 install_dir '/opt/flight/opt/web-suite'
 
-VERSION = '1.0.0'
+VERSION = '1.1.0'
 override 'flight-web-suite-utils', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
