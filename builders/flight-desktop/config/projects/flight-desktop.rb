@@ -34,7 +34,6 @@ install_dir '/opt/flight/opt/desktop'
 VERSION = '1.6.1'
 override 'flight-desktop', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 3
 
