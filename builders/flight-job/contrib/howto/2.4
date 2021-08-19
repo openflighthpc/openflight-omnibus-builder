@@ -338,6 +338,7 @@ $ flight job info-job DmSBREgL
 Estimated Finish: (none)
      Output Path: /home/centos/job/foo.output
      Results Dir: /home/centos/simple.sh-outputs/76
+      Desktop ID: (none)
 ~~~
 
 The output will include either the job's `Estimated Start` or its `Started at`
@@ -355,6 +356,10 @@ It will be \"no\" if an error occurred during the submission. The raw error from
 the scheduler can be retrieved using the `--verbose` flag. The exit status of the
 submit command will replace \"Submitted\" column.
 
+If the job script started an interactive session, its Flight Desktop ID will
+be shown.  The command `flight desktop show ID` can be used to retrieve
+details about the interactive session. 
+
 ~~~
 $ flight job info-job YKOVUcyo --verbose
               ID: YKOVUcyo
@@ -369,6 +374,7 @@ $ flight job info-job YKOVUcyo --verbose
      Stderr Path: (none)
  Estimated Start: (none)
 Estimated Finish: (none)
+      Desktop ID: (none)
 
 Submit Standard Out:
 

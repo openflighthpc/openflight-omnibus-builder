@@ -50,21 +50,13 @@ build do
 
   # Update the config
   block do
-    check_cron = '/opt/flight/libexec/job/check-cron.sh'
-    block do
-      FileUtils.rm_rf File.dirname(check_cron)
-      FileUtils.mkdir_p File.dirname(check_cron)
-    end
-    copy 'libexec/check-cron.sh', check_cron
-    project.extra_package_file check_cron
-
     slurm_dir = "/opt/flight/libexec/job/slurm"
     block do
       FileUtils.rm_rf slurm_dir
       FileUtils.mkdir_p slurm_dir
     end
-    copy 'libexec/slurm', File.expand_path('..', slurm_dir)
-    Find.find(File.join(project_dir, 'libexec/slurm')) do |f|
+    copy 'libexec/job/slurm', File.expand_path('..', slurm_dir)
+    Find.find(File.join(project_dir, 'libexec/job/slurm')) do |f|
       if File.file?(f)
         $stdout.puts "Found slurm script #{File.basename(f)}"
         install_path = File.join(slurm_dir, File.basename(f))
@@ -77,7 +69,7 @@ build do
       FileUtils.rm_rf state_maps_dir
       FileUtils.mkdir_p state_maps_dir
     end
-    Dir.glob(File.join(project_dir, 'etc/state-maps/*')).each do |file|
+    Dir.glob(File.join(project_dir, 'etc/job/state-maps/*')).each do |file|
       copy file, state_maps_dir
     end
     block do
@@ -88,14 +80,31 @@ build do
       end
     end
 
+    adapters_dir = "/opt/flight/usr/share/job"
+    block do
+      FileUtils.rm_rf adapters_dir
+      FileUtils.mkdir_p adapters_dir
+    end
+    Dir.glob(File.join(project_dir, 'usr/share/job/adapter.*.erb')).each do |file|
+      copy file, adapters_dir
+    end
+    block do
+      Find.find(adapters_dir).each do |path|
+        next unless File.file?(path)
+        next unless path =~ /adapter\..*\.erb/
+        $stdout.puts "Found adapter file: #{path}"
+        project.extra_package_file path
+      end
+    end
+
     templates_dir = "/opt/flight/usr/share/job/templates"
     block do
       FileUtils.rm_rf templates_dir
       FileUtils.mkdir_p templates_dir
     end
-    Dir.glob(File.join(project_dir, 'usr/share/*')).each do |dir|
+    Dir.glob(File.join(project_dir, 'usr/share/job/templates/*')).each do |dir|
       basename = File.basename(dir)
-      copy File.join('usr/share', basename), templates_dir
+      copy File.join('usr/share/job/templates', basename), templates_dir
     end
     block do
       Find.find(templates_dir).each do |path|
