@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -26,59 +26,38 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-export flight_ROOT="${flight_ROOT:-/opt/flight}"
-mkdir -p "$flight_ROOT"/opt/action-api/libexec/
+# NOTE: This file is managed by 'update_web_suite_package_scripts' software
+#       definition. Any changes will be lost on the next build.
 
-# Determine which version of flight-service is installed
-flight="$flight_ROOT/bin/flight"
-service_version=$("$flight" service --version | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
+# Ensure flight_ROOT is set correctly
+flight_ROOT=/opt/flight
 
-# Determine if at least flight service v1.4.0 has been installed
-ruby="$flight_ROOT/bin/ruby"
-is_140=$("$ruby" -e "require 'rubygems'; puts Gem::Version.new('$service_version') >= Gem::Version.new('1.4.0')")
+# Run the configuration
+"${flight_ROOT}/bin/ruby" <<EOF
+require 'yaml'
+require 'securerandom'
 
-# (Re)configure flight-action
-if [[ "$is_140" == "true" ]]; then
-  "$flight" service info action-api | while read line; do
-    # Find the jwt_secret line
-    if [ "$(echo "$line" | cut -f2)" == "jwt_secret" ]; then
-      if [ -z "$(echo "$line" | cut -f4)" ]; then
-        # Configure it with a random string if unset
-        secret=$( echo $(hostname --fqdn).$(date  +%s.%N) | sha256sum | cut -c 1-40 )
-        payload="{ \"jwt_secret\": \"$secret\" }"
-      else
-        # Ensure the application is reconfigured even if nothing has changed
-        payload="{}"
-      fi
-      echo "$payload" | "$flight" service configure action-api --force --config @- >/dev/null
-    fi
-  done
+path = '${flight_ROOT}/opt/action-api/config/application.yaml'
+data =  File.read(path)
+exit 0 if YAML.load(data)['jwt_secret']
 
-# Manually configure the application's config if installed with an older version
-# of flight service.
-#
-# NOTE: This fallback can be removed if a hard version dependency is added on
-#       flight-service 1.4.0
-else
-  config_file="$flight_ROOT"/var/lib/service/action-api.yml
+File.write path, <<~CONFIG
+#{data}
 
-  # Read the existing shared secret
-  if [ -f "${config_file}" ]; then
-    secret=$("$ruby" -e "require 'yaml'; puts YAML.load(File.read('$config_file'), symbolize_names: true)[:jwt_secret]")
-
-  # Generate a new shared-secret file
-  else
-    mkdir -p "$(dirname "${config_file}")"
-    secret=$( echo $(hostname --fqdn).$(date  +%s) | md5sum | cut -f1 -d' ')
-    cat <<EOF > "${config_file}"
----
-jwt_secret: ${secret}
+jwt_secret: #{SecureRandom.alphanumeric(40)}
+CONFIG
 EOF
-  fi
 
-  # Force the application to be reconfigured
-  /bin/bash "$flight_ROOT"/etc/service/types/action-api/configure.sh jwt_secret="${secret}" 1>/dev/null 2>&1
+mkdir -p ${flight_ROOT}/opt/action-api/libexec
+
+${flight_ROOT}/bin/flight service configure action-api --force --config '{}' >/dev/null 2>&1
+
+# Check if the service is already running and restart it
+if ${flight_ROOT}/bin/flight service status action-api | grep active >/dev/null 2>&1 ; then
+  ${flight_ROOT}/bin/flight service restart action-api >/dev/null 2>&1
 fi
 
-"$flight" service reload www 1>/dev/null 2>&1
+# Reload flight-www to pick up the new config
+${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
+
 exit 0
