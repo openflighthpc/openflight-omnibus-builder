@@ -4,7 +4,8 @@ d="$(pwd)"
 mkdir -p pkg
 
 NAME=flight-desktop-types
-VERSION=1.0.4
+VERSION=1.1.0~rc1
+TAG=$(echo "$VERSION" | sed "s/~/-/g")
 REL=1
 
 if [ -f /etc/redhat-release ]; then
@@ -13,6 +14,7 @@ if [ -f /etc/redhat-release ]; then
   rm -f $HOME/rpmbuild/SOURCES/${VERSION}.tar.gz
   rpmbuild -bb ${NAME}.spec \
            --define "_flight_pkg_version $VERSION" \
+           --define "_flight_pkg_tag $TAG" \
            --define "_flight_pkg_rel $REL"
   cd ..
   mv $HOME/rpmbuild/RPMS/noarch/${NAME}-*.noarch.rpm pkg
@@ -24,8 +26,8 @@ elif [ -f /etc/lsb-release ]; then
   pushd $HOME/${NAME}
   rm -rf ${NAME}-${VERSION} ${VERSION}.tar.gz
   rm -rf ${NAME}_${VERSION}-${REL}
-  wget https://github.com/openflighthpc/${NAME}/archive/${VERSION}.tar.gz
-  tar xzf ${VERSION}.tar.gz
+  wget https://github.com/openflighthpc/${NAME}/archive/${TAG}.tar.gz
+  tar xzf ${TAG}.tar.gz
   mkdir -p ${NAME}_${VERSION}-$REL/DEBIAN
   sed -e "s/%VERSION%/$VERSION/g" \
       -e "s/%REL%/$REL/g" \

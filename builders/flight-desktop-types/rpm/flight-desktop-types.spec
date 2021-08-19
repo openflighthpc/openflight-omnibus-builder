@@ -8,7 +8,7 @@ License:        CC-BY-SA
 
 URL:            https://openflighthpc.org
 %undefine _disable_source_fetch
-Source0:        https://github.com/openflighthpc/%{name}/archive/%{version}.tar.gz
+Source0:        https://github.com/openflighthpc/%{name}/archive/%{_flight_pkg_tag}.tar.gz
 Source1:        https://raw.githubusercontent.com/openflighthpc/openflight-omnibus-builder/master/builders/flight-desktop-types/dist/flight-desktop-type-1.0.0.tar.gz
 
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -20,7 +20,7 @@ Requires:      flight-desktop-system-1.0
 A collection of desktop session types for use with Flight Desktop.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{_flight_pkg_tag}
 
 %build
 
