@@ -35,7 +35,7 @@ VERSION = '0.7.0'
 override 'flight-scheduler-daemon', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-scheduler-daemon'
