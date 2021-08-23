@@ -40,26 +40,32 @@ skip_transitive_dependency_licensing true
 build do
   env = with_standard_compiler_flags(with_embedded_path)
 
+  # Create the etc/libexec directory
+  mkdir File.join(install_dir, 'etc')
+  mkdir File.join(install_dir, 'libexec')
+
   # Moves the project into place
   [
     'Gemfile', 'Gemfile.lock', 'bin', 'config', 'app',
     'LICENSE.txt', 'README.md', 'app.rb', 'config.ru', 'Rakefile',
-    '.cli-version'
+    '.cli-version', 'etc/action-api.yaml'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
 
-  # Patch the development port to the production address
+  # Define the legacy config paths
+  # NOTE: This prevents rpm from creating an rpmsave file on upgrade
+  #       Instead the deprecation notice becomes an rpmnew
   block do
-    path = File.join(install_dir, 'config/puma.rb')
-    File.write(path, File.read(path).sub(/^port.*$/, 'bind "tcp://127.0.0.1:917"'))
+    { 'application.yaml' => "action-api.yaml", 'nodes.yaml' => "nodes.yaml" }.each do |file, new_file|
+      File.write File.join(install_dir, 'config', file), <<~WARN
+        __meta__: >
+          The use of this file has been deprecated!
+          Please refer to the new file:
+          #{File.join install_dir, 'etc', new_file}
+      WARN
+    end
   end
-
-  # Create the blank nodes file
-  touch File.join(install_dir, 'config/nodes.yaml')
-
-  # Create the libexec directory where other packages will install scripts.
-  mkdir File.expand_path("#{install_dir}/libexec/")
 
   # Installs the gems to the shared `vendor/share`
   flags = [

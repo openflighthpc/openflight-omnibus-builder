@@ -32,16 +32,18 @@ friendly_name 'Flight Action API'
 
 install_dir '/opt/flight/opt/action-api'
 
-VERSION = '1.4.0'
-override 'flight-action-api', version: VERSION
+VERSION = '1.5.0'
+override 'flight-action-api', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
-build_iteration 4
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
+build_iteration 1
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
 dependency 'update_web_suite_package_scripts'
 dependency 'flight-action-api'
+dependency 'update_puma_scripts'
+dependency 'update_web_suite_package_scripts'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
@@ -60,6 +62,14 @@ runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
+if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'flight-service >= 1.3.0'
+elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'flight-service (>= 1.3.0)'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
+end
+
 require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
@@ -71,9 +81,10 @@ File.expand_path('../../opt/flight/libexec/commands/action-api', __dir__).tap do
   File.write path, content
 end
 
-%w(nodes.yaml application.yaml).each do |cf|
-  config_file "/opt/flight/opt/action-api/config/#{cf}"
-end
+config_file "/opt/flight/opt/action-api/etc/action-api.yaml"
+# Deprecated paths
+config_file "/opt/flight/opt/action-api/config/application.yaml"
+config_file "/opt/flight/opt/action-api/config/nodes.yaml"
 
 package :rpm do
   vendor 'Alces Flight Ltd'
