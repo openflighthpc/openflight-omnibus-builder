@@ -9,21 +9,37 @@ fi
 # Migrate the existing jwt_secret to the new config file
 "$flight_ROOT"/bin/ruby <<EOF
 require 'yaml'
+require 'fileutils'
 
 OLD_CONFIG = "$flight_ROOT/opt/action-api/config/application.yaml"
-NEW_CONFIG = "$flight_ROOT/opt/action-api/etc/action-api/shared-secret.conf"
+JWT_CONFIG = "$flight_ROOT/opt/action-api/etc/action-api/shared-secret.conf"
+
+REL_NODES  = "config/nodes.yaml"
+OLD_NODES  = "$flight_ROOT/opt/action-api/#{REL_NODES}"
+NEW_NODES  = "$flight_ROOT/opt/action-api/etc/nodes.yaml"
 
 # Attempt to load the yaml
 exit unless File.exists? OLD_CONFIG
 yaml = File.read OLD_CONFIG
-data = YAML.load(yaml, symbolize_names: true)
-exit unless data.key? :jwt_secret
+data = YAML.load(yaml, symbolize_names: true).to_h
 
 # Migrate the secret to the new file
-secret = data.delete :jwt_secret
-FileUtils.mkdir_p File.dirname(NEW_CONFIG)
-File.write NEW_CONFIG, secret
+if data.key? :jwt_secret
+  secret = data.delete :jwt_secret
+  FileUtils.mkdir_p File.dirname(JWT_CONFIG)
+  File.write JWT_CONFIG, secret
+end
+
+# Migrate the nodes config
+if data[:nodes_config_path] == REL_NODES
+  FileUtils.mv OLD_NODES, NEW_NODES, force: true
+  FileUtils.ln_s "../etc/nodes.yaml", OLD_NODES
+  data.delete(:nodes_config_path)
+end
 
 # Rewrite the old config
 File.write OLD_CONFIG, YAML.dump(data)
 EOF
+
+# Ensure the new nodes path exists
+touch "$flight_ROOT/opt/action-api/etc/nodes.yaml"

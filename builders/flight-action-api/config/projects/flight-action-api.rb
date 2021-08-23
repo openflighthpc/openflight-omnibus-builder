@@ -82,6 +82,9 @@ File.expand_path('../../opt/flight/libexec/commands/action-api', __dir__).tap do
 end
 
 config_file "/opt/flight/opt/action-api/etc/action-api.yaml"
+# Deprecated paths
+config_file "/opt/flight/opt/action-api/config/application.yaml"
+config_file "/opt/flight/opt/action-api/config/nodes.yaml"
 
 package :rpm do
   vendor 'Alces Flight Ltd'
