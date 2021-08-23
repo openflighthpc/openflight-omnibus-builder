@@ -8,3 +8,6 @@ files/**/cache/
 vendor
 vendor
 local
+package-scripts/flight-action-api/*
+opt/flight/etc/service/types/action-api/*.sh
+opt/flight/opt/action-api/bin/start

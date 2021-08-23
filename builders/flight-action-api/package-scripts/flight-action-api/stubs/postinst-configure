@@ -1,18 +1,29 @@
-"${flight_ROOT}/bin/ruby" <<EOF
+if [ ! -f "$flight_ROOT/opt/action-api/config/nodes.yaml" ]; then
+  # Create the new empty nodes config if the old one is omitted
+  # NOTE: It is assumed the application is correctly configured to use
+  #       the old path if it exists
+  touch "$flight_ROOT/opt/action-api/etc/nodes.yaml"
+fi
+
+# Run the configuration
+# Migrate the existing jwt_secret to the new config file
+"$flight_ROOT"/bin/ruby <<EOF
 require 'yaml'
-require 'securerandom'
 
-path = '${flight_ROOT}/opt/action-api/config/application.yaml'
-data =  File.read(path)
-exit 0 if YAML.load(data)['jwt_secret']
+OLD_CONFIG = "$flight_ROOT/opt/action-api/config/application.yaml"
+NEW_CONFIG = "$flight_ROOT/opt/action-api/etc/action-api/shared-secret.conf"
 
-File.write path, <<~CONFIG
-#{data}
+# Attempt to load the yaml
+exit unless File.exists? OLD_CONFIG
+yaml = File.read OLD_CONFIG
+data = YAML.load(yaml, symbolize_names: true)
+exit unless data.key? :jwt_secret
 
-jwt_secret: #{SecureRandom.alphanumeric(40)}
-CONFIG
+# Migrate the secret to the new file
+secret = data.delete :jwt_secret
+FileUtils.mkdir_p File.dirname(NEW_CONFIG)
+File.write NEW_CONFIG, secret
+
+# Rewrite the old config
+File.write OLD_CONFIG, YAML.dump(data)
 EOF
-
-mkdir -p ${flight_ROOT}/opt/action-api/libexec
-
-${flight_ROOT}/bin/flight service configure action-api --force --config '{}' >/dev/null 2>&1
