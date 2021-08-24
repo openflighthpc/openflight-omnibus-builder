@@ -54,7 +54,6 @@ DESKTOP_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-websockify'
 runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-desktop-types'
 
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
@@ -73,10 +72,14 @@ updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
 File.write(path, updated) unless original == updated
 
 if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'flight-desktop-types >= 1.1.0~'
+
   runtime_dependency 'tigervnc-server-minimal'
   runtime_dependency 'xorg-x11-xauth'
   runtime_dependency 'perl'
 elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'flight-desktop-types (>= 1.1.0~)'
+
   runtime_dependency 'tigervnc-standalone-server'
   runtime_dependency 'xauth'
   runtime_dependency 'perl'
