@@ -35,7 +35,7 @@ VERSION = '1.7.0-rc1'
 override 'flight-desktop', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 3
+build_iteration 4
 
 dependency 'preparation'
 dependency 'flight-desktop'
