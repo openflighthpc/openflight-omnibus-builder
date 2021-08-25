@@ -82,7 +82,7 @@ build do
     configure = if File.exists? configure_script
                   File.read(configure_script).chomp
                 else
-                  "${flight_ROOT}/bin/flight service configure #{service} --force --config '{}' >/dev/null 2>&1"
+                  "${flight_ROOT}/bin/flight service configure #{service} --force --config '{}'"
                 end
 
     rendered[:postinst] = <<~POSTINST
@@ -95,11 +95,11 @@ build do
 
       # Check if the service is already running and restart it
       if ${flight_ROOT}/bin/flight service status #{service} | grep active >/dev/null 2>&1 ; then
-        ${flight_ROOT}/bin/flight service restart #{service} >/dev/null 2>&1
+        ${flight_ROOT}/bin/flight service restart #{service}
       fi
 
       # Reload flight-www to pick up the new config
-      ${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
+      ${flight_ROOT}/bin/flight service reload www
 
       exit 0
     POSTINST
@@ -115,7 +115,7 @@ build do
       # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
       if [ "$1" == "0" -o "$1" == "remove" ]; then
         # Stop the service
-        ${flight_ROOT}/bin/flight service stop #{service} >/dev/null 2>&1
+        ${flight_ROOT}/bin/flight service stop #{service}
       fi
 
       exit 0
@@ -128,7 +128,7 @@ build do
       flight_ROOT=/opt/flight
 
       # Reload flight-www to remove the proxy configuration
-      ${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
+      ${flight_ROOT}/bin/flight service reload www
 
       exit 0
     POSTRM

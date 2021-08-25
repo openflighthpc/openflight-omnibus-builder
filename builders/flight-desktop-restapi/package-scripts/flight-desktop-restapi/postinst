@@ -33,14 +33,14 @@
 flight_ROOT=/opt/flight
 
 # Run the configuration
-${flight_ROOT}/bin/flight service configure desktop-restapi --force --config '{}' >/dev/null 2>&1
+${flight_ROOT}/bin/flight service configure desktop-restapi --force --config '{}'
 
 # Check if the service is already running and restart it
-if ${flight_ROOT}/bin/flight service status desktop-restapi | grep active >/dev/null 2>&1 ; then
-  ${flight_ROOT}/bin/flight service restart desktop-restapi >/dev/null 2>&1
+if ${flight_ROOT}/bin/flight service status desktop-restapi | grep -q active ; then
+  ${flight_ROOT}/bin/flight service restart desktop-restapi
 fi
 
 # Reload flight-www to pick up the new config
-${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
+${flight_ROOT}/bin/flight service reload www
 
 exit 0
