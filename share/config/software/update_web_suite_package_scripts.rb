@@ -94,7 +94,7 @@ build do
       #{configure}
 
       # Check if the service is already running and restart it
-      if ${flight_ROOT}/bin/flight service status #{service} | grep active >/dev/null 2>&1 ; then
+      if ${flight_ROOT}/bin/flight service status #{service} | grep -q active ; then
         ${flight_ROOT}/bin/flight service restart #{service}
       fi
 
