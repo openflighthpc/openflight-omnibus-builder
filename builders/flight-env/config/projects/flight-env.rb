@@ -35,7 +35,7 @@ VERSION = '1.4.1'
 override 'flight-env', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-env'
@@ -104,8 +104,8 @@ end
   opt/flight/libexec/commands/env
   opt/flight/etc/env.rc
   opt/flight/etc/env.cshrc
-  opt/flight/etc/profile.d/10-env.csh
-  opt/flight/etc/profile.d/10-env.sh
+  opt/flight/etc/profile.d/999-env.csh
+  opt/flight/etc/profile.d/999-env.sh
   opt/flight/etc/banner/tips.d/10-env.rc
 ).each do |f|
   extra_package_file f
