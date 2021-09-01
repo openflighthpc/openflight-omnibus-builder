@@ -2,51 +2,61 @@
 
 set -e
 
-/opt/flight/bin/flight service enable console-api
-/opt/flight/bin/flight service enable desktop-restapi
-/opt/flight/bin/flight service enable file-manager-api
-/opt/flight/bin/flight service enable job-script-api
-/opt/flight/bin/flight service enable login-api
-/opt/flight/bin/flight service enable www
-/opt/flight/bin/flight service restart console-api
-/opt/flight/bin/flight service restart desktop-restapi
-/opt/flight/bin/flight service restart job-script-api
-/opt/flight/bin/flight service restart www
-
-/opt/flight/bin/flight config get web-suite.domain 1>/dev/null 2>&1
-if [ "$?" -eq "0" ] ; then
-/opt/flight/bin/flight service restart login-api
-/opt/flight/bin/flight service restart file-manager-api
+if [ -n "$2" ]; then
+  # An existing installation is being upgraded.  Each service should restart
+  # itself.  We have nothing to do.
+  :
 else
-cat <<EOF 1>&2
-================================================
-Configure and start Login API
-================================================
-The login-api needs configuring and starting.
-This can be done by running the following:
-  /opt/flight/bin/flight config set web-suite.domain <DOMAIN>
-  /opt/flight/bin/flight service start login-api
+  # The package is being installed not upgraded.  Let's detail what to do
+  # next.
+  domain=$(/opt/flight/bin/flight config get web-suite.domain 2>/dev/null)
+  if [ $? -eq 0 -a "${domain}" != "" ] ; then
+    # A domain has already been set.  We assume that that means that an SSL
+    # certificate has been created too.
+    cat <<EOF 1>&2
 
 ================================================
-Configure and start File Manager API
+Start Flight Web Suite
 ================================================
-The file-manager-api needs configuring and starting.
-This can be done by running the following:
-  /opt/flight/bin/flight config set web-suite.domain <DOMAIN>
-  /opt/flight/bin/flight service start file-manager-api
 
-EOF
-fi
-if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
-cat <<EOF 1>&2
-================================================
-HTTPS support needs to be enabled for flight-www
-================================================
-To enable HTTPS support run:
-  /opt/flight/bin/flight www enable-https
-  /opt/flight/bin/flight service restart www
+Flight Web Suite has been configured for the domain '${domain}'.  You can
+start and enable the web suite services by running the commands below.
+
+  /opt/flight/bin/flight web-suite start
+  /opt/flight/bin/flight web-suite enable
+
+You can alternatively change the domain by running the following:
+
+  /opt/flight/bin/flight web-suite set-domain <DOMAIN>
+  /opt/flight/bin/flight web-suite start
+  /opt/flight/bin/flight web-suite enable
 
 EOF
+  else
+    cat <<EOF 1>&2
+
+================================================
+Configure and start Flight Web Suite
+================================================
+
+Flight Web Suite needs configuring and starting.  You will need to configure
+the domain for the web suite to use; generate an SSL certificate; and then
+start and enable the web suite services.  The commands below detail how to do
+so.  By default they will generate a self-signed certificate.
+
+  /opt/flight/bin/flight web-suite set-domain <DOMAIN>
+  /opt/flight/bin/flight web-suite start
+  /opt/flight/bin/flight web-suite enable
+
+You can alternatively generate a Let's Encrypt certificate by running the
+following:
+
+  /opt/flight/bin/flight web-suite set-domain <DOMAIN> --cert-type letsencrypt --email <YOUR EMAIL ADDRESS>
+  /opt/flight/bin/flight web-suite start
+  /opt/flight/bin/flight web-suite enable
+
+EOF
+  fi
 fi
 
 exit 0

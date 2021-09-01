@@ -99,7 +99,7 @@ build do
       fi
 
       # Reload flight-www to pick up the new config
-      ${flight_ROOT}/bin/flight service reload www
+      ${flight_ROOT}/bin/flight service reload www >/dev/null 2>&1
 
       exit 0
     POSTINST
@@ -128,7 +128,7 @@ build do
       flight_ROOT=/opt/flight
 
       # Reload flight-www to remove the proxy configuration
-      ${flight_ROOT}/bin/flight service reload www
+      ${flight_ROOT}/bin/flight service reload www >/dev/null 2>&1
 
       exit 0
     POSTRM

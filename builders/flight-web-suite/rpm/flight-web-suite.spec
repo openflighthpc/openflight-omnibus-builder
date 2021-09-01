@@ -75,7 +75,31 @@ if [ "$1" == "2" ] ; then
 else
   # The package is being installed not upgraded.  Let's detail what to do
   # next.
-  cat <<EOF 1>&2
+  domain=$(/opt/flight/bin/flight config get web-suite.domain 2>/dev/null)
+  if [ $? -eq 0 -a "${domain}" != "" ] ; then
+    # A domain has already been set.  We assume that that means that an SSL
+    # certificate has been created too.
+    cat <<EOF 1>&2
+
+================================================
+Start Flight Web Suite
+================================================
+
+Flight Web Suite has been configured for the domain '${domain}'.  You can
+start and enable the web suite services by running the commands below.
+
+  /opt/flight/bin/flight web-suite start
+  /opt/flight/bin/flight web-suite enable
+
+You can alternatively change the domain by running the following:
+
+  /opt/flight/bin/flight web-suite set-domain <DOMAIN>
+  /opt/flight/bin/flight web-suite start
+  /opt/flight/bin/flight web-suite enable
+
+EOF
+  else
+    cat <<EOF 1>&2
 
 ================================================
 Configure and start Flight Web Suite
@@ -99,6 +123,7 @@ following:
 
 EOF
   fi
+fi
 
 %changelog
 * Mon Aug 23 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.6-1
