@@ -1,7 +1,7 @@
 : '
 : NAME: web-suite
 : SYNOPSIS: Manage web-suite services
-: VERSION: 1.1.0
+: VERSION: 1.1.1-rc1
 : ROOT: true
 : '
 #==============================================================================

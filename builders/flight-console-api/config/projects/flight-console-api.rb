@@ -35,7 +35,7 @@ VERSION = '2.1.0'
 override 'flight-console-api', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 4
 
 dependency 'preparation'
 dependency 'update_web_suite_package_scripts'

@@ -36,7 +36,7 @@ VERSION = '1.4.0'
 override 'flight-action-api', version: VERSION
 
 build_version VERSION
-build_iteration 4
+build_iteration 5
 
 dependency 'preparation'
 dependency 'update_puma_scripts'

@@ -35,7 +35,7 @@ VERSION = '1.4.0-rc5'
 override 'flight-job-script-api', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'update_puma_scripts'
