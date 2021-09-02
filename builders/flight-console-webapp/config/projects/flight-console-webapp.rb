@@ -31,7 +31,7 @@ friendly_name 'Flight Console Webapp'
 
 install_dir '/opt/flight/opt/console-webapp'
 
-VERSION = '1.3.1-rc1'
+VERSION = '1.3.1'
 override 'flight-console-webapp', version: VERSION
 
 build_version VERSION

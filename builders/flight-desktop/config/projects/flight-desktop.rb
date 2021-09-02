@@ -31,11 +31,11 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.7.0-rc1'
+VERSION = '1.7.0'
 override 'flight-desktop', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 4
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-desktop'
@@ -72,13 +72,13 @@ updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
 File.write(path, updated) unless original == updated
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-desktop-types >= 1.1.0~'
+  runtime_dependency 'flight-desktop-types >= 1.1.0'
 
   runtime_dependency 'tigervnc-server-minimal'
   runtime_dependency 'xorg-x11-xauth'
   runtime_dependency 'perl'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'flight-desktop-types (>= 1.1.0~)'
+  runtime_dependency 'flight-desktop-types (>= 1.1.0)'
 
   runtime_dependency 'tigervnc-standalone-server'
   runtime_dependency 'xauth'
