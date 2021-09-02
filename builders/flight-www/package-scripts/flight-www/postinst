@@ -75,7 +75,8 @@ fi
 if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
   # Check if flight_WEB_SUITE_domain has been set
   domain=$(/opt/flight/bin/flight config get web-suite.domain 2>/dev/null)
-  if [ "$?" -eq "0" -a "${domain}" != "" ] ; then
+  rc="$?"
+  if [ "$rc" -eq "0" -a "${domain}" != "" ] ; then
     /opt/flight/bin/flight www cert-gen --cert-type self-signed >/dev/null 2>&1
     generated_cert="$?"
   else
@@ -84,8 +85,10 @@ if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
     domain=$(hostname -d)
     generated_cert="$?"
     if [ "${generated_cert}" -eq "0" ] ; then
-        /opt/flight/bin/flight config set web-suite.domain "${domain}" 2>/dev/null
-        generated_cert="$?"
+        # This might fail if `flight-starter` has not yet been installed.
+        # We don't let that prevent our attempts to create the SSL
+        # certificate.
+        /opt/flight/bin/flight config set web-suite.domain "${domain}" >/dev/null 2>&1
     fi
 
     # Attempt to generate a certificate

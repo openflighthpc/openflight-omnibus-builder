@@ -67,7 +67,7 @@ The Flight Web Suite collection of web applications for accessing a HPC environm
 %files
 # Nothing to do
 
-%post
+%post -p /bin/bash
 if [ "$1" == "2" ] ; then
   # An existing installation is being upgraded.  Each service should restart
   # itself.  We have nothing to do.
@@ -75,8 +75,22 @@ if [ "$1" == "2" ] ; then
 else
   # The package is being installed not upgraded.  Let's detail what to do
   # next.
-  domain=$(/opt/flight/bin/flight config get web-suite.domain 2>/dev/null)
-  if [ $? -eq 0 -a "${domain}" != "" ] ; then
+  domain_found=1
+  domain=$(/opt/flight/bin/flight web-suite get-domain 2>/dev/null)
+  rc=$?
+  if [ $rc -eq 0 -a "${domain}" != "" ] ; then
+    domain_found=0
+  elif [ $rc -eq 0 -a "${domain}" == "" ] ; then
+    # The domain has not been set via `flight config`/`flight web-suite`.
+    # Let's see if we can remedy that now.
+    domain=$(/opt/flight/bin/flight web-suite get-domain --use-fallback 2>/dev/null)
+    rc=$?
+    if [ $rc -eq 0 -a "${domain}" != "" ] ; then
+      /opt/flight/bin/flight web-suite set-domain "${domain}" &>/dev/null
+      domain_found=0
+    fi
+  fi
+  if [ ${domain_found} -eq 0 ] ; then
     # A domain has already been set.  We assume that that means that an SSL
     # certificate has been created too.
     cat <<EOF 1>&2
