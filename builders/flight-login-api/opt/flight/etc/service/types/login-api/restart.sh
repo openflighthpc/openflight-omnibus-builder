@@ -33,23 +33,27 @@ if [ -z "$flight_ROOT" ]; then
   exit 1
 fi
 
-OLD_PID="$1"
+PID_FILE="$1"
+OLD_PID="$(cat "$PID_FILE" | tr -d "\n")"
 
-${flight_ROOT}/etc/service/types/login-api/stop.sh "$OLD_PID"
+${flight_ROOT}/etc/service/types/login-api/stop.sh "$PID_FILE"
 
-# Wait up to 10ish seconds for puma to stop
-state=1
-for _ in `seq 1 20`; do
-  kill -0 "$OLD_PID" 2>/dev/null
-  state=$?
-  if [ "$state" -ne 0 ]; then
-    break
+if [ -n "$OLD_PID" ] ; then
+  # Wait up to 10ish seconds for puma to stop
+  state=1
+  for _ in `seq 1 20`; do
+    sleep 0.5
+    kill -0 "$OLD_PID" 2>/dev/null
+    state=$?
+    if [ "$state" -ne 0 ]; then
+      break
+    fi
+  done
+
+  if [ "$state" -eq 0 ]; then
+    echo Failed to stop login-api
+    exit 1
   fi
-done
-
-if [ "$state" -eq 0 ]; then
-  echo Failed to stop login-api
-  exit 1
 fi
 
 ${flight_ROOT}/etc/service/types/login-api/start.sh
