@@ -58,8 +58,6 @@ build do
     content = [
       File.read(path),
       "shared_secret_path: /opt/flight/etc/shared-secret.conf",
-      "integrated_reload_src: /opt/flight/libexec/desktop-restapi/reload-desktop-restapi",
-      "integrated_reload_dst: /opt/flight/libexec/desktop/hooks/post-verify/reload-desktop-restapi",
       ''
     ].join("\n")
     File.write path, content
