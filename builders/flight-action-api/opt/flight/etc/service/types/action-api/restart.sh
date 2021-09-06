@@ -1,6 +1,6 @@
 #!/bin/bash
 #==============================================================================
-# Copyright (C) 2020-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -26,25 +26,34 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-OLD_PID="$1"
 
-source "$DIR"/stop.sh "$OLD_PID"
-
-# Wait up to 10ish seconds for puma to stop
-state=1
-for _ in `seq 1 20`; do
-  kill -0 "$OLD_PID" 2>/dev/null
-  state=$?
-  if [ "$state" -ne 0 ]; then
-    break
-  fi
-done
-
-if [ "$state" -eq 0 ]; then
-  echo Failed to stop action-api
+# Ensure flight_ROOT is set
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
   exit 1
 fi
 
-source "$DIR"/start.sh
+PID_FILE="$1"
+OLD_PID="$(cat "$PID_FILE" | tr -d "\n")"
 
+${flight_ROOT}/etc/service/types/action-api/stop.sh "$PID_FILE"
+
+if [ -n "$OLD_PID" ] ; then
+  # Wait up to 10ish seconds for puma to stop
+  state=1
+  for _ in `seq 1 20`; do
+    sleep 0.5
+    kill -0 "$OLD_PID" 2>/dev/null
+    state=$?
+    if [ "$state" -ne 0 ]; then
+      break
+    fi
+  done
+
+  if [ "$state" -eq 0 ]; then
+    echo Failed to stop action-api
+    exit 1
+  fi
+fi
+
+${flight_ROOT}/etc/service/types/action-api/start.sh

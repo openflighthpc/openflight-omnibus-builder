@@ -26,19 +26,22 @@
 #===============================================================================
 name 'flight-web-suite-utils'
 maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-web-suite-utils'
+homepage 'https://github.com/openflighthpc/flight-web-suite'
 friendly_name 'Flight Web Suite Utils'
 
-install_dir '/opt/flight/opt/web-suite-utils'
+install_dir '/opt/flight/opt/web-suite'
 
-VERSION = '1.0.0'
-override 'flight-web-suite-utils', version: VERSION
+VERSION = '1.1.1'
+override 'flight-web-suite-utils', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'
+dependency 'flight-web-suite-utils'
 dependency 'version-manifest'
+
+runtime_dependency 'flight-www'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
@@ -50,6 +53,13 @@ runtime_dependency 'flight-starter-system-1.0'
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
+
+# Updates the version in the libexec file
+unless ENV.key?('ALPHA')
+  path = File.expand_path('../../opt/flight/libexec/commands/web-suite', __dir__)
+  original = File.read(path)
+  File.write path, original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
+end
 
 # Glob after updating the opt directory
 Dir.glob('opt/**/*')

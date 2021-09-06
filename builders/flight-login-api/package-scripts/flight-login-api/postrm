@@ -33,6 +33,6 @@
 flight_ROOT=/opt/flight
 
 # Reload flight-www to remove the proxy configuration
-${flight_ROOT}/bin/flight service reload www 1>/dev/null 2>&1
+${flight_ROOT}/bin/flight service reload www >/dev/null 2>&1
 
 exit 0

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
 #
@@ -25,5 +25,13 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+
+# Ensure flight_ROOT is set correctly
+flight_ROOT=/opt/flight
+
+# Check if the service is already running and restart it
+if ${flight_ROOT}/bin/flight service status scheduler-daemon | grep active >/dev/null 2>&1 ; then
+  ${flight_ROOT}/bin/flight service restart scheduler-daemon >/dev/null 2>&1
+fi
 
 exit 0

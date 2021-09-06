@@ -1,8 +1,0 @@
----
-title: "Flight Action API server"
-text: "Please provide values for the following configuration items."
-values:
-  - key: jwt_secret
-    label: Authentication secret token.
-    value:
-    length: 48

@@ -58,7 +58,7 @@ Obsoletes: <%= name %>
 # noop
 
 <% scripts.each do |name, contents| -%>
-%<%= name %>
+%<%= name %> -p /bin/bash
 <%= contents %>
 <% end -%>
 

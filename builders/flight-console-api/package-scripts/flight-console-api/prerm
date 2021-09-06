@@ -35,7 +35,7 @@ flight_ROOT=/opt/flight
 # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
 if [ "$1" == "0" -o "$1" == "remove" ]; then
   # Stop the service
-  ${flight_ROOT}/bin/flight service stop console-api >/dev/null 2>&1
+  ${flight_ROOT}/bin/flight service stop console-api
 fi
 
 exit 0

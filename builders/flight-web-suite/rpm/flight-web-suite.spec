@@ -37,17 +37,17 @@ URL:            https://openflighthpc.org
 
 BuildArch:      noarch
 Requires:       flight-console-api => 2.1.0, flight-console-api < 2.2.0~
-Requires:       flight-console-webapp => 1.3.0, flight-console-webapp < 1.4.0~
-Requires:       flight-desktop-restapi => 2.3.0, flight-desktop-restapi < 2.4.0~
-Requires:       flight-desktop-webapp => 1.4.0, flight-desktop-webapp < 1.5.0~
-Requires:       flight-file-manager-api => 1.2.0, flight-file-manager-api < 1.3.0~
-Requires:       flight-file-manager-webapp => 1.2.0, flight-file-manager-webapp < 1.3.0~
+Requires:       flight-console-webapp => 1.3.1, flight-console-webapp < 1.4.0~
+Requires:       flight-desktop-restapi => 2.4.0, flight-desktop-restapi < 2.5.0~
+Requires:       flight-desktop-webapp => 1.5.0, flight-desktop-webapp < 1.6.0~
+Requires:       flight-file-manager-api => 1.2.2, flight-file-manager-api < 1.3.0~
+Requires:       flight-file-manager-webapp => 1.2.2, flight-file-manager-webapp < 1.3.0~
 Requires:       flight-login-api => 1.1.0, flight-login-api < 1.2.0~
-Requires:       flight-job-script-api => 1.3.0, flight-job-script-api < 1.4.0~
-Requires:       flight-job-script-webapp => 1.3.0, flight-job-script-webapp < 1.4.0~
+Requires:       flight-job-script-api => 1.4.0, flight-job-script-api < 1.5.0~
+Requires:       flight-job-script-webapp => 1.4.0, flight-job-script-webapp < 1.5.0~
 Requires:       flight-www => 1.6.0, flight-www < 1.7.0~
 Requires:       flight-headnode-landing-page < 1.4.0~
-Requires:       flight-web-suite-utils => 1.0.0 flight-web-suite-utils < 1.1.0~
+Requires:       flight-web-suite-utils => 1.1.0 flight-web-suite-utils < 1.2.0~
 
 %description
 The Flight Web Suite collection of web applications for accessing a HPC environment.
@@ -67,55 +67,83 @@ The Flight Web Suite collection of web applications for accessing a HPC environm
 %files
 # Nothing to do
 
-%post
-/opt/flight/bin/flight service enable console-api
-/opt/flight/bin/flight service enable desktop-restapi
-/opt/flight/bin/flight service enable file-manager-api
-/opt/flight/bin/flight service enable job-script-api
-/opt/flight/bin/flight service enable login-api
-/opt/flight/bin/flight service enable www
-/opt/flight/bin/flight service restart console-api
-/opt/flight/bin/flight service restart desktop-restapi
-/opt/flight/bin/flight service restart job-script-api
-/opt/flight/bin/flight service restart www
-
-/opt/flight/bin/flight config get web-suite.domain 1>/dev/null 2>&1
-if [ "$?" -eq "0" ] ; then
-/opt/flight/bin/flight service restart login-api
-/opt/flight/bin/flight service restart file-manager-api
+%post -p /bin/bash
+if [ "$1" == "2" ] ; then
+  # An existing installation is being upgraded.  Each service should restart
+  # itself.  We have nothing to do.
+  :
 else
-cat <<EOF 1>&2
-================================================
-Configure and start Login API
-================================================
-The login-api needs configuring and starting.
-This can be done by running the following:
-  /opt/flight/bin/flight config set web-suite.domain <DOMAIN>
-  /opt/flight/bin/flight service start login-api
+  # The package is being installed not upgraded.  Let's detail what to do
+  # next.
+  domain_found=1
+  domain=$(/opt/flight/bin/flight web-suite get-domain 2>/dev/null)
+  rc=$?
+  if [ $rc -eq 0 -a "${domain}" != "" ] ; then
+    domain_found=0
+  elif [ $rc -eq 0 -a "${domain}" == "" ] ; then
+    # The domain has not been set via `flight config`/`flight web-suite`.
+    # Let's see if we can remedy that now.
+    domain=$(/opt/flight/bin/flight web-suite get-domain --use-fallback 2>/dev/null)
+    rc=$?
+    if [ $rc -eq 0 -a "${domain}" != "" ] ; then
+      /opt/flight/bin/flight web-suite set-domain "${domain}" &>/dev/null
+      domain_found=0
+    fi
+  fi
+  if [ ${domain_found} -eq 0 ] ; then
+    # A domain has already been set.  We assume that that means that an SSL
+    # certificate has been created too.
+    cat <<EOF 1>&2
 
 ================================================
-Configure and start File Manager API
+Start Flight Web Suite
 ================================================
-The file-manager-api needs configuring and starting.
-This can be done by running the following:
-  /opt/flight/bin/flight config set web-suite.domain <DOMAIN>
-  /opt/flight/bin/flight service start file-manager-api
+
+Flight Web Suite has been configured for the domain '${domain}'.  You can
+start and enable the web suite services by running the commands below.
+
+  /opt/flight/bin/flight web-suite start
+  /opt/flight/bin/flight web-suite enable
+
+You can alternatively change the domain by running the following:
+
+  /opt/flight/bin/flight web-suite set-domain <DOMAIN>
+  /opt/flight/bin/flight web-suite start
+  /opt/flight/bin/flight web-suite enable
 
 EOF
-fi
-if [ ! -f "/opt/flight/etc/www/ssl/key.pem" ]; then
-cat <<EOF 1>&2
+  else
+    cat <<EOF 1>&2
+
 ================================================
-HTTPS support needs to be enabled for flight-www
+Configure and start Flight Web Suite
 ================================================
-To enable HTTPS support run:
-  /opt/flight/bin/flight www enable-https
-  /opt/flight/bin/flight service restart www
+
+Flight Web Suite needs configuring and starting.  You will need to configure
+the domain for the web suite to use; generate an SSL certificate; and then
+start and enable the web suite services.  The commands below detail how to do
+so.  By default they will generate a self-signed certificate.
+
+  /opt/flight/bin/flight web-suite set-domain <DOMAIN>
+  /opt/flight/bin/flight web-suite start
+  /opt/flight/bin/flight web-suite enable
+
+You can alternatively generate a Let's Encrypt certificate by running the
+following:
+
+  /opt/flight/bin/flight web-suite set-domain <DOMAIN> --cert-type letsencrypt --email <YOUR EMAIL ADDRESS>
+  /opt/flight/bin/flight web-suite start
+  /opt/flight/bin/flight web-suite enable
 
 EOF
+  fi
 fi
 
 %changelog
+* Mon Aug 23 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.6-1
+- Bump flight-console-webapp, flight-desktop-*, flight-file-manager-*,
+  flight-job-script-* and flight-web-suite-utils.
+- Update post installation script.
 * Fri Jun 25 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.5-1
 - Bump flight-file-manager-*, flight-login-api, flight-www and
   flight-job-script-*

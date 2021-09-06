@@ -31,11 +31,11 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.6.1'
-override 'flight-desktop', version: VERSION
+VERSION = '1.7.0'
+override 'flight-desktop', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
-build_iteration 2
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-desktop'
@@ -52,8 +52,8 @@ exclude '**/bundler/git'
 
 DESKTOP_SYSTEM = '1.0'
 runtime_dependency 'flight-runway'
+runtime_dependency 'flight-websockify'
 runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-desktop-types'
 
 # Moves the correct howto version into place
 howto_src = File.expand_path("../../contrib/howto/#{VERSION.sub(/\.\d+(-\w.*)?\Z/, '')}", __dir__)
@@ -64,11 +64,22 @@ FileUtils.mkdir_p File.dirname(howto_dst)
 FileUtils.rm_f howto_dst
 FileUtils.cp howto_src, howto_dst
 
+# Updates the version in the libexec file
+path = File.expand_path('../../opt/flight/libexec/commands/desktop', __dir__)
+original = File.read(path)
+updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
+                  .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
+File.write(path, updated) unless original == updated
+
 if ohai['platform_family'] == 'rhel'
+  runtime_dependency 'flight-desktop-types >= 1.1.0'
+
   runtime_dependency 'tigervnc-server-minimal'
   runtime_dependency 'xorg-x11-xauth'
   runtime_dependency 'perl'
 elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'flight-desktop-types (>= 1.1.0)'
+
   runtime_dependency 'tigervnc-standalone-server'
   runtime_dependency 'xauth'
   runtime_dependency 'perl'
