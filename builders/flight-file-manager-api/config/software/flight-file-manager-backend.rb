@@ -64,7 +64,26 @@ build do
     delete File.expand_path("#{install_dir}/backend/lib/cloudcmd/#{path}")
   end
 
-  command "cd #{install_dir}/backend && /opt/flight/bin/yarn install", env: env
+  command "cd #{install_dir}/backend && /opt/flight/bin/yarn install --production", env: env
+
+  # Remove various development files from 'node_modules'
+  # NOTE: An explicit list is maintained to prevent directories being deleted by mistake
+  #       This list may need updating if new dependencies are added
+  block do
+    [
+      "#{install_dir}/backend/node_modules/@cloudcmd/fileop/dist-dev",
+      "#{install_dir}/backend/node_modules/console-io/dist-dev",
+      "#{install_dir}/backend/node_modules/deepword/dist-dev",
+      "#{install_dir}/backend/node_modules/dword/dist-dev",
+      "#{install_dir}/backend/node_modules/edward/dist-dev",
+      "#{install_dir}/backend/node_modules/monaco-editor/dev",
+      "#{install_dir}/backend/node_modules/restafary/dist-dev",
+
+      # This is the only source file with any considerable size
+      # Edward still functions without it
+      "#{install_dir}/backend/node_modules/edward/modules/ace-builds/src"
+    ].each { |dir| FileUtils.rm_rf dir }
+  end
 
   block do
     # Remove some git submodule files in some dependencies.  If these are left
