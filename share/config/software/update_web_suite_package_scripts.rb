@@ -134,12 +134,10 @@ build do
   POSTRM
 
   # Ensure all the scripts are up to date
-  updated = []
   paths.each do |type, path|
     new = rendered[type]
     old = (File.exists?(path) ? File.read(path) : '')
     unless old == new
-      updated << path
       FileUtils.mkdir_p File.dirname(path)
       File.write path, new
       FileUtils.chmod 0644, path
