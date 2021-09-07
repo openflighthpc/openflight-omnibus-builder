@@ -11,9 +11,6 @@ local
 package-scripts/*/postinst
 package-scripts/*/postrm
 package-scripts/*/prerm
-package-scripts/*/postinst
-package-scripts/*/postrm
-package-scripts/*/prerm
 opt/flight/etc/service/types/*/start.sh
 opt/flight/etc/service/types/*/restart.sh
 opt/flight/etc/service/types/*/stop.sh
