@@ -39,10 +39,10 @@ build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'
-dependency 'update_puma_scripts'
-dependency 'update_web_suite_package_scripts'
 dependency 'flight-file-manager-api'
 dependency 'flight-file-manager-backend'
+dependency 'update_puma_scripts'
+dependency 'update_web_suite_package_scripts'
 dependency 'version-manifest'
 
 license 'EPL-2.0'

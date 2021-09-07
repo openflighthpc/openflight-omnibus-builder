@@ -63,97 +63,84 @@ default_version '1.0.0'
 license :project_license
 skip_transitive_dependency_licensing true
 
-
+# NOTE: The scripts are intentionally re-rendered on every build to prevent
+# them being skipped by the cache
 build do
-  block do
-    # Extract information about the project
-    service = project.name.sub(/\Aflight-/, '')
+  # Extract information about the project
+  service = project.name.sub(/\Aflight-/, '')
 
-    # Define the script paths
-    rendered = {}
-    paths = {
-      postinst: File.join(project.package_scripts_path, 'postinst'),
-      prerm:    File.join(project.package_scripts_path, 'prerm'),
-      postrm:   File.join(project.package_scripts_path, 'postrm')
-    }
+  # Define the script paths
+  rendered = {}
+  paths = {
+    postinst: File.join(project.package_scripts_path, 'postinst'),
+    prerm:    File.join(project.package_scripts_path, 'prerm'),
+    postrm:   File.join(project.package_scripts_path, 'postrm')
+  }
 
-    # Render the postinst script
-    configure_script = File.join(project.package_scripts_path, 'stubs/postinst-configure')
-    configure = if File.exists? configure_script
-                  File.read(configure_script).chomp
-                else
-                  "${flight_ROOT}/bin/flight service configure #{service} --force --config '{}' >/dev/null 2>&1"
-                end
+  # Render the postinst script
+  configure_script = File.join(project.package_scripts_path, 'stubs/postinst-configure')
+  configure = if File.exists? configure_script
+                File.read(configure_script).chomp
+              else
+                "${flight_ROOT}/bin/flight service configure #{service} --force --config '{}' >/dev/null 2>&1"
+              end
 
-    rendered[:postinst] = <<~POSTINST
-      #{HEADER}
-      # Ensure flight_ROOT is set correctly
-      flight_ROOT=/opt/flight
+  rendered[:postinst] = <<~POSTINST
+    #{HEADER}
+    # Ensure flight_ROOT is set correctly
+    flight_ROOT=/opt/flight
 
-      # Run the configuration
-      #{configure}
+    # Run the configuration
+    #{configure}
 
-      # Check if the service is already running and restart it
-      if ${flight_ROOT}/bin/flight service status #{service} | grep -q active ; then
-        ${flight_ROOT}/bin/flight service restart #{service}
-      fi
+    # Check if the service is already running and restart it
+    if ${flight_ROOT}/bin/flight service status #{service} | grep -q active ; then
+      ${flight_ROOT}/bin/flight service restart #{service}
+    fi
 
-      # Reload flight-www to pick up the new config
-      ${flight_ROOT}/bin/flight service reload www >/dev/null 2>&1
+    # Reload flight-www to pick up the new config
+    ${flight_ROOT}/bin/flight service reload www >/dev/null 2>&1
 
-      exit 0
-    POSTINST
+    exit 0
+  POSTINST
 
-    # Render the prerm script
-    # NOTE: At the time of writing, `flight-www` has a similar script to this.
-    # Any changes made here will likely need to be duplicated
-    rendered[:prerm] = <<~PRERM
-      #{HEADER}
-      # Ensure flight_ROOT is set correctly
-      flight_ROOT=/opt/flight
+  # Render the prerm script
+  # NOTE: At the time of writing, `flight-www` has a similar script to this.
+  # Any changes made here will likely need to be duplicated
+  rendered[:prerm] = <<~PRERM
+    #{HEADER}
+    # Ensure flight_ROOT is set correctly
+    flight_ROOT=/opt/flight
 
-      # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
-      if [ "$1" == "0" -o "$1" == "remove" ]; then
-        # Stop the service
-        ${flight_ROOT}/bin/flight service stop #{service}
-      fi
+    # On "uninstall" the $1 variable will be either "0" (rpm) or "remove" (deb)
+    if [ "$1" == "0" -o "$1" == "remove" ]; then
+      # Stop the service
+      ${flight_ROOT}/bin/flight service stop #{service}
+    fi
 
-      exit 0
-    PRERM
+    exit 0
+  PRERM
 
-    # Render postrm
-    rendered[:postrm] = <<~POSTRM
-      #{HEADER}
-      # Ensure flight_ROOT is set correctly
-      flight_ROOT=/opt/flight
+  # Render postrm
+  rendered[:postrm] = <<~POSTRM
+    #{HEADER}
+    # Ensure flight_ROOT is set correctly
+    flight_ROOT=/opt/flight
 
-      # Reload flight-www to remove the proxy configuration
-      ${flight_ROOT}/bin/flight service reload www >/dev/null 2>&1
+    # Reload flight-www to remove the proxy configuration
+    ${flight_ROOT}/bin/flight service reload www >/dev/null 2>&1
 
-      exit 0
-    POSTRM
+    exit 0
+  POSTRM
 
-    # Ensure all the scripts are up to date
-    updated = []
-    paths.each do |type, path|
-      new = rendered[type]
-      old = (File.exists?(path) ? File.read(path) : '')
-      unless old == new
-        updated << path
-        FileUtils.mkdir_p File.dirname(path)
-        File.write path, new
-        FileUtils.chmod 0644, path
-      end
-    end
-
-    # Crash the build and prompt for the new files to be checked in!
-    # This helps ensure the updated version is in the repo and picked up
-    unless updated.empty?
-      raise <<~ERROR
-        The following puma scripts have been modified! Please check them in and restart the build.
-
-        #{updated.join("\n")}
-      ERROR
+  # Ensure all the scripts are up to date
+  paths.each do |type, path|
+    new = rendered[type]
+    old = (File.exists?(path) ? File.read(path) : '')
+    unless old == new
+      FileUtils.mkdir_p File.dirname(path)
+      File.write path, new
+      FileUtils.chmod 0644, path
     end
   end
 end
