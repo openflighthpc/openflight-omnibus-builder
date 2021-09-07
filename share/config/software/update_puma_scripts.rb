@@ -278,7 +278,9 @@ build do
 
   # Ensure all the scripts are up to date
   [:start, :start_bin, :stop, :restart, :reload].each do |type|
-    File.write(File.join(root_dir, paths[type]), rendered[type])
+    path = File.join(root_dir, paths[type])
+    FileUtils.mkdir_p(File.dirname(path))
+    File.write(path, rendered[type])
     project.extra_package_files << paths[type][1..-1]
   end
   project.extra_package_files.uniq!
