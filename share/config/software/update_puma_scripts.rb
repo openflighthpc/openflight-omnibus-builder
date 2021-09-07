@@ -83,6 +83,9 @@ build do
   rendered[:start] = <<~START
     #!/bin/bash
     #{PUMA_COPY_RIGHT_HEADER}
+    # Have subshells inherit `set -x` for better debugging.
+    export SHELLOPTS
+
     set -e
 
     # Ensure flight_ROOT is set
@@ -174,6 +177,8 @@ build do
   rendered[:stop] = <<~STOP
     #!/bin/bash
     #{PUMA_COPY_RIGHT_HEADER}
+    # Have subshells inherit `set -x` for better debugging.
+    export SHELLOPTS
 
     pid_file="$1"
     if [ -z "$pid_file" ]; then
@@ -203,6 +208,9 @@ build do
   rendered[:restart] = <<~RESTART
     #!/bin/bash
     #{PUMA_COPY_RIGHT_HEADER}
+    # Have subshells (e.g., the start and stop commands below) inherit `set
+    # -x` for better debugging.
+    export SHELLOPTS
 
     # Ensure flight_ROOT is set
     if [ -z "$flight_ROOT" ]; then
@@ -240,6 +248,8 @@ build do
   rendered[:reload] = <<~RELOAD
     #!/bin/bash
     #{PUMA_COPY_RIGHT_HEADER}
+    # Have subshells inherit `set -x` for better debugging.
+    export SHELLOPTS
 
     pid_file="$1"
     if [ -z "$pid_file" ]; then
