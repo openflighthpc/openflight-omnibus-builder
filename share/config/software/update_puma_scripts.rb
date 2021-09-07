@@ -291,6 +291,7 @@ build do
     path = File.join(root_dir, paths[type])
     FileUtils.mkdir_p(File.dirname(path))
     File.write(path, rendered[type])
+    FileUtils.chmod(0755, path)
     project.extra_package_files << paths[type][1..-1]
   end
   project.extra_package_files.uniq!
