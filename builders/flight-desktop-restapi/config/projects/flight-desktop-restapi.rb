@@ -32,9 +32,9 @@ friendly_name 'Flight Desktop REST API'
 install_dir '/opt/flight/opt/desktop-restapi'
 
 VERSION = '2.4.0'
-override 'flight-desktop-restapi', version: VERSION
+override 'flight-desktop-restapi', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'
