@@ -32,9 +32,9 @@ friendly_name 'Flight Job Script API'
 install_dir '/opt/flight/opt/job-script-api'
 
 VERSION = '1.4.0'
-override 'flight-job-script-api', version: VERSION
+override 'flight-job-script-api', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'
@@ -72,8 +72,9 @@ else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
 
-config_file File.join(install_dir, 'etc/flight-job-script-api.yaml')
+config_file '/opt/flight/etc/job-script-api.yaml'
 config_file '/opt/flight/etc/service/env/job-script-api'
+config_file '/opt/flight/etc/logrotate.d/job-script-api'
 
 require 'find'
 Find.find('opt') do |o|

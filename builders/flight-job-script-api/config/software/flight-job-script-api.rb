@@ -47,21 +47,9 @@ build do
   # Moves the api project into place
   [
     'Gemfile', 'Gemfile.lock', 'README.md', 'LICENSE.txt', 'app.rb', 'config.ru',
-    'app', 'bin', 'config', 'etc/flight-job-script-api.yaml', 'lib'
+    'app', 'bin', 'config', 'lib'
   ].each do |file|
     copy File.join('api', file), File.expand_path("#{install_dir}/#{file}/..")
-  end
-
-  # Update the config
-  block do
-    path = File.join(install_dir, 'etc/flight-job-script-api.yaml')
-    content = [
-      File.read(path),
-      "command_path: /usr/sbin:/usr/bin:/sbin:/bin:/opt/flight/opt/slurm/bin",
-      "shared_secret_path: /opt/flight/etc/shared-secret.conf",
-      ''
-    ].join("\n")
-    File.write path, content
   end
 
   # Installs the gems to the shared `vendor/share`
