@@ -32,9 +32,9 @@ friendly_name 'Flight Job'
 install_dir '/opt/flight/opt/job'
 
 VERSION = '2.4.0'
-override 'flight-job', version: VERSION
+override 'flight-job', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'
@@ -54,7 +54,6 @@ runtime_dependency 'flight-ruby-system-2.0'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-jq'
 
-# Define the user-editable files
 config_file '/opt/flight/etc/job.yaml'
 config_file '/opt/flight/libexec/job/slurm/sbatch-wrapper.sh'
 
@@ -73,10 +72,10 @@ updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
                   .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
 File.write(path, updated) unless original == updated
 
-# Glob after updating the opt directory
-Dir.glob('opt/**/*')
-   .select { |p| File.file? p }
-   .each { |p| extra_package_file p }
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
+end
 
 package :rpm do
   vendor 'Alces Flight Ltd'
