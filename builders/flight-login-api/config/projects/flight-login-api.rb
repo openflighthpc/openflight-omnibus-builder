@@ -31,7 +31,7 @@ friendly_name 'Flight Websuite Login API'
 
 install_dir '/opt/flight/opt/login-api'
 
-VERSION = '1.2.0-rc1'
+VERSION = '1.2.0'
 override 'flight-login-api', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
