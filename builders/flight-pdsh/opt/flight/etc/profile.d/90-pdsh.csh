@@ -44,3 +44,7 @@ switch ("$flight_PDSH_priority")
     set path=($path "$flight_ROOT"/opt/pdsh/bin)
     breaksw
 endsw
+
+if ( "$flight_DEFINES_paths" != "" ) then
+  set flight_DEFINES_paths = (${flight_DEFINES_paths} "$flight_ROOT"/opt/pdsh/bin)
+endif

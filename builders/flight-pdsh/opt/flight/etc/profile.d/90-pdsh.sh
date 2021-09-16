@@ -42,3 +42,7 @@ case ${flight_PDSH_priority:-embedded} in
 esac
 
 unset $(declare | grep ^flight_PDSH | cut -f1 -d= | xargs)
+
+if [ -n "$flight_DEFINES_paths" ]; then
+  flight_DEFINES_paths="$flight_DEFINES_paths $flight_ROOT/opt/pdsh/bin"
+fi
