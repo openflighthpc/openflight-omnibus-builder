@@ -31,11 +31,11 @@ friendly_name 'Flight Console api'
 
 install_dir '/opt/flight/opt/console-api'
 
-VERSION = '2.1.0'
+VERSION = '2.1.1'
 override 'flight-console-api', version: VERSION
 
 build_version VERSION
-build_iteration 4
+build_iteration 1
 
 dependency 'preparation'
 dependency 'update_web_suite_package_scripts'

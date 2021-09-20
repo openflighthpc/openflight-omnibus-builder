@@ -31,16 +31,16 @@ friendly_name 'Flight Desktop REST API'
 
 install_dir '/opt/flight/opt/desktop-restapi'
 
-VERSION = '2.4.0'
-override 'flight-desktop-restapi', version: VERSION
+VERSION = '2.4.1'
+override 'flight-desktop-restapi', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'
+dependency 'flight-desktop-restapi'
 dependency 'update_puma_scripts'
 dependency 'update_web_suite_package_scripts'
-dependency 'flight-desktop-restapi'
 dependency 'version-manifest'
 
 license 'EPL-2.0'

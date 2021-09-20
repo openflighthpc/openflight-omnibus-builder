@@ -42,8 +42,8 @@ Requires:       flight-desktop-restapi => 2.4.0, flight-desktop-restapi < 2.5.0~
 Requires:       flight-desktop-webapp => 1.5.0, flight-desktop-webapp < 1.6.0~
 Requires:       flight-file-manager-api => 1.2.2, flight-file-manager-api < 1.3.0~
 Requires:       flight-file-manager-webapp => 1.2.2, flight-file-manager-webapp < 1.3.0~
-Requires:       flight-login-api => 1.1.0, flight-login-api < 1.2.0~
-Requires:       flight-job-script-api => 1.4.0, flight-job-script-api < 1.5.0~
+Requires:       flight-login-api => 1.2.0, flight-login-api < 1.3.0~
+Requires:       flight-job-script-api => 1.5.0, flight-job-script-api < 1.6.0~
 Requires:       flight-job-script-webapp => 1.4.0, flight-job-script-webapp < 1.5.0~
 Requires:       flight-www => 1.6.0, flight-www < 1.7.0~
 Requires:       flight-headnode-landing-page < 1.4.0~
@@ -140,6 +140,8 @@ EOF
 fi
 
 %changelog
+* Wed Sep 15 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.7-1
+- Bump flight-job-script-api and flight-login-api
 * Mon Aug 23 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.6-1
 - Bump flight-console-webapp, flight-desktop-*, flight-file-manager-*,
   flight-job-script-* and flight-web-suite-utils.

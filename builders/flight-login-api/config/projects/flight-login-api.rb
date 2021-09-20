@@ -31,16 +31,16 @@ friendly_name 'Flight Websuite Login API'
 
 install_dir '/opt/flight/opt/login-api'
 
-VERSION = '1.1.0'
+VERSION = '1.2.0'
 override 'flight-login-api', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
+dependency 'flight-login-api'
 dependency 'update_puma_scripts'
 dependency 'update_web_suite_package_scripts'
-dependency 'flight-login-api'
 dependency 'version-manifest'
 
 license 'EPL-2.0'

@@ -7,3 +7,11 @@ bin/*
 files/**/cache/
 vendor
 local
+package-scripts/*/postinst
+package-scripts/*/postrm
+package-scripts/*/prerm
+opt/flight/etc/service/types/*/start.sh
+opt/flight/etc/service/types/*/restart.sh
+opt/flight/etc/service/types/*/stop.sh
+opt/flight/etc/service/types/*/reload.sh
+opt/flight/opt/*/bin/start

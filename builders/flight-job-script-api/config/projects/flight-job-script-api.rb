@@ -31,16 +31,16 @@ friendly_name 'Flight Job Script API'
 
 install_dir '/opt/flight/opt/job-script-api'
 
-VERSION = '1.4.0'
-override 'flight-job-script-api', version: VERSION
+VERSION = '1.5.0'
+override 'flight-job-script-api', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'
+dependency 'flight-job-script-api'
 dependency 'update_puma_scripts'
 dependency 'update_web_suite_package_scripts'
-dependency 'flight-job-script-api'
 dependency 'version-manifest'
 
 license 'EPL-2.0'
@@ -61,19 +61,20 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-job >= 2.4.0'
-  runtime_dependency 'flight-job < 2.5.0'
+  runtime_dependency 'flight-job >= 2.5.0'
+  runtime_dependency 'flight-job < 2.6.0'
   runtime_dependency 'flight-service >= 1.3.0'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'flight-job (>= 2.4.0)'
-  runtime_dependency 'flight-job (<< 2.5.0)'
+  runtime_dependency 'flight-job (>= 2.5.0)'
+  runtime_dependency 'flight-job (<< 2.6.0)'
   runtime_dependency 'flight-service (>= 1.3.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
 
-config_file File.join(install_dir, 'etc/flight-job-script-api.yaml')
+config_file '/opt/flight/etc/job-script-api.yaml'
 config_file '/opt/flight/etc/service/env/job-script-api'
+config_file '/opt/flight/etc/logrotate.d/job-script-api'
 
 require 'find'
 Find.find('opt') do |o|

@@ -31,7 +31,7 @@ friendly_name 'Manage HPC environment services'
 
 install_dir '/opt/flight/opt/service'
 
-VERSION = '1.3.0'
+VERSION = '1.4.0'
 override 'flight-service', version: VERSION
 
 build_version VERSION
