@@ -110,6 +110,14 @@ if ohai['platform_family'] == 'rhel'
       priority "flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   end
+
+  runtime_dependency 'xorg-x11-apps'
+  runtime_dependency 'netpbm-progs'
+elsif ohai['platform_family'] == 'debian'
+  runtime_dependency 'x11-apps'
+  runtime_dependency 'netpbm'
+else
+  raise "Unrecognised platform: #{ohai['platform_family']}"
 end
 
 package :deb do
