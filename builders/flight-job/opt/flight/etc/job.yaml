@@ -83,7 +83,7 @@
 #
 # The environment variable flight_JOB_submit_script_path takes precedence.
 # ==============================================================================
-submit_script_path: libexec/job/flight-slurm/submit.sh
+# submit_script_path: libexec/job/<scheduler>/submit.sh
 
 # ==============================================================================
 # Bootstrap Script Path
