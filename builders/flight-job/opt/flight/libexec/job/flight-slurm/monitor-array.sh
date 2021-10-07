@@ -25,7 +25,5 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-# Ensure that flight-slurm binaries are first on the PATH and thus override
-# any other installs of slurm
 PATH=$PATH:/opt/flight/opt/slurm/bin
 exec /opt/flight/libexec/job/slurm/monitor-array.sh "$@"
