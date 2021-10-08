@@ -72,6 +72,26 @@
 # scheduler: slurm
 
 # ==============================================================================
+# Additional PATH directories
+#
+# Additional directories to append to PATH when running the HPC scheduler
+# integratation scripts.
+#
+# If the binaries for your HPC scheduler are installed to non-common
+# directories you will need to modify this setting to include those
+# directories.  The format is the same as the PATH environment variable.
+# E.g., the following setting would add the two directories /opt/tools/bin and
+# /opt/utilities/bin to PATH.
+#
+#   additional_paths: /opt/tools/bin:/opt/utilities/bin
+#
+# The paths must be absolute.
+#
+# The environment variable flight_JOB_addtional_paths takes precedence
+# ==============================================================================
+additional_paths: /opt/flight/opt/jq/bin:/opt/flight/opt/slurm/bin
+
+# ==============================================================================
 # Submit Script Path
 # Specify the path to the script which submits jobs.
 #
@@ -83,7 +103,7 @@
 #
 # The environment variable flight_JOB_submit_script_path takes precedence.
 # ==============================================================================
-submit_script_path: libexec/job/flight-slurm/submit.sh
+# submit_script_path: libexec/job/<scheduler>/submit.sh
 
 # ==============================================================================
 # Bootstrap Script Path
@@ -97,7 +117,7 @@ submit_script_path: libexec/job/flight-slurm/submit.sh
 #
 # The environment variable flight_JOB_bootstrap_script_path takes precedence.
 # ==============================================================================
-bootstrap_script_path: libexec/job/flight-slurm/bootstrap.sh
+# bootstrap_script_path: libexec/job/<scheduler>/bootstrap.sh
 
 # ==============================================================================
 # Monitor Script Paths
@@ -113,8 +133,8 @@ bootstrap_script_path: libexec/job/flight-slurm/bootstrap.sh
 # The environment variables flight_JOB_monitor_script_path and
 # flight_JOB_monitor_array_script_path take precedence.
 # ==============================================================================
-monitor_script_path: libexec/job/flight-slurm/monitor.sh
-monitor_array_script_path: libexec/job/flight-slurm/monitor-array.sh
+# monitor_script_path: libexec/job/<scheduler>/monitor.sh
+# monitor_array_script_path: libexec/job/<scheduler>/monitor-array.sh
 
 # ==============================================================================
 # Cancel Script Path
@@ -128,7 +148,7 @@ monitor_array_script_path: libexec/job/flight-slurm/monitor-array.sh
 #
 # The environment variable flight_JOB_cancel_script_path takes precedence.
 # ==============================================================================
-cancel_script_path: libexec/job/flight-slurm/cancel.sh
+# cancel_script_path: libexec/job/<scheduler>/cancel.sh
 
 # ==============================================================================
 # Script Adapter Path
