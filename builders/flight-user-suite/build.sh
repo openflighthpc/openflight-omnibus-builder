@@ -4,7 +4,7 @@ d="$(pwd)"
 mkdir -p pkg
 
 NAME=flight-user-suite
-VERSION=2021.7
+VERSION=2021.8
 REL=1
 
 if [ -f /etc/redhat-release ]; then
