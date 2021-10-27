@@ -31,7 +31,7 @@ friendly_name 'Flight Job Script API'
 
 install_dir '/opt/flight/opt/job-script-api'
 
-VERSION = '1.5.0'
+VERSION = '1.5.1'
 override 'flight-job-script-api', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
