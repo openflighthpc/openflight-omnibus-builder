@@ -32,9 +32,9 @@ friendly_name 'Flight Console api'
 install_dir '/opt/flight/opt/console-api'
 
 VERSION = '2.1.1'
-override 'flight-console-api', version: VERSION
+override 'flight-console-api', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'
