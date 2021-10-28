@@ -27,13 +27,15 @@
 #===============================================================================
 
 # Checks if the example config pack has been previously installed
-# and symlinks it into place if required
+# but does not enable it. Uncommenting the `ln -s` call will
+# enable the example config pack.
+
 dir=/opt/flight/opt/www/landing-page/default/content/config-packs/
 flag="$dir/.example-installed"
 if [ ! -f "$flag" ]; then
   touch "$flag"
   pushd "$dir" >/dev/null
-  ln -s example.md.disabled example.md
+  # ln -s example.md.disabled example.md
   popd >/dev/null
 fi
 
