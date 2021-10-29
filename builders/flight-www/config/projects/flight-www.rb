@@ -44,7 +44,7 @@ if ENV.key?('ALPHA_cert')
 else
   build_version VERSION
 end
-build_iteration '2'
+build_iteration 3
 
 dependency 'preparation'
 dependency 'enforce-flight-runway'
@@ -67,8 +67,9 @@ exclude '**/bundler/git'
 # NOTE: The 1.1 system adds the /downloads location
 WWW_SYSTEMS = (0..1).map { |i| ":flight-www-system-1.#{i}" }.join(' ')
 
-# NOTE: The 1.1 system adds config-packs
-LANDING_PAGE_SYSTEMS = (0..1).map { |i| ":flight-landing-page-system-1.#{i}" }.join(' ')
+# * 1.1 added config-packs.
+# * 1.2 added support for consistent chrome/branding.
+LANDING_PAGE_SYSTEMS = (0..2).map { |i| ":flight-landing-page-system-1.#{i}" }.join(' ')
 
 runtime_dependency 'flight-plugin-cron'
 runtime_dependency 'flight-runway'
