@@ -31,11 +31,11 @@ friendly_name 'Flight Job Script Webapp'
 
 install_dir '/opt/flight/opt/job-script-webapp'
 
-VERSION = '1.6.0-rc6'
+VERSION = '1.6.0-rc7'
 override 'flight-job-script-webapp', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-job-script-webapp'
