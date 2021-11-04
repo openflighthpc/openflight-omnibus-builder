@@ -140,6 +140,29 @@ If prompted, you should supply the following password: XXXXXXX
 
 The session is now ready to be accessed with your favourite vnc client.
 
+### Environment options
+
+By default, when starting a session, the session environment is reset, and
+therefore does not keep environment variables from the machine it is started
+from. To override this feature, and carry over environment variables from the
+machine, you can include the following argument at the command line:
+
+~~~
+flight desktop start gnome --no-override-env
+~~~
+
+This is particularly important when starting interactive desktop sessions from
+Flight Job, as the latter tool sets various environment variables for SLURM and
+other job related packages.
+
+The application also supports the inverse functionality. By using the following argument:
+
+~~~
+flight desktop start gnome --override-env
+~~~
+
+The environment is forcefully blanked, regardless of the inclusion of `--no-override-env` or the value given in `config.yml`.
+
 ### Starting Applications
 
 When you start a session you can provide a "post initializtion" script to run
