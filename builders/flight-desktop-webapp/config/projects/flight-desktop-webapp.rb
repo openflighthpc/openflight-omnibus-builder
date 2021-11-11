@@ -31,11 +31,11 @@ friendly_name 'Flight Desktop Webapp'
 
 install_dir '/opt/flight/opt/desktop-webapp'
 
-VERSION = '1.6.0-rc2'
+VERSION = '1.6.0'
 override 'flight-desktop-webapp', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-desktop-webapp'
