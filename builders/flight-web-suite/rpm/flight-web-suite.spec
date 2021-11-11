@@ -36,16 +36,16 @@ License:        EPL-2.0
 URL:            https://openflighthpc.org
 
 BuildArch:      noarch
-Requires:       flight-console-api => 2.1.2~, flight-console-api < 2.2.0~
-Requires:       flight-console-webapp => 1.4.0~, flight-console-webapp < 1.5.0~
+Requires:       flight-console-api => 2.1.2, flight-console-api < 2.2.0~
+Requires:       flight-console-webapp => 1.4.0, flight-console-webapp < 1.5.0~
 Requires:       flight-desktop-restapi => 2.4.1, flight-desktop-restapi < 2.5.0~
-Requires:       flight-desktop-webapp => 1.6.0~, flight-desktop-webapp < 1.7.0~
+Requires:       flight-desktop-webapp => 1.6.0, flight-desktop-webapp < 1.7.0~
 Requires:       flight-file-manager-api => 1.2.2, flight-file-manager-api < 1.3.0~
-Requires:       flight-file-manager-webapp => 1.3.0~, flight-file-manager-webapp < 1.4.0~
-Requires:       flight-login-api => 1.2.1~, flight-login-api < 1.3.0~
-Requires:       flight-job-script-api => 1.6.0~, flight-job-script-api < 1.7.0~
-Requires:       flight-job-script-webapp => 1.6.0~, flight-job-script-webapp < 1.7.0~
-Requires:       flight-www => 1.6.0, flight-www < 1.7.0~
+Requires:       flight-file-manager-webapp => 1.3.0, flight-file-manager-webapp < 1.4.0~
+Requires:       flight-login-api => 1.2.1, flight-login-api < 1.3.0~
+Requires:       flight-job-script-api => 1.6.0, flight-job-script-api < 1.7.0~
+Requires:       flight-job-script-webapp => 1.6.0, flight-job-script-webapp < 1.7.0~
+Requires:       flight-www => 1.6.1, flight-www < 1.7.0~
 Requires:       flight-headnode-landing-page < 1.5.0~
 Requires:       flight-web-suite-utils => 1.1.0 flight-web-suite-utils < 1.2.0~
 
@@ -140,7 +140,7 @@ EOF
 fi
 
 %changelog
-* Wed Oct 27 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.8-1
+* Thu Nov 11 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.8-1
 - Bump flight-console-api, flight-console-webapp, flight-desktop-restapi,
   flight-desktop-webapp, flight-file-manager-webapp, flight-login-api,
   flight-headnode-landing-page, flight-job-script-api and
