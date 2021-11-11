@@ -31,20 +31,20 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.6.0'
-CERT_VERSION = '0.5.0'
+VERSION = '1.6.1'
+CERT_VERSION = '0.5.1'
 
 override 'flight-www', version: VERSION
 override 'flight-cert', version: ENV.fetch('ALPHA_cert', CERT_VERSION)
 override :nginx, version: '1.14.2'
-override 'flight-landing-page', version: '1.3.0'
+override 'flight-landing-page', version: '1.4.0'
 
 if ENV.key?('ALPHA_cert')
   build_version VERSION.sub(/(-\w+)?\Z/, '-alpha')
 else
   build_version VERSION
 end
-build_iteration '3'
+build_iteration 1
 
 dependency 'preparation'
 dependency 'enforce-flight-runway'
@@ -67,8 +67,9 @@ exclude '**/bundler/git'
 # NOTE: The 1.1 system adds the /downloads location
 WWW_SYSTEMS = (0..1).map { |i| ":flight-www-system-1.#{i}" }.join(' ')
 
-# NOTE: The 1.1 system adds config-packs
-LANDING_PAGE_SYSTEMS = (0..1).map { |i| ":flight-landing-page-system-1.#{i}" }.join(' ')
+# * 1.1 added config-packs.
+# * 1.2 added support for consistent chrome/branding.
+LANDING_PAGE_SYSTEMS = (0..2).map { |i| ":flight-landing-page-system-1.#{i}" }.join(' ')
 
 runtime_dependency 'flight-plugin-cron'
 runtime_dependency 'flight-runway'

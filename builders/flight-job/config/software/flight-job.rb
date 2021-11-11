@@ -43,7 +43,7 @@ build do
   env = with_standard_compiler_flags(with_embedded_path)
 
   [
-    'Gemfile', 'Gemfile.lock', 'bin/job', 'lib', 'LICENSE.txt', 'README.md',
+    'Gemfile', 'Gemfile.lock', 'bin/job', 'lib', 'config', 'LICENSE.txt', 'README.md',
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end

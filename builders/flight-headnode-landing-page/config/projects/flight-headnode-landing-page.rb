@@ -31,11 +31,11 @@ friendly_name 'Headnode content for landing page'
 
 install_dir '/opt/flight/opt/www/landing-page/default'
 
-VERSION = '1.3.0'
+VERSION = '1.4.0'
 override 'flight-headnode-landing-page', version: VERSION
 
 build_version VERSION
-build_iteration '1'
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-headnode-landing-page'
@@ -58,14 +58,14 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-landing-page-system-1.1'
-BRANDING_SYSTEM = '1.0'
+runtime_dependency 'flight-landing-page-system-1.2'
+BRANDING_SYSTEMS = (0..1).map { |i| ":flight-landing-page-branding-system-1.#{i}" }.join(' ')
 
 package :rpm do
   vendor 'Alces Flight Ltd'
   # repurposed 'priority' field to set RPM recommends/provides
   # provides are prefixed with `:`
-  priority ":flight-landing-page-content :flight-landing-page-branding-system-#{BRANDING_SYSTEM}"
+  priority ":flight-landing-page-content #{BRANDING_SYSTEMS}"
 end
 
 package :deb do
@@ -73,5 +73,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "::flight-landing-page-content :flight-landing-page-branding-system-#{BRANDING_SYSTEM}"
+  section "::flight-landing-page-content #{BRANDING_SYSTEMS}"
 end

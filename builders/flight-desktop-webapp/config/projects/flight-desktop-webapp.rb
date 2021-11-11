@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop Webapp'
 
 install_dir '/opt/flight/opt/desktop-webapp'
 
-VERSION = '1.5.0'
+VERSION = '1.6.0'
 override 'flight-desktop-webapp', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
@@ -55,7 +55,7 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-branding-system-1.0'
+runtime_dependency 'flight-landing-page-branding-system-1.1'
 
 require 'find'
 Find.find('opt') do |o|

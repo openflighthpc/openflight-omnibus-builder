@@ -1,7 +1,7 @@
 : '
 : NAME: job
 : SYNOPSIS: Generate and submit jobs from predefined templates
-: VERSION: 2.5.1
+: VERSION: 2.6.0
 : '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
@@ -35,7 +35,6 @@ flight_ROOT=${flight_ROOT:-"$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." &> /d
 export RUBYOPT='-W0'
 export FLIGHT_CWD=$(pwd)
 export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
-export PATH="$PATH:$flight_ROOT/opt/jq/bin"
 
 cd $flight_ROOT/opt/job
 "$flight_ROOT"/bin/flexec bundle exec bin/job "$@"

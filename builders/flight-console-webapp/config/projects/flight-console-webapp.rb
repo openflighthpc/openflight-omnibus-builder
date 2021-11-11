@@ -31,7 +31,7 @@ friendly_name 'Flight Console Webapp'
 
 install_dir '/opt/flight/opt/console-webapp'
 
-VERSION = '1.3.1'
+VERSION = '1.4.0'
 override 'flight-console-webapp', version: VERSION
 
 build_version VERSION
@@ -55,7 +55,7 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-branding-system-1.0'
+runtime_dependency 'flight-landing-page-branding-system-1.1'
 
 require 'find'
 Find.find('opt') do |o|

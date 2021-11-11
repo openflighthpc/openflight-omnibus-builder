@@ -40,7 +40,7 @@ build do
 
   # Moves the project into place
   [
-    'package.json', 'yarn.lock', 'src', 'etc',
+    'package.json', 'yarn.lock', 'src', 'etc', 'libexec',
     'LICENSE.txt', 'README.md',
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
