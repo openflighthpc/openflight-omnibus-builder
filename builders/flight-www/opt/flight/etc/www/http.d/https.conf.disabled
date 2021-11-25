@@ -1,4 +1,5 @@
 server {
   listen 443 ssl default;
   include /opt/flight/etc/www/server-https.d/*.conf;
+  include /opt/flight/etc/www/error-locations.conf;
 }
