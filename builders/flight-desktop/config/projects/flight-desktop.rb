@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.8.1-rc1'
+VERSION = '1.8.1'
 override 'flight-desktop', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
