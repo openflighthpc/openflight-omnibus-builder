@@ -32,7 +32,7 @@ friendly_name 'Flight web server service'
 install_dir '/opt/flight/opt/www'
 
 VERSION = '1.6.2'
-CERT_VERSION = '0.6.0-rc1'
+CERT_VERSION = '0.6.0'
 
 override 'flight-www', version: ENV.fetch('ALPHA', VERSION)
 override 'flight-cert', version: ENV.fetch('ALPHA_cert', CERT_VERSION)
