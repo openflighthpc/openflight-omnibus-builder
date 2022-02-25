@@ -41,6 +41,10 @@ version '14.15.4' do
   source sha256: 'b51c033d40246cd26e52978125a3687df5cd02ee532e8614feff0ba6c13a774f'
 end
 
+version '14.19.0' do
+  source sha256: '223ca31e3440b79a3fe6828161b1843743eaa7610a88c0e1ac1d8e1d815b44cd'
+end
+
 license 'MIT'
 license_file 'LICENSE'
 skip_transitive_dependency_licensing true

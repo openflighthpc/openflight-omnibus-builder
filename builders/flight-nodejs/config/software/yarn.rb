@@ -33,6 +33,10 @@ version '1.22.4' do
   source sha256: 'bc5316aa110b2f564a71a3d6e235be55b98714660870c5b6b2d2d3f12587fb58'
 end
 
+version '1.22.17' do
+  source sha256: '267982c61119a055ba2b23d9cf90b02d3d16c202c03cb0c3a53b9633eae37249'
+end
+
 license 'BSD-2-Clause'
 license_file 'LICENSE'
 skip_transitive_dependency_licensing true
