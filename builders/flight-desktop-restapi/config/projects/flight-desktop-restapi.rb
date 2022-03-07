@@ -71,6 +71,10 @@ else
   raise "Unrecognised platform: #{ohai['platform_family']}"
 end
 
+config_file '/opt/flight/etc/desktop-restapi.yaml'
+config_file '/opt/flight/etc/service/env/desktop-restapi'
+config_file '/opt/flight/etc/logrotate.d/desktop-restapi'
+
 require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
