@@ -31,7 +31,7 @@ friendly_name 'Flight NodeJS'
 
 install_dir '/opt/flight/opt/nodejs'
 
-NODEJS_VERSION = '14.15.4'
+NODEJS_VERSION = '14.19.0'
 VERSION = NODEJS_VERSION
 override 'flight-nodejs', version: VERSION
 
@@ -48,7 +48,7 @@ dependency 'version-manifest'
 JS_SYSTEM = '2.0'
 
 override 'nodejs', version: NODEJS_VERSION
-override 'yarn', version: '1.22.4'
+override 'yarn', version: '1.22.17'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
