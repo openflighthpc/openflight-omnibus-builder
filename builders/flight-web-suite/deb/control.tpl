@@ -15,5 +15,5 @@ Depends:      flight-console-api (>= 2.2.0), flight-console-api (<< 2.3.0),
   flight-job-script-api (>= 1.6.0), flight-job-script-api (<< 1.7.0),
   flight-job-script-webapp (>= 1.6.0), flight-job-script-webapp (<< 1.7.0),
   flight-www (>= 1.6.2), flight-www (<< 1.7.0),
-  flight-headnode-landing-page (<< 1.5.0),
+  flight-headnode-landing-page (<< 1.6.0),
   flight-web-suite-utils (>= 1.1.0), flight-web-suite-utils (<< 1.2.0)
