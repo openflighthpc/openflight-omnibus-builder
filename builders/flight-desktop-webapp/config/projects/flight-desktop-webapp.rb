@@ -35,7 +35,7 @@ VERSION = '1.7.0'
 override 'flight-desktop-webapp', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-desktop-webapp'
@@ -55,7 +55,7 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-branding-system-1.1'
+runtime_dependency 'flight-landing-page-branding-system-1.2'
 
 require 'find'
 Find.find('opt') do |o|

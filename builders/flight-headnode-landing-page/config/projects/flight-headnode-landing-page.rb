@@ -31,7 +31,7 @@ friendly_name 'Headnode content for landing page'
 
 install_dir '/opt/flight/opt/www/landing-page/default'
 
-VERSION = '1.4.0'
+VERSION = '1.5.0'
 override 'flight-headnode-landing-page', version: VERSION
 
 build_version VERSION
@@ -59,7 +59,7 @@ exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
 runtime_dependency 'flight-landing-page-system-1.2'
-BRANDING_SYSTEMS = (0..1).map { |i| ":flight-landing-page-branding-system-1.#{i}" }.join(' ')
+BRANDING_SYSTEMS = (0..2).map { |i| ":flight-landing-page-branding-system-1.#{i}" }.join(' ')
 
 package :rpm do
   vendor 'Alces Flight Ltd'
