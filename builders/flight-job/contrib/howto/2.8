@@ -300,8 +300,10 @@ Your `crontab` will be modified to perform the periodic check.
 
 ### submit-job: Submit a job to the scheduler
 
-A previously rendered template can be submitted using the `create-job` command.
-The output of the command is the same as the `info-job` command.
+A previously rendered template can be submitted using the `submit-job`
+command.  This will step you through various question prompts and then submit
+the `script` creating a `job`.  The output of the command is the same as the
+`info-job` command.
 
 ~~~
 $ flight job submit-job xpVrobuO

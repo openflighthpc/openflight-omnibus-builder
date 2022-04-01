@@ -51,13 +51,13 @@ The different types of desktop sessions can be returned with `avail`:
 | Name     | Summary                                             | State      |
 |----------|-----------------------------------------------------|------------|
 | chrome   | Full-screen Google Chrome browser session.          | Unverified |
-| &#9;     | &#9;                                                | &#9;       |
-| &#9;     |  `>` https://www.google.com/chrome/                 | &#9;       |
-| &#9;     | &#9;                                                | &#9;       |
+|          |                                                     |            |
+|          |  `>` https://www.google.com/chrome/                 |            |
+|          |                                                     |            |
 | gnome    | GNOME v3, a free and open-source desktop            | Unverified |
-| &#9;     | environment for Unix-like operating systems.        | &#9;       |
-| &#9;     | &#9;                                                | &#9;       |
-| &#9;     |  `>` https://www.gnome.org/                         | &#9;       |
+|          | environment for Unix-like operating systems.        |            |
+|          |                                                     |            |
+|          |  `>` https://www.gnome.org/                         |            |
 | ...      | ...                                                 | ...        |
 
 ## Verifying and Installing a Desktop
@@ -198,6 +198,10 @@ flight desktop start gnome \
   --app firefox \
   --app "/path/to/launch/script arg1 arg2"
 ~~~
+
+The session can be configured to automatically exit when the post
+initializtion script exits.  To do so pass the flag `--kill-on-script-exit`.
+This flag only makes sense when a `--script` is specified.
 
 ## List Running Sessions
 

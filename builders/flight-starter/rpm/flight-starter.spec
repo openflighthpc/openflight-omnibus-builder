@@ -70,6 +70,8 @@ if [ -e "$old" ]; then
 fi
 
 %changelog
+* Fri Apr  1 2022 Ben Armston <ben.armston@alces-flight.com> - 2022.2.0
+- Updated to 2022.2.0
 * Mon Mar  7 2022 Ben Armston <ben.armston@alces-flight.com> - 2022.1.0
 - Updated to 2022.1.0
 * Thu Nov 25 2021 Ben Armston <ben.armston@alces-flight.com> - 2021.9.0
