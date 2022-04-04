@@ -304,7 +304,7 @@ additional_paths: /opt/flight/opt/jq/bin:/opt/flight/opt/slurm/bin
 # The environment variable flight_JOB_ssh_private_key_path takes
 # precedence.
 # ============================================================================== 
-# ssh_private_key_path: "etc/job/id_rsa"
+ssh_private_key_path: "~/.ssh/id_alcescluster"
 
 # ============================================================================== 
 # SSH Public Key Path
@@ -318,7 +318,7 @@ additional_paths: /opt/flight/opt/jq/bin:/opt/flight/opt/slurm/bin
 # The environment variable flight_JOB_ssh_public_key_path takes
 # precedence.
 # ============================================================================== 
-# ssh_public_key_path: "etc/job/id_rsa.pub"
+ssh_public_key_path: "~/.ssh/id_alcescluster.pub"
 
 # ==============================================================================
 # Log Path
