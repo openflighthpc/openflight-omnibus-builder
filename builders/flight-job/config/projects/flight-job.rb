@@ -31,7 +31,7 @@ friendly_name 'Flight Job'
 
 install_dir '/opt/flight/opt/job'
 
-VERSION = '2.8.0-rc4'
+VERSION = '2.8.0-rc5'
 override 'flight-job', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)

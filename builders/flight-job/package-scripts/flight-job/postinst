@@ -35,6 +35,7 @@ pub_key="$priv_key".pub
 if [ ! -f "$priv_key" ]; then
   mkdir -p $(dirname "$priv_key")
   ssh-keygen -b 4096 -t rsa -f "$priv_key" -q -N "" -C "Flight Job Key"
+  chmod o+r "$priv_key"
 
   # Ensure any existing public key is removed
   rm -f "$pub_key"
