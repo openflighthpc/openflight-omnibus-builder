@@ -51,6 +51,9 @@ Vagrant.configure("2") do |config|
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
+    build.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+    end
   end
 
   config.vm.define "centos8-test", autostart: false do |build|
