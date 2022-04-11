@@ -29,9 +29,9 @@ require 'zlib'
 require 'minitar'
 
 name 'flight-headnode-landing-page'
-default_version '0.0.0'
+default_version 'enh/login-widget'
 
-source git: 'https://github.com/openflighthpc/flight-landing-page'
+source git: "https://github.com/openflighthpc/flight-landing-page"
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
@@ -61,7 +61,6 @@ build do
     end
   end
 
-  # Add the files to the rpm
   project.extra_package_file readme
   project.extra_package_file tarball
 end

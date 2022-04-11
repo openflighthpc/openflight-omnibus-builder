@@ -39,6 +39,7 @@ build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-headnode-landing-page'
+dependency 'flight-webapp-components'
 dependency 'version-manifest'
 
 if ohai['platform_family'] == 'rhel'
