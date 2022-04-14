@@ -29,7 +29,7 @@ require 'zlib'
 require 'minitar'
 
 name 'flight-headnode-landing-page'
-default_version 'enh/login-widget'
+default_version '0.0.0'
 
 source git: "https://github.com/openflighthpc/flight-landing-page"
 
