@@ -3,7 +3,7 @@ require 'zlib'
 require 'minitar'
 
 name 'flight-webapp-components'
-default_version 'enh/account-menu-builder'
+default_version '0.0.0'
 
 source git: "https://github.com/openflighthpc/flight-webapp-components"
 
