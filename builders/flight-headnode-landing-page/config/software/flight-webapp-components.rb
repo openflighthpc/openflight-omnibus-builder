@@ -13,6 +13,8 @@ skip_transitive_dependency_licensing true
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
+  # Configure the URL used to access the login API.
+  env["REACT_APP_LOGIN_API_BASE_URL"] = "/login/api/v0"
 
   # Build flight-webapp-components and the login menu
   block do
