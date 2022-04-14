@@ -20,15 +20,6 @@ build do
     command "cd #{project_dir} && /opt/flight/bin/yarn install", env: env
     command "cd #{project_dir} && /opt/flight/bin/yarn run build", env: env
 
-    # Add newly built components to package.json of builder
-    package_path = File.join(project_dir, 'builder', 'package.json')
-    config = JSON.parse(File.read(package_path))
-    config["dependencies"]["flight-webapp-components"] = "link:.."
-    File.write(
-      package_path,
-      config.to_json
-    )
-
     # Build flight login menu
     command "cd #{project_dir}/builder && /opt/flight/bin/yarn install", env: env
     command "cd #{project_dir}/builder && /opt/flight/bin/yarn run build", env: env
