@@ -13,34 +13,36 @@ $ flight desktop --help
     Manage interactive GUI desktop sessions.
 
   COMMANDS:
-
-    avail   Show available desktop types
-    clean   Clean up one or more exited desktop sessions
-    doctor  Perform diagnostics and display results
-    help    Display global or [command] help documentation
-    kill    Terminate an interactive desktop session
-    list    List interactive desktop sessions
+		
+    avail   Show available desktop types		
+    clean   Clean up one or more exited desktop sessions		
+    doctor  Perform diagnostics and display results		
+    help    Display global or [command] help documentation			
+    kill    Terminate an interactive desktop session		
+    list    List interactive desktop sessions			
     prepare Prepare a desktop type for use
-    set     Set or display default settings
-    show    Show information about a desktop session
-    start   Start an interactive desktop session
-    verify  Verify prerequisites are met for a desktop type
-    webify  Start web access support for an active desktop session
+    rename  Rename a desktop session			
+    set     Set or display default settings		
+    show    Show information about a desktop session			
+    start   Start an interactive desktop session		
+    verify  Verify prerequisites are met for a desktop type			
+    webify  Start web access support for an active desktop session	
 
   ALIASES:
-
-    av avail
-    k  kill
-    ls list
-    s  start
-    st start
+  
+    av  avail   
+    k   kill   
+    ls  list   
+    s   start   
+    st  start   
+    web webify   
 
   GLOBAL OPTIONS:
-
-    -h, --help
+	
+    -h, --help 
         Display help documentation
-
-    --version
+	
+    --version 
         Display version information
 ~~~
 
