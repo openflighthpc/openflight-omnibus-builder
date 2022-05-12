@@ -37,16 +37,16 @@ URL:            https://openflighthpc.org
 
 BuildArch:      noarch
 Requires:       flight-console-api => 2.2.0, flight-console-api < 2.3.0~
-Requires:       flight-console-webapp => 1.5.0, flight-console-webapp < 1.6.0~
+Requires:       flight-console-webapp => 1.6.0~, flight-console-webapp < 1.7.0~
 Requires:       flight-desktop-restapi => 2.5.0, flight-desktop-restapi < 2.6.0~
-Requires:       flight-desktop-webapp => 1.7.0, flight-desktop-webapp < 1.8.0~
+Requires:       flight-desktop-webapp => 1.8.0~, flight-desktop-webapp < 1.9.0~
 Requires:       flight-file-manager-api => 1.4.0, flight-file-manager-api < 1.5.0~
-Requires:       flight-file-manager-webapp => 1.4.0, flight-file-manager-webapp < 1.5.0~
+Requires:       flight-file-manager-webapp => 1.5.0~, flight-file-manager-webapp < 1.6.0~
 Requires:       flight-login-api => 1.2.1, flight-login-api < 1.3.0~
 Requires:       flight-job-script-api => 1.7.0, flight-job-script-api < 1.8.0~
-Requires:       flight-job-script-webapp => 1.7.0, flight-job-script-webapp < 1.8.0~
+Requires:       flight-job-script-webapp => 1.8.0~, flight-job-script-webapp < 1.9.0~
 Requires:       flight-www => 1.6.2, flight-www < 1.7.0~
-Requires:       flight-headnode-landing-page < 1.6.0~
+Requires:       flight-headnode-landing-page < 1.7.0~
 Requires:       flight-web-suite-utils => 1.1.0 flight-web-suite-utils < 1.2.0~
 
 %description
@@ -140,6 +140,8 @@ EOF
 fi
 
 %changelog
+* Thu May 12 2022 Ben Armston <ben.armston@alces-flight.com> - 2022.3~1
+- Bump *-webapps and landing page.
 * Fri Apr 1 2022 Ben Armston <ben.armston@alces-flight.com> - 2022.2-1
 - Bump flight-job-script-api and flight-job-script-webapp.
 * Mon Mar 7 2022 Ben Armston <ben.armston@alces-flight.com> - 2022.1-1
