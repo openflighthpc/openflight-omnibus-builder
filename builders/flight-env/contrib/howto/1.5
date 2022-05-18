@@ -136,8 +136,8 @@ $ gridware --help
 
 ## Permanently Enable an Environment
 
-An environment can be permanently set as the login environment with the
-`set-default` command:
+An environment can be permanently set as the login environment for the
+current user with the `set-default` command:
 
 ~~~
 $ flight env set-default gridware
@@ -152,7 +152,10 @@ $ sudo /opt/flight/bin/flight env set-default gridware --global
 Default global environment set to: gridware@default
 ~~~
 
-The user-specific and system-wide defaults can be removed with the
+Note that the user default login environment takes precedence over the
+system-wide default.
+
+The user and system-wide defaults can be removed with the
 `--remove` command:
 
 ~~~
