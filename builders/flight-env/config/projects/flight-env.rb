@@ -32,9 +32,9 @@ friendly_name 'Flight Environment'
 install_dir '/opt/flight/opt/env'
 
 VERSION = '1.4.1'
-override 'flight-env', version: VERSION
+override 'flight-env', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 2
 
 dependency 'preparation'
