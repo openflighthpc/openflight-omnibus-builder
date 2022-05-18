@@ -144,9 +144,22 @@ $ flight env set-default gridware
 Default environment set to: gridware@default
 ~~~
 
-This default can be removed with the `--remove` command:
+By executing the command as root, a system-wide default login environment
+can be set using the `--global` command:
+
+~~~
+$ sudo /opt/flight/bin/flight env set-default gridware --global
+Default global environment set to: gridware@default
+~~~
+
+The user-specific and system-wide defaults can be removed with the
+`--remove` command:
 
 ~~~
 $ flight env set-default --remove
+Default environment removed
+
+$ flight env set-default --remove --global
+Default global environment removed
 ~~~
 
