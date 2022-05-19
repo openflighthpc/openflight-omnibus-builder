@@ -119,7 +119,7 @@ NAME:
 ~~~
 NOTE: The environment will need to be recreated if it was purged in the previous step
 
-To retrieve the currently activate environment:
+To retrieve the currently active environment:
 
 ~~~
 $ flight env show-active
@@ -145,7 +145,7 @@ Default environment set to: gridware@default
 ~~~
 
 By executing the command as root, a system-wide default login environment
-can be set using the `--global` command:
+can be set using the `--global` option:
 
 ~~~
 $ sudo /opt/flight/bin/flight env set-default gridware --global
@@ -156,7 +156,7 @@ Note that the user default login environment takes precedence over the
 system-wide default.
 
 The user and system-wide defaults can be removed with the
-`--remove` command:
+`--remove` option:
 
 ~~~
 $ flight env set-default --remove
