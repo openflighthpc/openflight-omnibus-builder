@@ -31,7 +31,7 @@ friendly_name 'Flight Job Script Webapp'
 
 install_dir '/opt/flight/opt/job-script-webapp'
 
-VERSION = '1.8.0-rc1'
+VERSION = '1.8.0-rc2'
 override 'flight-job-script-webapp', version: VERSION
 
 build_version VERSION
