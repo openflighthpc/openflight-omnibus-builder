@@ -1,7 +1,7 @@
 : '
 : NAME: desktop
 : SYNOPSIS: Manage interactive GUI desktop sessions
-: VERSION: 1.10.0-rc2
+: VERSION: 1.10.0
 : '
 #==============================================================================
 # Copyright (C) 2019-present Alces Flight Ltd.
