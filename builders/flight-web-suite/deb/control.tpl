@@ -7,7 +7,7 @@ Maintainer:   OpenFlightHPC Project <flight@openflighthpc.org>
 Description:  The Flight User Suite collection of HPC environment tools
 Depends:      flight-console-api (>= 2.2.0), flight-console-api (<< 2.3.0),
   flight-console-webapp (>= 1.6.0), flight-console-webapp (<< 1.7.0),
-  flight-desktop-restapi (>= 2.5.0), flight-desktop-restapi (<< 2.6.0),
+  flight-desktop-restapi (>= 2.6.0), flight-desktop-restapi (<< 2.7.0),
   flight-desktop-webapp (>= 1.8.0), flight-desktop-webapp (<< 1.9.0),
   flight-file-manager-api (>= 1.4.0), flight-file-manager-api (<< 1.5.0),
   flight-file-manager-webapp (>= 1.5.0), flight-file-manager-webapp (<< 1.6.0),
