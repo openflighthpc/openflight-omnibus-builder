@@ -317,12 +317,32 @@ A list of previously submitted jobs is available with the `list-jobs` command:
 
 ~~~
 $ flight job list-jobs
-+----------+-----------+-----------+----------------+----------------+----------------+
-| ID       | State     | Submitted | Created at     | Start at       | End at         |
-+----------+-----------+-----------+----------------+----------------+----------------+
-| nKJ6_BUr | COMPLETED | yes       | 11/03/21 13:20 | 11/03/21 13:20 | 11/03/21 13:20 |
-| DmSBREgL | PENDING   | yes       | 11/03/21 16:14 | (none)         | (none)         |
-+----------+-----------+-----------+----------------+----------------+----------------+
++------------------+------------------+-----------+-----------+-----------+---------+--------+
+| ID               | Script ID        | Sched. ID | State     | Submitted | Started | Ended  |
++------------------+------------------+-----------+-----------+-----------+---------+--------+
+| desktop-on-log-1 | desktop-on-log-1 | 267       | COMPLETED | 06/05/22  | 06/05   | 06/05  |
+| desktop-on-log-2 | desktop-on-log-1 | (none)    | PENDING   | 10:42     | (none)  | (none) |
+| desktop-on-com-1 | desktop-on-com-1 | 266       | RUNNING   | 10:35     | 10:35   | *14:35 |
++------------------+------------------+-----------+-----------+-----------+---------+--------+
+~~~
+
+The displayed jobs may be filtered by job ID, script ID and state using the optional
+flags: `--id`, `--script` and `state`.
+
+Filters may be input as glob expressions. It is recommended that filters including wildcards should
+be enclosed in quotes to prevent shell expansion.
+
+Multiple comma-separated filter expressions may be passed to each flag. A job is considered
+to have passed the filter for a given flag if its attributes match at least one of these expressions.
+
+~~~
+flight job list-jobs --id "*-1" --state completed,running
++------------------+------------------+-----------+-----------+-----------+---------+--------+
+| ID               | Script ID        | Sched. ID | State     | Submitted | Started | Ended  |
++------------------+------------------+-----------+-----------+-----------+---------+--------+
+| desktop-on-log-1 | desktop-on-log-1 | 267       | COMPLETED | 06/05/22  | 06/05   | 06/05  |
+| desktop-on-com-1 | desktop-on-com-1 | 266       | RUNNING   | 10:35     | 10:35   | *14:35 |
++------------------+------------------+-----------+-----------+-----------+---------+--------+
 ~~~
 
 ### info-job: View details about a specific job
