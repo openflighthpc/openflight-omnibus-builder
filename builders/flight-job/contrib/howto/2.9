@@ -312,8 +312,9 @@ $ flight job list-jobs
 +------------------+------------------+-----------+-----------+-----------+---------+--------+
 | ID               | Script ID        | Sched. ID | State     | Submitted | Started | Ended  |
 +------------------+------------------+-----------+-----------+-----------+---------+--------+
-| desktop-on-log-1 | desktop-on-log-1 | 267       | COMPLETED | 06/05/22  | 06/05   | 06/05  |
-| desktop-on-log-2 | desktop-on-log-1 | (none)    | PENDING   | 10:42     | (none)  | (none) |
+| desktop-on-log-1 | desktop-on-log-1 | 265       | COMPLETED | 06/05/22  | 06/05   | 06/05  |
+| desktop-on-log-2 | desktop-on-log-1 | 267       | RUNNING   | 10:33     | 10:33   | *11:33 |
+| desktop-on-log-3 | desktop-on-log-1 | (none)    | PENDING   | 10:42     | (none)  | (none) |
 | desktop-on-com-1 | desktop-on-com-1 | 266       | RUNNING   | 10:35     | 10:35   | *14:35 |
 +------------------+------------------+-----------+-----------+-----------+---------+--------+
 ~~~
@@ -323,6 +324,9 @@ flags: `--id`, `--script` and `state`.
 
 Filters may be input as glob expressions. It is recommended that filters including wildcards should
 be enclosed in quotes to prevent shell expansion.
+
+Jobs may be filtered by multiple attributes simultaneously by using multiple flags. Only jobs
+that match the filters passed to all flags will be displayed.
 
 Multiple comma-separated filter expressions may be passed to each flag. A job is considered
 to have passed the filter for a given flag if its attributes match at least one of these expressions.
