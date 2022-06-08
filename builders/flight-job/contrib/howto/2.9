@@ -105,6 +105,20 @@ $ flight job list-templates
 current templates and is not guaranteed to be consistent. A template's index
 my change as templates are added.
 
+The displayed templates may be filtered by ID and name using the optional
+flags: `--id` and `--name`.
+
+~~~
+$ flight job list-templates --id "*-array"
++-------+--------------+---------------------+
+| Index | ID           | Name                |
++-------+--------------+---------------------+
+| 1     | simple-array | Simple serial array |
++-------+--------------+---------------------+
+~~~
+
+Refer to `list-jobs` below for more information on filtering.
+
 ### info-template: View details about a specific template
 
 Details about a template can be viewed with  the `info-template` command.
@@ -228,6 +242,20 @@ $ flight job list-scripts
 +----------+-------------+-----------+----------------+
 ~~~
 
+The displayed scripts may be filtered by ID and template ID using the optional
+flags: `--id` and `--template`.
+
+~~~
+$ flight job list-scripts --template simple
++----------+-------------+-----------+----------------+
+| ID       | Template ID | File Name | Created at     |
++----------+-------------+-----------+----------------+
+| xpVrobuO | simple      | simple.sh | 11/03/21 14:23 |
++----------+-------------+-----------+----------------+
+~~~
+
+Refer to `list-jobs` below for more information on filtering.
+
 ### info-scripts: View details about a specific script
 
 Details about a specific script can be retrieved using the `info-script` command.
@@ -291,6 +319,9 @@ A record of `script` submissions is maintained as `jobs`. The `jobs` integrate
 with an external scheduler and will periodically be updated with their progress.
 Your `crontab` will be modified to perform the periodic check.
 
+For `array jobs`, which span multiple nodes, a record of script submissions to
+each node is maintained as `tasks`.
+
 ### submit-job: Submit a job to the scheduler
 
 A previously rendered template can be submitted using the `submit-job`
@@ -309,13 +340,67 @@ A list of previously submitted jobs is available with the `list-jobs` command:
 
 ~~~
 $ flight job list-jobs
-+----------+-----------+-----------+----------------+----------------+----------------+
-| ID       | State     | Submitted | Created at     | Start at       | End at         |
-+----------+-----------+-----------+----------------+----------------+----------------+
-| nKJ6_BUr | COMPLETED | yes       | 11/03/21 13:20 | 11/03/21 13:20 | 11/03/21 13:20 |
-| DmSBREgL | PENDING   | yes       | 11/03/21 16:14 | (none)         | (none)         |
-+----------+-----------+-----------+----------------+----------------+----------------+
++------------------+------------------+-----------+-----------+-----------+---------+--------+
+| ID               | Script ID        | Sched. ID | State     | Submitted | Started | Ended  |
++------------------+------------------+-----------+-----------+-----------+---------+--------+
+| desktop-on-log-1 | desktop-on-log-1 | 265       | COMPLETED | 06/05/22  | 06/05   | 06/05  |
+| desktop-on-log-2 | desktop-on-log-1 | 267       | RUNNING   | 10:33     | 10:33   | *11:33 |
+| desktop-on-log-3 | desktop-on-log-1 | (none)    | PENDING   | 10:42     | (none)  | (none) |
+| desktop-on-com-1 | desktop-on-com-1 | 266       | RUNNING   | 10:35     | 10:35   | *14:35 |
++------------------+------------------+-----------+-----------+-----------+---------+--------+
 ~~~
+
+The displayed jobs may be filtered by job ID, script ID and state using the optional
+flags: `--id`, `--script` and `--state`.
+
+Filters may be input as glob expressions. It is recommended that filters including wildcards should
+be enclosed in quotes to prevent shell expansion.
+
+Jobs may be filtered by multiple attributes simultaneously by using multiple flags. Only jobs
+that match the filters passed to all flags will be displayed.
+
+Multiple comma-separated filter expressions may be passed to each flag. A job is considered
+to have passed the filter for a given flag if its attributes match at least one of these expressions.
+
+~~~
+flight job list-jobs --id "*-1" --state completed,running
++------------------+------------------+-----------+-----------+-----------+---------+--------+
+| ID               | Script ID        | Sched. ID | State     | Submitted | Started | Ended  |
++------------------+------------------+-----------+-----------+-----------+---------+--------+
+| desktop-on-log-1 | desktop-on-log-1 | 267       | COMPLETED | 06/05/22  | 06/05   | 06/05  |
+| desktop-on-com-1 | desktop-on-com-1 | 266       | RUNNING   | 10:35     | 10:35   | *14:35 |
++------------------+------------------+-----------+-----------+-----------+---------+--------+
+~~~
+
+### list-tasks: View a record of the tasks for submitted array jobs
+
+A list of the tasks submitted to each node for an array job is available with the `list-tasks`
+command:
+
+~~~
+flight job list-tasks array-job
++-------+----------------+-----------+-----------+----------------+----------------+
+| Index | Job ID         | Sched. ID | State     | Started at     | Ended at       |
++-------+----------------+-----------+-----------+----------------+----------------+
+| 1     | array-job      | 4         | COMPLETED | 26/05/22 15:46 | 26/05/22 15:46 |
+| 2     | array-job      | 5         | COMPLETED | 26/05/22 15:46 | 26/05/22 15:46 |
+| 3     | array-job      | 6         | CANCELLED | 26/05/22 15:46 | 26/05/22 15:46 |
++-------+----------------+-----------+-----------+----------------+----------------+
+~~~
+
+The displayed tasks may be filtered by their current state using the optional flag:
+`--state`.
+
+~~~
+flight job list-tasks array-job --state CANCELLED
++-------+----------------+-----------+-----------+----------------+----------------+
+| Index | Job ID         | Sched. ID | State     | Started at     | Ended at       |
++-------+----------------+-----------+-----------+----------------+----------------+
+| 3     | array-job      | 6         | CANCELLED | 26/05/22 15:46 | 26/05/22 15:46 |
++-------+----------------+-----------+-----------+----------------+----------------+
+~~~
+
+Refer to `list-jobs` above for more information on filtering.
 
 ### info-job: View details about a specific job
 
