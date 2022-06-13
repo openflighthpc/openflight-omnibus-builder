@@ -27,14 +27,36 @@
 #===============================================================================
 echo "Stopping: $@"
 pid=$(cat "$1")
+if [ "$2" == "--force" ] ; then
+    force=true
+else
+    force=false
+fi
 kill $pid
-# Wait a couple of seconds for the server to remove its pid file.
-for _ in `seq 1 4`; do
-  sleep 0.5
-  if [ ! -f "${flight_ROOT}/var/run/console-api.pid" ]; then
-    break
-  fi
+
+# Console API has a safe shutdown mechanism to give users a chance to finish
+# up their console session / save work etc..  That safe shutdown has Console
+# API wait 30 seconds (by default) before terminating its connections.
+#
+# If we are using the safe shutdown we wait for 32 seconds to give a chance
+# for that to happen.
+#
+# If we are forcing the shutdown, we wait a couple of seconds and then force
+# the shutdown if it hasn't already done so.
+if [ "$force" == "true" ] ; then
+    max_wait=4
+else
+    max_wait=64
+fi
+for _ in `seq 1 $max_wait`; do
+    sleep 0.5
+    if [ ! -f "${flight_ROOT}/var/run/console-api.pid" ]; then
+        break
+    fi
 done
-if [ -f "${flight_ROOT}/var/run/console-api.pid" ]; then
-  kill $pid
+
+if [ -f "${flight_ROOT}/var/run/console-api.pid" -a "$force" == "true" ]; then
+    # This second kill will circumvent the graceful shutdown and close the
+    # connections immediately.
+    kill $pid
 fi
