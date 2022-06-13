@@ -35,7 +35,7 @@ VERSION = '1.8.0'
 override 'flight-desktop-webapp', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-desktop-webapp'
