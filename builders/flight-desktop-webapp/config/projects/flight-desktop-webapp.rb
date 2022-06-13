@@ -57,6 +57,8 @@ runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-landing-page-branding-system-1.2'
 
+config_file '/opt/flight/etc/www/server-https.d/desktop-webapp.conf'
+
 require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)

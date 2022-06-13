@@ -77,6 +77,7 @@ runtime_dependency 'flight-service-system-1.0'
 
 config_file '/opt/flight/etc/login-api.yaml'
 config_file '/opt/flight/etc/service/env/login-api'
+config_file '/opt/flight/etc/www/server-https.d/login-api.conf'
 
 require 'find'
 Find.find('opt') do |o|

@@ -62,6 +62,8 @@ Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
 
+config_file "/opt/flight/etc/www/server-https.d/job-script-webapp.conf"
+
 package :rpm do
   vendor 'Alces Flight Ltd'
 end

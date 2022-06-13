@@ -74,6 +74,7 @@ end
 config_file '/opt/flight/etc/desktop-restapi.yaml'
 config_file '/opt/flight/etc/service/env/desktop-restapi'
 config_file '/opt/flight/etc/logrotate.d/desktop-restapi'
+config_file '/opt/flight/etc/www/server-https.d/flight-desktop.conf'
 
 require 'find'
 Find.find('opt') do |o|

@@ -73,6 +73,8 @@ end
 
 config_file '/opt/flight/etc/file-manager-api.yaml'
 config_file '/opt/flight/etc/service/env/file-manager-api'
+config_file '/opt/flight/etc/logrotate.d/flight-manager-api'
+config_file '/opt/flight/etc/www/server-https.d/file-manager-api.conf'
 
 require 'find'
 Find.find('opt') do |o|

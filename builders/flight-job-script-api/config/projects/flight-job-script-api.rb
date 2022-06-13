@@ -75,6 +75,7 @@ end
 config_file '/opt/flight/etc/job-script-api.yaml'
 config_file '/opt/flight/etc/service/env/job-script-api'
 config_file '/opt/flight/etc/logrotate.d/job-script-api'
+config_file '/opt/flight/etc/www/server-https.d/job-script-api.conf'
 
 require 'find'
 Find.find('opt') do |o|

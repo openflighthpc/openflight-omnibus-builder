@@ -62,6 +62,9 @@ Find.find('opt') do |o|
 end
 
 config_file "#{install_dir}/etc/config.json"
+config_file "/opt/flight/etc/service/env/console-api"
+config_file "/opt/flight/etc/logrotate.d/console-api"
+config_file "/opt/flight/etc/www/server-https.d/console-01-api.conf"
 
 package :rpm do
   vendor 'Alces Flight Ltd'
