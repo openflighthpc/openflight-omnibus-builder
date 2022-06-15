@@ -14,18 +14,19 @@ $ flight desktop --help
 
   COMMANDS:
 		
-    avail   Show available desktop types		
+    avail   Show available desktop types
     clean   Clean up one or more exited desktop sessions		
     doctor  Perform diagnostics and display results		
     help    Display global or [command] help documentation			
-    kill    Terminate an interactive desktop session		
-    list    List interactive desktop sessions			
+    kill    Terminate an interactive desktop session
+    list    List interactive desktop sessions
     prepare Prepare a desktop type for use
-    rename  Rename a desktop session			
-    set     Set or display default settings		
-    show    Show information about a desktop session			
-    start   Start an interactive desktop session		
-    verify  Verify prerequisites are met for a desktop type			
+    rename  Rename a desktop session
+    resize  Resize a desktop session
+    set     Set or display default settings
+    show    Show information about a desktop session
+    start   Start an interactive desktop session
+    verify  Verify prerequisites are met for a desktop type
     webify  Start web access support for an active desktop session	
 
   ALIASES:
@@ -205,18 +206,74 @@ The session can be configured to automatically exit when the post
 initializtion script exits.  To do so pass the flag `--kill-on-script-exit`.
 This flag only makes sense when a `--script` is specified.
 
+## Default session configuration
+
+If the desktop type or geometry are not specified, desktops will be started using
+the default configuration for these options. These defaults can be viewed using the
+`set` command.
+
+~~~
+$ flight desktop set
+
+Default desktop type: gnome
+    Default geometry: 1024x768
+~~~
+
+The default desktop type and size can be changed by specifying arguments as NAME=VALUE
+pairs.
+
+~~~
+$ flight desktop set desktop=xfce geometry=1920x1080
+
+Default desktop type: xfce
+    Default geometry: 1920x1080
+~~~
+
 ## List Running Sessions
 
 The running sessions are returned by the `list` command:
 
 ~~~
 $ flight desktop list
+
+| Name      | Identity   | Type  | Host name | IP address | Display   | Password | State  |
+|-----------|------------|-------|-----------|------------|-----------|----------|--------|
+| session-1 | session-id | gnome | master    | 10.10.0.1  | :1 (5923) | XXXXXXXX | Active |
+| ...       | ...        | ...   | ...       | ...        | ...       | ...      | ...    |
 ~~~
 
-| Identity | Type  | Host name | IP address | Display   | Password | State  |
-|----------|-------|-----------|------------|-----------|----------|--------|
-| 7d6d8b87 | gnome | master    | 10.10.0.1  | :1 (5923) | XXXXXXXX | Active |
-| ...      | ...   | ...       | ...        | ...       | ...      | ...    |
+## Rename a Session
+
+An existing session can be renamed using the `rename` command:
+
+~~~
+$ flight desktop rename session-id gnome-1
+
+Desktop session `session-id` has been renamed `gnome-1`
+~~~
+
+## Resize a Session
+
+Desktop sessions will be automatically started with the default geometry. Refer
+to the `set` command for information on changing the default session configuration.
+
+The dimensions of an existing desktop session can be changed using the `resize`
+command:
+
+~~~
+$ flight desktop resize session-id 1920x1080
+~~~
+
+List the available sizes for a given desktop using the `avail` option:
+
+~~~
+$ flight desktop resize --avail session-id
+
+640x480
+800x600
+1024x768
+...
+~~~
 
 ## Terminate a Session
 
