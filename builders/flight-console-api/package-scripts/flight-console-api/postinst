@@ -63,8 +63,6 @@ if [ ! -f "$pub_key" ]; then
   ssh-keygen -y -f "$priv_key" > "$pub_key"
 fi
 
-${flight_ROOT}/bin/flight service configure console-api --force --config '{}' >/dev/null 2>&1
-
 # Check if the service is already running and restart it
 if ${flight_ROOT}/bin/flight service status console-api | grep -q active ; then
   ${flight_ROOT}/bin/flight service restart console-api

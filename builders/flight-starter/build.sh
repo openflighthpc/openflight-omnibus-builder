@@ -3,9 +3,9 @@ cd "$(dirname "$0")"
 d="$(pwd)"
 mkdir -p pkg
 
-NOW=2022.3
-NEXT=2022.4
-VERSION=${NOW}.0
+NOW=2022.4
+NEXT=2022.5
+VERSION=${NOW}.0~rc1
 TAG=$(echo "$VERSION" | sed "s/~/-/g")
 REL=1
 

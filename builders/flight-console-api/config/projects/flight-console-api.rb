@@ -31,7 +31,7 @@ friendly_name 'Flight Console api'
 
 install_dir '/opt/flight/opt/console-api'
 
-VERSION = '2.2.2'
+VERSION = '2.2.2-rc1'
 override 'flight-console-api', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
@@ -62,7 +62,6 @@ Find.find('opt') do |o|
 end
 
 config_file "#{install_dir}/etc/config.json"
-config_file "/opt/flight/etc/service/env/console-api"
 config_file "/opt/flight/etc/logrotate.d/console-api"
 config_file "/opt/flight/etc/www/server-https.d/console-01-api.conf"
 
