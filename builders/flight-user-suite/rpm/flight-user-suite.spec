@@ -10,7 +10,7 @@ URL:            https://openflighthpc.org
 
 BuildArch:     noarch
 Requires:      flight-runway => 1.1.0, flight-runway < 1.2.0~
-Requires:      flight-starter => 2022.4.0~, flight-starter < 2022.5.0~
+Requires:      flight-starter => 2022.4.0, flight-starter < 2022.5.0~
 %{?el8:Recommends:    flight-plugin-system-starter}
 Requires:      flight-env => 1.5.0, flight-env < 1.6.0~
 Requires:      flight-desktop => 1.11.0, flight-desktop < 1.12.0~
