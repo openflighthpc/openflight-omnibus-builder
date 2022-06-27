@@ -31,7 +31,7 @@ friendly_name 'Flight Console Webapp'
 
 install_dir '/opt/flight/opt/console-webapp'
 
-VERSION = '1.7.0-rc1'
+VERSION = '1.7.0'
 override 'flight-console-webapp', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
