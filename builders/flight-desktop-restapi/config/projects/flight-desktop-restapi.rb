@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop REST API'
 
 install_dir '/opt/flight/opt/desktop-restapi'
 
-VERSION = '2.6.0'
+VERSION = '2.7.0'
 override 'flight-desktop-restapi', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
@@ -62,10 +62,10 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-desktop >= 1.6.0'
+  runtime_dependency 'flight-desktop >= 1.11.0'
   runtime_dependency 'flight-service >= 1.3.0'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'flight-desktop (>= 1.6.0)'
+  runtime_dependency 'flight-desktop (>= 1.11.0)'
   runtime_dependency 'flight-service (>= 1.3.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
@@ -74,6 +74,7 @@ end
 config_file '/opt/flight/etc/desktop-restapi.yaml'
 config_file '/opt/flight/etc/service/env/desktop-restapi'
 config_file '/opt/flight/etc/logrotate.d/desktop-restapi'
+config_file '/opt/flight/etc/www/server-https.d/flight-desktop.conf'
 
 require 'find'
 Find.find('opt') do |o|

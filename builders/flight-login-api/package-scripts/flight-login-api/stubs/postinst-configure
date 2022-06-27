@@ -37,5 +37,3 @@ EOF
         -e "/^${var_name}=/s/^/# /" \
         "${env_file}"
 fi
-
-${flight_ROOT}/bin/flight service configure login-api --force --config '{}' >/dev/null 2>&1

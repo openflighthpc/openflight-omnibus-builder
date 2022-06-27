@@ -31,7 +31,7 @@ friendly_name 'Flight Job Script Webapp'
 
 install_dir '/opt/flight/opt/job-script-webapp'
 
-VERSION = '1.8.0'
+VERSION = '1.9.1'
 override 'flight-job-script-webapp', version: VERSION
 
 build_version VERSION
@@ -61,6 +61,8 @@ require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
+
+config_file "/opt/flight/etc/www/server-https.d/job-script-webapp.conf"
 
 package :rpm do
   vendor 'Alces Flight Ltd'

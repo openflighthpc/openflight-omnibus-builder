@@ -31,10 +31,10 @@ friendly_name 'Manage HPC environment services'
 
 install_dir '/opt/flight/opt/service'
 
-VERSION = '1.4.1'
-override 'flight-service', version: VERSION
+VERSION = '1.5.0'
+override 'flight-service', version: ENV.fetch('ALPHA', VERSION)
 
-build_version VERSION
+build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
 build_iteration 1
 
 dependency 'preparation'

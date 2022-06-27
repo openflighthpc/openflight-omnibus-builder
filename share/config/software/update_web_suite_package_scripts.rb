@@ -82,7 +82,7 @@ build do
   configure = if File.exists? configure_script
                 File.read(configure_script).chomp
               else
-                "${flight_ROOT}/bin/flight service configure #{service} --force --config '{}' >/dev/null 2>&1"
+                ""
               end
 
   rendered[:postinst] = <<~POSTINST

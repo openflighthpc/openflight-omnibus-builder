@@ -14,18 +14,19 @@ $ flight env --help
 
   COMMANDS:
 
-    activate     Activate an application environment
-    avail        Show available application environment types
-    create       Create a new application environment
-    deactivate   Deactivate the current application environment
-    help         Display global or [command] help documentation
-    info         Show information about an application environment type
-    list         List configured application environments
-    purge        Purge an existing application environment
-    set-default  Set the default application environment
-    show-active  Show currently active application environment
-    show-default Show the default application environment
-    switch       Switch to a different application environment
+    activate       Activate an application environment
+    avail          Show available application environment types
+    create         Create a new application environment
+    deactivate     Deactivate the current application environment
+    help           Display global or [command] help documentation
+    info           Show information about an application environment type
+    list           List configured application environments
+    purge          Purge an existing application environment
+    remove-default Remove the default application environment if it is set.
+    set-default    Set the default application environment
+    show-active    Show currently active application environment
+    show-default   Show the default application environment
+    switch         Switch to a different application environment
 
   GLOBAL OPTIONS:
 
@@ -119,7 +120,7 @@ NAME:
 ~~~
 NOTE: The environment will need to be recreated if it was purged in the previous step
 
-To retrieve the currently activate environment:
+To retrieve the currently active environment:
 
 ~~~
 $ flight env show-active
@@ -136,17 +137,48 @@ $ gridware --help
 
 ## Permanently Enable an Environment
 
-An environment can be permanently set as the login environment with the
-`set-default` command:
+An environment can be permanently set as the login environment for the
+current user with the `set-default` command:
 
 ~~~
 $ flight env set-default gridware
 Default environment set to: gridware@default
 ~~~
 
-This default can be removed with the `--remove` command:
+By executing the command as root, a system-wide default login environment
+can be set using the `--system` option:
 
 ~~~
-$ flight env set-default --remove
+$ sudo /opt/flight/bin/flight env set-default gridware --system
+Default system-wide environment set to: gridware@default
 ~~~
 
+Users can opt in to using the system-wide default login environment
+with the `--use-system` option:
+
+~~~
+$ flight env set-default --use-system
+Default login environment has been set to the system-wide default.
+Currently set to: gridware@default
+~~~
+
+## Remove the Default Login Environment
+
+The default login environment can be removed with the
+`remove-default` command:
+
+~~~
+$ flight env remove-default
+Default environment removed
+~~~
+
+Note that this will also opt users out of using the system-wide default
+login environment.
+
+By executing the command as root, the system-wide default environment
+can be removed using the `--system` option:
+
+~~~
+$ sudo /opt/flight/bin/flight env remove-default --system
+System-wide default environment removed
+~~~

@@ -1,10 +1,9 @@
 ---
-title: Flight File Manager Access Service
-short_title: File Manager
-subtitle: Access file manager sessions
+title: Flight File Manager
+short_title: Files
+subtitle: Access files on your cluster
 path: /files
 fa_icon: file-o
 ---
-The *Flight File Manager Service* allows you to access your
-cluster's file system via a GUI (graphical user interface)
-running in the comfort of your browser.
+The *Flight File Manager* service provides access to your
+files held on your cluster via an in-browser interface.

@@ -31,7 +31,7 @@ friendly_name 'Flight File Manager Webapp'
 
 install_dir '/opt/flight/opt/file-manager-webapp'
 
-VERSION = '1.5.0'
+VERSION = '1.6.0'
 override 'flight-file-manager-webapp', version: VERSION
 
 build_version VERSION
@@ -56,11 +56,14 @@ runtime_dependency 'flight-service-system-1.0'
 runtime_dependency 'flight-www'
 runtime_dependency 'flight-www-system-1.0'
 runtime_dependency 'flight-landing-page-branding-system-1.2'
+runtime_dependency 'flight-landing-page-system-1.3'
 
 require 'find'
 Find.find('opt') do |o|
   extra_package_file(o) if File.file?(o)
 end
+
+config_file "/opt/flight/etc/www/server-https.d/file-manager-webapp.conf"
 
 package :rpm do
   vendor 'Alces Flight Ltd'

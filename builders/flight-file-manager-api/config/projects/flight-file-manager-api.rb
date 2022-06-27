@@ -31,7 +31,7 @@ friendly_name 'Flight File Manager API'
 
 install_dir '/opt/flight/opt/file-manager-api'
 
-VERSION = '1.4.0'
+VERSION = '1.6.0'
 override 'flight-file-manager-api', version: ENV.fetch('ALPHA', VERSION)
 override 'flight-file-manager-backend', version: ENV.fetch('ALPHA', VERSION)
 
@@ -73,6 +73,8 @@ end
 
 config_file '/opt/flight/etc/file-manager-api.yaml'
 config_file '/opt/flight/etc/service/env/file-manager-api'
+config_file '/opt/flight/etc/logrotate.d/flight-manager-api'
+config_file '/opt/flight/etc/www/server-https.d/file-manager-api.conf'
 
 require 'find'
 Find.find('opt') do |o|

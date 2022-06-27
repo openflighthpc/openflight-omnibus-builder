@@ -31,11 +31,11 @@ friendly_name 'Flight Environment'
 
 install_dir '/opt/flight/opt/env'
 
-VERSION = '1.4.1'
+VERSION = '1.5.0'
 override 'flight-env', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-env'
@@ -63,6 +63,13 @@ raise "Could not locate: #{howto_src}" unless File.exists? howto_src
 FileUtils.mkdir_p File.dirname(howto_dst)
 FileUtils.rm_f howto_dst
 FileUtils.cp howto_src, howto_dst
+
+# Updates the version in the libexec file
+path = File.expand_path('../../opt/flight/libexec/commands/env', __dir__)
+original = File.read(path)
+updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
+                  .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
+File.write(path, updated) unless original == updated
 
 if ohai['platform_family'] == 'rhel'
   # vim-common provides xxd a dependency required by Gridware
