@@ -17,7 +17,9 @@ Specify <version> to build:
   18.08
   19.05
   20.02
-  20.11 (latest)
+  20.11
+  21.08
+  22.05 (latest)
 EOF
   exit 1
 fi
@@ -55,24 +57,52 @@ case $VERSION in
     ;;
   20.02)
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-20-02-5-1-flight1"
-      REL="flight-slurm-20.02.5.flight1"
+      TAG="flight-slurm-20-02-3-1-flight3"
+      REL="flight-slurm-20.02.3.flight3"
     else
-      TAG="slurm-20-02-5-1-flight1"
-      REL="slurm-20.02.5.flight1"
+      TAG="slurm-20-02-3-1-flight3"
+      REL="slurm-20.02.3.flight3"
     fi
     ;;
-  20.11|latest)
-    BUILD_FLAGS="--with slurmrestd"
+  20.11)
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-20-11-0-1-flight1"
-      REL="flight-slurm-20.11.0.flight1"
+      TAG="flight-slurm-20-11-7-1-flight1"
+      REL="flight-slurm-20.11.7.flight1"
     else
-      TAG="slurm-20-11-0-1-flight1"
-      REL="slurm-20.11.0.flight1"
+      TAG="slurm-20-11-7-1-flight1"
+      REL="slurm-20.11.7.flight1"
     fi
     libjwt=true
+    nvml=true
+    ;;
+  21.08)
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
+    BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-21-08-8-1-flight1"
+      REL="flight-slurm-21.08.8.flight1"
+    else
+      TAG="slurm-21-08-8-1-flight1"
+      REL="slurm-21.08.8.flight1"
+    fi
+    libjwt=true
+    nvml=true
+    ;;
+  22.05|latest)
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
+    BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-22-05-2-1-flight1"
+      REL="flight-slurm-22.05.2.flight1"
+    else
+      TAG="slurm-22-05-2-1-flight1"
+      REL="slurm-22.05.2.flight1"
+    fi
+    libjwt=true
+    pmix=true
+    nvml=true
     ;;
   *)
     echo "$0: unrecognized Slurm version: $VERSION"
@@ -103,17 +133,37 @@ if [ "$distro" == "rhel7" ]; then
        readline-devel perl-devel lua-devel hwloc-devel \
        numactl-devel hdf5-devel lz4-devel freeipmi-devel \
        rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
-       man2html python2 python3 $BUILD_DEPS \
-       pmix-devel
+       man2html python2 python3 $BUILD_DEPS
   if [ "$libssh2" ]; then
     # This is needed for Slurm 18.08 or 17.11.
     sudo yum install -y libssh2-devel
   fi
   if [ "$libjwt" ]; then
-    # This is needed for Slurm 20.11.
-    rpmbuild --rebuild ${TARGET}/../dist/libjwt-1.12.1-0.el7.src.rpm
-    sudo yum install -y ~/rpmbuild/RPMS/x86_64/libjwt-devel-1.12.1-0.el7.x86_64.rpm \
-         ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el7.x86_64.rpm
+    if ! rpm -qa libjwt-devel | grep -q '^libjwt-devel-1.12.1'; then
+      # This is needed for Slurm 20.11+
+      rpmbuild --rebuild ${TARGET}/../dist/libjwt-1.12.1-0.el7.src.rpm
+      sudo yum install -y ~/rpmbuild/RPMS/x86_64/libjwt-devel-1.12.1-0.el7.x86_64.rpm \
+           ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el7.x86_64.rpm
+      build_libjwt=true
+    fi
+  fi
+  if [ "$pmix" ]; then
+    if ! rpm -qa pmix-devel | grep -q '^pmix-devel-4.1.2'; then
+      # This is needed for Slurm 22.05+
+      # Build deps:
+      sudo yum install -y epel-rpm-macros pandoc
+      # Build it:
+      rpmbuild --rebuild ${TARGET}/../dist/pmix-4.1.2-2.fc37.src.rpm
+      sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.1.2-2.el7.x86_64.rpm \
+           ~/rpmbuild/RPMS/x86_64/pmix-devel-4.1.2-2.el7.x86_64.rpm \
+           ~/rpmbuild/RPMS/x86_64/pmix-tools-4.1.2-2.el7.x86_64.rpm
+      built_pmix=true
+    fi
+  else
+    sudo yum install -y pmix-devel
+  fi
+  if [ "$nvml" ]; then
+    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-nvml-devel-11-7-11.7.50-1.x86_64.rpm
   fi
 elif [ "$distro" == "rhel8" ]; then
   sudo yum config-manager --set-enabled PowerTools
@@ -149,9 +199,19 @@ elif [ "$distro" == "rhel8" ]; then
     sudo yum install -y ~/rpmbuild/RPMS/x86_64/libjwt-devel-1.12.1-0.el8.x86_64.rpm \
          ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el8.x86_64.rpm
   fi
+
+  if [ "$nvml" ]; then
+    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-nvml-devel-11-7-11.7.50-1.x86_64.rpm
+  fi
 fi
 
 # Create tarball
+if [ -d "$REL" ]; then
+  if [ -d "$REL.old" ]; then
+    rm -rf "$REL.old"
+  fi
+  mv $REL $REL.old
+fi
 git clone $REPO --branch $TAG --depth 1 --single-branch $REL
 
 if [[ $distro == 'rhel8' ]] ; then
@@ -173,7 +233,7 @@ if [ -z "$nonflight" ]; then
            --define '_localstatedir %{_prefix}/var' \
            --define '_sharedstatedir %{_prefix}/var/lib' \
            -ta $REL.tar.bz2 \
-           $BUILD_FLAGS \
+           "${BUILD_FLAGS[@]}" \
            --with hwloc \
            --with mysql \
            --with hdf5 \
@@ -185,7 +245,7 @@ if [ -z "$nonflight" ]; then
   mv $HOME/rpmbuild/RPMS/*/flight-slurm-*.rpm "$TARGET"
 else
   rpmbuild -ta $REL.tar.bz2 \
-           $BUILD_FLAGS \
+           "${BUILD_FLAGS[@]}" \
            --with hwloc \
            --with mysql \
            --with hdf5 \
@@ -204,11 +264,18 @@ if [ "$libssh2" ]; then
   fi
 fi
 
-if [ "$libjwt" ]; then
+if [ "$build_libjwt" ]; then
   # This is needed for Slurm 20.11.
   if [ "$distro" == "rhel7" ]; then
     mv ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el7.x86_64.rpm "$TARGET"
-  elif [ "$distro" == "rhel7" ]; then
+  elif [ "$distro" == "rhel8" ]; then
     mv ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el8.x86_64.rpm "$TARGET"
+  fi
+fi
+
+if [ "$built_pmix" ]; then
+  # This is needed for Slurm 22.05.
+  if [ "$distro" == "rhel7" ]; then
+    mv ~/rpmbuild/RPMS/x86_64/pmix-*.rpm "$TARGET"
   fi
 fi
