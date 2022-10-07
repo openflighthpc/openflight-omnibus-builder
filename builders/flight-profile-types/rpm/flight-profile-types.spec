@@ -39,5 +39,7 @@ rm -rf $RPM_BUILD_ROOT
 %dir /opt/flight/usr/lib/profile/types/
 %dir /opt/flight/usr/lib/profile/types/openflight-slurm-standalone
 /opt/flight/usr/lib/profile/types/openflight-slurm-standalone/*
+%dir /opt/flight/usr/lib/profile/types/openflight-slurm-multinode
+/opt/flight/usr/lib/profile/types/openflight-slurm-multinode/*
 
 %changelog
