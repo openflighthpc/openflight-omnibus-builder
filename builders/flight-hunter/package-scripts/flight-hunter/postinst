@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2023-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,47 +25,36 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-hunter'
-default_version '0.3.0'
 
-source git: 'https://github.com/openflighthpc/flight-hunter'
+# Ensure flight_ROOT is set correctly
+flight_ROOT=/opt/flight
 
-dependency 'enforce-flight-runway'
-whitelist_file Regexp.new("vendor/ruby/.*\.so$")
+# Run the migration
+"${flight_ROOT}/bin/ruby" <<EOF
+require 'yaml'
+require 'fileutils'
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
+install_dir = "${flight_ROOT}/opt/hunter"
 
-build do
-  require 'yaml'
-  require 'fileutils'
-  env = with_standard_compiler_flags(with_embedded_path)
+Dir.chdir install_dir do
+  ['buffer', 'parsed'].each do |list|
+    list_file = File.join('var', "#{list}.yaml")
+    next unless File.file?(list_file)
 
-  # Moves the project into place
-  [
-    'Gemfile', 'Gemfile.lock', 'bin', 'data', 'etc', 'lib', 'libexec',
-    'LICENSE.txt', 'README.md', 'underware.gemspec'
-  ].each do |file|
-    copy file, File.expand_path("#{install_dir}/#{file}/..")
-  end
+    old = YAML.load_file(list_file)
 
-  # Installs the gems to the shared `vendor/share`
-  flags = [
-    "--without development test",
-    '--path vendor'
-  ].join(' ')
-  command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+    next unless old # Empty file
 
-  block do
-    config = {
-      'port' => 8888,
-      'autorun_mode' => 'hunt',
-      'auth_key' => 'flight-hunter'
-    }
-    File.write(
-      File.expand_path("#{install_dir}/etc/config.yml"),
-      config.to_yaml
-    )
+    dir = FileUtils.mkdir_p(File.join(install_dir, 'var', list)).first
+
+    old.each do |node|
+      out = YAML.dump(node)
+      File.open(File.join(dir, "#{node['id']}.yaml"), "w") do |f|
+        f.write(out)
+      end
+    end
+
+    FileUtils.rm(list_file)
   end
 end
+EOF
