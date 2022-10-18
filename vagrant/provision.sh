@@ -113,6 +113,14 @@ if [ "$1" != "test" ]; then
   if which yum &>/dev/null; then
     CENTOS_VER=$(rpm --eval '%{centos_ver}')
 
+    if [[ $CENTOS_VER == 8 ]] && ! dnf makecache ; then
+      # Centos 8 has now reached EOL and no longer receives development resources
+      # from the official CentOS proect. We should be using the `vault.centos.org`
+      # mirrors instead of the official ones.
+      sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+      sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+    fi
+
     yum install -y -e0 git rpm-build cmake
     install_rvm
     source /etc/profile.d/rvm.sh

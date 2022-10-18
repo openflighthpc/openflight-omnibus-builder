@@ -46,8 +46,22 @@ Vagrant.configure("2") do |config|
     build.vm.box = 'bento/centos-8'
     # Versions greater than this suffer from a "Ruby file operations on NFS
     # mounts" issue.  See https://bugzilla.redhat.com/show_bug.cgi?id=1840284.
+
+    build.vbguest.auto_update = false
+
+    # Centos 8 has now reached EOL and no longer receives development resources
+    # from the official CentOS proect. We should be using the `vault.centos.org`
+    # mirrors instead of the official ones.
+    build.vbguest.installer_hooks[:before_install] =
+      [
+        'cd /etc/yum.repos.d/',
+        "sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*",
+        "sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*"
+      ]
+
     build.vm.box_version = '202010.22.0'
     build.vm.provision "shell", path: "vagrant/provision.sh"
+
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
