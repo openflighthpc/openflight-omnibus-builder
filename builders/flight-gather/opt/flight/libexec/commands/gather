@@ -1,7 +1,7 @@
 : '
 : NAME: gather
 : SYNOPSIS: Collects system information
-: VERSION: 0.0.5
+: VERSION: 0.0.6
 : ROOT: true
 : '
 #==============================================================================
