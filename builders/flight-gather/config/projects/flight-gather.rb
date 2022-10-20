@@ -31,7 +31,7 @@ friendly_name 'Flight gather'
 
 install_dir '/opt/flight/opt/gather'
 
-VERSION = '0.0.7'
+VERSION = '0.0.6'
 override 'flight-gather', version: VERSION
 
 build_version VERSION
