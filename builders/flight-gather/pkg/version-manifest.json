@@ -1,0 +1,38 @@
+{
+  "manifest_format": 2,
+  "software": {
+    "preparation": {
+      "locked_version": "1.0.0",
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": "1.0.0",
+      "license": "project_license"
+    },
+    "enforce-flight-runway": {
+      "locked_version": "1.0.0",
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": "1.0.0",
+      "license": "project_license"
+    },
+    "flight-gather": {
+      "locked_version": "2c46726006bb27f81d96a293b0193982bd76a814",
+      "locked_source": {
+        "git": "https://github.com/openflighthpc/flight-gather"
+      },
+      "source_type": "git",
+      "described_version": "0.0.7",
+      "license": "EPL-2.0"
+    },
+    "version-manifest": {
+      "locked_version": "0.0.1",
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": "0.0.1",
+      "license": "project_license"
+    }
+  },
+  "build_version": "0.0.7",
+  "build_git_revision": "98a513e4364bb0de07347a1cb6511c6a762ac19f",
+  "license": "EPL-2.0"
+}
