@@ -16,12 +16,12 @@
       "license": "project_license"
     },
     "flight-gather": {
-      "locked_version": "2c46726006bb27f81d96a293b0193982bd76a814",
+      "locked_version": "ee7bd2788fe3c5f98a5802e6e180f522bb2ba54f",
       "locked_source": {
         "git": "https://github.com/openflighthpc/flight-gather"
       },
       "source_type": "git",
-      "described_version": "0.0.7",
+      "described_version": "0.0.8",
       "license": "EPL-2.0"
     },
     "version-manifest": {
@@ -32,7 +32,7 @@
       "license": "project_license"
     }
   },
-  "build_version": "0.0.7",
-  "build_git_revision": "98a513e4364bb0de07347a1cb6511c6a762ac19f",
+  "build_version": "0.0.8",
+  "build_git_revision": "3b2e034be14c98eebaab0e76e96d0a91dbc9d9a6",
   "license": "EPL-2.0"
 }
