@@ -41,5 +41,7 @@ rm -rf $RPM_BUILD_ROOT
 /opt/flight/usr/lib/profile/types/openflight-slurm-standalone/*
 %dir /opt/flight/usr/lib/profile/types/openflight-slurm-multinode
 /opt/flight/usr/lib/profile/types/openflight-slurm-multinode/*
+%dir /opt/flight/usr/lib/profile/types/openflight-kubernetes-multinode
+/opt/flight/usr/lib/profile/types/openflight-kubernetes-multinode/*
 
 %changelog
