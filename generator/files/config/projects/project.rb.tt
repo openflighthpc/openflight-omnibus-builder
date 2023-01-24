@@ -1,0 +1,40 @@
+<%= boilerplate %>
+
+name '<%= repo_name %>'
+maintainer 'Alces Flight Ltd'
+homepage 'https://github.com/openflighthpc/<%= repo_name %>'
+friendly_name 'Flight Example'
+
+install_dir '/opt/flight/opt/<%= executable %>'
+
+VERSION = '0.0.0'
+override '<%= repo_name %>', version: VERSION
+
+build_version VERSION
+build_iteration 1
+
+dependency 'preparation'
+dependency '<%= repo_name %>'
+dependency 'version-manifest'
+
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+
+description 'An OpenFlightHPC project'
+
+exclude '**.git'
+exclude '**.gitkeep'
+exclude '**/bundler/git'
+
+runtime_dependency 'flight-runway'
+runtime_dependency 'flight-ruby-system-2.0'
+
+extra_package_file 'opt/flight/libexec/commands/<%= executable %>'
+
+package :rpm do
+  vendor 'Alces Flight Ltd'
+end
+
+package :deb do
+  vendor 'Alces Flight Ltd'
+end

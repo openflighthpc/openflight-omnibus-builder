@@ -1,0 +1,9 @@
+*.gem
+.kitchen/
+.kitchen.local.yml
+pkg/*
+.vagrant
+bin/*
+files/**/cache/
+vendor
+local

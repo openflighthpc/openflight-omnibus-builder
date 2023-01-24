@@ -1,0 +1,15 @@
+: '
+: NAME: <%= executable %>
+: SYNOPSIS: An OpenFlightHPC project
+: VERSION: 0.0.0
+: '
+
+<%= boilerplate %>
+
+export FLIGHT_CWD="$(pwd)"
+cd /opt/flight/opt/<%= executable %>
+
+# What to display in `flight-starter` help menu
+export FLIGHT_PROGRAM_NAME="${flight_NAME} $(basename $0)"
+
+flexec bundle exec bin/<%= executable %> "$@"
