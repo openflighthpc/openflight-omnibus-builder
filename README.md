@@ -51,7 +51,7 @@ where, in the case of, for example, Flight Desktop, the required arguments resem
 bin/thor generate_builder desktop "flight-desktop" "Flight Desktop"
 ```
 
-A simplistic builder will be generated in the working directory. Copy this directory to `/vagrant/builders` and make any project-specific changes to it before continuing to build. See [docs/omnibus.md](the builder docs) for more info with regards to further configuration options.
+A simplistic builder will be generated in the working directory. Copy this directory to `/vagrant/builders` and make any project-specific changes to it before continuing to build. See [the builder docs](docs/omnibus.md) for more info with regards to further configuration options.
 
 
 #### Initialize build infrastructure within the VM
