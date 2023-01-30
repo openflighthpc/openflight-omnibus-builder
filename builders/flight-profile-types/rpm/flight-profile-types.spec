@@ -43,5 +43,7 @@ rm -rf $RPM_BUILD_ROOT
 /opt/flight/usr/lib/profile/types/openflight-slurm-multinode/*
 %dir /opt/flight/usr/lib/profile/types/openflight-kubernetes-multinode
 /opt/flight/usr/lib/profile/types/openflight-kubernetes-multinode/*
+%dir /opt/flight/usr/lib/profile/types/openflight-jupyter-standalone
+/opt/flight/usr/lib/profile/types/openflight-jupyter-standalone/*
 
 %changelog
