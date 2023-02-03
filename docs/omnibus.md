@@ -27,7 +27,7 @@ These methods describe the package in a way that will be displayed to the user w
 
 `install_dir` is the path to which the package will be installed on the user's system. For OpenFlightHPC packages, this will almost always be `/opt/flight/opt/<executable-name>`.
 
-A constant, `VERSION`, will be set in the project file. This constant is used throughout the builder to specify the version of the package being built, and *must* be equal to the GitHub tag that you wish to build against.
+A constant, `VERSION`, must be set in the project file. This constant is used throughout the builder to specify the version of the package being built. It *must* be equal to the GitHub tag that you wish to build against. It is conditionally set depending on the current build architecture. When updating a package, please update the `VERSION` setter in the conditional that corresponds to your build architecture.
 
 `build_iteration` is a incrementable value that lets you build the same version multiple times (by default, you cannot build a package that already exists in `pkg/`). This value should *always* be reset to `1` when the final package build is ready.
 
@@ -64,9 +64,30 @@ The logic to actually install your application belongs to the `build` block defi
 - Add compiler flags to the environment hash
 - Move all the files/directories of your project into place
 - Install any gems in your project's Gemfile
-- Set up the default `etc/config.yml` file for your application
+- Define version block
+  - Set up the default `etc/config.yml` file for your application
 
-The template builder generates all of this automatically. You should check that the "Move all files into place" step includes all of the files/directories in your application. You should also fill in any config keys you want to be set upon installation. If there is any extra setup that must be done, include it in the `build` block.
+The template builder generates all of this automatically. You should check that the "Move all files into place" step includes all of the files/directories in your application. You should also fill in any config keys you want to be set upon installation. In the case that your application has more setup required on the user's system, include it in the `build` block. Software definition files are just Ruby, after all. Some variables you may find useful include:
+
+| Variable | Description |
+|----------|-------------|
+| `install_dir` | The absolute path of the directory containing the installed package, e.g. `/opt/flight/opt/<package>` |
+| `project_dir` | The relative path of the project directory , e.g. `builders/<package>/opt/flight/` |
+
+#### Version blocks
+
+We support building multiple versions of the same software in the same software definition file. This is only really useful when we are maintaining different versions across our RHEL/Debian architectures. A version block is defiend with:
+
+```ruby
+build do
+  ...
+  version '0.0.0' do
+    ...
+  end
+end
+```
+
+A version block *must* be defined for each possible version that we are currently maintaining (i.e. each version that is specified in the project file). You should put any version specific build instructions in these blocks. Most of the pre-generated build instructions should remain outside of these blocks, as they are version agnostic instructions.
 
 #### Config file preservation
 

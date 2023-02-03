@@ -29,13 +29,15 @@ build do
   ].join(' ')
   command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
 
-  block do
-    require 'yaml'
-    config = {}
+  version '0.0.0' do
+    block do
+      require 'yaml'
+      config = {}
 
-    File.write(
-      File.expand_path("#{install_dir}/etc/config.yml"),
-      config.to_yaml
-    )
+      File.write(
+        File.expand_path("#{install_dir}/etc/config.yml"),
+        config.to_yaml
+      )
+    end
   end
 end

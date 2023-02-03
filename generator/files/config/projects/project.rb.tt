@@ -7,7 +7,19 @@ friendly_name 'Flight Example'
 
 install_dir '/opt/flight/opt/<%= executable %>'
 
-VERSION = '0.0.0'
+
+if ohai['platform_family'] == 'rhel'
+  rhel_rel = ohai['platform_version'].split('.').first.to_i
+  if rhel_rel == 7
+    VERSION = '0.0.0'
+
+  elsif rhel_rel == 8
+    VERSION = '0.0.0'
+  end
+elsif ohai['platform_family'] == 'debian'
+  VERSION='0.0.0'
+end
+
 override '<%= repo_name %>', version: VERSION
 
 build_version VERSION
