@@ -11,7 +11,7 @@ The top-level project file defines the application as a whole.
 
 ### Project description
 
-The project file will always contain the following [Omnibus method calls](https://github.com/chef/omnibus#projects):
+The project file will always contain the following [Omnibus DSL method calls](https://github.com/chef/omnibus#projects):
 
 | Method | Description |
 |--------|-------------|
@@ -21,7 +21,7 @@ The project file will always contain the following [Omnibus method calls](https:
 | `friendly_name` | The name of the project with user-friendly formatting |
 | `description` | A short description of the project |
 
-These methods describe the package in a way that will be displayed to the user when they install it from their favourite package manager. The `homepage` method sets the repository that will be cloned at build time.
+These DSL methods describe the package in a way that will be displayed to the user when they install it from their favourite package manager. The `homepage` method sets the repository that will be cloned at build time.
 
 ### Project setup
 
@@ -43,7 +43,7 @@ You may define extra files in the builder to be installed to the user's system a
 
 Software files define individual components of the overall package. They are a good way to split the build/installation of your package into multiple steps/blocks. You will always have a software file for your project, as this is what is triggered by the top-level project definition.
 
-Some of the details/methods here exist because software definition files are designed to be able to be used by multiple project definitions at the same time. For example, `default_version` exists to specify which software version should be used when the top-level project definition doesn't specify a version.
+Some of the DSL methods here exist because software definition files are designed to be able to be used by multiple project definitions at the same time. For example, `default_version` exists to specify which software version should be used when the top-level project definition doesn't specify a version.
 
 ### Software definition
 
@@ -67,7 +67,7 @@ The logic to actually install your application belongs to the `build` block defi
 - Define version block
   - Set up the default `etc/config.yml` file for your application
 
-The template builder generates all of this automatically. You should check that the "Move all files into place" step includes all of the files/directories in your application. You should also fill in any config keys you want to be set upon installation. In the case that your application has more setup required on the user's system, include it in the `build` block. Software definition files are just Ruby, after all. Some variables you may find useful include:
+The template builder generates all of this automatically. You should check that the "Move all files into place" step includes all of the files/directories in your application. You should also fill in any config keys you want to be set upon installation. In the case that your application has more setup required on the user's system, include it in the `build` block. Software definition files are just Ruby, after all. Some DSL methods you may find useful include:
 
 | Variable | Description |
 |----------|-------------|
