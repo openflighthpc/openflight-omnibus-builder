@@ -1,0 +1,4 @@
+# Unique name for the service
+flight_MFA_service="$(flight config get cluster.name 2>/dev/null)"
+# Namespace for service
+flight_MFA_issuer=OpenFlightHPC
