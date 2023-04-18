@@ -4,7 +4,7 @@ d="$(pwd)"
 mkdir -p pkg
 
 NAME=flight-profile-types
-VERSION=0.1.7
+VERSION=0.2.0~rc1
 TAG=$(echo "$VERSION" | sed "s/~/-/g")
 REL=1
 

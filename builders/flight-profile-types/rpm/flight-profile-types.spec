@@ -36,14 +36,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 %license LICENSE.txt
-%dir /opt/flight/usr/lib/profile/types/
-%dir /opt/flight/usr/lib/profile/types/openflight-slurm-standalone
-/opt/flight/usr/lib/profile/types/openflight-slurm-standalone/*
-%dir /opt/flight/usr/lib/profile/types/openflight-slurm-multinode
-/opt/flight/usr/lib/profile/types/openflight-slurm-multinode/*
-%dir /opt/flight/usr/lib/profile/types/openflight-kubernetes-multinode
-/opt/flight/usr/lib/profile/types/openflight-kubernetes-multinode/*
-%dir /opt/flight/usr/lib/profile/types/openflight-jupyter-standalone
-/opt/flight/usr/lib/profile/types/openflight-jupyter-standalone/*
+%files
+/opt/flight/usr/lib/profile/types
 
 %changelog
