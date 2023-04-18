@@ -19,7 +19,8 @@ Specify <version> to build:
   20.02
   20.11
   21.08
-  22.05 (latest)
+  22.05
+  23.02 (latest)
 EOF
   exit 1
 fi
@@ -90,7 +91,7 @@ case $VERSION in
     libjwt=true
     nvml=true
     ;;
-  22.05|latest)
+  22.05)
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
@@ -99,6 +100,20 @@ case $VERSION in
     else
       TAG="slurm-22-05-6-1-flight1"
       REL="slurm-22.05.6.flight1"
+    fi
+    libjwt=true
+    pmix=true
+    nvml=true
+    ;;
+  23.02|latest)
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
+    BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-23-02-1-1-flight1"
+      REL="flight-slurm-23.02.1.flight1"
+    else
+      TAG="slurm-23-02-1-1-flight1"
+      REL="slurm-23.02.1.flight1"
     fi
     libjwt=true
     pmix=true
@@ -126,7 +141,7 @@ else
 fi
 
 # Install dependencies
-#sudo yum groupinstall -y "Development Tools"
+sudo yum groupinstall -y "Development Tools"
 sudo yum install -y epel-release
 if [ "$distro" == "rhel7" ]; then
   sudo yum install -y munge-devel munge-libs pam-devel \
@@ -166,12 +181,14 @@ if [ "$distro" == "rhel7" ]; then
     sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-nvml-devel-11-7-11.7.50-1.x86_64.rpm
   fi
 elif [ "$distro" == "rhel8" ]; then
+  sudo yum config-manager --set-enabled powertools
   sudo yum config-manager --set-enabled PowerTools
   sudo yum install -y munge-devel munge-libs pam-devel \
        readline-devel perl-devel lua-devel hwloc-devel \
        numactl-devel hdf5-devel lz4-devel freeipmi-devel \
        rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
        man2html python3 python2 $BUILD_DEPS
+  sudo yum install -y pmix-devel
   if ! rpm -qa pmix-devel | grep -q '^pmix-devel'; then
     if [ ! -f pmix-2.1.1-1.el8.src.rpm ]; then
       wget http://vault.centos.org/8.1.1911/AppStream/Source/SPackages/pmix-2.1.1-1.el8.src.rpm
