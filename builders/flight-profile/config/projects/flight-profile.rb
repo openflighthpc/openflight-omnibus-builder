@@ -31,7 +31,7 @@ friendly_name 'Flight Profile'
 
 install_dir '/opt/flight/opt/profile'
 
-VERSION = '0.2.0-rc1'
+VERSION = '0.2.0-rc2'
 override 'flight-profile', version: VERSION
 
 build_version VERSION
@@ -51,9 +51,15 @@ exclude '**.gitkeep'
 exclude '**/bundler/git'
 
 PROFILE_SYSTEM = '1.0'
+
+case ohai['platform_family']
+when 'rhel'
+  runtime_dependency 'flight-profile-types >= 0.2.0~rc2'
+when 'debian'
+  runtime_dependency 'flight-profile-types (>= 0.2.0~rc2)'
+end
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-profile-types'
 
 path = File.expand_path('../../opt/flight/libexec/commands/profile', __dir__)
 original = File.read(path)
