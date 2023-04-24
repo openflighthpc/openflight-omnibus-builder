@@ -31,7 +31,7 @@ friendly_name 'Flight Profile'
 
 install_dir '/opt/flight/opt/profile'
 
-VERSION = '0.2.0-rc2'
+VERSION = '0.2.0-rc3'
 override 'flight-profile', version: VERSION
 
 build_version VERSION
