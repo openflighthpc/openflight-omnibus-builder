@@ -34,8 +34,9 @@ license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
 # Numpy has a bunch of files which depend on each other, this can be ignored
-whitelist_file Regexp.new('\.venv/lib/python\d\.\d/site-packages/numpy\.libs/libgfortran-.+')
-whitelist_file Regexp.new('\.venv/lib/python\d\.\d/site-packages/numpy\.libs/libopenblasp-.+')
+#whitelist_file Regexp.new('\.venv/lib/python\d\.\d/site-packages/numpy\.libs/libgfortran-.+')
+#whitelist_file Regexp.new('\.venv/lib/python\d\.\d/site-packages/numpy\.libs/libopenblasp-.+')
+whitelist_file Regexp.new('\.venv/.*')
 
 build do
   env = with_embedded_path("PIPENV_VENV_IN_PROJECT" => 'true')

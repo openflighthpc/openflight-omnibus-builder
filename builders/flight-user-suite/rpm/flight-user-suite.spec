@@ -10,7 +10,7 @@ URL:            https://openflighthpc.org
 
 BuildArch:     noarch
 Requires:      flight-runway => 1.1.0, flight-runway < 1.2.0~
-Requires:      flight-starter => 2022.4.0, flight-starter < 2022.5.0~
+Requires:      flight-starter => 2023.1.0, flight-starter < 2023.2.0~
 %{?el8:Recommends:    flight-plugin-system-starter}
 Requires:      flight-env => 1.5.0, flight-env < 1.6.0~
 Requires:      flight-desktop => 1.11.0, flight-desktop < 1.12.0~
@@ -36,6 +36,8 @@ The Flight User Suite collection of tools and packages for running a HPC environ
 # Nothing to do
 
 %changelog
+* Thu Jun 16 2022 Jack Millard <jack.millard@alces-flight.com> - 2023.1-1
+- Bumped flight-env and flight-starter
 * Thu Jun 16 2022 Ben Armston <ben.armston@alces-flight.com> - 2022.4-1
 - Bumped flight-env, flight-job and flight-desktop
 * Thu May 12 2022 Ben Armston <ben.armston@alces-flight.com> - 2022.3-1
