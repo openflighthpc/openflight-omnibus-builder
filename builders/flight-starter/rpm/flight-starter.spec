@@ -70,6 +70,8 @@ if [ -e "$old" ]; then
 fi
 
 %changelog
+* Tue Apr 25 2023 Jack Millard <jack.millard@alces-flight.com> - 2023.1.0
+- Updated to 2023.1.0
 * Tue Oct  4 2022 Jack Millard <jack.millard@alces-flight.com> - 2022.4.1
 - Updated to 2022.4.1
 * Thu May 19 2022 Ben Armston <ben.armston@alces-flight.com> - 2022.3.0
