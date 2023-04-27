@@ -86,7 +86,24 @@ EOF
 }
 
 install_ruby_and_bundler() {
-    rvm install 2.7
+    if [[ $CENTOS_VER == 9 ]]; then
+      dnf install perl
+      cd /tmp
+      wget https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1t/openssl-1.1.1t.tar.gz
+      tar -xvxf /tmp/openssl-1.1.1t.tar.gz
+      cd /tmp/openssl-1.1.1t/
+      ./config --prefix=/opt/openssl-1.1.1t --openssldir=/opt/openssl-1.1.1t shared zlib
+      make; make test; make install
+      rm -rf /opt/openssl-1.1.1t/certs
+      ln -s /etc/ssl/certs /opt/openssl-1.1.1t
+      wget http://curl.haxx.se/ca/cacert.pem -O /tmp/cacert.pem
+      mv /tmp/cacert.pem /home/vagrant/cacert.pem
+      export SSL_CERT_FILE=/home/vagrant/cacert.pem
+      echo 'export SSL_CERT_FILE=/home/vagrant/cacert.pem' >>/home/vagrant/.bash_profile
+      rvm install 2.7 --with-openssl-dir=/opt/openssl-1.1.1t/
+    else
+      rvm install 2.7
+    fi
     gem install bundler:1.17.3
     gem install bundler:2.1.4
     usermod -a -G rvm vagrant
@@ -113,7 +130,7 @@ if [ "$1" != "test" ]; then
     yum install -y -e0 python3-pip
     su vagrant -c 'pip3 install pipenv --user'
 
-    if [[ $CENTOS_VER == 8 ]] ; then
+    if [[ $CENTOS_VER == 8 ]] || [[ $CENTOS_VER == 9 ]]; then
       yum install -y python3-devel python2-devel
       su vagrant -c 'pip3 install awscli --upgrade --user'
     else

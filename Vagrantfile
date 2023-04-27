@@ -63,6 +63,25 @@ Vagrant.configure("2") do |config|
     end
   end
 
+  config.vm.define 'centos9s', autostart: false do |build|
+    build.vm.box = 'generic/centos9s'
+
+    # These _might_ become necessary again in the future.
+    # As of 27-04-2023, they are not.
+    #
+    #build.vbguest.auto_update = false
+    #build.vbguest.installer_hooks[:before_start] = [
+    #  "sudo dnf -y install libXmu libXext libXt libX11",
+    #  #"sudo dnf -y upgrade --refresh",
+    #  "sudo dnf -y install kernel-devel"
+    #]
+
+    build.vm.provision "shell", path: "vagrant/provision.sh"
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
+    end
+  end
+
   config.vm.define "ubuntu1804", autostart: false do |build|
     build.vm.box = 'ubuntu/bionic64'
     build.vm.provision "shell", path: "vagrant/provision.sh"
