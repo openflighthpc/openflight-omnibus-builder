@@ -1,7 +1,7 @@
 : '
 : NAME: hunter
-: SYNOPSIS: Manage installation and configuration of cluster content
-: VERSION: 0.0.7
+: SYNOPSIS: MAC and payload cluster collection tool
+: VERSION: 0.3.2-rc3
 : ROOT: true
 : '
 #==============================================================================

@@ -27,15 +27,15 @@
 name 'flight-hunter'
 maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/flight-hunter'
-friendly_name 'Flight hunter'
+friendly_name 'Flight Hunter'
 
 install_dir '/opt/flight/opt/hunter'
 
-VERSION = '0.0.7'
+VERSION = '0.3.2-rc3'
 override 'flight-hunter', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-hunter'
@@ -53,7 +53,19 @@ exclude '**/bundler/git'
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
 
-extra_package_file 'opt/flight/libexec/commands/hunter'
+# Updates the version in the libexec file
+path = File.expand_path('../../opt/flight/libexec/commands/hunter', __dir__)
+original = File.read(path)
+updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
+                  .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
+File.write(path, updated) unless original == updated
+
+require 'find'
+Find.find('opt') do |o|
+  extra_package_file(o) if File.file?(o)
+end
+
+config_file '/opt/flight/opt/hunter/etc/config.yml'
 
 package :rpm do
   vendor 'Alces Flight Ltd'
