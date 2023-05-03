@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.11.2'
+VERSION = '1.11.3'
 override 'flight-desktop', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
@@ -96,6 +96,7 @@ extra_package_file howto_relative
 if ohai['platform_family'] == 'rhel'
   rhel_rel = ohai['platform_version'].split('.').first.to_i
   if rhel_rel == 8
+    runtime_dependency 'xorg-x11-apps'
     package :rpm do
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
@@ -111,7 +112,6 @@ if ohai['platform_family'] == 'rhel'
     end
   end
 
-  runtime_dependency 'xorg-x11-apps'
   runtime_dependency 'netpbm-progs'
 elsif ohai['platform_family'] == 'debian'
   runtime_dependency 'x11-apps'
