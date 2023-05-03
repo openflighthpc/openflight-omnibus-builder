@@ -31,8 +31,8 @@ friendly_name 'Flight Profile'
 
 install_dir '/opt/flight/opt/profile'
 
-VERSION = '0.0.3'
-override 'flight-action', version: VERSION
+VERSION = '0.2.0-rc3'
+override 'flight-profile', version: VERSION
 
 build_version VERSION
 build_iteration 1
@@ -51,11 +51,25 @@ exclude '**.gitkeep'
 exclude '**/bundler/git'
 
 PROFILE_SYSTEM = '1.0'
+
+case ohai['platform_family']
+when 'rhel'
+  runtime_dependency 'flight-profile-types >= 0.2.0~rc2'
+when 'debian'
+  runtime_dependency 'flight-profile-types (>= 0.2.0~rc2)'
+end
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
-runtime_dependency 'flight-profile-types'
+
+path = File.expand_path('../../opt/flight/libexec/commands/profile', __dir__)
+original = File.read(path)
+updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
+                  .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
+                  File.write(path, updated) unless original == updated
 
 extra_package_file 'opt/flight/libexec/commands/profile'
+
+config_file '/opt/flight/opt/profile/etc/config.yml'
 
 package :rpm do
   vendor 'Alces Flight Ltd'
