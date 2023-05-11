@@ -136,6 +136,14 @@ if grep -q 'release 8' /etc/redhat-release; then
       exit 1
     ;;
   esac
+elif grep -q 'release 9' /etc/redhat-release; then
+  distro="rhel9"
+  case $VERSION in
+    17.11|18.08)
+      echo "$0: Slurm version not currently available for EL8: $VERSION"
+      exit 1
+    ;;
+  esac
 else
   distro="rhel7"
 fi
@@ -219,6 +227,45 @@ elif [ "$distro" == "rhel8" ]; then
 
   if [ "$nvml" ]; then
     sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-nvml-devel-11-7-11.7.50-1.x86_64.rpm
+  fi
+elif [ "$distro" == "rhel9" ]; then
+  sudo yum config-manager --set-enabled crb
+  sudo yum install -y munge-devel munge-libs pam-devel \
+       readline-devel perl-devel lua-devel hwloc-devel \
+       numactl-devel hdf5-devel lz4-devel freeipmi-devel \
+       rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
+       man2html python3 dbus-devel $BUILD_DEPS
+  sudo yum install -y pmix-devel
+  if ! rpm -qa pmix-devel | grep -q '^pmix-devel'; then
+    if [ ! -f pmix-2.1.1-1.el8.src.rpm ]; then
+      wget http://vault.centos.org/8.1.1911/AppStream/Source/SPackages/pmix-2.1.1-1.el8.src.rpm
+    fi
+    sudo yum install -y environment-modules libevent-devel
+    rpmbuild --rebuild pmix-2.1.1-1.el8.src.rpm
+    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-devel-2.1.1-1.el8.x86_64.rpm
+  fi
+
+ # if [ "$libssh2" ]; then
+ #   # This is needed for Slurm 18.08 or 17.11.
+ #   if ! rpm -qa libssh2-devel | grep -q '^libssh2-devel'; then
+ #     if [ ! -f libssh2-1.8.0-3.el7.src.rpm ]; then
+ #       wget http://vault.centos.org/7.7.1908/os/Source/SPackages/libssh2-1.8.0-3.el7.src.rpm
+ #     fi
+ #     rpmbuild --rebuild libssh2-1.8.0-3.el7.src.rpm
+ #     sudo yum install -y ~/rpmbuild/RPMS/x86_64/libssh2-1.8.0-3.el8.x86_64.rpm ~/rpmbuild/RPMS/x86_64/libssh2-devel-1.8.0-3.el8.x86_64.rpm
+ #   fi
+ # fi
+
+ # if [ "$libjwt" ]; then
+ #   # This is needed for Slurm 20.11.
+ #   sudo yum install -y check-devel
+ #   rpmbuild --rebuild ${TARGET}/../dist/libjwt-1.12.1-0.el7.src.rpm
+ #   sudo yum install -y ~/rpmbuild/RPMS/x86_64/libjwt-devel-1.12.1-0.el8.x86_64.rpm \
+ #        ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el8.x86_64.rpm
+ # fi
+
+  if [ "$nvml" ]; then
+    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-nvml-devel-11-7-11.7.91-1.x86_64.rpm
   fi
 fi
 
