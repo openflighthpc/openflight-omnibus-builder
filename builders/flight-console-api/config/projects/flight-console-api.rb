@@ -35,7 +35,7 @@ VERSION = '2.2.2'
 override 'flight-console-api', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'update_web_suite_package_scripts'
