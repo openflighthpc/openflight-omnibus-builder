@@ -54,20 +54,18 @@ build do
   ].join(' ')
   command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
 
-  version '0.0.0' do
-    block do
-      require 'yaml'
-      config = {
-        'type_paths' =>  [
-          "/opt/flight/opt/silo/etc/types"
-	],
-	'global_silos_path' => "/opt/flight/opt/silo/etc/global"
-      }
+  block do
+    require 'yaml'
+    config = {
+      'type_paths' =>  [
+        "/opt/flight/opt/silo/etc/types"
+      ],
+      'global_silos_path' => "/opt/flight/opt/silo/etc/global"
+    }
 
-      File.write(
-        File.expand_path("#{install_dir}/etc/config.yml"),
-        config.to_yaml
-      )
-    end
+    File.write(
+      File.expand_path("#{install_dir}/etc/config.yml"),
+      config.to_yaml
+    )
   end
 end

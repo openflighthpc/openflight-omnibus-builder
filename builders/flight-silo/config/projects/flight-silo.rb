@@ -32,18 +32,7 @@ friendly_name 'Flight Example'
 
 install_dir '/opt/flight/opt/silo'
 
-
-if ohai['platform_family'] == 'rhel'
-  rhel_rel = ohai['platform_version'].split('.').first.to_i
-  if rhel_rel == 7
-    VERSION = '0.0.0'
-
-  elsif rhel_rel == 8
-    VERSION = '0.0.0'
-  end
-elsif ohai['platform_family'] == 'debian'
-  VERSION='0.0.0'
-end
+VERSION='0.1.0'
 
 override 'flight-silo', version: VERSION
 
