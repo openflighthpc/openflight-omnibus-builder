@@ -35,6 +35,25 @@ The EL7 build VM will be provisioned with the required tools including required 
 
 Access the build VM using `vagrant ssh`.  The build infrastructure is mounted within the guest at `/vagrant`.
 
+#### Create project builder
+
+This repository contains a Thor template designed to ease the initialisation of an Omnibus builder for a new project.
+
+```
+vagrant ssh
+cd /vagrant/generator
+bin/thor generate_builder EXECUTABLE REPO_NAME FRIENDLY_NAME
+```
+
+where, in the case of, for example, Flight Desktop, the required arguments resemble:
+
+```
+bin/thor generate_builder desktop "flight-desktop" "Flight Desktop"
+```
+
+A simplistic builder will be generated in the working directory. Copy this directory to `/vagrant/builders` and make any project-specific changes to it before continuing to build. See [the builder docs](docs/omnibus.md) for more info with regards to further configuration options.
+
+
 #### Initialize build infrastructure within the VM
 
 Log in to the build VM and set up the Omnibus build infrastructure.
