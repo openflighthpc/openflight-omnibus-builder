@@ -86,27 +86,31 @@ EOF
 }
 
 install_ruby_and_bundler() {
-    if [[ $CENTOS_VER == 9 ]]; then
-      dnf install perl
-      cd /tmp
-      wget https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1t/openssl-1.1.1t.tar.gz
-      tar -xvxf /tmp/openssl-1.1.1t.tar.gz
-      cd /tmp/openssl-1.1.1t/
-      ./config --prefix=/opt/openssl-1.1.1t --openssldir=/opt/openssl-1.1.1t shared zlib
-      make; make test; make install
-      rm -rf /opt/openssl-1.1.1t/certs
-      ln -s /etc/ssl/certs /opt/openssl-1.1.1t
-      wget http://curl.haxx.se/ca/cacert.pem -O /tmp/cacert.pem
-      mv /tmp/cacert.pem /home/vagrant/cacert.pem
-      export SSL_CERT_FILE=/home/vagrant/cacert.pem
-      echo 'export SSL_CERT_FILE=/home/vagrant/cacert.pem' >>/home/vagrant/.bash_profile
-      rvm install 2.7 --with-openssl-dir=/opt/openssl-1.1.1t/
-    else
-      rvm install 2.7
-    fi
-    gem install bundler:1.17.3
-    gem install bundler:2.1.4
-    usermod -a -G rvm vagrant
+  # Only checking for Ruby 2.7's existence in CentOS 9 because it's a bit more
+  # involved to install it there than just `rvm install 2.7`
+
+  CENTOS_VER=$(rpm --eval '%{centos_ver}')
+  if [[ $CENTOS_VER == 9 ]] && [[ $(rvm list) != *ruby-2.7.* ]] ; then
+    dnf install perl
+    cd /tmp
+    wget https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1t/openssl-1.1.1t.tar.gz
+    tar -xvxf /tmp/openssl-1.1.1t.tar.gz
+    cd /tmp/openssl-1.1.1t/
+    ./config --prefix=/opt/openssl-1.1.1t --openssldir=/opt/openssl-1.1.1t shared zlib
+    make; make test; make install
+    rm -rf /opt/openssl-1.1.1t/certs
+    ln -s /etc/ssl/certs /opt/openssl-1.1.1t
+    wget http://curl.haxx.se/ca/cacert.pem -O /tmp/cacert.pem
+    mv /tmp/cacert.pem /home/vagrant/cacert.pem
+    export SSL_CERT_FILE=/home/vagrant/cacert.pem
+    echo 'export SSL_CERT_FILE=/home/vagrant/cacert.pem' >>/home/vagrant/.bash_profile
+    rvm install 2.7 --with-openssl-dir=/opt/openssl-1.1.1t/
+  else
+    rvm install 2.7
+  fi
+  gem install bundler:1.17.3
+  gem install bundler:2.1.4
+  usermod -a -G rvm vagrant
 }
 
 if [ "$1" != "test" ]; then
