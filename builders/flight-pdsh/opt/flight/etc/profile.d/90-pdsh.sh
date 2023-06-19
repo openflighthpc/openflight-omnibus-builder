@@ -42,3 +42,14 @@ case ${flight_PDSH_priority:-embedded} in
 esac
 
 unset $(declare | grep ^flight_PDSH | cut -f1 -d= | xargs)
+
+if [ "$(type -t flight_HELPER_remove_path)" == "function" ]; then
+  function flight_PDSH_exit() {
+    PATH=$(flight_HELPER_remove_path $flight_ROOT/opt/pdsh/bin)
+  }
+
+  if [ -n "$flight_DEFINES" ]; then
+    flight_DEFINES_exits+=(flight_PDSH_exit)
+    flight_DEFINES+=(flight_PDSH_exit)
+  fi
+fi
