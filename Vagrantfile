@@ -90,6 +90,8 @@ Vagrant.configure("2") do |config|
     #  "sudo dnf -y install kernel-devel"
     #]
 
+    build.vbguest.auto_update = false
+
     build.vm.provision "shell", path: "vagrant/provision.sh"
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
