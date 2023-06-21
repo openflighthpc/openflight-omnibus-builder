@@ -1,7 +1,7 @@
-flight-architect Omnibus project
+flight-gather Omnibus project
 ===========================
 This project creates full-stack platform-specific packages for
-`flight-architect`!
+`flight-gather`!
 
 Installation
 ------------
@@ -19,10 +19,10 @@ Usage
 You create a platform-specific package using the `build project` command:
 
 ```shell
-$ bin/omnibus build flight-architect
+$ bin/omnibus build flight-gather
 ```
 
-The platform/architecture type of the package created will match the platform
+The platform/gatherure type of the package created will match the platform
 where the `build project` command is invoked. For example, running this command
 on a MacBook Pro will generate a Mac OS X package. After the build completes
 packages will be available in the `pkg/` folder.
@@ -33,15 +33,15 @@ You can clean up all temporary files generated during the build process with
 the `clean` command:
 
 ```shell
-$ bin/omnibus clean flight-architect
+$ bin/omnibus clean flight-gather
 ```
 
 Adding the `--purge` purge option removes __ALL__ files generated during the
-build including the project install directory (`/opt/flight-architect`) and
+build including the project install directory (`/opt/flight-gather`) and
 the package cache directory (`/var/cache/omnibus/pkg`):
 
 ```shell
-$ bin/omnibus clean flight-architect --purge
+$ bin/omnibus clean flight-gather --purge
 ```
 
 ### Publish
