@@ -26,6 +26,7 @@
 #===============================================================================
 Vagrant.configure("2") do |config|
   code_path = ENV['FLIGHT_CODE'] || "#{ENV['HOME']}/code"
+  vagrant_path = File.join(code_path, 'openflight-omnibus-builder')
 
   config.vm.define "centos7", primary: true do |build|
     build.vm.box = "bento/centos-7"
@@ -93,6 +94,11 @@ Vagrant.configure("2") do |config|
     build.vbguest.auto_update = false
 
     build.vm.provision "shell", path: "vagrant/provision.sh"
+
+    if File.directory?(vagrant_path)
+      build.vm.synced_folder vagrant_path, "/vagrant"
+    end
+
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
