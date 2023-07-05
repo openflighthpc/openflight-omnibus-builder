@@ -109,11 +109,11 @@ case $VERSION in
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-23-02-2-1-flight1"
-      REL="flight-slurm-23.02.2.flight1"
+      TAG="flight-slurm-23-02-3-1-flight1"
+      REL="flight-slurm-23.02.3.flight1"
     else
-      TAG="slurm-23-02-2-1-flight1"
-      REL="slurm-23.02.2.flight1"
+      TAG="slurm-23-02-3-1-flight1"
+      REL="slurm-23.02.3.flight1"
     fi
     libjwt=true
     pmix=true
