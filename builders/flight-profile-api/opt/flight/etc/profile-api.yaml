@@ -1,0 +1,78 @@
+#==============================================================================
+# Copyright (C) 2023-present Alces Flight Ltd.
+#
+# This file is part of Flight Profile API.
+#
+# This program and the accompanying materials are made available under
+# the terms of the Eclipse Public License 2.0 which is available at
+# <https://www.eclipse.org/legal/epl-2.0>, or alternative license
+# terms made available by Alces Flight Ltd - please direct inquiries
+# about licensing to licensing@alces-flight.com.
+#
+# Flight Profile API is distributed in the hope that it will be useful, but
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR
+# IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARRANTIES OR CONDITIONS
+# OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A
+# PARTICULAR PURPOSE. See the Eclipse Public License 2.0 for more
+# details.
+#
+# You should have received a copy of the Eclipse Public License 2.0
+# along with Flight Profile API. If not, see:
+#
+#  https://opensource.org/licenses/EPL-2.0
+#
+# For more information on Flight Profile API, please visit:
+# https://github.com/openflighthpc/flight-profile-api
+#==============================================================================
+#
+# Profile Command
+#
+# The command to used to run the Flight Profile executable.
+#
+# The default value uses the 'flight_ROOT' environment variable.  Expanding
+# environment variables is only supported when using the default value.  You
+# will need to use explicit full path if you override this value.
+#
+# The environment variable flight_PROFILE_API_profile_command takes
+# precedence.
+# =============================================================================
+# profile_command: ${flight_ROOT}/bin/flight profile
+
+# ==============================================================================
+# Command PATH
+# The PATH the profile command will be executed with.
+#
+# The environment variable flight_PROFILE_API_command_path takes precedence.
+# ==============================================================================
+# command_path: /usr/sbin:/usr/bin:/sbin:/bin
+
+# ==============================================================================
+# Command Timeout
+# The maximum time to wait when running a profile command. Commands which
+# take longer then this period will be terminated.
+#
+# The environment variable flight_PROFILE_API_command_timeout takes precedence.
+# ==============================================================================
+# command_timeout: 30
+
+# ==============================================================================
+# Log Path
+# The file the logger will write to. It will write to standard error if
+# omitted.
+#
+# Relative paths are expanded according to the "Relative path expansion" rules
+# described below.
+#
+# The environment variable flight_PROFILE_API_log_path takes precedence.
+# ==============================================================================
+# log_path: /dev/stdout
+
+# =============================================================================
+# Log Level
+# Specify which level of logging should be used. The supported values are:
+# fatal, error, warn, info, or debug
+#
+# The environment variable flight_PROFILE_API_log_level takes precedence.
+# =============================================================================
+# log_level: info
+
