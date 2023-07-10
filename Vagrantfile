@@ -107,4 +107,21 @@ Vagrant.configure("2") do |config|
       build.vm.synced_folder code_path, "/code"
     end
   end
+
+  config.vm.define 'ubuntu2204', autostart: false do |build|
+    build.vm.box = 'ubuntu/jammy64'
+
+    config.vbguest.auto_update = false
+
+    build.vm.provision 'shell', path: 'vagrant/provision.sh'
+    build.vm.network "private_network", ip: "172.17.177.4"
+
+    if File.directory?(vagrant_path)
+      build.vm.synced_folder vagrant_path, "/vagrant"
+    end
+
+    if File.directory?(code_path)
+      build.vm.synced_folder code_path, "/code"
+    end
+  end
 end
