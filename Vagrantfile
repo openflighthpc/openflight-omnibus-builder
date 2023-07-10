@@ -30,6 +30,8 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "centos7", primary: true do |build|
     build.vm.box = "bento/centos-7"
+    build.vm.network "private_network", ip: "172.17.177.1"
+
     build.vm.provision "shell", path: "vagrant/provision.sh"
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
@@ -62,6 +64,7 @@ Vagrant.configure("2") do |config|
 
     build.vm.box_version = '202010.22.0'
     build.vm.provision "shell", path: "vagrant/provision.sh"
+    build.vm.network "private_network", ip: "172.17.177.2"
 
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
@@ -94,45 +97,12 @@ Vagrant.configure("2") do |config|
     build.vbguest.auto_update = false
 
     build.vm.provision "shell", path: "vagrant/provision.sh"
+    build.vm.network "private_network", ip: "172.17.177.3"
 
     if File.directory?(vagrant_path)
       build.vm.synced_folder vagrant_path, "/vagrant"
     end
 
-    if File.directory?(code_path)
-      build.vm.synced_folder code_path, "/code"
-    end
-  end
-
-  config.vm.define "ubuntu1804", autostart: false do |build|
-    build.vm.box = 'ubuntu/bionic64'
-    build.vm.provision "shell", path: "vagrant/provision.sh"
-    if File.directory?(code_path)
-      build.vm.synced_folder code_path, "/code"
-    end
-  end
-
-  config.vm.define "ubuntu1804-test", autostart: false do |build|
-    build.vm.box = 'ubuntu/bionic64'
-    if File.directory?(code_path)
-      build.vm.synced_folder code_path, "/code"
-    end
-  end
-
-  config.vm.define "ubuntu2004", autostart: false do |build|
-    build.vm.box = 'ubuntu/focal64'
-    build.vm.provision "shell", path: "vagrant/provision.sh"
-    if File.directory?(code_path)
-      build.vm.synced_folder code_path, "/code"
-    end
-  end
-
-  config.vm.define "ubuntu2004-test", autostart: false do |build|
-    build.vm.box = 'ubuntu/focal64'
-    build.vm.provision "shell" do |s|
-      s.path = "vagrant/provision.sh"
-      s.args = ["test"]
-    end
     if File.directory?(code_path)
       build.vm.synced_folder code_path, "/code"
     end
