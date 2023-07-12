@@ -24,25 +24,28 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-Vagrant.configure("2") do |config|
-  code_path = ENV['FLIGHT_CODE'] || "#{ENV['HOME']}/code"
-  vagrant_path = File.join(code_path, 'openflight-omnibus-builder')
+CODE_PATH = ENV['FLIGHT_CODE'] || "#{ENV['HOME']}/code"
+VAGRANT_PATH = File.join(CODE_PATH, 'openflight-omnibus-builder')
 
+Vagrant.configure("2") do |config|
   config.vm.define "centos7", primary: true do |build|
     build.vm.box = "bento/centos-7"
     build.vm.network "private_network", ip: "172.17.177.1"
 
+    setup_shared_folders(build)
+
     build.vm.provision "shell", path: "vagrant/provision.sh"
-    if File.directory?(code_path)
-      build.vm.synced_folder code_path, "/code"
-    end
   end
 
   config.vm.define "centos7-test", autostart: false do |build|
     build.vm.box = "bento/centos-7"
-    if File.directory?(code_path)
-      build.vm.synced_folder code_path, "/code"
+
+    build.vm.provision "shell" do |s|
+      s.path = "vagrant/provision.sh"
+      s.args = ["test"]
     end
+
+    setup_shared_folders(build)
   end
 
   config.vm.define "centos8", autostart: false do |build|
@@ -66,9 +69,8 @@ Vagrant.configure("2") do |config|
     build.vm.provision "shell", path: "vagrant/provision.sh"
     build.vm.network "private_network", ip: "172.17.177.2"
 
-    if File.directory?(code_path)
-      build.vm.synced_folder code_path, "/code"
-    end
+    setup_shared_folders(build)
+
     build.vm.provider "virtualbox" do |v|
       v.memory = 2048
     end
@@ -76,9 +78,13 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "centos8-test", autostart: false do |build|
     build.vm.box = 'bento/centos-8'
-    if File.directory?(code_path)
-      build.vm.synced_folder code_path, "/code"
+
+    build.vm.provision "shell" do |s|
+      s.path = "vagrant/provision.sh"
+      s.args = ["test"]
     end
+
+    setup_shared_folders(build)
   end
 
   config.vm.define 'centos9s', autostart: false do |build|
@@ -99,12 +105,53 @@ Vagrant.configure("2") do |config|
     build.vm.provision "shell", path: "vagrant/provision.sh"
     build.vm.network "private_network", ip: "172.17.177.3"
 
-    if File.directory?(vagrant_path)
-      build.vm.synced_folder vagrant_path, "/vagrant"
+    setup_shared_folders(build)
+  end
+
+  config.vm.define 'centos9s-test', autostart: false do |build|
+    build.vm.box = 'generic/centos9s'
+
+    build.vbguest.auto_update = false
+
+    build.vm.provision "shell" do |s|
+      s.path = "vagrant/provision.sh"
+      s.args = ["test"]
     end
 
-    if File.directory?(code_path)
-      build.vm.synced_folder code_path, "/code"
+    setup_shared_folders(build)
+  end
+
+  config.vm.define 'ubuntu2204', autostart: false do |build|
+    build.vm.box = 'ubuntu/jammy64'
+
+    config.vbguest.auto_update = false
+
+    build.vm.provision 'shell', path: 'vagrant/provision.sh'
+    build.vm.network "private_network", ip: "172.17.177.4"
+
+    setup_shared_folders(build)
+  end
+
+  config.vm.define 'ubuntu2204-test', autostart: false do |build|
+    build.vm.box = 'ubuntu/jammy64'
+
+    config.vbguest.auto_update = false
+
+    build.vm.provision "shell" do |s|
+      s.path = "vagrant/provision.sh"
+      s.args = ["test"]
     end
+
+    setup_shared_folders(build)
+  end
+end
+
+def setup_shared_folders(build)
+  if File.directory?(VAGRANT_PATH)
+    build.vm.synced_folder VAGRANT_PATH, "/vagrant"
+  end
+
+  if File.directory?(CODE_PATH)
+    build.vm.synced_folder CODE_PATH, "/code"
   end
 end
