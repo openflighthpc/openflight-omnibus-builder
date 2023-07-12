@@ -27,10 +27,60 @@
 CODE_PATH = ENV['FLIGHT_CODE'] || "#{ENV['HOME']}/code"
 VAGRANT_PATH = File.join(CODE_PATH, 'openflight-omnibus-builder')
 
+# Set up reusable key for all nodes so we can `pdsh` builder commands.
+# Requires `~/.ssh/openflight-omnibus-builder.key` key to exist.
+SSH_PRV_KEY_PATH = File.expand_path('~/.ssh/openflight-omnibus-builder.key')
+SSH_PUB_KEY_PATH = "#{SSH_PRV_KEY_PATH}.pub"
+if !File.file?(SSH_PRV_KEY_PATH) || !File.file?(SSH_PUB_KEY_PATH)
+  $stderr.puts <<-EOF
+  You need to create a passwordless SSH key-pair and save them to
+  ~/.ssh/openflight-omnibus-builder.key
+  ~/.ssh/openflight-omnibus-builder.key.pub
+  EOF
+  exit 1
+end
+
 Vagrant.configure("2") do |config|
+
+  # Insert openflight-omnibus-builder key into each node
+  config.ssh.forward_agent = false
+  config.ssh.insert_key = false
+  config.ssh.private_key_path = [
+    "~/.vagrant.d/insecure_private_key",
+    SSH_PRV_KEY_PATH
+  ].compact.select { |k| File.file?(File.expand_path(k)) }
+
+  config.vm.provision 'shell', privileged: false do |s|
+    if !SSH_PRV_KEY_PATH.nil? && !File.file?(SSH_PRV_KEY_PATH) || !File.file?(SSH_PUB_KEY_PATH)
+      s.inline = <<-SHELL
+        echo "No SSH key found. Things are broken, as this should have been caught earlier in the Vagrant process.
+        exit 0
+      SHELL
+    else
+      ssh_prv_key = File.read(SSH_PRV_KEY_PATH)
+      ssh_pub_key = File.readlines(SSH_PUB_KEY_PATH).first.strip
+      s.inline = <<-SHELL
+        if grep -sq "#{ssh_pub_key}" /home/$USER/.ssh/authorized_keys; then
+          echo "SSH keys already provisioned."
+          exit 0;
+        fi
+        echo "Provisioning SSH key."
+        mkdir -p /home/$USER/.ssh/
+        touch /home/$USER/.ssh/authorized_keys
+        echo "#{ssh_pub_key}" >> /home/$USER/.ssh/authorized_keys
+        sed -i -s '/vagrant insecure public key/d' /home/$USER/.ssh/authorized_keys
+        echo #{ssh_pub_key} > /home/$USER/.ssh/id_rsa.pub
+        chmod 644 /home/$USER/.ssh/id_rsa.pub
+        echo "#{ssh_prv_key}" > /home/$USER/.ssh/id_rsa
+        chmod 600 /home/$USER/.ssh/id_rsa
+        exit 0
+      SHELL
+    end
+  end
+
   config.vm.define "centos7", primary: true do |build|
     build.vm.box = "bento/centos-7"
-    build.vm.network "private_network", ip: "172.17.177.1"
+    build.vm.network "private_network", ip: "172.17.177.5"
 
     setup_shared_folders(build)
 
