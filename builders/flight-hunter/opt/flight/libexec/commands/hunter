@@ -1,7 +1,7 @@
 : '
 : NAME: hunter
 : SYNOPSIS: MAC and payload cluster collection tool
-: VERSION: 0.4.1
+: VERSION: 0.5.0-rc1
 : ROOT: true
 : '
 #==============================================================================
