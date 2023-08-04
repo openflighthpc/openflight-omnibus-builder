@@ -82,6 +82,10 @@ Vagrant.configure("2") do |config|
     build.vm.box = "bento/centos-7"
     build.vm.network "private_network", ip: "172.17.177.5"
 
+    build.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+    end
+
     setup_shared_folders(build)
 
     build.vm.provision "shell", path: "vagrant/provision.sh"
@@ -150,6 +154,10 @@ Vagrant.configure("2") do |config|
     #  "sudo dnf -y install kernel-devel"
     #]
 
+    build.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+    end
+
     build.vbguest.auto_update = false
 
     build.vm.provision "shell", path: "vagrant/provision.sh"
@@ -184,6 +192,10 @@ Vagrant.configure("2") do |config|
 
   config.vm.define 'ubuntu2204-test', autostart: false do |build|
     build.vm.box = 'ubuntu/jammy64'
+
+    build.vm.provider "virtualbox" do |v|
+      v.memory = 2048
+    end
 
     config.vbguest.auto_update = false
 
