@@ -42,7 +42,7 @@ build do
   # Moves the project into place
   [
     'Gemfile', 'Gemfile.lock', 'bin', 'data', 'etc', 'lib', 'libexec', 'log', 'var',
-    'LICENSE.txt', 'README.md', 'underware.gemspec'
+    'opt', 'LICENSE.txt', 'README.md', 'underware.gemspec'
   ].each do |file|
     copy file, File.expand_path("#{install_dir}/#{file}/..")
   end
