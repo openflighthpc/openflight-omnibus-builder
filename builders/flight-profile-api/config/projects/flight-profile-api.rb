@@ -35,7 +35,7 @@ VERSION = '1.0.0-rc1'
 override 'flight-profile-api', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 2
+build_iteration 3
 
 dependency 'preparation'
 dependency 'flight-profile-api'
@@ -62,10 +62,10 @@ runtime_dependency 'flight-service'
 runtime_dependency 'flight-service-system-1.0'
 
 if ohai['platform_family'] == 'rhel'
-  runtime_dependency 'flight-profile >= 0.4.0-rc1'
+  runtime_dependency 'flight-profile >= 0.4.0~rc1'
   runtime_dependency 'flight-service >= 1.3.0'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'flight-profile (>= 0.4.0-rc1)'
+  runtime_dependency 'flight-profile (>= 0.4.0~rc1)'
   runtime_dependency 'flight-service (>= 1.3.0)'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
