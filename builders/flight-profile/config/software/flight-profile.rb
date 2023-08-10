@@ -60,7 +60,7 @@ build do
       'type_paths' => [
         '/opt/flight/usr/lib/profile/types'
       ],
-      'shared_secret_path' => '/opt/flight/etc/shared_secret.conf'
+      'shared_secret_path' => '/opt/flight/etc/shared-secret.conf'
     }
     File.write(
       File.expand_path("#{install_dir}/etc/config.yml"),
