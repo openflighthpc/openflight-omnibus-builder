@@ -58,4 +58,16 @@ build do
     '--path vendor'
   ].join(' ')
   command "cd #{install_dir} && /opt/flight/bin/bundle install #{flags}", env: env
+
+  block do
+    require 'yaml'
+    config = {
+      'shared_secret_path' => '/opt/flight/etc/shared-secret.conf'
+    }
+
+    File.write(
+      File.expand_path("#{install_dir}/etc/config.yml"),
+      config.to_yaml
+    )
+  end
 end
