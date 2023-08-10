@@ -28,11 +28,11 @@
 name 'flight-silo'
 maintainer 'Alces Flight Ltd'
 homepage 'https://github.com/openflighthpc/flight-silo'
-friendly_name 'Flight Example'
+friendly_name 'Flight Silo'
 
 install_dir '/opt/flight/opt/silo'
 
-VERSION='0.1.0'
+VERSION='0.2.0'
 
 override 'flight-silo', version: VERSION
 
