@@ -31,7 +31,7 @@ friendly_name 'Flight Hunter'
 
 install_dir '/opt/flight/opt/hunter'
 
-VERSION = '0.5.0-rc2'
+VERSION = '0.5.0-rc3'
 override 'flight-hunter', version: VERSION
 
 build_version VERSION
