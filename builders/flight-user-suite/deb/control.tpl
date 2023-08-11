@@ -12,3 +12,4 @@ Depends: flight-runway (>= 1.1.0), flight-runway (<< 1.2.0),
   flight-job (>= 2.10.0), flight-job (<< 2.11.0),
   flight-howto (>= 1.0.2), flight-howto (<< 1.2.0),
   flight-silo (>= 0.2.0), flight-silo (<< 1.0.0)
+Recommends: flight-plugin-system-starter
