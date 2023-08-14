@@ -16,7 +16,12 @@ priv_key=${flight_ROOT}/etc/console-api/id_rsa
 pub_key="$priv_key".pub
 if [ ! -f "$priv_key" ]; then
   mkdir -p $(dirname "$priv_key")
-  ssh-keygen -b 4096 -t rsa -f "$priv_key" -q -N "" -C "Flight Console API Key"
+
+  if [ -f /etc/redhat-release ] && grep -q 'release 9' /etc/redhat-release; then
+    ssh-keygen -b 521 -t ecdsa -f "$priv_key" -q -N "" -C "Flight Console API Key"
+  else
+    ssh-keygen -b 4096 -t rsa -f "$priv_key" -q -N "" -C "Flight Console API Key"
+  fi
 
   # Ensure any existing public key is removed
   rm -f "$pub_key"
