@@ -11,17 +11,14 @@ else
     chmod 0400 "${env_file}"
 fi
 
-# Generate a private key if required
-priv_key=${flight_ROOT}/etc/console-api/id_rsa
+priv_key=${flight_ROOT}/etc/console-api/flight_console_api_key
 pub_key="$priv_key".pub
+
+# Generate a private key if required
 if [ ! -f "$priv_key" ]; then
   mkdir -p $(dirname "$priv_key")
 
-  if [ -f /etc/redhat-release ] && grep -q 'release 9' /etc/redhat-release; then
-    ssh-keygen -b 521 -t ecdsa -f "$priv_key" -q -N "" -C "Flight Console API Key"
-  else
-    ssh-keygen -b 4096 -t rsa -f "$priv_key" -q -N "" -C "Flight Console API Key"
-  fi
+  ssh-keygen -b 521 -t ecdsa -f "$priv_key" -q -N "" -C "Flight Console API Key"
 
   # Ensure any existing public key is removed
   rm -f "$pub_key"
