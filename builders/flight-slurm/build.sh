@@ -109,11 +109,11 @@ case $VERSION in
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-23-02-3-1-flight1"
-      REL="flight-slurm-23.02.3.flight1"
+      TAG="flight-slurm-23-02-4-1-flight1"
+      REL="flight-slurm-23.02.4.flight1"
     else
-      TAG="slurm-23-02-3-1-flight1"
-      REL="slurm-23.02.3.flight1"
+      TAG="slurm-23-02-4-1-flight1"
+      REL="slurm-23.02.4.flight1"
     fi
     libjwt=true
     pmix=true
@@ -218,11 +218,8 @@ elif [ "$distro" == "rhel8" ]; then
   fi
 
   if [ "$libjwt" ]; then
-    # This is needed for Slurm 20.11.
-    sudo yum install -y check-devel
-    rpmbuild --rebuild ${TARGET}/../dist/libjwt-1.12.1-0.el7.src.rpm
-    sudo yum install -y ~/rpmbuild/RPMS/x86_64/libjwt-devel-1.12.1-0.el8.x86_64.rpm \
-         ~/rpmbuild/RPMS/x86_64/libjwt-1.12.1-0.el8.x86_64.rpm
+    # This is needed for Slurm 20.11+
+    sudo yum install -y libjwt-devel
   fi
 
   if [ "$nvml" ]; then
