@@ -1,7 +1,7 @@
 : '
 : NAME: directory
 : SYNOPSIS: Access to user and group directory services
-: VERSION: 1.1.3
+: VERSION: 1.1.4
 : ROOT: true
 : '
 #==============================================================================

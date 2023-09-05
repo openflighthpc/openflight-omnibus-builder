@@ -31,11 +31,11 @@ friendly_name 'Flight Directory'
 
 install_dir '/opt/flight/opt/directory'
 
-VERSION = '1.1.3'
+VERSION = '1.1.4'
 override 'flight-directory', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 PYTHON_SYSTEM = '3.8'
 override 'sqlite3', version: '3.32.3.0'
