@@ -25,7 +25,7 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 name 'flight-profile'
-default_version '0.1.2'
+default_version '0.0.0'
 
 source git: 'https://github.com/openflighthpc/flight-profile'
 
