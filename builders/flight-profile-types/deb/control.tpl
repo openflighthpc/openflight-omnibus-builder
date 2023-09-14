@@ -5,4 +5,4 @@ Priority: optional
 Architecture: all
 Maintainer: OpenFlightHPC Project <flight@openflighthpc.org>
 Description: A collection of cluster types for use with Flight Profile
-Depends: flight-profile (>= 0.2.0)
+Depends: flight-profile (>= 1.0.0-rc1)
