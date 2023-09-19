@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.11.3'
+VERSION = '1.11.5'
 override 'flight-desktop', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
@@ -92,6 +92,8 @@ end
   extra_package_file f
 end
 extra_package_file howto_relative
+
+config_file '/opt/flight/opt/desktop/etc/config.yml'
 
 if ohai['platform_family'] == 'rhel'
   rhel_rel = ohai['platform_version'].split('.').first.to_i
