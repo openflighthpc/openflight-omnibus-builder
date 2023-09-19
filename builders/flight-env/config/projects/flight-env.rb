@@ -35,7 +35,7 @@ VERSION = '1.5.2'
 override 'flight-env', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-env'
@@ -118,6 +118,8 @@ end
   extra_package_file f
 end
 extra_package_file howto_relative
+
+config_file "/opt/flight/opt/env/etc/config.yml"
 
 package :rpm do
   vendor 'Alces Flight Ltd'
