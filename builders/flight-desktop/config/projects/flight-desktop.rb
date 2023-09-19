@@ -93,6 +93,8 @@ end
 end
 extra_package_file howto_relative
 
+config_file '/opt/flight/opt/desktop/etc/config.yml'
+
 if ohai['platform_family'] == 'rhel'
   rhel_rel = ohai['platform_version'].split('.').first.to_i
   if rhel_rel == 7
