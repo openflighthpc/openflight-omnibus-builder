@@ -83,7 +83,7 @@ if ohai['platform_family'] == 'rhel'
   end
 
   rhel_rel = ohai['platform_version'].split('.').first.to_i
-  if rhel_rel == 8
+  if rhel_rel == 8 || rhel_rel == 9
     # lua-posix, lua-devel, python3 required by EasyBuild
     runtime_dependency 'lua-posix'
     runtime_dependency 'lua-devel'
