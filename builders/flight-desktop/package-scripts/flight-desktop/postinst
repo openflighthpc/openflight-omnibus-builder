@@ -32,6 +32,7 @@ if [ -f /etc/redhat-release ]; then
 Optional Dependencies for Flight Desktop
 ========================================
 For better desktop session passwords, please install 'apg' (requires OpenFlightHPC).
+For desktop previews in Flight Desktop Webapp, please install 'ImageMagick' (requires EPEL).
 
 EOF
   else
@@ -40,6 +41,7 @@ EOF
 Optional Dependencies for Flight Desktop
 ========================================
 For better desktop session passwords, please install 'apg' (requires EPEL).
+For desktop previews in Flight Desktop Webapp, please install 'ImageMagick' (requires EPEL).
 
 EOF
   fi
@@ -49,6 +51,7 @@ else
 Optional Dependencies for Flight Desktop
 ========================================
 For better desktop session passwords, please install 'apg'.
+For desktop previews in Flight Desktop Webapp, please install 'imagemagick'.
 
 EOF
 fi

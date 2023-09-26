@@ -35,7 +35,7 @@ VERSION = '1.11.6'
 override 'flight-desktop', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-desktop'
@@ -103,7 +103,14 @@ if ohai['platform_family'] == 'rhel'
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
       # provides are prefixed with `:`
-      priority "flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+      priority "apg ImageMagick flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+    end
+  elsif rhel_rel == 9
+    package :rpm do
+      vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
+      priority "apg ImageMagick flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   else
     package :rpm do
@@ -126,5 +133,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section ":ImageMagick :apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+  section ":apg imagemagick flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
 end
