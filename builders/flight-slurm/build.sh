@@ -150,7 +150,9 @@ fi
 
 # Install dependencies
 sudo yum groupinstall -y "Development Tools"
-sudo yum install -y epel-release
+if ! yum repolist | grep -q epel; then
+  sudo yum install -y epel-release
+fi
 if [ "$distro" == "rhel7" ]; then
   sudo yum install -y munge-devel munge-libs pam-devel \
        readline-devel perl-devel lua-devel hwloc-devel \
