@@ -109,11 +109,11 @@ case $VERSION in
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-23-02-6-1-flight1"
-      REL="flight-slurm-23.02.6.flight1"
+      TAG="flight-slurm-23-02-6-1-flight2"
+      REL="flight-slurm-23.02.6.flight2"
     else
-      TAG="slurm-23-02-6-1-flight1"
-      REL="slurm-23.02.6.flight1"
+      TAG="slurm-23-02-6-1-flight3"
+      REL="slurm-23.02.6.flight3"
     fi
     libjwt=true
     pmix=true
@@ -170,23 +170,24 @@ if [ "$distro" == "rhel7" ]; then
       build_libjwt=true
     fi
   fi
-  if [ "$pmix" ]; then
-    if ! rpm -qa pmix-devel | grep -q '^pmix-devel-4.1.2'; then
-      # This is needed for Slurm 22.05+
-      # Build deps:
-      sudo yum install -y epel-rpm-macros pandoc
-      # Build it:
-      rpmbuild --rebuild ${TARGET}/../dist/pmix-4.1.2-2.fc37.src.rpm
-      sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.1.2-2.el7.x86_64.rpm \
-           ~/rpmbuild/RPMS/x86_64/pmix-devel-4.1.2-2.el7.x86_64.rpm \
-           ~/rpmbuild/RPMS/x86_64/pmix-tools-4.1.2-2.el7.x86_64.rpm
-      built_pmix=true
+  if ! rpm -qa pmix | grep -q '^pmix-4.2.6'; then
+    # Build deps:
+    sudo yum install -y gcc make libevent-devel hwloc-devel python3-devel zlib-devel
+    if [ ! -f pmix-4.2.6-1.src.rpm ]; then
+      wget https://github.com/openpmix/openpmix/releases/download/v4.2.6/pmix-4.2.6-1.src.rpm
     fi
-  else
-    sudo yum install -y pmix-devel
+    rpmbuild --rebuild pmix-4.2.6-1.src.rpm
+    if rpm -qa pmix-devel | grep -q '^pmix-devel'; then
+      sudo yum remove -y pmix-devel
+    fi
+    if rpm -qa pmix-tools | grep -q '^pmix-tools'; then
+      sudo yum remove -y pmix-tools
+    fi
+    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.2.6-1.el7.x86_64.rpm
+    built_pmix=true
   fi
   if [ "$nvml" ]; then
-    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-nvml-devel-11-7-11.7.50-1.x86_64.rpm
+    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-nvml-devel-12-2-12.2.140-1.x86_64.rpm
   fi
 elif [ "$distro" == "rhel8" ]; then
   sudo yum config-manager --set-enabled powertools
@@ -196,16 +197,22 @@ elif [ "$distro" == "rhel8" ]; then
        numactl-devel hdf5-devel lz4-devel freeipmi-devel \
        rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
        man2html python3 python2 $BUILD_DEPS
-  sudo yum install -y pmix-devel
-  if ! rpm -qa pmix-devel | grep -q '^pmix-devel'; then
-    if [ ! -f pmix-2.1.1-1.el8.src.rpm ]; then
-      wget http://vault.centos.org/8.1.1911/AppStream/Source/SPackages/pmix-2.1.1-1.el8.src.rpm
+  if ! rpm -qa pmix | grep -q '^pmix-4.2.6'; then
+    # Build deps:
+    sudo yum install -y gcc make libevent-devel hwloc-devel python3-devel zlib-devel
+    if [ ! -f pmix-4.2.6-1.src.rpm ]; then
+      wget https://github.com/openpmix/openpmix/releases/download/v4.2.6/pmix-4.2.6-1.src.rpm
     fi
-    sudo yum install -y environment-modules libevent-devel
-    rpmbuild --rebuild pmix-2.1.1-1.el8.src.rpm
-    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-devel-2.1.1-1.el8.x86_64.rpm
+    rpmbuild --rebuild pmix-4.2.6-1.src.rpm
+    if rpm -qa pmix-devel | grep -q '^pmix-devel'; then
+      sudo yum remove -y pmix-devel
+    fi
+    if rpm -qa pmix-tools | grep -q '^pmix-tools'; then
+      sudo yum remove -y pmix-tools
+    fi
+    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.2.6-1.el8.x86_64.rpm
+    built_pmix=true
   fi
-
   if [ "$libssh2" ]; then
     # This is needed for Slurm 18.08 or 17.11.
     if ! rpm -qa libssh2-devel | grep -q '^libssh2-devel'; then
@@ -223,7 +230,7 @@ elif [ "$distro" == "rhel8" ]; then
   fi
 
   if [ "$nvml" ]; then
-    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-nvml-devel-11-7-11.7.50-1.x86_64.rpm
+    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-nvml-devel-12-2-12.2.140-1.x86_64.rpm
   fi
 elif [ "$distro" == "rhel9" ]; then
   sudo yum config-manager --set-enabled crb
@@ -233,13 +240,21 @@ elif [ "$distro" == "rhel9" ]; then
        rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
        man2html python3 dbus-devel $BUILD_DEPS
   sudo yum install -y pmix-devel
-  if ! rpm -qa pmix-devel | grep -q '^pmix-devel'; then
-    if [ ! -f pmix-2.1.1-1.el8.src.rpm ]; then
-      wget http://vault.centos.org/8.1.1911/AppStream/Source/SPackages/pmix-2.1.1-1.el8.src.rpm
+  if ! rpm -qa pmix | grep -q '^pmix-4.2.6'; then
+    # Build deps:
+    sudo yum install -y gcc make libevent-devel hwloc-devel python3-devel zlib-devel
+    if [ ! -f pmix-4.2.6-1.src.rpm ]; then
+      wget https://github.com/openpmix/openpmix/releases/download/v4.2.6/pmix-4.2.6-1.src.rpm
     fi
-    sudo yum install -y environment-modules libevent-devel
-    rpmbuild --rebuild pmix-2.1.1-1.el8.src.rpm
-    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-devel-2.1.1-1.el8.x86_64.rpm
+    rpmbuild --rebuild pmix-4.2.6-1.src.rpm
+    if rpm -qa pmix-devel | grep -q '^pmix-devel'; then
+      sudo yum remove -y pmix-devel
+    fi
+    if rpm -qa pmix-tools | grep -q '^pmix-tools'; then
+      sudo yum remove -y pmix-tools
+    fi
+    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.2.6-1.el9.x86_64.rpm
+    built_pmix=true
   fi
 
  # if [ "$libssh2" ]; then
@@ -262,7 +277,7 @@ elif [ "$distro" == "rhel9" ]; then
  # fi
 
   if [ "$nvml" ]; then
-    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-nvml-devel-11-7-11.7.91-1.x86_64.rpm
+    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-nvml-devel-12-2-12.2.140-1.x86_64.rpm
   fi
 fi
 
@@ -335,8 +350,5 @@ if [ "$build_libjwt" ]; then
 fi
 
 if [ "$built_pmix" ]; then
-  # This is needed for Slurm 22.05.
-  if [ "$distro" == "rhel7" ]; then
-    mv ~/rpmbuild/RPMS/x86_64/pmix-*.rpm "$TARGET"
-  fi
+  mv ~/rpmbuild/RPMS/x86_64/pmix-*.rpm "$TARGET"
 fi
