@@ -55,6 +55,8 @@ build do
   # Builds the virtual env
   command(<<-CMD, env: env)
     cd #{install_dir}
+    pip install pipenv
+    pip uninstall click_repl
     pipenv install --python /opt/flight/opt/python/bin/python --deploy
   CMD
 
