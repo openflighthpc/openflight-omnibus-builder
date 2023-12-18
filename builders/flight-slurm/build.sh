@@ -20,7 +20,8 @@ Specify <version> to build:
   20.11
   21.08
   22.05
-  23.02 (latest)
+  23.02
+  23.11 (latest)
 EOF
   exit 1
 fi
@@ -66,7 +67,7 @@ case $VERSION in
     fi
     ;;
   20.11)
-    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-12.3")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
       TAG="flight-slurm-20-11-7-1-flight1"
@@ -79,7 +80,7 @@ case $VERSION in
     nvml=true
     ;;
   21.08)
-    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-12.3")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
       TAG="flight-slurm-21-08-8-1-flight1"
@@ -92,7 +93,7 @@ case $VERSION in
     nvml=true
     ;;
   22.05)
-    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-12.3")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
       TAG="flight-slurm-22-05-10-1-flight1"
@@ -105,15 +106,29 @@ case $VERSION in
     pmix=true
     nvml=true
     ;;
-  23.02|latest)
-    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-11.7")
+  23.02)
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-12.3")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-23-02-6-1-flight2"
-      REL="flight-slurm-23.02.6.flight2"
+      TAG="flight-slurm-23-02-7-1-flight1"
+      REL="flight-slurm-23.02.7.flight1"
     else
-      TAG="slurm-23-02-6-1-flight3"
-      REL="slurm-23.02.6.flight3"
+      TAG="slurm-23-02-7-1-flight1"
+      REL="slurm-23.02.7.flight1"
+    fi
+    libjwt=true
+    pmix=true
+    nvml=true
+    ;;
+  23.11|latest)
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-12.3")
+    BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-23-11-1-1-flight1"
+      REL="flight-slurm-23.11.1.flight1"
+    else
+      TAG="slurm-23-11-1-1-flight1"
+      REL="slurm-23.11.1.flight1"
     fi
     libjwt=true
     pmix=true
@@ -172,24 +187,24 @@ if [ "$distro" == "rhel7" ]; then
       build_libjwt=true
     fi
   fi
-  if ! rpm -qa pmix | grep -q '^pmix-4.2.6'; then
+  if ! rpm -qa pmix | grep -q '^pmix-4.2.7'; then
     # Build deps:
     sudo yum install -y gcc make libevent-devel hwloc-devel python3-devel zlib-devel
-    if [ ! -f pmix-4.2.6-1.src.rpm ]; then
-      wget https://github.com/openpmix/openpmix/releases/download/v4.2.6/pmix-4.2.6-1.src.rpm
+    if [ ! -f pmix-4.2.7-1.src.rpm ]; then
+      wget https://github.com/openpmix/openpmix/releases/download/v4.2.7/pmix-4.2.7-1.src.rpm
     fi
-    rpmbuild --rebuild pmix-4.2.6-1.src.rpm
+    rpmbuild --rebuild pmix-4.2.7-1.src.rpm
     if rpm -qa pmix-devel | grep -q '^pmix-devel'; then
       sudo yum remove -y pmix-devel
     fi
     if rpm -qa pmix-tools | grep -q '^pmix-tools'; then
       sudo yum remove -y pmix-tools
     fi
-    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.2.6-1.el7.x86_64.rpm
+    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.2.7-1.el7.x86_64.rpm
     built_pmix=true
   fi
   if [ "$nvml" ]; then
-    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-nvml-devel-12-2-12.2.140-1.x86_64.rpm
+    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-nvml-devel-12-3-12.3.101-1.x86_64.rpm
   fi
 elif [ "$distro" == "rhel8" ]; then
   sudo yum config-manager --set-enabled powertools
@@ -199,20 +214,20 @@ elif [ "$distro" == "rhel8" ]; then
        numactl-devel hdf5-devel lz4-devel freeipmi-devel \
        rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
        man2html python3 python2 $BUILD_DEPS
-  if ! rpm -qa pmix | grep -q '^pmix-4.2.6'; then
+  if ! rpm -qa pmix | grep -q '^pmix-4.2.7'; then
     # Build deps:
     sudo yum install -y gcc make libevent-devel hwloc-devel python3-devel zlib-devel
-    if [ ! -f pmix-4.2.6-1.src.rpm ]; then
-      wget https://github.com/openpmix/openpmix/releases/download/v4.2.6/pmix-4.2.6-1.src.rpm
+    if [ ! -f pmix-4.2.7-1.src.rpm ]; then
+      wget https://github.com/openpmix/openpmix/releases/download/v4.2.7/pmix-4.2.7-1.src.rpm
     fi
-    rpmbuild --rebuild pmix-4.2.6-1.src.rpm
+    rpmbuild --rebuild pmix-4.2.7-1.src.rpm
     if rpm -qa pmix-devel | grep -q '^pmix-devel'; then
       sudo yum remove -y pmix-devel
     fi
     if rpm -qa pmix-tools | grep -q '^pmix-tools'; then
       sudo yum remove -y pmix-tools
     fi
-    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.2.6-1.el8.x86_64.rpm
+    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.2.7-1.el8.x86_64.rpm
     built_pmix=true
   fi
   if [ "$libssh2" ]; then
@@ -232,7 +247,7 @@ elif [ "$distro" == "rhel8" ]; then
   fi
 
   if [ "$nvml" ]; then
-    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-nvml-devel-12-2-12.2.140-1.x86_64.rpm
+    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-nvml-devel-12-3-12.3.101-1.x86_64.rpm
   fi
 elif [ "$distro" == "rhel9" ]; then
   sudo yum config-manager --set-enabled crb
@@ -242,20 +257,20 @@ elif [ "$distro" == "rhel9" ]; then
        rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
        man2html python3 dbus-devel $BUILD_DEPS
   sudo yum install -y pmix-devel
-  if ! rpm -qa pmix | grep -q '^pmix-4.2.6'; then
+  if ! rpm -qa pmix | grep -q '^pmix-4.2.7'; then
     # Build deps:
     sudo yum install -y gcc make libevent-devel hwloc-devel python3-devel zlib-devel
-    if [ ! -f pmix-4.2.6-1.src.rpm ]; then
-      wget https://github.com/openpmix/openpmix/releases/download/v4.2.6/pmix-4.2.6-1.src.rpm
+    if [ ! -f pmix-4.2.7-1.src.rpm ]; then
+      wget https://github.com/openpmix/openpmix/releases/download/v4.2.7/pmix-4.2.7-1.src.rpm
     fi
-    rpmbuild --rebuild pmix-4.2.6-1.src.rpm
+    rpmbuild --rebuild pmix-4.2.7-1.src.rpm
     if rpm -qa pmix-devel | grep -q '^pmix-devel'; then
       sudo yum remove -y pmix-devel
     fi
     if rpm -qa pmix-tools | grep -q '^pmix-tools'; then
       sudo yum remove -y pmix-tools
     fi
-    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.2.6-1.el9.x86_64.rpm
+    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-4.2.7-1.el9.x86_64.rpm
     built_pmix=true
   fi
 
@@ -279,7 +294,7 @@ elif [ "$distro" == "rhel9" ]; then
  # fi
 
   if [ "$nvml" ]; then
-    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-nvml-devel-12-2-12.2.140-1.x86_64.rpm
+    sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel9/x86_64/cuda-nvml-devel-12-3-12.3.101-1.x86_64.rpm
   fi
 fi
 
