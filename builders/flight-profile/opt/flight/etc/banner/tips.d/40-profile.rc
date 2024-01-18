@@ -1,0 +1,9 @@
+################################################################################
+##
+## Flight Profile
+## Copyright (c) 2024-present Alces Flight Ltd
+##
+################################################################################
+flight_TIP_command="flight profile"
+flight_TIP_synopsis="configure and apply identities to nodes"
+flight_TIP_root="true"
