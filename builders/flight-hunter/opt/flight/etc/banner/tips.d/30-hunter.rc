@@ -1,0 +1,9 @@
+################################################################################
+##
+## Flight Desktop
+## Copyright (c) 2024-present Alces Flight Ltd
+##
+################################################################################
+flight_TIP_command="flight hunter"
+flight_TIP_synopsis="only show if have comand"
+flight_TIP_root="true"
