@@ -1,9 +1,9 @@
 ################################################################################
 ##
-## Flight Desktop
+## Flight Hunter
 ## Copyright (c) 2024-present Alces Flight Ltd
 ##
 ################################################################################
 flight_TIP_command="flight hunter"
-flight_TIP_synopsis="only show if have comand"
+flight_TIP_synopsis="label and manage cluster node inventory"
 flight_TIP_root="true"
