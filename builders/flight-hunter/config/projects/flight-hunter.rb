@@ -35,7 +35,7 @@ VERSION = '0.7.0-rc1'
 override 'flight-hunter', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-hunter'
