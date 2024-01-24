@@ -31,7 +31,7 @@ friendly_name 'Flight gather'
 
 install_dir '/opt/flight/opt/gather'
 
-VERSION = '0.0.8'
+VERSION = '0.1.1-rc1'
 override 'flight-gather', version: VERSION
 
 build_version VERSION
@@ -49,6 +49,12 @@ description 'System information collection tool'
 exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
+
+path = File.expand_path('../../opt/flight/libexec/commands/gather', __dir__)
+original = File.read(path)
+updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
+                  .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
+                  File.write(path, updated) unless original == updated
 
 runtime_dependency 'flight-runway'
 runtime_dependency 'flight-ruby-system-2.0'
