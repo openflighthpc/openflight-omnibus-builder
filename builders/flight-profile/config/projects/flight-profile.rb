@@ -69,10 +69,7 @@ updated = original.sub(/^: VERSION: [[:graph:]]+$/, ": VERSION: #{VERSION}")
                   .sub(/^: SYNOPSIS:.*$/, ": SYNOPSIS: #{description}")
                   File.write(path, updated) unless original == updated
 
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
+extra_package_file 'opt/flight/libexec/commands/profile'
 
 config_file '/opt/flight/opt/profile/etc/config.yml'
 
