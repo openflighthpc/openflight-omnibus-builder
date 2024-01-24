@@ -13,7 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildArch: noarch
 Requires: flight-profile-system-1.0
-Requires: flight-profile >= 0.2.0
+Requires: flight-profile >= 1.1.0~rc1
 
 %description
 A collection of cluster types for use with Flight Profile
