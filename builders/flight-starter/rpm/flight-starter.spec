@@ -48,6 +48,7 @@ install -p -m 644 $RPM_BUILD_ROOT/etc/xdg/flight.cshrc $RPM_BUILD_ROOT/opt/fligh
 %config(noreplace) /opt/flight/etc/setup-sshkey.rc
 /opt/flight/etc/flight-config-map.d/*
 /opt/flight/etc/profile.d/*
+/opt/flight/etc/settings.d/*
 /opt/flight/etc/setup.sh
 /opt/flight/etc/setup.csh
 /opt/flight/libexec/commands/*
