@@ -3,9 +3,9 @@ cd "$(dirname "$0")"
 d="$(pwd)"
 mkdir -p pkg
 
-NOW=2023.1
-NEXT=2023.2
-VERSION=${NOW}.1
+NOW=2024.1
+NEXT=2024.2
+VERSION=${NOW}.0~rc1
 TAG=$(echo "$VERSION" | sed "s/~/-/g")
 REL=1
 
@@ -85,14 +85,19 @@ elif [ -f /etc/lsb-release ]; then
   # https://github.com/openflighthpc/openflight-omnibus-builder/issues/29
   mkdir -p flight-plugin-system-starter_${VERSION}-${REL}/etc/csh/login.d
   mv flight-plugin-system-starter_${VERSION}-${REL}/etc/profile.d/zz-flight-starter.csh \
+     flight-plugin-system-starter_${VERSION}-${REL}/etc/settings.d/tips.rc \
      flight-plugin-system-starter_${VERSION}-${REL}/etc/csh/login.d
 
   # flight-plugin-manual-starter
   mkdir -p flight-plugin-manual-starter_${VERSION}-${REL}/opt/flight/etc/plugin/xdg
   mkdir -p flight-plugin-manual-starter_${VERSION}-${REL}/opt/flight/etc/plugin/profile.d
+  mkdir -p flight-plugin-manual-starter_${VERSION}-${REL}/opt/flight/etc/plugin/settings.d
   mkdir -p flight-plugin-manual-starter_${VERSION}-${REL}/opt/flight/etc/plugin/csh/login.d
   cp -v flight-plugin-system-starter_${VERSION}-${REL}/etc/profile.d/zz-flight-starter.sh \
      flight-plugin-manual-starter_${VERSION}-${REL}/opt/flight/etc/plugin/profile.d/flight-starter.sh
+  cp -v flight-plugin-system-starter_${VERSION}-${REL}/etc/settings.d/tips.rc \
+     flight-plugin-manual-starter_${VERSION}-${REL}/opt/flight/etc/plugin/settings.d/tips.rc
+
   cp -v flight-plugin-system-starter_${VERSION}-${REL}/etc/csh/login.d/zz-flight-starter.csh \
      flight-plugin-manual-starter_${VERSION}-${REL}/opt/flight/etc/plugin/csh/login.d/flight-starter.csh
   cp -v flight-plugin-system-starter_${VERSION}-${REL}/etc/xdg/* \
