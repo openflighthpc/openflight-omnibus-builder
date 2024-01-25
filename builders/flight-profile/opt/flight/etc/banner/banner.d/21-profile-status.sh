@@ -52,7 +52,7 @@
   finished="$(grep -R exit_status ${flight_ROOT}/opt/profile/var/inventory/ |awk '{print $2}' |grep -v '^$')"
   completed_nodes="$(echo "$finished" |grep '^0$' |grep -v '^$' -c )"
   failed_nodes="$(echo "$finished" |grep -v '^0$' |grep -v '^$' -c )"
-  applying_nodes="$(grep -Rc 'last_action: apply' ${flight_ROOT}/opt/profile/var/inventory/ || echo -e '0')"
+  applying_nodes="$(grep -R 'last_action: apply' ${flight_ROOT}/opt/profile/var/inventory/ 2>/dev/null |wc -l)"
   printf "  ${bold}${white}${bggreen}Completed:${clr}${bold}${white}${clr}\
     $completed_nodes\
     ${bold}${white}${bgorange}Applying:${clr}${bold}${white}${clr}\
