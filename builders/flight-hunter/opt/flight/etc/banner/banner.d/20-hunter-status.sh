@@ -50,8 +50,8 @@
 
   # Hunter info
   printf "  ${bold}${white}${bggreen}Parsed:${clr}${bold}${white}${clr}\
-    $(ls ${flight_ROOT}/opt/hunter/var/parsed/ | wc -l)\
+    $(ls ${flight_ROOT}/opt/hunter/var/parsed/ 2>/dev/null | wc -l)\
     ${bold}${white}${bgorange}Buffer:${clr}${bold}${white}${clr}\
-    $(ls ${flight_ROOT}/opt/hunter/var/buffer/ | wc -l)\n"
+    $(ls ${flight_ROOT}/opt/hunter/var/buffer/ 2>/dev/null | wc -l)\n"
   echo ""
 )
