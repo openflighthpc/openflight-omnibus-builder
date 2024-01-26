@@ -32,7 +32,7 @@ friendly_name 'Flight Silo'
 
 install_dir '/opt/flight/opt/silo'
 
-VERSION='0.3.0-rc1'
+VERSION='0.3.0-rc2'
 
 override 'flight-silo', version: VERSION
 
