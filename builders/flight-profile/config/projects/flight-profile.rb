@@ -31,11 +31,11 @@ friendly_name 'Flight Profile'
 
 install_dir '/opt/flight/opt/profile'
 
-VERSION = '1.1.0-rc1'
+VERSION = '1.1.0-rc2'
 override 'flight-profile', version: VERSION
 
 build_version VERSION
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-profile'
