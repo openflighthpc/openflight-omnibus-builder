@@ -31,11 +31,11 @@ friendly_name 'Flight Hunter'
 
 install_dir '/opt/flight/opt/hunter'
 
-VERSION = '0.7.0-rc1'
+VERSION = '0.7.0'
 override 'flight-hunter', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-hunter'
