@@ -31,7 +31,7 @@ friendly_name 'Flight Profile'
 
 install_dir '/opt/flight/opt/profile'
 
-VERSION = '1.1.0-rc2'
+VERSION = '1.1.0'
 override 'flight-profile', version: VERSION
 
 build_version VERSION
@@ -54,10 +54,10 @@ PROFILE_SYSTEM = '1.0'
 
 case ohai['platform_family']
 when 'rhel'
-  runtime_dependency 'flight-profile-types >= 1.1.0~rc1'
+  runtime_dependency 'flight-profile-types >= 1.1.0'
   runtime_dependency 'ncurses'
 when 'debian'
-  runtime_dependency 'flight-profile-types (>= 1.1.0~rc1)'
+  runtime_dependency 'flight-profile-types (>= 1.1.0)'
   runtime_dependency 'libncurses5-dev'
 end
 runtime_dependency 'flight-runway'
