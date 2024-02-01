@@ -31,8 +31,8 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.7.0'
-CERT_VERSION = '0.6.0'
+VERSION = '1.7.1'
+CERT_VERSION = '0.6.1'
 
 override 'flight-www', version: ENV.fetch('ALPHA', VERSION)
 override 'flight-cert', version: ENV.fetch('ALPHA_cert', CERT_VERSION)
@@ -91,7 +91,7 @@ config_file '/opt/flight/etc/cert.yaml'
 # Update the version numbering in files
 File.expand_path('../../opt/flight/libexec/commands/www', __dir__).tap do |path|
   content = File.read path
-  content.sub!(/: VERSION:.*/, ": VERSION: #{CERT_VERSION}")
+  content.sub!(/: VERSION:.*/, ": VERSION: #{VERSION}")
   File.write path, content
 end
 
