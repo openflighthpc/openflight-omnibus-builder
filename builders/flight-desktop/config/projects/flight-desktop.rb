@@ -31,11 +31,11 @@ friendly_name 'Flight Desktop'
 
 install_dir '/opt/flight/opt/desktop'
 
-VERSION = '1.11.3'
+VERSION = '1.11.5'
 override 'flight-desktop', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-desktop'
@@ -93,6 +93,8 @@ end
 end
 extra_package_file howto_relative
 
+config_file '/opt/flight/opt/desktop/etc/config.yml'
+
 if ohai['platform_family'] == 'rhel'
   rhel_rel = ohai['platform_version'].split('.').first.to_i
   if rhel_rel == 8
@@ -101,7 +103,14 @@ if ohai['platform_family'] == 'rhel'
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
       # provides are prefixed with `:`
-      priority "apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+      priority "apg ImageMagick flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+    end
+  elsif rhel_rel == 9
+    package :rpm do
+      vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
+      priority "apg ImageMagick flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
   else
     package :rpm do
@@ -125,5 +134,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section ":apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+  section ":apg imagemagick flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
 end

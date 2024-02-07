@@ -31,7 +31,7 @@ friendly_name 'Flight Desktop REST API'
 
 install_dir '/opt/flight/opt/desktop-restapi'
 
-VERSION = '2.7.2'
+VERSION = '2.7.3'
 override 'flight-desktop-restapi', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)

@@ -35,7 +35,7 @@ VERSION = '1.5.2'
 override 'flight-env', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-env'
@@ -83,7 +83,7 @@ if ohai['platform_family'] == 'rhel'
   end
 
   rhel_rel = ohai['platform_version'].split('.').first.to_i
-  if rhel_rel == 8
+  if rhel_rel == 8 || rhel_rel == 9
     # lua-posix, lua-devel, python3 required by EasyBuild
     runtime_dependency 'lua-posix'
     runtime_dependency 'lua-devel'
@@ -118,6 +118,8 @@ end
   extra_package_file f
 end
 extra_package_file howto_relative
+
+config_file "/opt/flight/opt/env/etc/config.yml"
 
 package :rpm do
   vendor 'Alces Flight Ltd'
