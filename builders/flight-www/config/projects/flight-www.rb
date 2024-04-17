@@ -31,13 +31,13 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '1.7.1'
+VERSION = '2.0.0'
 CERT_VERSION = '0.6.1'
 
 override 'flight-www', version: ENV.fetch('ALPHA', VERSION)
 override 'flight-cert', version: ENV.fetch('ALPHA_cert', CERT_VERSION)
 override :nginx, version: '1.14.2'
-override 'flight-landing-page', version: '1.7.0'
+override 'flight-landing-page', version: '2.0.0'
 
 if ENV.key?('ALPHA') || ENV.key?('ALPHA_cert')
   build_version VERSION.sub(/(-\w+)?\Z/, '-alpha')
@@ -70,7 +70,8 @@ WWW_SYSTEMS = (0..1).map { |i| ":flight-www-system-1.#{i}" }.join(' ')
 # * 1.1 added config-packs.
 # * 1.2 added support for consistent chrome/branding.
 # * 1.3 added support for bookmarks
-LANDING_PAGE_SYSTEMS = (0..3).map { |i| ":flight-landing-page-system-1.#{i}" }.join(' ')
+# * 2.0 marks the web suite overhaul
+LANDING_PAGE_SYSTEMS = (0..0).map { |i| ":flight-landing-page-system-2.#{i}" }.join(' ')
 
 runtime_dependency 'flight-plugin-cron'
 runtime_dependency 'flight-runway'

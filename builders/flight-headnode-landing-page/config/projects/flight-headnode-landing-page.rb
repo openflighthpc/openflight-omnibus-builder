@@ -65,8 +65,8 @@ exclude '**/.git'
 exclude '**/.gitkeep'
 exclude '**/bundler/git'
 
-runtime_dependency 'flight-landing-page-system-1.2'
-BRANDING_SYSTEMS = (0..2).map { |i| ":flight-landing-page-branding-system-1.#{i}" }.join(' ')
+runtime_dependency 'flight-landing-page-system-2.0'
+BRANDING_SYSTEMS = (0..0).map { |i| ":flight-landing-page-branding-system-2.#{i}" }.join(' ')
 
 package :rpm do
   vendor 'Alces Flight Ltd'
