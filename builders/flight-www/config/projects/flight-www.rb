@@ -37,14 +37,14 @@ CERT_VERSION = '0.6.1'
 override 'flight-www', version: ENV.fetch('ALPHA', VERSION)
 override 'flight-cert', version: ENV.fetch('ALPHA_cert', CERT_VERSION)
 override :nginx, version: '1.14.2'
-override 'flight-landing-page', version: '2.0.0'
+override 'flight-landing-page', version: '2.0.1'
 
 if ENV.key?('ALPHA') || ENV.key?('ALPHA_cert')
   build_version VERSION.sub(/(-\w+)?\Z/, '-alpha')
 else
   build_version VERSION
 end
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'enforce-flight-runway'

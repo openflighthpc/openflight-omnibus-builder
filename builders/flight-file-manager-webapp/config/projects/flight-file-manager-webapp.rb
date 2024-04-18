@@ -35,7 +35,7 @@ VERSION = '2.0.0'
 override 'flight-file-manager-webapp', version: VERSION
 
 build_version VERSION
-build_iteration 1
+build_iteration 2
 
 dependency 'preparation'
 dependency 'flight-file-manager-webapp'
