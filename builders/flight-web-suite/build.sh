@@ -31,7 +31,7 @@ d="$(pwd)"
 mkdir -p pkg
 
 NAME=flight-web-suite
-VERSION=2022.4
+VERSION=2024.1
 REL=1
 
 if [ -f /etc/redhat-release ]; then
