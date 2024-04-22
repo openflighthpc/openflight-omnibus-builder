@@ -28,8 +28,11 @@
 Description=OpenFlightHPC services
 After=syslog.target
 After=network-online.target
+After=cloud-final.service
 
 [Service]
+# Workaround for https://bugs.ruby-lang.org/issues/12695
+Environment="HOME=/"
 Type=oneshot
 SyslogIdentifier=flight-service
 RemainAfterExit=true
@@ -41,3 +44,4 @@ ExecStop=/opt/flight/bin/flight service stack stop
 
 [Install]
 WantedBy=multi-user.target
+WantedBy=cloud-init.target
