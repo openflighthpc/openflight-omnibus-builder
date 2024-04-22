@@ -41,6 +41,7 @@ build_iteration 1
 dependency 'preparation'
 dependency 'flight-file-manager-api'
 dependency 'flight-file-manager-backend'
+dependency 'flight-file-manager-backend-proxy'
 dependency 'update_puma_scripts'
 dependency 'update_web_suite_package_scripts'
 dependency 'version-manifest'
