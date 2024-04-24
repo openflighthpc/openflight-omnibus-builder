@@ -9,8 +9,8 @@ fi
 
 # Warn about obsolete reverse proxy configuration
 conf_file=${flight_ROOT}/etc/www/server-https.d/file-manager-api.conf
-printf -v search_criterion "rewrite ^/files/backend/(.*)$ /files/backend/$1 break;"
-if [ -f "${conf_file}" ] && grep -vq "$search_criterion" "$conf_file" ; then
+printf -v search_criterion "%q" "rewrite ^/files/backend/(.*)$ /files/backend/\$1 break;"
+if [ -f "${conf_file}" ] && ! grep -Eq "$search_criterion" "$conf_file" ; then
   # The nginx file is missing the configuration for the custom reverse proxy.
   
   cat <<EOF 1>&2
@@ -36,6 +36,8 @@ to:
     proxy_pass http://127.0.0.1:925/;
 
 EOF
+
+fi
 
 # Warn about obsolete configuration.
 env_file=${flight_ROOT}/etc/service/env/file-manager-api

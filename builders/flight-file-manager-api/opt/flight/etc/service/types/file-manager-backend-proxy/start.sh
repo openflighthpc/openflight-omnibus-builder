@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2024-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,36 +25,23 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-file-manager-backend-proxy'
-default_version '0.0.0'
 
-source git: 'https://github.com/openflighthpc/flight-file-manager'
+# Have subshells inherit `set -x` for better debugging.
+export SHELLOPTS
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-skip_transitive_dependency_licensing true
+set -e
 
-build do
-  env = with_standard_compiler_flags(with_embedded_path)
+# Ensure flight_ROOT is set
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
 
-  block do
-    FileUtils.mkdir_p File.join(install_dir, 'backend-proxy')
-  end
+# Required to correctly handle output parsing.
+if [ -f /etc/locale.conf ]; then
+  . /etc/locale.conf
+fi
+export LANG=${LANG:-en_US.UTF-8}
 
-  # Moves the shared project into place
-  ['LICENSE.txt'].each do |file|
-    copy file, File.expand_path("#{install_dir}/backend-proxy/#{file}/..")
-  end
-
-  # Moves the project into place
-  [ 'README.md', 'go.mod', 'main.go' ].each do |file|
-    copy File.join('backend-proxy', file), File.expand_path("#{install_dir}/backend-proxy/#{file}/..")
-  end
-
-  # Build backend-proxy and then remove the unwanted files.
-  command "cd #{install_dir}/backend-proxy " \
-          "&& go build", env: env
-  %w(go.mod main.go).each do |path|
-    delete File.expand_path("#{install_dir}/backend-proxy/#{path}")
-  end
-end
+tool_bg ${flight_ROOT}/opt/file-manager-backend-proxy/backend-proxy
+tool_set pid=$(echo $!)
