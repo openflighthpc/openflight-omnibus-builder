@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -25,24 +26,22 @@
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
 
-location ^~ /files/api/ {
-  proxy_pass http://127.0.0.1:920/;
-  proxy_pass_request_headers on;
-  proxy_set_header HOST $host;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header X-Forwarded-Proto $scheme;
-  proxy_set_header X-Real-IP $remote_addr;
-  proxy_set_header X-Real-Port $server_port;
-}
+# Have subshells inherit `set -x` for better debugging.
+export SHELLOPTS
 
-location ^~ /files/backend/ {
-  rewrite ^/files/backend/(.*)$ /files/backend/$1 break;
-  proxy_pass http://127.0.0.1:925/;
-  proxy_pass_request_headers on;
-  proxy_set_header HOST $host;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header X-Forwarded-Proto $scheme;
-  proxy_set_header X-Real-IP $remote_addr;
-  proxy_set_header X-Real-Port $server_port;
-  client_max_body_size 50M;
-}
+set -e
+
+# Ensure flight_ROOT is set
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
+
+# Required to correctly handle output parsing.
+if [ -f /etc/locale.conf ]; then
+  . /etc/locale.conf
+fi
+export LANG=${LANG:-en_US.UTF-8}
+
+tool_bg ${flight_ROOT}/opt/file-manager-backend-proxy/backend-proxy
+tool_set pid=$(echo $!)

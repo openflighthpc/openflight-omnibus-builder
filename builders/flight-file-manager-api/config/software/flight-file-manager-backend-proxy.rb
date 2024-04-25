@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2024-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,25 +24,36 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
+name 'flight-file-manager-backend-proxy'
+default_version '0.0.0'
 
-location ^~ /files/api/ {
-  proxy_pass http://127.0.0.1:920/;
-  proxy_pass_request_headers on;
-  proxy_set_header HOST $host;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header X-Forwarded-Proto $scheme;
-  proxy_set_header X-Real-IP $remote_addr;
-  proxy_set_header X-Real-Port $server_port;
-}
+source git: 'https://github.com/openflighthpc/flight-file-manager'
 
-location ^~ /files/backend/ {
-  rewrite ^/files/backend/(.*)$ /files/backend/$1 break;
-  proxy_pass http://127.0.0.1:925/;
-  proxy_pass_request_headers on;
-  proxy_set_header HOST $host;
-  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header X-Forwarded-Proto $scheme;
-  proxy_set_header X-Real-IP $remote_addr;
-  proxy_set_header X-Real-Port $server_port;
-  client_max_body_size 50M;
-}
+license 'EPL-2.0'
+license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
+
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
+
+  block do
+    FileUtils.mkdir_p File.join(install_dir, 'backend-proxy')
+  end
+
+  # Moves the shared project into place
+  ['LICENSE.txt'].each do |file|
+    copy file, File.expand_path("#{install_dir}/backend-proxy/#{file}/..")
+  end
+
+  # Moves the project into place
+  [ 'README.md', 'go.mod', 'main.go' ].each do |file|
+    copy File.join('backend-proxy', file), File.expand_path("#{install_dir}/backend-proxy/#{file}/..")
+  end
+
+  # Build backend-proxy and then remove the unwanted files.
+  command "cd #{install_dir}/backend-proxy " \
+          "&& go build", env: env
+  %w(go.mod main.go).each do |path|
+    delete File.expand_path("#{install_dir}/backend-proxy/#{path}")
+  end
+end

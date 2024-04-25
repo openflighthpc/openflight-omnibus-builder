@@ -85,6 +85,24 @@ EOF
     fi
 }
 
+install_go() {
+  # Flight File Manager API has a reverse proxy written in Go. It requires Go
+  # 1.22 to be installed.
+
+  # Remove any previous Go installation
+  rm -rf /usr/local/go
+
+  # Fetch Go 1.22 release
+  cd /tmp
+  wget https://go.dev/dl/go1.22.2.linux-amd64.tar.gz
+
+  # Extract Go 1.22 to /usr/local
+  tar -C /usr/local -xzf /tmp/go1.22.2.linux-amd64.tar.gz
+
+  # Include Go binary in PATH
+  echo 'export PATH=$PATH:/usr/local/go/bin' >>/home/vagrant/.bash_profile
+}
+
 install_ruby_and_bundler() {
   # Only checking for Ruby 2.7's existence in CentOS 9/Ubuntu 22 because it's a bit more
   # involved to install it there than just `rvm install 2.7`
@@ -145,7 +163,7 @@ if [ "$1" != "test" ]; then
       sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
     fi
 
-    yum install -y -e0 git rpm-build cmake
+    yum install -y -e0 git rpm-build cmake wget
     install_rvm
     source /etc/profile.d/rvm.sh
     install_ruby_and_bundler
@@ -178,7 +196,7 @@ if [ "$1" != "test" ]; then
     fi
   elif which apt &>/dev/null; then
     apt-get update
-    apt-get -y install ruby ruby-dev libffi-dev gcc make autoconf fakeroot awscli dpkg-dev libz-dev
+    apt-get -y install ruby ruby-dev libffi-dev gcc make autoconf fakeroot awscli dpkg-dev libz-dev wget
 
     apt-get -y install gnupg2
     install_rvm
@@ -208,6 +226,8 @@ if [ "$1" != "test" ]; then
     hostname openflight-builder
   fi
   hostname -s > /etc/hostname
+
+  install_go
 
   cd /opt
   git clone https://github.com/openflighthpc/openflight-repo
