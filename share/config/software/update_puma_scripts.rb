@@ -107,7 +107,7 @@ build do
     tool_bg #{flight_paths[:start_bin]} "$pidfile"
 
     # Wait up to 10ish seconds for puma to start
-    for _ in `seq 1 20`; do
+    for _ in `seq 1 30`; do
       sleep 0.5
       if [ -f "$pidfile" ]; then
         pid=$(cat "$pidfile" | tr -d "\\n")
