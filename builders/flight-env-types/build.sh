@@ -4,7 +4,7 @@ d="$(pwd)"
 mkdir -p pkg
 
 NAME=flight-env-types
-VERSION=1.0.7
+VERSION=1.0.8
 TAG=$(echo "$VERSION" | sed "s/~/-/g")
 REL=1
 
