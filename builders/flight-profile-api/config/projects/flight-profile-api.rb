@@ -35,7 +35,7 @@ VERSION = '1.0.0'
 override 'flight-profile-api', version: ENV.fetch('ALPHA', VERSION)
 
 build_version(ENV.key?('ALPHA') ? VERSION.sub(/(-\w+)?\Z/, '-alpha') : VERSION)
-build_iteration 4
+build_iteration 5
 
 dependency 'preparation'
 dependency 'flight-profile-api'
