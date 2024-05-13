@@ -43,5 +43,5 @@ if [ -f /etc/locale.conf ]; then
 fi
 export LANG=${LANG:-en_US.UTF-8}
 
-tool_bg ${flight_ROOT}/opt/file-manager-backend-proxy/backend-proxy
+tool_bg ${flight_ROOT}/opt/file-manager-api/backend-proxy/backend-proxy
 tool_set pid=$(echo $!)
