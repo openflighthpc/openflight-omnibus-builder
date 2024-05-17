@@ -90,3 +90,8 @@ fi
         fi
     done
 )
+
+# Restart the backend-proxy process
+if ${flight_ROOT}/bin/flight service status file-manager-backend-proxy | grep -q active ; then
+  ${flight_ROOT}/bin/flight service restart file-manager-backend-proxy
+fi

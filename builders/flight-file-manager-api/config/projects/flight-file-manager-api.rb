@@ -31,7 +31,7 @@ friendly_name 'Flight File Manager API'
 
 install_dir '/opt/flight/opt/file-manager-api'
 
-VERSION = '2.0.2'
+VERSION = '2.0.3'
 override 'flight-file-manager-api', version: ENV.fetch('ALPHA', VERSION)
 override 'flight-file-manager-backend', version: ENV.fetch('ALPHA', VERSION)
 override 'flight-file-manager-backend-proxy', version: ENV.fetch('ALPHA', VERSION)
