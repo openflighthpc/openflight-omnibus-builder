@@ -25,7 +25,9 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-/opt/flight/bin/flight landing-page compile
+compile_log_dir=/opt/flight/var/log/package-scripts/
+mkdir -p $compile_log_dir
+/opt/flight/bin/flight landing-page compile >> $compile_log_dir/landing-page-compile.log 2>&1
 /opt/flight/bin/flight service reload www 1>/dev/null 2>&1
 
 exit 0
