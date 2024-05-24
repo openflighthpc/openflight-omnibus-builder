@@ -124,5 +124,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section "ImageMagick :apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+  section ":ImageMagick :apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
 end
