@@ -28,7 +28,7 @@
 
 # Reload the service if being removed due to upgrade
 # NOTE: Technically any reason but a full removal
-if [ "$1" != "0" ] || [ "$1" ~!= "remove" ]; then
+if [ "$1" != "0" ] && [ "$1" != "remove" ]; then
   # Stop the service
   /opt/flight/bin/flight service reload www >/dev/null 2>&1
 fi
