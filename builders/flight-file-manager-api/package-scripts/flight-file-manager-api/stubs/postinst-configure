@@ -7,6 +7,38 @@ if ls "$old" >/dev/null 2>&1; then
   rmdir "$old"
 fi
 
+# Warn about obsolete reverse proxy configuration
+conf_file=${flight_ROOT}/etc/www/server-https.d/file-manager-api.conf
+printf -v search_criterion "%q" "rewrite ^/files/backend/(.*)$ /files/backend/\$1 break;"
+if [ -f "${conf_file}" ] && ! grep -Eq "$search_criterion" "$conf_file" ; then
+  # The nginx file is missing the configuration for the custom reverse proxy.
+  
+  cat <<EOF 1>&2
+===========================================================
+WARNING: Configuration required for flight-file-manager-api
+===========================================================
+
+The existing NGINX configuration for flight-file-manager-api contains an
+obsolete definition for the backend reverse proxy. To update the configuration,
+follow the instructions below and then restart flight-www and
+flight-file-manager-api:
+
+Edit the configuration file '${conf_file}' and update the lines:
+  
+  location ^~ /files/backend/ {
+    rewrite ^/files/(.*)$ /$1 break;
+    proxy_pass http://127.0.0.1:920/;
+
+to:
+
+  location ^~ /files/backend/ {
+    rewrite ^/files/backend/(.*)$ /files/backend/$1 break;
+    proxy_pass http://127.0.0.1:925/;
+
+EOF
+
+fi
+
 # Warn about obsolete configuration.
 env_file=${flight_ROOT}/etc/service/env/file-manager-api
 var_name="flight_FILE_MANAGER_API_cloudcmd_cookie_domain"
@@ -29,7 +61,7 @@ Run the command:
 
     flight config set web-suite.domain "${domain}"
 
-Or edit the configurtion file '${flight_ROOT}/etc/file-manager-api.yaml' and
+Or edit the configuration file '${flight_ROOT}/etc/file-manager-api.yaml' and
 set 'cloudcmd_cookie_domain' to '${domain}'.
 
 EOF
@@ -58,3 +90,8 @@ fi
         fi
     done
 )
+
+# Restart the backend-proxy process
+if ${flight_ROOT}/bin/flight service status file-manager-backend-proxy | grep -q active ; then
+  ${flight_ROOT}/bin/flight service restart file-manager-backend-proxy
+fi

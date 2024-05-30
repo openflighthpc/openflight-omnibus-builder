@@ -38,7 +38,7 @@ license_file 'LICENSE.txt'
 skip_transitive_dependency_licensing true
 
 build do
-  type = 'headnode'
+  type = 'default'
   # Moves the content for the landing page into place.
   copy "landing-page/types/#{type}/*", install_dir
 

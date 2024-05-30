@@ -1,5 +1,5 @@
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2024-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,51 +24,36 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-file-manager-webapp'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-file-manager'
-friendly_name 'Flight File Manager Webapp'
+name 'flight-file-manager-backend-proxy'
+default_version '0.0.0'
 
-install_dir '/opt/flight/opt/file-manager-webapp'
-
-VERSION = '2.0.3'
-override 'flight-file-manager-webapp', version: VERSION
-
-build_version VERSION
-build_iteration 1
-
-dependency 'preparation'
-dependency 'flight-file-manager-webapp'
-dependency 'version-manifest'
+source git: 'https://github.com/openflighthpc/flight-file-manager'
 
 license 'EPL-2.0'
 license_file 'LICENSE.txt'
+skip_transitive_dependency_licensing true
 
-description 'Manage file manager sessions'
+build do
+  env = with_standard_compiler_flags(with_embedded_path)
 
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-exclude 'node_modules'
+  block do
+    FileUtils.mkdir_p File.join(install_dir, 'backend-proxy')
+  end
 
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-branding-system-2.0'
-runtime_dependency 'flight-landing-page-system-2.0'
+  # Moves the shared project into place
+  ['LICENSE.txt'].each do |file|
+    copy file, File.expand_path("#{install_dir}/backend-proxy/#{file}/..")
+  end
 
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
+  # Moves the project into place
+  [ 'README.md', 'go.mod', 'main.go' ].each do |file|
+    copy File.join('backend-proxy', file), File.expand_path("#{install_dir}/backend-proxy/#{file}/..")
+  end
 
-config_file "/opt/flight/etc/www/server-https.d/file-manager-webapp.conf"
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
+  # Build backend-proxy and then remove the unwanted files.
+  command "cd #{install_dir}/backend-proxy " \
+          "&& go build", env: env
+  %w(go.mod main.go).each do |path|
+    delete File.expand_path("#{install_dir}/backend-proxy/#{path}")
+  end
 end

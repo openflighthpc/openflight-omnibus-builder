@@ -1,5 +1,6 @@
+#!/bin/bash
 #==============================================================================
-# Copyright (C) 2019-present Alces Flight Ltd.
+# Copyright (C) 2021-present Alces Flight Ltd.
 #
 # This file is part of OpenFlight Omnibus Builder.
 #
@@ -24,50 +25,23 @@
 # For more information on OpenFlight Omnibus Builder, please visit:
 # https://github.com/openflighthpc/openflight-omnibus-builder
 #===============================================================================
-name 'flight-job-script-webapp'
-maintainer 'Alces Flight Ltd'
-homepage 'https://github.com/openflighthpc/flight-job-script'
-friendly_name 'Flight Job Script Webapp'
 
-install_dir '/opt/flight/opt/job-script-webapp'
+# Have subshells inherit `set -x` for better debugging.
+export SHELLOPTS
 
-VERSION = '2.0.1'
-override 'flight-job-script-webapp', version: VERSION
+set -e
 
-build_version VERSION
-build_iteration 1
+# Ensure flight_ROOT is set
+if [ -z "$flight_ROOT" ]; then
+  echo "flight_ROOT has not been set!" >&2
+  exit 1
+fi
 
-dependency 'preparation'
-dependency 'flight-job-script-webapp'
-dependency 'version-manifest'
+# Required to correctly handle output parsing.
+if [ -f /etc/locale.conf ]; then
+  . /etc/locale.conf
+fi
+export LANG=${LANG:-en_US.UTF-8}
 
-license 'EPL-2.0'
-license_file 'LICENSE.txt'
-
-description 'Webapp for creating customised job scripts'
-
-exclude '**/.git'
-exclude '**/.gitkeep'
-exclude '**/bundler/git'
-exclude 'node_modules'
-
-runtime_dependency 'flight-service'
-runtime_dependency 'flight-service-system-1.0'
-runtime_dependency 'flight-www'
-runtime_dependency 'flight-www-system-1.0'
-runtime_dependency 'flight-landing-page-branding-system-2.0'
-
-require 'find'
-Find.find('opt') do |o|
-  extra_package_file(o) if File.file?(o)
-end
-
-config_file "/opt/flight/etc/www/server-https.d/job-script-webapp.conf"
-
-package :rpm do
-  vendor 'Alces Flight Ltd'
-end
-
-package :deb do
-  vendor 'Alces Flight Ltd'
-end
+tool_bg ${flight_ROOT}/opt/file-manager-api/backend-proxy/backend-proxy
+tool_set pid=$(echo $!)

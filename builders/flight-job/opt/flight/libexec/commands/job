@@ -1,7 +1,7 @@
 : '
 : NAME: job
 : SYNOPSIS: Generate and submit jobs from predefined templates
-: VERSION: 2.10.2
+: VERSION: 2.10.3
 : '
 #==============================================================================
 # Copyright (C) 2020-present Alces Flight Ltd.
