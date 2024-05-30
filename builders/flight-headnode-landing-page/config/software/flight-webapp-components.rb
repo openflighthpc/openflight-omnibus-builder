@@ -15,6 +15,9 @@ build do
   env = with_standard_compiler_flags(with_embedded_path)
   # Configure the URL used to access the login API.
   env["REACT_APP_LOGIN_API_BASE_URL"] = "/login/api/v0"
+  env["REACT_APP_BRANDING_FILE"] = "/data/branding.json"
+  env["REACT_APP_ENVIRONMENT_FILE"] = "/data/environment.json"
+  env["REACT_APP_DATA_FILE"] = "/data/index.json"
 
   # Build flight-webapp-components and the login menu
   block do
