@@ -29,7 +29,9 @@
 # `flight-www` may not be installed yet.  That is fine, as `flight-www` will
 # compile the landing page once it is installed.
 if [ -f /opt/flight/libexec/commands/landing-page ]; then
-    /opt/flight/bin/flight landing-page compile
+    compile_log_dir=/opt/flight/var/log/package-scripts/
+    mkdir -p $compile_log_dir
+    /opt/flight/bin/flight landing-page compile >> $compile_log_dir/landing-page-compile.log 2>&1
 fi
 
 exit 0

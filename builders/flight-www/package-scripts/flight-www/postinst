@@ -34,7 +34,9 @@ if [ -d /opt/flight/opt/landing-page/www/overridden ]; then
              /opt/flight/opt/www/landing-page/
 fi
 
-/opt/flight/bin/flight landing-page compile
+compile_log_dir=/opt/flight/var/log/package-scripts/
+mkdir -p $compile_log_dir
+/opt/flight/bin/flight landing-page compile >> $compile_log_dir/landing-page-compile.log 2>&1
 
 
 # Rename the cron file used for automatic cert renewal.
