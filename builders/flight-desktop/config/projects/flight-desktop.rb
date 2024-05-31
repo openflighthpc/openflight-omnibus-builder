@@ -95,26 +95,25 @@ extra_package_file howto_relative
 
 if ohai['platform_family'] == 'rhel'
   rhel_rel = ohai['platform_version'].split('.').first.to_i
-  if rhel_rel == 8
+  if rhel_rel == 7
     runtime_dependency 'xorg-x11-apps'
-    package :rpm do
-      vendor 'Alces Flight Ltd'
-      # repurposed 'priority' field to set RPM recommends/provides
-      # provides are prefixed with `:`
-      priority "apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
-    end
-  else
     package :rpm do
       vendor 'Alces Flight Ltd'
       # repurposed 'priority' field to set RPM recommends/provides
       # provides are prefixed with `:`
       priority "flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
     end
+  else
+    package :rpm do
+      vendor 'Alces Flight Ltd'
+      # repurposed 'priority' field to set RPM recommends/provides
+      # provides are prefixed with `:`
+      priority "ImageMagick apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+    end
   end
 
   runtime_dependency 'netpbm-progs'
 elsif ohai['platform_family'] == 'debian'
-  runtime_dependency 'x11-apps'
   runtime_dependency 'netpbm'
 else
   raise "Unrecognised platform: #{ohai['platform_family']}"
@@ -125,5 +124,5 @@ package :deb do
   # repurposed 'section' field to set DEB recommends/provides
   # entire section is prefixed with `:` to trigger handling
   # provides are further prefixed with `:`
-  section ":apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
+  section ":ImageMagick :apg flight-howto-system-1.0 :flight-desktop-system-#{DESKTOP_SYSTEM}"
 end
