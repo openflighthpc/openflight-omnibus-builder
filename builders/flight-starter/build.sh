@@ -6,7 +6,7 @@ mkdir -p pkg
 NOW=2024.1
 NEXT=2024.2
 VERSION=${NOW}.0
-TAG=$(echo "$VERSION" | sed "s/~/-/g")
+TAG=${TAG:-$(echo "$VERSION" | sed "s/~/-/g")}
 REL=1
 
 if [ -f /etc/redhat-release ]; then
