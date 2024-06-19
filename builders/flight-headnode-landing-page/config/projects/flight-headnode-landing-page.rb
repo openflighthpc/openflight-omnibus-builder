@@ -31,7 +31,7 @@ friendly_name 'Headnode content for landing page'
 
 install_dir '/opt/flight/opt/www/landing-page/default'
 
-VERSION = '2.0.2'
+VERSION = '2.0.3'
 LOGIN_VERSION = '1.0.1'
 override 'flight-headnode-landing-page', version: ENV.fetch('ALPHA', VERSION)
 override 'flight-webapp-components', version: ENV.fetch('ALPHA_login', LOGIN_VERSION)
@@ -41,7 +41,7 @@ if ENV.key?('ALPHA') || ENV.key?('ALPHA_login')
 else
   build_version VERSION
 end
-build_iteration 2
+build_iteration 1
 
 dependency 'preparation'
 dependency 'flight-headnode-landing-page'
