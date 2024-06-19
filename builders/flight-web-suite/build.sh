@@ -31,8 +31,8 @@ d="$(pwd)"
 mkdir -p pkg
 
 NAME=flight-web-suite
-VERSION=2024.1
-REL=2
+VERSION=2024.2
+REL=1
 
 if [ -f /etc/redhat-release ]; then
   echo "Building RPM package..."

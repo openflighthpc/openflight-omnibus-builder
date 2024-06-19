@@ -43,11 +43,9 @@ Requires:       flight-desktop-webapp => 2.0.0, flight-desktop-webapp < 2.1.0~
 Requires:       flight-file-manager-api => 2.0.0, flight-file-manager-api < 2.1.0~
 Requires:       flight-file-manager-webapp => 2.0.0, flight-file-manager-webapp < 2.1.0~
 Requires:       flight-login-api => 1.2.1, flight-login-api < 1.3.0~
-Requires:       flight-job-script-api => 1.9.0, flight-job-script-api < 1.10.0~
-Requires:       flight-job-script-webapp => 2.0.0, flight-job-script-webapp < 2.1.0~
 Requires:       flight-www => 2.0.0, flight-www < 2.1.0~
 Requires:       flight-headnode-landing-page < 3.0.0
-Requires:       flight-web-suite-utils => 1.1.0 flight-web-suite-utils < 1.2.0~
+Requires:       flight-web-suite-utils => 1.2.0 flight-web-suite-utils < 1.3.0~
 
 %description
 The Flight Web Suite collection of web applications for accessing a HPC environment.
@@ -140,6 +138,9 @@ EOF
 fi
 
 %changelog
+* Wed Jun 19 2024 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2024.2-1
+- Remove job-script-api and job-script-webapp; bump file-manager-api
+  and flight-web-suite-utils.
 * Thu Jun 16 2022 Ben Armston <ben.armston@alces-flight.com> -2022.4-1
 - Bump console-api, console-webapp, desktop-restapi, desktop-webapp,
   file-manager-api, file-manager-webapp, job-script-api, job-script-webapp,
