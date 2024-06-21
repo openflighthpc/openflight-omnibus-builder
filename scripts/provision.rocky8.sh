@@ -94,4 +94,4 @@ EOF
 ln -s /home/rocky /home/vagrant
 
 cp -a /etc/os-release /etc/os-release.orig
-sed -i -e 's/ID=.*/ID="rhel"/g' /etc/os-release
+sed -i -e 's/^ID=.*/ID="rhel"/g' /etc/os-release
