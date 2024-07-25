@@ -31,7 +31,7 @@ friendly_name 'Flight web server service'
 
 install_dir '/opt/flight/opt/www'
 
-VERSION = '2.0.0'
+VERSION = '2.0.1'
 CERT_VERSION = '0.6.2'
 
 override 'flight-www', version: ENV.fetch('ALPHA', VERSION)
@@ -44,7 +44,7 @@ if ENV.key?('ALPHA') || ENV.key?('ALPHA_cert')
 else
   build_version VERSION
 end
-build_iteration 3
+build_iteration 1
 
 dependency 'preparation'
 dependency 'enforce-flight-runway'
