@@ -43,7 +43,7 @@ Requires:       flight-desktop-webapp => 2.0.0, flight-desktop-webapp < 2.1.0~
 Requires:       flight-file-manager-api => 2.0.0, flight-file-manager-api < 2.1.0~
 Requires:       flight-file-manager-webapp => 2.0.0, flight-file-manager-webapp < 2.1.0~
 Requires:       flight-login-api => 1.2.1, flight-login-api < 1.3.0~
-Requires:       flight-www => 2.0.0, flight-www < 2.1.0~
+Requires:       flight-www => 2.1.0, flight-www < 2.2.0~
 Requires:       flight-headnode-landing-page < 3.0.0
 Requires:       flight-web-suite-utils => 1.2.0 flight-web-suite-utils < 1.3.0~
 
@@ -138,6 +138,8 @@ EOF
 fi
 
 %changelog
+* Thu Aug  1 2024 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2024.3-1
+- Bump flight-www version constraint.
 * Wed Jun 19 2024 Mark J. Titorenko <mark.titorenko@alces-flight.com> - 2024.2-1
 - Remove job-script-api and job-script-webapp; bump file-manager-api
   and flight-web-suite-utils.
