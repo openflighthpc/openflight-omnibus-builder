@@ -2,10 +2,6 @@
 REPO="https://github.com/openflighthpc/slurm"
 TARGET="$(cd "$(dirname "$0")" && pwd)/pkg"
 
-PMIX_VERSION=${PMIX_VERSION:-5.0.6}
-NVML_VERSION=12-8-12.8.90
-CUDA_VERSION=12.8
-
 if [ "$1" == "--non-flight" ]; then
   nonflight=true
   shift
@@ -33,6 +29,40 @@ EOF
 fi
 
 VERSION=$1
+
+if grep -q 'release 8' /etc/redhat-release; then
+  distro="rhel8"
+  case $VERSION in
+    17.11|18.08)
+      echo "$0: Slurm version not currently available for EL8: $VERSION"
+      exit 1
+    ;;
+  esac
+elif grep -q 'release 9' /etc/redhat-release; then
+  distro="rhel9"
+  case $VERSION in
+    17.11|18.08)
+      echo "$0: Slurm version not currently available for EL9: $VERSION"
+      exit 1
+    ;;
+  esac
+else
+  distro="rhel7"
+fi
+
+PMIX_VERSION=${PMIX_VERSION:-5.0.7}
+
+case $distro in
+  rhel8|rhel9)
+    NVML_VERSION=12-8-12.8.90
+    CUDA_VERSION=12.8
+    ;;
+  rhel7)
+    NVML_VERSION=12-4-12.4.127
+    CUDA_VERSION=12.4
+    ;;
+esac
+
 case $VERSION in
   17.11)
     if [ -z "$nonflight" ]; then
@@ -154,11 +184,11 @@ case $VERSION in
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-${CUDA_VERSION}")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-24-11-3-1-flight1"
-      REL="flight-slurm-24.11.3.flight1"
+      TAG="flight-slurm-24-11-4-1-flight1"
+      REL="flight-slurm-24.11.4.flight1"
     else
-      TAG="slurm-24-11-3-1-flight1"
-      REL="slurm-24.11.3.flight1"
+      TAG="slurm-24-11-4-1-flight1"
+      REL="slurm-24.11.4.flight1"
     fi
     libjwt=true
     nvml=true
@@ -172,25 +202,6 @@ esac
 mkdir -p $HOME/flight-slurm
 cd $HOME/flight-slurm
 
-if grep -q 'release 8' /etc/redhat-release; then
-  distro="rhel8"
-  case $VERSION in
-    17.11|18.08)
-      echo "$0: Slurm version not currently available for EL8: $VERSION"
-      exit 1
-    ;;
-  esac
-elif grep -q 'release 9' /etc/redhat-release; then
-  distro="rhel9"
-  case $VERSION in
-    17.11|18.08)
-      echo "$0: Slurm version not currently available for EL9: $VERSION"
-      exit 1
-    ;;
-  esac
-else
-  distro="rhel7"
-fi
 
 # Install dependencies
 sudo yum groupinstall -y "Development Tools"
