@@ -2,9 +2,9 @@
 REPO="https://github.com/openflighthpc/slurm"
 TARGET="$(cd "$(dirname "$0")" && pwd)/pkg"
 
-PMIX_VERSION=5.0.3
-NVML_VERSION=12-6-12.6.77
-CUDA_VERSION=12.6
+PMIX_VERSION=${PMIX_VERSION:-5.0.6}
+NVML_VERSION=12-8-12.8.90
+CUDA_VERSION=12.8
 
 if [ "$1" == "--non-flight" ]; then
   nonflight=true
@@ -26,7 +26,8 @@ Specify <version> to build:
   22.05
   23.02
   23.11
-  24.05 (latest)
+  24.05
+  24.11 (latest)
 EOF
   exit 1
 fi
@@ -136,7 +137,7 @@ case $VERSION in
     libjwt=true
     nvml=true
     ;;
-  24.05|latest)
+  24.05)
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-${CUDA_VERSION}")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
@@ -145,6 +146,19 @@ case $VERSION in
     else
       TAG="slurm-24-05-3-1-flight1"
       REL="slurm-24.05.3.flight1"
+    fi
+    libjwt=true
+    nvml=true
+    ;;
+  24.11|latest)
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-${CUDA_VERSION}")
+    BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-24-11-3-1-flight1"
+      REL="flight-slurm-24.11.3.flight1"
+    else
+      TAG="slurm-24-11-3-1-flight1"
+      REL="slurm-24.11.3.flight1"
     fi
     libjwt=true
     nvml=true
