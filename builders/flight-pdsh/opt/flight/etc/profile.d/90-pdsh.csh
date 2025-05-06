@@ -44,3 +44,13 @@ switch ("$flight_PDSH_priority")
     set path=($path "$flight_ROOT"/opt/pdsh/bin)
     breaksw
 endsw
+
+alias | grep "^flight_HELPER_remove_path" >/dev/null
+if ( $? == 0 ) then
+  alias flight_PDSH_exit set path '`flight_HELPER_remove_path $flight_ROOT/opt/pdsh/bin`'
+
+  if ( "$flight_DEFINES" != "" ) then
+    set flight_DEFINES= (${flight_DEFINES} flight_PDSH_exit)
+    set flight_DEFINES_exits= (${flight_DEFINES_exits} flight_PDSH_exit)
+  endif
+endif
