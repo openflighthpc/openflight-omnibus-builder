@@ -56,6 +56,7 @@ case $VERSION in
     # 	PMIX_VERSION=${PMIX_VERSION:-6.0.0}
     # 	;;
     *)
+        # 6.0.0 is not compatible with Slurm <= 25.05
 	PMIX_VERSION=${PMIX_VERSION:-5.0.8}
 	;;
 esac
@@ -192,11 +193,11 @@ case $VERSION in
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-${CUDA_VERSION}")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-24-11-4-1-flight1"
-      REL="flight-slurm-24.11.4.flight1"
+      TAG="flight-slurm-24-11-5-1-flight1"
+      REL="flight-slurm-24.11.5.flight1"
     else
-      TAG="slurm-24-11-4-1-flight1"
-      REL="slurm-24.11.4.flight1"
+      TAG="slurm-24-11-5-1-flight1"
+      REL="slurm-24.11.5.flight1"
     fi
     libjwt=true
     nvml=true
@@ -205,11 +206,11 @@ case $VERSION in
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-${CUDA_VERSION}")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-25-05-0-1-flight1"
-      REL="flight-slurm-25.05.0.flight1"
+      TAG="flight-slurm-25-05-1-1-flight1"
+      REL="flight-slurm-25.05.1.flight1"
     else
-      TAG="slurm-25-05-0-1-flight1"
-      REL="slurm-25.05.0.flight1"
+      TAG="slurm-25-05-1-1-flight1"
+      REL="slurm-25.05.1.flight1"
     fi
     libjwt=true
     nvml=true
