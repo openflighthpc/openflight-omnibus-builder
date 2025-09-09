@@ -32,7 +32,7 @@ fi
 VERSION=$1
 
 if grep -q 'release 8' /etc/redhat-release; then
-  distro="rhel8"
+  distro="el8"
   case $VERSION in
     17.11|18.08)
       echo "$0: Slurm version not currently available for EL8: $VERSION"
@@ -40,7 +40,7 @@ if grep -q 'release 8' /etc/redhat-release; then
     ;;
   esac
 elif grep -q 'release 9' /etc/redhat-release; then
-  distro="rhel9"
+  distro="el9"
   case $VERSION in
     17.11|18.08)
       echo "$0: Slurm version not currently available for EL9: $VERSION"
@@ -48,25 +48,25 @@ elif grep -q 'release 9' /etc/redhat-release; then
     ;;
   esac
 else
-  distro="rhel7"
+  distro="el7"
 fi
 
 case $VERSION in
     25.05|latest)
-        PMIX_VERSION=${PMIX_VERSION:-6.0.0}
+        PMIX_VERSIONS="${PMIX_VERSIONS:-6.0.0 5.0.8 4.2.9}"
         ;;
     *)
         # 6.0.0 is not compatible with Slurm <= 25.05.2
-	PMIX_VERSION=${PMIX_VERSION:-5.0.8}
+	PMIX_VERSIONS="${PMIX_VERSIONS:-5.0.8 4.2.9}"
 	;;
 esac
 
 case $distro in
-  rhel8|rhel9)
-    NVML_VERSION=13-0-13.0.39
+  el8|el9)
+    NVML_VERSION=13-0-13.0.87
     CUDA_VERSION=13.0
     ;;
-  rhel7)
+  el7)
     NVML_VERSION=12-4-12.4.127
     CUDA_VERSION=12.4
     ;;
@@ -206,11 +206,11 @@ case $VERSION in
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-${CUDA_VERSION}")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-25-05-2-1-flight1"
-      REL="flight-slurm-25.05.2.flight1"
+      TAG="flight-slurm-25-05-3-1-flight1"
+      REL="flight-slurm-25.05.3.flight1"
     else
-      TAG="slurm-25-05-2-1-flight1"
-      REL="slurm-25.05.2.flight1"
+      TAG="slurm-25-05-3-1-flight1"
+      REL="slurm-25.05.3.flight1"
     fi
     libjwt=true
     nvml=true
@@ -230,7 +230,7 @@ sudo yum groupinstall -y "Development Tools"
 if ! yum repolist | grep -q epel; then
   sudo yum install -y epel-release
 fi
-if [ "$distro" == "rhel7" ]; then
+if [ "$distro" == "el7" ]; then
   sudo yum install -y munge-devel munge-libs pam-devel \
        readline-devel perl-devel lua-devel hwloc-devel \
        numactl-devel hdf5-devel lz4-devel freeipmi-devel \
@@ -249,26 +249,10 @@ if [ "$distro" == "rhel7" ]; then
       built_libjwt=true
     fi
   fi
-  if ! rpm -qa pmix | grep -q "^pmix-${PMIX_VERSION}"; then
-    # Build deps:
-    sudo yum install -y gcc make libevent-devel hwloc-devel python3-devel zlib-devel
-    if [ ! -f pmix-${PMIX_VERSION}-1.src.rpm ]; then
-      wget https://github.com/openpmix/openpmix/releases/download/v${PMIX_VERSION}/pmix-${PMIX_VERSION}-1.src.rpm
-    fi
-    rpmbuild --rebuild pmix-${PMIX_VERSION}-1.src.rpm
-    if rpm -qa pmix-devel | grep -q '^pmix-devel'; then
-      sudo yum remove -y pmix-devel
-    fi
-    if rpm -qa pmix-tools | grep -q '^pmix-tools'; then
-      sudo yum remove -y pmix-tools
-    fi
-    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-${PMIX_VERSION}-1.el7.x86_64.rpm
-    built_pmix=true
-  fi
   if [ "$nvml" ]; then
     sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-nvml-devel-${NVML_VERSION}-1.x86_64.rpm
   fi
-elif [ "$distro" == "rhel8" ]; then
+elif [ "$distro" == "el8" ]; then
   sudo yum config-manager --set-enabled powertools
   sudo yum config-manager --set-enabled PowerTools
   sudo yum install -y munge-devel munge-libs pam-devel \
@@ -276,23 +260,6 @@ elif [ "$distro" == "rhel8" ]; then
        numactl-devel hdf5-devel lz4-devel freeipmi-devel \
        rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
        man2html python3 python2 $BUILD_DEPS
-  if ! rpm -qa pmix | grep -q "^pmix-${PMIX_VERSION}"; then
-    # Build deps:
-    sudo yum install -y gcc make libevent-devel hwloc-devel python3-devel zlib-devel
-    if [ ! -f pmix-${PMIX_VERSION}-1.src.rpm ]; then
-      wget https://github.com/openpmix/openpmix/releases/download/v${PMIX_VERSION}/pmix-${PMIX_VERSION}-1.src.rpm
-    fi
-    rpmbuild --rebuild pmix-${PMIX_VERSION}-1.src.rpm
-    if rpm -qa pmix-devel | grep -q '^pmix-devel'; then
-      sudo yum remove -y pmix-devel
-    fi
-    if rpm -qa pmix-tools | grep -q '^pmix-tools'; then
-      sudo yum remove -y pmix-tools
-    fi
-    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-${PMIX_VERSION}-1.el8.x86_64.rpm
-    built_pmix=true
-  fi
-
   if [ "$libjwt" ]; then
     # This is needed for Slurm 20.11+
     sudo yum install -y libjwt-devel
@@ -301,29 +268,18 @@ elif [ "$distro" == "rhel8" ]; then
   if [ "$nvml" ]; then
     sudo yum install -y https://developer.download.nvidia.com/compute/cuda/repos/rhel8/x86_64/cuda-nvml-devel-${NVML_VERSION}-1.x86_64.rpm
   fi
-elif [ "$distro" == "rhel9" ]; then
+elif [ "$distro" == "el9" ]; then
   sudo yum config-manager --set-enabled crb
   sudo yum install -y munge-devel munge-libs pam-devel \
        readline-devel perl-devel lua-devel hwloc-devel \
        numactl-devel hdf5-devel lz4-devel freeipmi-devel \
        rrdtool-devel gtk2-devel libcurl-devel mariadb-devel \
        man2html python3 dbus-devel $BUILD_DEPS
-  sudo yum install -y pmix-devel
-  if ! rpm -qa pmix | grep -q "^pmix-${PMIX_VERSION}"; then
-    # Build deps:
-    sudo yum install -y gcc make libevent-devel hwloc-devel python3-devel zlib-devel
-    if [ ! -f pmix-${PMIX_VERSION}-1.src.rpm ]; then
-      wget https://github.com/openpmix/openpmix/releases/download/v${PMIX_VERSION}/pmix-${PMIX_VERSION}-1.src.rpm
-    fi
-    rpmbuild --rebuild pmix-${PMIX_VERSION}-1.src.rpm
-    if rpm -qa pmix-devel | grep -q '^pmix-devel'; then
+  if rpm -qa pmix-devel | grep -q '^pmix-devel'; then
       sudo yum remove -y pmix-devel
-    fi
-    if rpm -qa pmix-tools | grep -q '^pmix-tools'; then
+  fi
+  if rpm -qa pmix-tools | grep -q '^pmix-tools'; then
       sudo yum remove -y pmix-tools
-    fi
-    sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-${PMIX_VERSION}-1.el9.x86_64.rpm
-    built_pmix=true
   fi
 
   if [ "$libjwt" ]; then
@@ -336,6 +292,26 @@ elif [ "$distro" == "rhel9" ]; then
   fi
 fi
 
+# PMIx build deps:
+sudo yum install -y gcc make libevent-devel hwloc-devel python3-devel zlib-devel
+for pmix_ver in ${PMIX_VERSIONS}; do
+    if ! rpm -qa pmix | grep -q "^pmix-${pmix_ver}"; then
+	  if [ ! -f pmix-${pmix_ver}-1.src.rpm ]; then
+	      wget https://github.com/openpmix/openpmix/releases/download/v${pmix_ver}/pmix-${pmix_ver}-1.src.rpm
+	  fi
+	  rpmbuild --rebuild pmix-${pmix_ver}-1.src.rpm
+	  #sudo yum install -y ~/rpmbuild/RPMS/x86_64/pmix-${pmix_ver}-1.el9.x86_64.rpm
+	  sudo rpm --force -ivh --prefix /opt/pmix/${pmix_ver} ~/rpmbuild/RPMS/x86_64/pmix-${pmix_ver}-1.${distro}.x86_64.rpm
+	  built_pmix=true
+    fi
+    PMIX_LINE="/opt/pmix/${pmix_ver}:${PMIX_LINE}"
+done
+# force install the first (default) PMIx:
+if [ "$built_pmix" ]; then
+    sudo rpm --force -ivh ~/rpmbuild/RPMS/x86_64/pmix-${PMIX_VERSIONS%% *}-1.${distro}.x86_64.rpm
+fi
+BUILD_FLAGS+=(-D "_with_pmix --with-pmix=/usr:${PMIX_LINE%:?*}")
+
 # Create tarball
 if [ -d "$REL" ]; then
   if [ -d "$REL.old" ]; then
@@ -345,7 +321,7 @@ if [ -d "$REL" ]; then
 fi
 git clone $REPO --branch $TAG --depth 1 --single-branch $REL
 
-if [[ $distro == 'rhel8' ]] ; then
+if [[ $distro == 'el8' ]] ; then
     ## Fix dlopen bug/error as explained here https://bugs.schedmd.com/show_bug.cgi?id=2443
     sed -i '1i%global _hardened_ldflags "-Wl,-z,lazy"' $REL/slurm.spec
     sed -i '1i%global _hardened_cflags "-Wl,-z,lazy"' $REL/slurm.spec
@@ -371,8 +347,7 @@ if [ -z "$nonflight" ]; then
            --with lua \
            --with numa \
            --with x11 \
-           --without debug \
-           --with pmix
+           --without debug
   mv $HOME/rpmbuild/RPMS/*/flight-slurm-*.rpm "$TARGET"
 else
   rpmbuild -ta $REL.tar.bz2 \
@@ -383,14 +358,13 @@ else
            --with lua \
            --with numa \
            --with x11 \
-           --without debug \
-           --with pmix
+           --without debug
   mv $HOME/rpmbuild/RPMS/*/slurm-*.rpm "$TARGET"
 fi
 
 if [ "$built_libjwt" ]; then
   # This is needed for Slurm 20.11+.
-  if [ "$distro" == "rhel7" ]; then
+  if [ "$distro" == "el7" ]; then
     mv ~/rpmbuild/RPMS/x86_64/libjwt-*.rpm "$TARGET"
   fi
 fi
