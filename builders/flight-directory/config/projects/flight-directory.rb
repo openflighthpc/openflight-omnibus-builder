@@ -31,7 +31,7 @@ friendly_name 'Flight Directory'
 
 install_dir '/opt/flight/opt/directory'
 
-VERSION = '1.2.0'
+VERSION = '1.2.1'
 override 'flight-directory', version: VERSION
 
 build_version VERSION
