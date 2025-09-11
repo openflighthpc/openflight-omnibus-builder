@@ -35,7 +35,7 @@ VERSION = '3.8.10'
 override 'flight-python', version: VERSION
 
 build_version VERSION
-build_iteration 3
+build_iteration 4
 
 dependency 'preparation'
 dependency 'flight-python'

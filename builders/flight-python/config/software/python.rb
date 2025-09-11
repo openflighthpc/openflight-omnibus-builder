@@ -1,3 +1,4 @@
+# coding: utf-8
 #==============================================================================
 # Copyright (C) 2021-present Alces Flight Ltd.
 #
@@ -43,6 +44,8 @@ dependency 'libffi'
 dependency 'sqlite3'
 dependency 'readline'
 dependency "gdbm"
+dependency "liblzma"
+dependency "libuuid"
 
 relative_path "Python-#{version}"
 
