@@ -24,7 +24,8 @@ Specify <version> to build:
   23.11
   24.05
   24.11
-  25.05 (latest)
+  25.05
+  25.11 (latest)
 EOF
   exit 1
 fi
@@ -52,7 +53,7 @@ else
 fi
 
 case $VERSION in
-    25.05|latest)
+    25.05|25.11|latest)
         PMIX_VERSIONS="${PMIX_VERSIONS:-6.0.0 5.0.9 4.2.9}"
         ;;
     *)
@@ -202,7 +203,7 @@ case $VERSION in
     libjwt=true
     nvml=true
     ;;
-  25.05|latest)
+  25.05)
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-${CUDA_VERSION}")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
@@ -211,6 +212,19 @@ case $VERSION in
     else
       TAG="slurm-25-05-4-1-flight1"
       REL="slurm-25.05.4.flight1"
+    fi
+    libjwt=true
+    nvml=true
+    ;;
+  25.11|latest)
+    BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-${CUDA_VERSION}")
+    BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
+    if [ -z "$nonflight" ]; then
+      TAG="flight-slurm-25-11-0-1-flight1"
+      REL="flight-slurm-25.11.0.flight1"
+    else
+      TAG="slurm-25-11-0-1-flight1"
+      REL="slurm-25.11.0.flight1"
     fi
     libjwt=true
     nvml=true
