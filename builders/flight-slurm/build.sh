@@ -52,16 +52,6 @@ else
   distro="el7"
 fi
 
-case $VERSION in
-    25.05|25.11|latest)
-        PMIX_VERSIONS="${PMIX_VERSIONS:-6.0.0 5.0.10 4.2.9}"
-        ;;
-    *)
-        # 6.0.0 is not compatible with Slurm <= 25.05.2
-	PMIX_VERSIONS="${PMIX_VERSIONS:-5.0.10 4.2.9}"
-	;;
-esac
-
 case $distro in
   el8|el9)
     NVML_VERSION=13-0-13.0.87
@@ -70,7 +60,20 @@ case $distro in
   el7)
     NVML_VERSION=12-4-12.4.127
     CUDA_VERSION=12.4
+    # 6.0.0 is not compatible with HWLOC < 2.1.0 and 
+    # EL7 only provides v1.11.8
+    PMIX_VERSIONS="${PMIX_VERSIONS:-5.0.10 4.2.9}"
     ;;
+esac
+
+case $VERSION in
+    25.05|25.11|latest)
+        PMIX_VERSIONS="${PMIX_VERSIONS:-6.0.0 5.0.10 4.2.9}"
+        ;;
+    *)
+        # 6.0.0 is not compatible with Slurm <= 25.05.2
+	PMIX_VERSIONS="${PMIX_VERSIONS:-5.0.10 4.2.9}"
+	;;
 esac
 
 case $VERSION in
