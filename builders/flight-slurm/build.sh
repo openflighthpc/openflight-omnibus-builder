@@ -55,8 +55,8 @@ fi
 
 case $distro in
   el8|el9)
-    NVML_VERSION=13-2-13.2.82
-    CUDA_VERSION=13.2
+    NVML_VERSION=13-3-13.3.29
+    CUDA_VERSION=13.3
     ;;
   el7)
     NVML_VERSION=12-4-12.4.127
@@ -211,11 +211,11 @@ case $VERSION in
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-${CUDA_VERSION}")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-25-05-4-1-flight1"
-      REL="flight-slurm-25.05.4.flight1"
+      TAG="flight-slurm-25-05-7-1-flight1"
+      REL="flight-slurm-25.05.7.flight1"
     else
-      TAG="slurm-25-05-4-1-flight1"
-      REL="slurm-25.05.4.flight1"
+      TAG="slurm-25-05-7-1-flight1"
+      REL="slurm-25.05.7.flight1"
     fi
     libjwt=true
     nvml=true
@@ -237,11 +237,11 @@ case $VERSION in
     BUILD_FLAGS=(--with slurmrestd -D "_with_nvml --with-nvml=/usr/local/cuda-${CUDA_VERSION}")
     BUILD_DEPS="json-c-devel http-parser-devel jansson-devel doxygen"
     if [ -z "$nonflight" ]; then
-      TAG="flight-slurm-26-05-0-1-flight1"
-      REL="flight-slurm-26.05.0.flight1"
+      TAG="flight-slurm-26-05-1-1-flight1"
+      REL="flight-slurm-26.05.1.flight1"
     else
-      TAG="slurm-26-05-0-1-flight1"
-      REL="slurm-26.05.0.flight1"
+      TAG="slurm-26-05-1-1-flight1"
+      REL="slurm-26.05.1.flight1"
     fi
     libjwt=true
     nvml=true
