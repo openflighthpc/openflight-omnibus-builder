@@ -63,17 +63,17 @@ case $distro in
     CUDA_VERSION=12.4
     # 6.0.0 is not compatible with HWLOC < 2.1.0 and 
     # EL7 only provides v1.11.8
-    PMIX_VERSIONS="${PMIX_VERSIONS:-5.0.10 4.2.9}"
+    PMIX_VERSIONS="${PMIX_VERSIONS:-5.0.11 4.2.9}"
     ;;
 esac
 
 case $VERSION in
     25.05|25.11|latest)
-        PMIX_VERSIONS="${PMIX_VERSIONS:-6.1.0 5.0.10 4.2.9}"
+        PMIX_VERSIONS="${PMIX_VERSIONS:-6.1.0 5.0.11 4.2.9}"
         ;;
     *)
         # 6.0.0 is not compatible with Slurm <= 25.05.2
-	PMIX_VERSIONS="${PMIX_VERSIONS:-5.0.10 4.2.9}"
+	PMIX_VERSIONS="${PMIX_VERSIONS:-5.0.11 4.2.9}"
 	;;
 esac
 
@@ -240,8 +240,8 @@ case $VERSION in
       TAG="flight-slurm-26-05-1-1-flight1"
       REL="flight-slurm-26.05.1.flight1"
     else
-      TAG="slurm-26-05-1-1-flight1"
-      REL="slurm-26.05.1.flight1"
+      TAG="slurm-26-05-3-1-flight1"
+      REL="slurm-26.05.3.flight1"
     fi
     libjwt=true
     nvml=true
