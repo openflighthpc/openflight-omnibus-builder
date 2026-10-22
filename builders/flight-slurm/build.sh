@@ -55,8 +55,8 @@ fi
 
 case $distro in
   el8|el9)
-    NVML_VERSION=13-3-13.3.29
-    CUDA_VERSION=13.3
+    NVML_VERSION=13-4-13.4.92
+    CUDA_VERSION=13.4
     ;;
   el7)
     NVML_VERSION=12-4-12.4.127
