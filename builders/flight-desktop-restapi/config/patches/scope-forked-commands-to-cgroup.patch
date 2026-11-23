@@ -1,0 +1,81 @@
+--- subprocess.rb.pre_2026-11-05	2025-11-18 11:59:22.000000000 +0000
++++ subprocess.rb	2026-11-12 15:10:35.889361348 +0000
+@@ -70,12 +70,78 @@
+
+     private
+
++    def cgroup_systemd_base
++      if File.exist?("/sys/fs/cgroup/cgroup.controllers")
++        "/sys/fs/cgroup"                          # cgroup v2 (EL9)
++      else
++        "/sys/fs/cgroup/systemd"                  # cgroup v1 (EL8)
++      end
++    end
++
++    def user_slice_path(uid)
++      File.join(cgroup_systemd_base, "user.slice", "user-#{uid}.slice")
++    end
++
++    def join_resource_controllers(uid, pid)
++      # Only needed on cgroup v1. On v2 the single hierarchy write is enough.
++      return if File.exist?("/sys/fs/cgroup/cgroup.controllers")
++
++      candidates = [
++        "/sys/fs/cgroup/memory",
++        "/sys/fs/cgroup/pids",
++        "/sys/fs/cgroup/cpu,cpuacct",
++        "/sys/fs/cgroup/cpu",
++      ]
++
++      candidates.each do |base|
++        path  = File.join(base, "user.slice", "user-#{uid}.slice")
++        procs = File.join(path, "cgroup.procs")
++        next unless File.exist?(procs)
++
++        File.write(procs, pid.to_s)
++      rescue => e
++        @logger.debug("Could not join #{path}: #{e.message}")
++      end
++    end
++
++    def ensure_user_scope(username, uid, gid)
++      slice_path = user_slice_path(uid)
++
++      # 1. Ensure user slice hierarchy exists (and memory/ etc. on v1)
++      unless system("systemctl", "start", "user@#{uid}.service",
++                    out: File::NULL, err: File::NULL)
++        @logger.warn("Failed to start user@#{uid}.service for #{username}")
++        return
++      end
++
++      # 2. Wait briefly if needed (usually instant when already running)
++      20.times do
++        break if Dir.exist?(slice_path)
++        sleep 0.05
++      end
++
++      unless Dir.exist?(slice_path)
++        @logger.warn("User slice #{slice_path} did not appear")
++        return
++      end
++
++      # 3. Move this process into the user slice
++      begin
++        File.write(File.join(slice_path, "cgroup.procs"), Process.pid.to_s)
++        join_resource_controllers(uid, Process.pid)  # v1 memory/pids/cpu
++      rescue => e
++        @logger.warn("Failed to move pid #{Process.pid} into #{slice_path}: #{e.message}")
++      end
++    end
++
+     def run_fork(&block)
+       @pid = Kernel.fork do
+         @out_read.close
+         @err_read.close
+         @in_write.close
+
++        ensure_user_scope(@username, @passwd.uid, @passwd.gid)
++
+         # Jump through hoops to 1) drop the parent process's group permissions
+         # and 2) add all groups for user.
+         Process.groups = []
